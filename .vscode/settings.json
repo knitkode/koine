@@ -23,7 +23,7 @@
     "**/.swc": true,
     "**/.swcrc": true,
     "**/jest.config.js": true,
-    "**/package.json": true,
+    // "**/package.json": true,
     "**/project.json": true,
     // "**/README.md": true,
     "**/tsconfig.json": true,
