@@ -27,8 +27,8 @@ export function parseURL(href: string) {
 /**
  * Strips out the trailing slash
  */
-export function removeTralingSlash(value = "") {
-  return value.replace(/\/*$/, "");
+export function removeTralingSlash(urlLike = "") {
+  return urlLike.replace(/\/*$/, "");
 }
 
 /**
