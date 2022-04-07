@@ -1,33 +1,33 @@
-// {
-//   "files.exclude": {
-//     // @at root
-//     ".github": true,
-//     ".husky": true,
-//     ".swc": true,
-//     ".commitlint.config.js": true,
-//     ".commitlintrc.json": true,
-//     ".editorconfig": true,
-//     ".prettierignore": true,
-//     ".prettierrc": true,
-//     "babel.config.json": true,
-//     "jest.config.js": true,
-//     "jest.preset.js": true,
-//     "tmp": true,
-//     "tools": true,
-//     "tsconfig.base.json": true,
-//     // @at nested
-//     "**/.babelrc": true,
-//     "**/.eslintrc.json": true,
-//     "**/.gitignore": true,
-//     "**/.gitkeep": true,
-//     "**/.swc": true,
-//     "**/.swcrc": true,
-//     "**/jest.config.js": true,
-//     "**/package.json": true,
-//     "**/project.json": true,
-//     "**/README.md": true,
-//     "**/tsconfig.json": true,
-//     "**/tsconfig.lib.json": true,
-//     "**/tsconfig.spec.json": true
-//   }
-// }
+{
+  "files.exclude": {
+    // @at root
+    ".github": true,
+    ".husky": true,
+    ".swc": true,
+    ".commitlint.config.js": true,
+    ".commitlintrc.json": true,
+    ".editorconfig": true,
+    ".prettierignore": true,
+    ".prettierrc": true,
+    "babel.config.json": true,
+    "jest.config.js": true,
+    "jest.preset.js": true,
+    "tmp": true,
+    "tools": true,
+    "tsconfig.base.json": true,
+    // @at nested
+    "**/.babelrc": true,
+    "**/.eslintrc.json": true,
+    "**/.gitignore": true,
+    "**/.gitkeep": true,
+    "**/.swc": true,
+    "**/.swcrc": true,
+    "**/jest.config.js": true,
+    "**/package.json": true,
+    "**/project.json": true,
+    "**/README.md": true,
+    "**/tsconfig.json": true,
+    "**/tsconfig.lib.json": true,
+    "**/tsconfig.spec.json": true
+  }
+}
