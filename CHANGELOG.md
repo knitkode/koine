@@ -1,5 +1,16 @@
-<<<<<<< HEAD
-=======
+## [1.0.2](https://github.com/knitkode/koine/compare/v1.0.1...v1.0.2) (2022-04-08)
+
+### Bug Fixes
+
+- **setup:** deps ([23f7767](https://github.com/knitkode/koine/commit/23f776728656557cee2bd86c74698c3e7d2bf182))
+- **setup:** use nx cloud ([2964a1a](https://github.com/knitkode/koine/commit/2964a1a8597d3283a865fa69bd78174fdb3fdb40))
+
+### Chores
+
+- **setup:** fix build for next ([0b68a99](https://github.com/knitkode/koine/commit/0b68a992921ae60a7bd3812edef43500bb5ea32d))
+
+# <<<<<<< HEAD
+
 ## [1.0.1](https://github.com/knitkode/koine/compare/v1.0.0...v1.0.1) (2022-04-08)
 
 ### Chores
@@ -27,4 +38,4 @@
 
 - nx init ([918301b](https://github.com/knitkode/koine/commit/918301b64cfcd1554e2153a7a0dd708132c49f9d))
 - initial commit ([36e775e](https://github.com/knitkode/koine/commit/36e775e6c1ee0245618d3305b640f8d61d30f61e))
->>>>>>> e775a2877183033d391ba1c503c2ad38927ae6f5
+  > > > > > > > e775a2877183033d391ba1c503c2ad38927ae6f5
