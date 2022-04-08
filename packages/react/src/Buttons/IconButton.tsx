@@ -1,4 +1,3 @@
-import { ComponentPropsWithRef } from "react";
 import styled, { css } from "styled-components";
 import {
   btnStyleReset,
@@ -32,4 +31,4 @@ export type IconButtonUiProps = KoineButtonUiProps & {
 };
 
 export type IconButtonProps = IconButtonUiProps &
-  ComponentPropsWithRef<"button">;
+  React.ComponentPropsWithRef<"button">;

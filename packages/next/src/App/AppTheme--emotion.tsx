@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { ThemeProvider, Theme } from "@mui/material/styles";
 import { CacheProvider, EmotionCache } from "@emotion/react";
@@ -21,7 +20,7 @@ export type AppThemeEmotionProps = NextAppProps & {
 /**
  * App theme with `emotion` (good for `@mui`)s
  */
-export const AppThemeEmotion: FC<AppThemeEmotionProps> = ({
+export const AppThemeEmotion: React.FC<AppThemeEmotionProps> = ({
   emotionCache = clientSideEmotionCache,
   theme,
   children,

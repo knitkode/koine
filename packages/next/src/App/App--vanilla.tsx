@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { AppHead } from "./AppHead";
 import { AppThemeVanilla, AppThemeVanillaProps } from "./AppTheme--vanilla";
@@ -11,7 +10,7 @@ export type AppVanillaProps = NextAppProps &
 /**
  * App
  */
-export const AppVanilla: FC<AppVanillaProps> = (props) => {
+export const AppVanilla: React.FC<AppVanillaProps> = (props) => {
   return (
     <>
       <AppHead />

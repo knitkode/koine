@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styled from "styled-components";
 import { KoineButton, KoineButtonProps } from "../../Buttons";
 import { field } from "../Field";
@@ -49,7 +48,7 @@ export type InputGroupProps = {
   btnProps?: KoineButtonProps;
 };
 
-export const InputGroup: FC<InputGroupProps> = ({
+export const InputGroup: React.FC<InputGroupProps> = ({
   pre,
   post,
   Button = KoineButton,

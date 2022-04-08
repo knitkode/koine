@@ -1,4 +1,3 @@
-import { FC, ReactNode } from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { SeoDefaults, SeoDefaultsProps } from "../Seo";
 
@@ -6,7 +5,7 @@ export type AppMainVanillaProps = NextAppProps & {
   /**
    * A wrapping layout component
    */
-  Layout: FC<Record<string, unknown>>;
+  Layout: React.FC<Record<string, unknown>>;
   /**
    * Seo site wide default configuration
    */
@@ -14,11 +13,11 @@ export type AppMainVanillaProps = NextAppProps & {
   /**
    * JSX to render just after SEO
    */
-  pre?: ReactNode;
+  pre?: React.ReactNode;
   /**
    * JSX to render just at the end of the markup
    */
-  post?: ReactNode;
+  post?: React.ReactNode;
 };
 
 /**
@@ -26,7 +25,7 @@ export type AppMainVanillaProps = NextAppProps & {
  *
  * It does not imply any specific styling or animation solution
  */
-export const AppMainVanilla: FC<AppMainVanillaProps> = ({
+export const AppMainVanilla: React.FC<AppMainVanillaProps> = ({
   Component,
   pageProps,
   Layout,

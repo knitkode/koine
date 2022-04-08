@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 
 type TextObj = { key: string; data: string };
@@ -10,10 +10,10 @@ export type TextLoopPieceProps = {
   noOverflow?: boolean;
   delay?: number;
   className?: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 };
 
-export const TextLoopPiece: FC<TextLoopPieceProps> = ({
+export const TextLoopPiece: React.FC<TextLoopPieceProps> = ({
   text = "",
   style = {},
   className = "",

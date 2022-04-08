@@ -1,4 +1,3 @@
-import { ComponentPropsWithRef } from "react";
 import styled, { css } from "styled-components";
 import { IconButton, IconButtonProps, IconButtonUiProps } from "./IconButton";
 
@@ -11,4 +10,4 @@ export const IconButtonFab = styled(IconButton)<IconButtonUiProps>`
 `;
 
 export type IconButtonFabProps = IconButtonProps &
-  ComponentPropsWithRef<"button">;
+  React.ComponentPropsWithRef<"button">;

@@ -1,4 +1,3 @@
-import type { FC, CSSProperties } from "react";
 import styled from "styled-components";
 
 export type KoineImgProps = {};
@@ -15,11 +14,11 @@ export const KoineImg = styled.img<KoineImgProps>``;
 export type KoineImgSmartWrapProps = {
   $loaded?: boolean;
   $error?: boolean;
-  $bg?: CSSProperties["backgroundColor"];
+  $bg?: React.CSSProperties["backgroundColor"];
 };
 
 export type KoineImgSmartProps = KoineImgProps & {
-  Wrap: FC<KoineImgSmartWrapProps>;
+  Wrap: React.FC<KoineImgSmartWrapProps>;
 };
 
 // /**

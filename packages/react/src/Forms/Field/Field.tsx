@@ -1,4 +1,3 @@
-import type { FC, CSSProperties } from "react";
 import type {
   FieldError as RHF_FieldError,
   FieldErrors as RHF_FieldErrors,
@@ -64,10 +63,10 @@ export type FieldProps = {
   t?: Translate;
   error?: RHF_FieldError;
   errors?: RHF_FieldErrors;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 };
 
-export const Field: FC<FieldProps> = ({
+export const Field: React.FC<FieldProps> = ({
   name,
   t,
   error,

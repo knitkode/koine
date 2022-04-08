@@ -1,9 +1,4 @@
-import {
-  ForwardedRef,
-  KeyboardEventHandler,
-  useCallback,
-  useMemo,
-} from "react";
+import { useCallback, useMemo } from "react";
 import { useWatch } from "react-hook-form";
 import type { Option } from "../../types";
 import { InputInvisible } from "../styles";
@@ -48,7 +43,7 @@ export type UseToggleProps = Omit<FormControl, "value"> & {
  */
 export function useToggle(
   props: UseToggleProps,
-  ref: ForwardedRef<HTMLInputElement>
+  ref: React.ForwardedRef<HTMLInputElement>
 ) {
   const {
     name,
@@ -123,31 +118,33 @@ export function useToggle(
    * Fake the spacebar keyboard behaviour on the radio mode of the checkbox.
    * Without this *only* the arrow keys would change the checkbox state
    */
-  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      if (event.key === " ") {
-        event.preventDefault();
-        event.stopPropagation();
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> =
+    useCallback(
+      (event) => {
+        if (event.key === " ") {
+          event.preventDefault();
+          event.stopPropagation();
 
-        const firstInput = event.target as HTMLInputElement;
-        const next = firstInput.nextElementSibling as HTMLInputElement;
-        const prev = firstInput.previousElementSibling as HTMLInputElement;
-        const secondInput = next?.tagName === "INPUT" ? next : prev;
-        let target = firstInput;
+          const firstInput = event.target as HTMLInputElement;
+          const next = firstInput.nextElementSibling as HTMLInputElement;
+          const prev = firstInput.previousElementSibling as HTMLInputElement;
+          const secondInput = next?.tagName === "INPUT" ? next : prev;
+          let target = firstInput;
 
-        if (firstInput.checked) {
-          target = secondInput;
-        } else {
-          if (!secondInput.checked) {
-            target = firstInput.value === valueTrue ? firstInput : secondInput;
+          if (firstInput.checked) {
+            target = secondInput;
+          } else {
+            if (!secondInput.checked) {
+              target =
+                firstInput.value === valueTrue ? firstInput : secondInput;
+            }
           }
-        }
 
-        if (target) target.click();
-      }
-    },
-    [valueTrue]
-  );
+          if (target) target.click();
+        }
+      },
+      [valueTrue]
+    );
 
   // collect all the return values that are dependent on the current value
   // of the input

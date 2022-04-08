@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styled from "styled-components";
 
 const AlertRoot = styled.div<Pick<AlertProps, "$danger">>`
@@ -18,7 +17,11 @@ export type AlertProps = {
   $danger?: boolean;
 };
 
-export const Alert: FC<AlertProps> = ({ $danger, children, ...props }) => {
+export const Alert: React.FC<AlertProps> = ({
+  $danger,
+  children,
+  ...props
+}) => {
   return (
     <AlertRoot $danger={$danger} {...props}>
       <AlertInner>{children}</AlertInner>

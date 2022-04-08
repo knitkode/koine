@@ -1,4 +1,5 @@
-// @ts-check
+import { NextConfig } from "next";
+import { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 
 /**
  * Normalise pathname
@@ -7,10 +8,8 @@
  *
  * - Removes subsequent slashes
  * - Removing initial and ending slashes
- *
- * @param {string} pathname
  */
-function normaliseUrlPathname(pathname) {
+export function normaliseUrlPathname(pathname: string) {
   return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
 }
 
@@ -18,9 +17,8 @@ function normaliseUrlPathname(pathname) {
  * Clean a pathname and encode each part
  *
  * @see {@link normaliseUrlPathname}
- * @param {string} pathname
  */
-function encodePathname(pathname) {
+export function encodePathname(pathname: string) {
   const parts = normaliseUrlPathname(pathname).split("/");
 
   return parts
@@ -30,34 +28,30 @@ function encodePathname(pathname) {
 }
 
 /**
- * @param {string} locale
- * @param {string} localisedPathname
- * @param {string} templateName
- * @param {boolean} [dynamic]
- * @param {boolean} [permanent]
  */
-function getPathRedirect(
-  locale,
-  localisedPathname,
-  templateName,
-  dynamic,
-  permanent
+export function getPathRedirect(
+  locale: string,
+  localisedPathname: string,
+  templateName: string,
+  dynamic?: boolean,
+  permanent?: boolean
 ) {
   const suffix = dynamic ? `/:slug*` : "";
   return {
     source: `/${locale}/${encodePathname(localisedPathname)}${suffix}`,
     destination: `/${encodePathname(templateName)}${suffix}`,
     permanent: Boolean(permanent),
-    locale: /** @type {false} */ (false),
+    locale: false as const,
   };
 }
 
 /**
- * @param {string} source
- * @param {string} destination
- * @param {boolean} [dynamic]
  */
-function getPathRewrite(source, destination, dynamic) {
+export function getPathRewrite(
+  source: string,
+  destination: string,
+  dynamic?: boolean
+) {
   const suffix = dynamic ? `/:path*` : "";
   return {
     source: `/${encodePathname(source)}${suffix}`,
@@ -66,21 +60,19 @@ function getPathRewrite(source, destination, dynamic) {
 }
 
 /**
- * @param {{
- *   defaultLocale: string;
- *   routes: Record<string, string>;
- *   dynamicRoutes: Record<string, boolean>;
- *   permanent?: boolean;
- * }} options
  */
-async function getRedirects({
+export async function getRedirects({
   defaultLocale,
   routes,
   dynamicRoutes,
   permanent,
+}: {
+  defaultLocale: string;
+  routes: Record<string, string>;
+  dynamicRoutes: Record<string, boolean>;
+  permanent?: boolean;
 }) {
-  const redirects =
-    /** @type {import("next/dist/lib/load-custom-routes").Redirect[]} */ ([]);
+  const redirects: Redirect[] = [];
 
   Object.keys(routes).forEach((page) => {
     const dynamic = dynamicRoutes[page];
@@ -102,14 +94,15 @@ async function getRedirects({
 }
 
 /**
- * @param {{
- *   routes: Record<string, string>;
- *   dynamicRoutes: Record<string, boolean>;
- * }} options
  */
-async function getRewrites({ routes, dynamicRoutes }) {
-  const rewrites =
-    /** @type {import("next/dist/lib/load-custom-routes").Rewrite[]} */ ([]);
+export async function getRewrites({
+  routes,
+  dynamicRoutes,
+}: {
+  routes: Record<string, string>;
+  dynamicRoutes: Record<string, boolean>;
+}) {
+  const rewrites: Rewrite[] = [];
 
   Object.keys(routes).forEach((page) => {
     const dynamic = dynamicRoutes[page];
@@ -126,20 +119,24 @@ async function getRewrites({ routes, dynamicRoutes }) {
   return rewrites;
 }
 
+type KoineNextConfig = {
+  /** @default true Nx monorepo setup */
+  nx?: boolean;
+  /** @default true  Svg to react components */
+  svg?: boolean;
+  /** @default true  Styled components enabled */
+  sc?: boolean;
+};
+
 /**
  * Get Next.js config with some basic opinionated defaults
- *
- * @typedef {object} KoineNextConfig
- * @property {boolean} [KoineNextConfig.nx=true] Nx monorepo setup
- * @property {boolean} [KoineNextConfig.svg=true] Svg to react components
- * @property {boolean} [KoineNextConfig.sc=true] Styled components enabled
- *
- * @typedef {import("next").NextConfig} NextConfig
- *
- * @param {NextConfig & KoineNextConfig} [config]
- * @return {NextConfig}
  */
-function withConfig({ nx = true, svg = true, sc = true, ...nextConfig } = {}) {
+export function withKoine({
+  nx = true,
+  svg = true,
+  sc = true,
+  ...nextConfig
+}: NextConfig & KoineNextConfig = {}) {
   nextConfig = {
     // @see https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory
     pageExtensions: ["page.tsx", "page.ts"],
@@ -165,7 +162,7 @@ function withConfig({ nx = true, svg = true, sc = true, ...nextConfig } = {}) {
     // @see https://github.com/vercel/next.js/issues/7322#issuecomment-887330111
     // reactStrictMode: false,
     ...nextConfig,
-  };
+  } as NextConfig;
 
   if (svg) {
     if (nx) {
@@ -211,15 +208,7 @@ function withConfig({ nx = true, svg = true, sc = true, ...nextConfig } = {}) {
     };
   }
 
-  return nextConfig;
+  return nextConfig as NextConfig;
 }
 
-withConfig.normaliseUrlPathname = normaliseUrlPathname;
-withConfig.encodePathname = encodePathname;
-withConfig.getPathRedirect = getPathRedirect;
-withConfig.getPathRewrite = getPathRewrite;
-withConfig.getRedirects = getRedirects;
-withConfig.getRewrites = getRewrites;
-withConfig.withConfig = withConfig;
-
-module.exports = withConfig;
+export default withKoine;

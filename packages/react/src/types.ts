@@ -1,5 +1,3 @@
-import { ForwardRefExoticComponent, ExoticComponent, FC } from "react";
-
 export type Translate = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   i18nKey: any,
@@ -32,7 +30,7 @@ export type KoineComponentProps<BaseComponentProps, ExtendableProps> =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type KoineComponent<Props = any> =
   | string
-  | ForwardRefExoticComponent<Props>
-  | ExoticComponent<Props>
-  | FC<Props>
+  | React.ForwardRefExoticComponent<Props>
+  | React.ExoticComponent<Props>
+  | React.FC<Props>
   | ((props: Props) => JSX.Element);

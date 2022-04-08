@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import { MdAdd as IconExpand } from "@react-icons/all-files/md/MdAdd";
 import { MdRemove as IconCollapse } from "@react-icons/all-files/md/MdRemove";
 import type { KoineComponentProps, KoineComponent } from "../types";
@@ -29,15 +29,16 @@ export type CalendarDaygridCellStyledProps = CalendarViewDayProps & {
   $color: string;
 };
 
-export type CalendarDaygridCellEventProps = ComponentPropsWithoutRef<"div"> &
-  (
-    | (CalendarDaygridCellStyledProps & {
-        $placeholder?: false;
-      })
-    | {
-        $placeholder: true;
-      }
-  );
+export type CalendarDaygridCellEventProps =
+  React.ComponentPropsWithoutRef<"div"> &
+    (
+      | (CalendarDaygridCellStyledProps & {
+          $placeholder?: false;
+        })
+      | {
+          $placeholder: true;
+        }
+    );
 
 export type CalendarDaygridCellEventBtnProps = CalendarDaygridCellEventProps;
 

@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback } from "react";
+import { useCallback } from "react";
 import type { Editor as EditorType, EditorOptions } from "@tiptap/react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -19,7 +19,10 @@ export type EditorBarProps = {
 
 export const EditorBar = ({ editor }: EditorBarProps) => {
   const handleClick = useCallback(
-    (e: SyntheticEvent<HTMLButtonElement>, type: EditorBarClickBtnType) => {
+    (
+      e: React.SyntheticEvent<HTMLButtonElement>,
+      type: EditorBarClickBtnType
+    ) => {
       e.preventDefault();
       editor?.chain().focus()[`toggle${type}`]().run();
     },
@@ -33,7 +36,7 @@ export const EditorBar = ({ editor }: EditorBarProps) => {
   return (
     <EditorBarRoot>
       <EditorBarBtn
-        onClick={(e: SyntheticEvent<HTMLButtonElement>) =>
+        onClick={(e: React.SyntheticEvent<HTMLButtonElement>) =>
           handleClick(e, "Bold")
         }
         className={editor.isActive("bold") ? "is-active" : ""}
@@ -41,7 +44,7 @@ export const EditorBar = ({ editor }: EditorBarProps) => {
         <EditorIconBold />
       </EditorBarBtn>
       <EditorBarBtn
-        onClick={(e: SyntheticEvent<HTMLButtonElement>) =>
+        onClick={(e: React.SyntheticEvent<HTMLButtonElement>) =>
           handleClick(e, "Italic")
         }
         className={editor.isActive("bold") ? "is-active" : ""}

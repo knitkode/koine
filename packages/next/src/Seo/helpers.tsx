@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type { NextSeoProps, DefaultSeoProps } from "next-seo/lib/types";
 import { isArray } from "@koine/utils";
 
@@ -98,7 +97,7 @@ export const buildTags = ({
   metaTags,
   linkTags,
 }: BuildTagsParams = {}) => {
-  const render: ReactNode[] = [];
+  const render: React.ReactNode[] = [];
   const $names: MetaNames = {};
   const $properties: MetaProperties = {};
 

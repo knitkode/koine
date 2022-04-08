@@ -4,17 +4,7 @@
  * Maybe do a simplified version following this example:
  * https://codesandbox.io/s/framer-motion-accordion-qx958?file=/src/Example.tsx
  */
-import {
-  FC,
-  ReactNode,
-  CSSProperties,
-  ComponentPropsWithoutRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { MotionProps, m } from "framer-motion";
 import {
@@ -82,7 +72,7 @@ export type CollapsableHeadProps = Pick<CollapsableStyledProps, "$expanded"> &
     onClick: (...args: any) => any;
   };
 
-export const CollapsableHead: FC<CollapsableHeadProps> = ({
+export const CollapsableHead: React.FC<CollapsableHeadProps> = ({
   $expanded,
   id,
   onClick,
@@ -148,8 +138,8 @@ export const CollapsableBodyRoot = styled(m.div)`
 
 export type CollapsableBodyProps = MotionProps &
   Pick<CollapsableStyledProps, "$expanded"> & {
-    children?: ReactNode;
-    style?: CSSProperties;
+    children?: React.ReactNode;
+    style?: React.CSSProperties;
   };
 
 export const CollapsableBody = forwardRef<HTMLDivElement, CollapsableBodyProps>(
@@ -160,18 +150,18 @@ export const CollapsableBody = forwardRef<HTMLDivElement, CollapsableBodyProps>(
 
 export type CollapsableComponents = {
   HeadRoot?: typeof CollapsableHeadRoot;
-  HeadAction?: null | typeof CollapsableHeadAction | FC<any>;
-  HeadIcon?: null | typeof CollapsableHeadIcon | FC<any>;
+  HeadAction?: null | typeof CollapsableHeadAction | React.FC<any>;
+  HeadIcon?: null | typeof CollapsableHeadIcon | React.FC<any>;
 };
 
-export type CollapsableProps = ComponentPropsWithoutRef<"div"> & {
+export type CollapsableProps = React.ComponentPropsWithoutRef<"div"> & {
   id?: string;
   expanded?: boolean;
   /** Used to trigger a recalculation effect */
   recalc?: any;
   onChange?: () => any;
-  head: null | ReactNode;
-  body: ReactNode;
+  head: null | React.ReactNode;
+  body: React.ReactNode;
   /** Amount of milliseconds after which the component collapses */
   // autoCollapse?: number;
   components?: CollapsableComponents;

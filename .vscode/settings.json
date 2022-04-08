@@ -24,7 +24,7 @@
     "**/.swcrc": true,
     "**/jest.config.js": true,
     // "**/package.json": true,
-    "**/project.json": true,
+    // "**/project.json": true,
     // "**/README.md": true,
     "**/tsconfig.json": true,
     "**/tsconfig.lib.json": true,

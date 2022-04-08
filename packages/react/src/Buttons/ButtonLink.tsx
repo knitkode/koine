@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styled from "styled-components";
 import { KoineComponentProps, KoineComponent } from "../types";
 import { KoineLinkProps } from "../Link";
@@ -20,7 +19,7 @@ export type ButtonLinkProps = KoineComponentProps<
 // export const KoineButtonLink: FC<ButtonLinkProps> = ({ Koine, ...props }) => {
 //   return <Root {...props} as={Koine.Link} />;
 // }
-export const KoineButtonLink: FC<ButtonLinkProps> = ({
+export const KoineButtonLink: React.FC<ButtonLinkProps> = ({
   href,
   Koine = { Link: "a" },
   ...props

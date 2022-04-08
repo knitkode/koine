@@ -1,4 +1,3 @@
-import { ComponentPropsWithRef } from "react";
 import styled, { css } from "styled-components";
 import { stateFocus } from "../styles/styled";
 
@@ -93,4 +92,4 @@ export type KoineButtonUiProps = {
 };
 
 export type KoineButtonProps = KoineButtonUiProps &
-  ComponentPropsWithRef<"button">;
+  React.ComponentPropsWithRef<"button">;

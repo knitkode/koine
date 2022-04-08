@@ -1,9 +1,4 @@
 import type {
-  ChangeEventHandler,
-  ComponentPropsWithRef,
-  ReactNode,
-} from "react";
-import type {
   Control,
   UseFormRegister,
   UseFormSetValue,
@@ -16,12 +11,12 @@ type FormControlNativeType = "input" | "select" | "textarea";
 type FormControlFieldValues = Record<string, any>;
 
 export type FormControlNative<T extends FormControlNativeType = "input"> = Omit<
-  ComponentPropsWithRef<T>,
+  React.ComponentPropsWithRef<T>,
   "name"
 >;
 
 export type FormControlProps<T extends FormControlFieldValues = any> = {
-  label?: ReactNode;
+  label?: React.ReactNode;
   name: string;
   control?: Control<T>;
   register?: UseFormRegister<T>;
@@ -55,7 +50,7 @@ export function defaultOptionsFilterFn(options: Option[], inputValue?: string) {
  * We are faking the native input `onChange` event
  */
 export function triggerOnChange<T extends HTMLElement = HTMLInputElement>(
-  onChange?: ChangeEventHandler<T>,
+  onChange?: React.ChangeEventHandler<T>,
   name?: string,
   value?: any
 ) {

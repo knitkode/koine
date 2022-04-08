@@ -1,4 +1,4 @@
-import { useEffect, useState, FC, ComponentPropsWithoutRef } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { overlay, centered } from "../../styles/styled";
 import { Collapsable } from "../../Collapsable";
@@ -22,7 +22,7 @@ export const FormFeedback = styled(Alert)`
   padding: 2em 0;
 `;
 
-export type FormProps = ComponentPropsWithoutRef<"form"> & {
+export type FormProps = React.ComponentPropsWithoutRef<"form"> & {
   action: string;
   ok?: boolean;
   Ok?: typeof FormFeedback;
@@ -51,7 +51,7 @@ export type FormProps = ComponentPropsWithoutRef<"form"> & {
 
 type FormFeedbackView = "" | "ok" | "fail";
 
-export const Form: FC<FormProps> = ({
+export const Form: React.FC<FormProps> = ({
   ok,
   fail,
   loading,

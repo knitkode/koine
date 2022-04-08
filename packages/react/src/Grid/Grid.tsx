@@ -1,4 +1,3 @@
-import { CSSProperties } from "react";
 import styled, { StyledProps } from "styled-components";
 import type { Theme, Breakpoint } from "../styles/theme";
 
@@ -36,7 +35,7 @@ export const ContainerFluid = styled.div<ContainerFluidProps>`
 type Direction = "min" | "max";
 
 export type RowProps = GridProps & {
-  $valign?: CSSProperties["alignItems"];
+  $valign?: React.CSSProperties["alignItems"];
   $reverse?: `${Direction}:${Breakpoint}`;
   /**
    * It forces child columns to be on one line overflowing the content when it does not fit,
@@ -64,7 +63,7 @@ export type ColProps = GridProps &
   Partial<Record<Breakpoint, number>> & {
     $width?: number;
     $flex?: boolean;
-    $valign?: CSSProperties["alignItems"];
+    $valign?: React.CSSProperties["alignItems"];
     $auto?: boolean;
     $offset?: string;
   };

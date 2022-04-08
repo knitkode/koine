@@ -1,4 +1,4 @@
-import { useState, useCallback, SyntheticEvent } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import { parseURL } from "@koine/utils";
@@ -13,7 +13,7 @@ export function useLogout() {
   const [fail] = useState(false);
 
   const submit = useCallback(
-    (event: SyntheticEvent<HTMLFormElement>) => {
+    (event: React.SyntheticEvent<HTMLFormElement>) => {
       event.preventDefault();
       event.stopPropagation();
 

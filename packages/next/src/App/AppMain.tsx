@@ -1,4 +1,3 @@
-import { FC, ReactNode } from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { useRouter } from "next/router";
 import { SeoDefaults, SeoDefaultsProps } from "../Seo";
@@ -15,7 +14,7 @@ export type AppMainProps = NextAppProps & {
   /**
    * A wrapping layout component
    */
-  Layout: FC<Record<string, unknown>>;
+  Layout: React.FC<Record<string, unknown>>;
   /**
    * Seo site wide default configuration
    */
@@ -27,11 +26,11 @@ export type AppMainProps = NextAppProps & {
   /**
    * JSX to render just after SEO
    */
-  pre?: ReactNode;
+  pre?: React.ReactNode;
   /**
    * JSX to render just at the end of the markup
    */
-  post?: ReactNode;
+  post?: React.ReactNode;
 };
 
 /**
@@ -41,7 +40,7 @@ export type AppMainProps = NextAppProps & {
  *
  * About the page transition [wallis' blog post](https://wallis.dev/blog/nextjs-page-transitions-with-framer-motion)
  */
-export const AppMain: FC<AppMainProps> = ({
+export const AppMain: React.FC<AppMainProps> = ({
   Component,
   pageProps,
   Layout,

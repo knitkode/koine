@@ -1,4 +1,3 @@
-import { FC } from "react";
 import {
   motion,
   useViewportScroll,
@@ -10,7 +9,7 @@ import { useReveal, UseRevealOptions } from "./useReveal";
 
 export type RevealProps = UseRevealOptions;
 
-export const Reveal: FC<RevealProps> = ({
+export const Reveal: React.FC<RevealProps> = ({
   children,
   direction,
   offsetStartY,

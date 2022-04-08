@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { AppHead } from "./AppHead";
 import { AppThemeEmotion, AppThemeEmotionProps } from "./AppTheme--emotion";
@@ -11,7 +10,7 @@ export type AppEmotionProps = NextAppProps &
 /**
  * App
  */
-export const AppEmotion: FC<AppEmotionProps> = (props) => {
+export const AppEmotion: React.FC<AppEmotionProps> = (props) => {
   return (
     <>
       <AppHead />

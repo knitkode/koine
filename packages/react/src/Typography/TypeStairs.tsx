@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from "react";
+import { forwardRef } from "react";
 
 export type TypeStairsProps = {
   children: string;
@@ -10,19 +10,19 @@ export const TypeStairs = forwardRef(
     // split in rows or just use one row if there is no limit
     const rows = limit ? splitTextIntoRows(children, limit) : [children];
 
-    return (
+    return rows.length > 1 ? (
       <>
-        {rows.length > 1
-          ? rows.map((row, rowIndex) => {
-              return (
-                <span key={`row-${rowIndex}`}>
-                  {renderRow(row, rowIndex, ref)}
-                  {rowIndex !== rows.length - 1 && <br />}
-                </span>
-              );
-            })
-          : renderRow(rows[0], 0, ref)}
+        {rows.map((row, rowIndex) => {
+          return (
+            <span key={`row-${rowIndex}`}>
+              {renderRow(row, rowIndex, ref)}
+              {rowIndex !== rows.length - 1 && <br />}
+            </span>
+          );
+        })}
       </>
+    ) : (
+      renderRow(rows[0], 0, ref)
     );
   }
 );
@@ -51,7 +51,11 @@ function splitTextIntoRows(input = "", limit = 18) {
   return rows;
 }
 
-function renderRow(row: string, rowIndex: number, ref: ForwardedRef<any>) {
+function renderRow(
+  row: string,
+  rowIndex: number,
+  ref: React.ForwardedRef<any>
+) {
   const letters = row.split("");
   let fontWeightIdx = 1;
   // const fontWeight = Math.min(fontWeightIdx * 100, 800);

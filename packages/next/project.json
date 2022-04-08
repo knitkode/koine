@@ -1,0 +1,62 @@
+{
+  "root": "packages/next",
+  "sourceRoot": "packages/next/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build-esm": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "project": "packages/next/package.json",
+        "entryFile": "packages/next/src/index.ts",
+        "external": ["react", "react/jsx-runtime"],
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "compiler": "swc",
+        "assets": [
+          {
+            "glob": "packages/next/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "build-config": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "project": "packages/next/package.json",
+        "entryFile": "packages/next/src/config/index.ts",
+        "external": [],
+        "rollupConfig": "packages/next/rollup.config.js",
+        "compiler": "swc",
+        "assets": [
+          {
+            "glob": "packages/next/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "build": {
+      "builder": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["nx build-esm next", "nx build-config next"],
+        "parallel": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/next/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

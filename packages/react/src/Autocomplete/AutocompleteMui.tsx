@@ -1,7 +1,5 @@
 import {
   // forwardRef,
-  ForwardedRef,
-  CSSProperties,
   useCallback,
   useMemo,
   useState,
@@ -62,8 +60,8 @@ export type AutocompleteProps<
 > = Omit<FormControl, keyof AutocompleteConfig<TOption, TValue>> &
   AutocompleteConfig<TOption, TValue> & {
     className?: string;
-    style?: CSSProperties;
-    $ref?: ForwardedRef<HTMLInputElement>;
+    style?: React.CSSProperties;
+    $ref?: React.ForwardedRef<HTMLInputElement>;
   };
 
 /**

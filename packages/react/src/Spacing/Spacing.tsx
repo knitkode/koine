@@ -1,4 +1,3 @@
-import { ComponentPropsWithoutRef, FC } from "react";
 import styled from "styled-components";
 import { isUndefined } from "@koine/utils";
 import {
@@ -39,7 +38,7 @@ type SpacingSyntax =
   | `${SpacingSize}:${SpacingSyntaxFactor}:${SpacingProperty}`
   | `${SpacingSize}:${SpacingSyntaxFactor}:${SpacingProperty}:${SpacingSyntaxDevices}`;
 
-export type SpacingProps = ComponentPropsWithoutRef<"div"> &
+export type SpacingProps = React.ComponentPropsWithoutRef<"div"> &
   Partial<Record<SpacingDirectionAxis, SpacingSyntax>>;
 
 const extractDirectionArgs = (raw: SpacingSyntax) => {
@@ -62,7 +61,7 @@ const extractDirectionArgs = (raw: SpacingSyntax) => {
  * <Spacing top="sm:2:padding:tablet,desktop" />
  * ```
  */
-export const Spacing: FC<SpacingProps> = ({
+export const Spacing: React.FC<SpacingProps> = ({
   top,
   bottom,
   vertical,

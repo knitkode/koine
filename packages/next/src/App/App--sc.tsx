@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { AppHead } from "./AppHead";
 import { AppThemeSc, AppThemeScProps } from "./AppTheme--sc";
@@ -9,7 +8,7 @@ export type AppBaseProps = NextAppProps & AppThemeScProps & AppMainProps;
 /**
  * App
  */
-export const AppBase: FC<AppBaseProps> = (props) => {
+export const AppBase: React.FC<AppBaseProps> = (props) => {
   return (
     <>
       <AppHead />

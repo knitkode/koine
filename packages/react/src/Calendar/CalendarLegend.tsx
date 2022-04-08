@@ -1,4 +1,3 @@
-import { ComponentPropsWithoutRef } from "react";
 import type { CalendarsMap } from "./types";
 import type { KoineComponentProps, KoineComponent } from "../types";
 
@@ -7,7 +6,7 @@ export type KoineCalendarLegendProps = {
   calendarsMap: CalendarsMap;
 };
 
-export type CalendarLegendItemProps = ComponentPropsWithoutRef<"div"> & {
+export type CalendarLegendItemProps = React.ComponentPropsWithoutRef<"div"> & {
   $color: string;
   $empty: boolean;
   disabled: boolean;

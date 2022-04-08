@@ -1,4 +1,3 @@
-import { FC } from "react";
 import styled from "styled-components";
 
 const Root = styled.div<Pick<FeedbackProps, "$danger">>`
@@ -11,7 +10,7 @@ export type FeedbackProps = {
   $danger?: boolean;
 };
 
-export const Feedback: FC<FeedbackProps> = ({ $danger, children }) => {
+export const Feedback: React.FC<FeedbackProps> = ({ $danger, children }) => {
   return (
     <Root role="alert" $danger={$danger}>
       {children}

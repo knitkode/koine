@@ -1,4 +1,3 @@
-import { FC, CSSProperties } from "react";
 import styled from "styled-components";
 import { overlay } from "../styles";
 import { Container, ContainerProps } from "../Grid";
@@ -28,7 +27,7 @@ export const BgColorSkewed = styled.div<{
 `;
 
 export type BgContainerProps = ContainerProps & {
-  color: NonNullable<CSSProperties["background"]>;
+  color: NonNullable<React.CSSProperties["background"]>;
   /**
    * In `deg` unit.
    * @default 0
@@ -54,7 +53,7 @@ export type BgContainerProps = ContainerProps & {
   perspective?: number;
 };
 
-export const BgContainer: FC<BgContainerProps> = ({
+export const BgContainer: React.FC<BgContainerProps> = ({
   color,
   skewY = 0,
   rotate = 0,

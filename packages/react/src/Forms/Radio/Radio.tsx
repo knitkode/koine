@@ -1,4 +1,4 @@
-import { forwardRef, ForwardedRef } from "react";
+import { forwardRef } from "react";
 import styled from "styled-components";
 import type { Option } from "../../types";
 import { label } from "../Label/Label";
@@ -27,7 +27,7 @@ const RadioOptionLabel = styled(ToggleLabel)``;
 
 type RadioOptionProps = Omit<FormControl, "value"> &
   Option & {
-    $ref: ForwardedRef<HTMLInputElement>;
+    $ref: React.ForwardedRef<HTMLInputElement>;
   };
 
 const RadioOption = forwardRef<HTMLInputElement, RadioOptionProps>(

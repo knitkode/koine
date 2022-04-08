@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, useState } from "react";
+import { useState } from "react";
 import NextImage, { ImageProps as NextImageProps } from "next/image";
 import {
   // KoineImg,
@@ -7,7 +7,7 @@ import {
   KoineImgSmartWrapProps,
 } from "@koine/react";
 
-export type NextImgProps = Omit<ComponentPropsWithoutRef<"img">, "src"> &
+export type NextImgProps = Omit<React.ComponentPropsWithoutRef<"img">, "src"> &
   // KoineImgProps &
   NextImageProps;
 

@@ -1,4 +1,3 @@
-import type { CSSProperties, ReactNode } from "react";
 import { useMemo } from "react";
 import { useFormState } from "react-hook-form";
 import { decode } from "@koine/utils";
@@ -15,13 +14,13 @@ type FieldControlRenderProps = Pick<
 
 export type FieldControlProps = FieldControlRenderProps & {
   /** Render props pattern */
-  children: (props: FieldControlRenderProps) => ReactNode;
+  children: (props: FieldControlRenderProps) => React.ReactNode;
   t: Translate;
   showError?: boolean;
   encode?: boolean;
   hint?: string;
   className?: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 };
 
 /**

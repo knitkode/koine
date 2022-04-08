@@ -1,23 +1,17 @@
-import {
-  ComponentPropsWithoutRef,
-  CSSProperties,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { uid } from "@koine/utils";
 
-export type RatingStarProps = ComponentPropsWithoutRef<"svg"> &
+export type RatingStarProps = React.ComponentPropsWithoutRef<"svg"> &
   RatingStarModel & {
     /** @default 16 */
     size?: number;
     /** Between 0 and 1 */
     value: number;
     /** @default "#FFD84C" */
-    colorBg?: CSSProperties["color"];
+    colorBg?: React.CSSProperties["color"];
     /** @default "#947813" */
-    colorStroke?: CSSProperties["color"];
+    colorStroke?: React.CSSProperties["color"];
   };
 
 export const RatingStarRoot = styled.svg`

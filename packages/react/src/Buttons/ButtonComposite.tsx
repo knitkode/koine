@@ -1,4 +1,4 @@
-import { memo, ElementType } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 import { IconBaseProps, IconType } from "@react-icons/all-files/lib";
 import { KoineComponentProps, KoineComponent } from "../types";
@@ -50,7 +50,7 @@ const Text = styled.span``;
 
 export type KoineButtonCompositeProps = KoineButtonProps &
   Omit<ButtonLinkProps, "Koine"> & {
-    Icon?: IconType | ElementType;
+    Icon?: IconType | React.ElementType;
     iconProps?: IconBaseProps;
     textMain?: string;
     textSub?: string;

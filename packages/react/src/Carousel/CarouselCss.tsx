@@ -1,4 +1,4 @@
-import { FC, Children, CSSProperties } from "react";
+import { Children } from "react";
 import styled from "styled-components";
 import { uid, SetRequired } from "@koine/utils";
 import {
@@ -57,7 +57,7 @@ export type KoineCarouselCssProps = ColProps & {
   /**
    * @default "start"
    */
-  $snap?: CSSProperties["scrollSnapAlign"];
+  $snap?: React.CSSProperties["scrollSnapAlign"];
   /**
    * Carousel's slide width
    */
@@ -69,7 +69,7 @@ export type CarouselCssProps = KoineCarouselCssProps;
 /**
  * For programmatic usage an example here @see https://stackoverflow.com/a/65902068/9122820
  */
-export const KoineCarouselCss: FC<CarouselCssProps> = ({
+export const KoineCarouselCss: React.FC<CarouselCssProps> = ({
   items,
   $gutterRow,
   $gutterCol,

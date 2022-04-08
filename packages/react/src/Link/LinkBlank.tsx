@@ -1,9 +1,8 @@
-import type { FC, ComponentPropsWithRef } from "react";
 import styled from "styled-components";
 import { MdLaunch as IconOutboundLink } from "@react-icons/all-files/md/MdLaunch";
 import { max } from "../styles/media";
 
-export type LinkBlankProps = ComponentPropsWithRef<"a">;
+export type LinkBlankProps = React.ComponentPropsWithRef<"a">;
 
 export const LinkBlankA = styled.a.attrs({
   target: "_blank",
@@ -26,7 +25,7 @@ export const LinkBlankIcon = styled(IconOutboundLink)`
   }
 `;
 
-export const LinkBlank: FC<LinkBlankProps> = ({
+export const LinkBlank: React.FC<LinkBlankProps> = ({
   children,
   target,
   rel,

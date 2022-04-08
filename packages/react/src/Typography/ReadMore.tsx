@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useMemo, CSSProperties } from "react";
+import { useState, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useIsomorphicLayoutEffect } from "react-use";
 import { m, useSpring } from "framer-motion";
@@ -55,14 +55,14 @@ export type ReadMoreProps = {
   lines?: number;
   lineHeight?: number;
   fontSize?: number;
-  bg?: CSSProperties["background"];
+  bg?: React.CSSProperties["background"];
   /** @default "Expand" */
   expand?: string;
   /** @default "Collapse" */
   collapse?: string;
 };
 
-export const ReadMore: FC<ReadMoreProps> = ({
+export const ReadMore: React.FC<ReadMoreProps> = ({
   lines = 3,
   lineHeight = 1.6,
   fontSize = 14,

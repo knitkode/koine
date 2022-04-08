@@ -1,15 +1,9 @@
-import React, {
-  Attributes,
-  ClassAttributes,
-  ElementType,
-  FunctionComponentElement,
-  ReactElement,
-} from "react";
+import { createElement } from "react";
 
 function classed<P extends Record<string, never>>(
-  type: ElementType,
+  type: React.ElementType,
   ...className: string[]
-): (props?: (Attributes & P) | null) => FunctionComponentElement<P>;
+): (props?: (React.Attributes & P) | null) => React.FunctionComponentElement<P>;
 
 function classed<
   T extends keyof JSX.IntrinsicElements,
@@ -17,20 +11,20 @@ function classed<
 >(
   type: keyof JSX.IntrinsicElements,
   ...className: string[]
-): (props?: (ClassAttributes<T> & P) | null) => ReactElement<P, T>;
+): (props?: (React.ClassAttributes<T> & P) | null) => React.ReactElement<P, T>;
 
 /**
  * Adapted (removed `classnames` dependency) from:
  * @see https://daily.dev/blog/my-tailwind-css-utility-function-for-creating-reusable-react-components-typescript-support
  */
 function classed<P extends Record<string, never>>(
-  type: ElementType | keyof JSX.IntrinsicElements,
+  type: React.ElementType | keyof JSX.IntrinsicElements,
   ...className: string[]
 ): (
-  props?: (Attributes & P & { className?: string }) | null
-) => ReactElement<P> {
+  props?: (React.Attributes & P & { className?: string }) | null
+) => React.ReactElement<P> {
   return function Classed(props) {
-    return React.createElement(type, {
+    return createElement(type, {
       ...props,
       className: [props?.className || ""].concat(className).join(" "),
     });
