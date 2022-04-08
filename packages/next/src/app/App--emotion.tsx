@@ -13,12 +13,12 @@ export type AppEmotionProps = NextAppProps &
  */
 export const AppEmotion: React.FC<AppEmotionProps> = (props) => {
   return (
-    <React.Fragment>
+    <>
       <AppHead />
       <AppThemeEmotion {...props}>
         <AppMain {...props} />
       </AppThemeEmotion>
-    </React.Fragment>
+    </>
   );
 };
 

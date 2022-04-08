@@ -11,12 +11,12 @@ export type AppBaseProps = NextAppProps & AppThemeScProps & AppMainProps;
  */
 export const AppBase: React.FC<AppBaseProps> = (props) => {
   return (
-    <React.Fragment>
+    <>
       <AppHead />
       <AppThemeSc {...props}>
         <AppMain {...props} />
       </AppThemeSc>
-    </React.Fragment>
+    </>
   );
 };
 

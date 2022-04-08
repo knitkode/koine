@@ -12,12 +12,14 @@ export type AppAuthScProps = NextAppProps & AppThemeScProps & AppMainProps;
  */
 export const AppAuthSc: React.FC<AppAuthScProps> = (props) => {
   return (
-    <SessionProvider session={props.pageProps.session}>
+    <>
       <AppHead />
-      <AppThemeSc {...props}>
-        <AppMain {...props} />
-      </AppThemeSc>
-    </SessionProvider>
+      <SessionProvider session={props.pageProps.session}>
+        <AppThemeSc {...props}>
+          <AppMain {...props} />
+        </AppThemeSc>
+      </SessionProvider>
+    </>
   );
 };
 

@@ -13,12 +13,12 @@ export type AppVanillaProps = NextAppProps &
  */
 export const AppVanilla: React.FC<AppVanillaProps> = (props) => {
   return (
-    <React.Fragment>
+    <>
       <AppHead />
       <AppThemeVanilla {...props}>
         <AppMainVanilla {...props} />
       </AppThemeVanilla>
-    </React.Fragment>
+    </>
   );
 };
 

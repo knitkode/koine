@@ -58,18 +58,20 @@ export const AppMain: React.FC<AppMainProps> = ({
   const { pathname } = useRouter();
 
   return (
-    <LazyMotion features={loadMotionFeatures}>
+    <>
       <SeoDefaults {...seo} />
       {pre}
-      <NextProgress />
-      <Layout>
-        <AnimatePresence exitBeforeEnter initial={false}>
-          <m.div key={pathname} {...transition}>
-            <Component {...pageProps} key={pathname} />
-          </m.div>
-        </AnimatePresence>
-      </Layout>
+      <LazyMotion features={loadMotionFeatures}>
+        <NextProgress />
+        <Layout>
+          <AnimatePresence exitBeforeEnter initial={false}>
+            <m.div key={pathname} {...transition}>
+              <Component {...pageProps} key={pathname} />
+            </m.div>
+          </AnimatePresence>
+        </Layout>
+      </LazyMotion>
       {post}
-    </LazyMotion>
+    </>
   );
 };
