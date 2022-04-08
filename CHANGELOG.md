@@ -1,3 +1,15 @@
+## [1.0.1](https://github.com/knitkode/koine/compare/v1.0.0...v1.0.1) (2022-04-08)
+
+### Chores
+
+- **setup:** deps ([e9dc480](https://github.com/knitkode/koine/commit/e9dc480a8e984b7e2a1bf08928dfdecfbb438656))
+- **setup:** stick to react 17 for now and remove react imports types, use namespace ([deba63f](https://github.com/knitkode/koine/commit/deba63f5acefb15d67f9b8cdd0431da0fe1ad206))
+- **setup:** trigger ci ([a5cbe4a](https://github.com/knitkode/koine/commit/a5cbe4a80754463a8d7ac8f42bb8305bd7365500))
+
+### Other
+
+- Merge branch 'main' of github.com:knitkode/koine into main ([08f036a](https://github.com/knitkode/koine/commit/08f036a1386d678603046fc9088b36b651c931a2))
+
 # 1.0.0 (2022-04-07)
 
 ### Chores
