@@ -5,13 +5,28 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/utils",
-        "main": "packages/utils/src/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
         "tsConfig": "packages/utils/tsconfig.lib.json",
-        "assets": ["packages/utils/*.md"]
+        "project": "packages/utils/package.json",
+        "entryFile": "packages/utils/src/index.ts",
+        "external": [],
+        "compiler": "babel",
+        "assets": [
+          {
+            "glob": "packages/utils/README.md",
+            "input": ".",
+            "output": "."
+          },
+          {
+            "glob": "packages/utils/src/*.d.ts",
+            "input": ".",
+            "output": "."
+          }
+        ]
       }
     },
     "lint": {

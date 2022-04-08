@@ -1,3 +1,4 @@
+import React from "react";
 /* ? eslint-disable @next/next/no-document-import-in-page */
 import NextDocument, {
   DocumentContext,

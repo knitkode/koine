@@ -1,5 +1,5 @@
-import { NextConfig } from "next";
-import { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
+import type { NextConfig } from "next";
+import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 
 /**
  * Normalise pathname

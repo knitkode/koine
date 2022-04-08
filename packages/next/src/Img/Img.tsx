@@ -1,5 +1,8 @@
-import { useState } from "react";
-import NextImage, { ImageProps as NextImageProps } from "next/image";
+import React, { useState } from "react";
+import NextImage, {
+  ImageProps as NextImageProps,
+  StaticImageData,
+} from "next/image";
 import {
   // KoineImg,
   // KoineImgProps,
@@ -7,13 +10,21 @@ import {
   KoineImgSmartWrapProps,
 } from "@koine/react";
 
+// we need to recreate the StaticImport type to allow typescript to correctly
+// compile as next does not export `StaticImport` but just `declare`s it
+// @see related issue: https://github.com/microsoft/TypeScript/issues/9944
+interface StaticRequire {
+  default: StaticImageData;
+}
+type StaticImport = StaticRequire | StaticImageData;
+
 export type NextImgProps = Omit<React.ComponentPropsWithoutRef<"img">, "src"> &
   // KoineImgProps &
-  NextImageProps;
+  Omit<NextImageProps, "src"> & {
+    src: string | StaticImport;
+  };
 
-export const NextImg = (props: NextImgProps) => {
-  return <NextImage {...props} />;
-};
+export const NextImg = NextImage;
 
 export type NextImgSmartWrapProps = KoineImgSmartWrapProps;
 

@@ -9,15 +9,21 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/react",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
         "tsConfig": "packages/react/tsconfig.lib.json",
         "project": "packages/react/package.json",
         "entryFile": "packages/react/src/index.ts",
         "external": ["react/jsx-runtime"],
         "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-        "compiler": "swc",
+        "compiler": "babel",
         "assets": [
           {
             "glob": "packages/react/README.md",
+            "input": ".",
+            "output": "."
+          },
+          {
+            "glob": "packages/react/src/*.d.ts",
             "input": ".",
             "output": "."
           }

@@ -1,16 +1,24 @@
-const path = require("path");
+// FIXME: this is a workaround adapted from
+//
+const { join } = require("path");
+const nrwlConfig = require("@nrwl/react/plugins/bundle-rollup");
 
 module.exports = (config) => {
-  // console.log("rollup!", config);
-  // we cannot have an array here to manage the multi entries
-  return {
-    ...config,
-    input: path.resolve(process.cwd(), "packages/next/src/config/index.ts"),
-    output: {
-      ...config.output,
-      format: "cjs",
-      entryFileNames: "config.js",
-      chunkFileNames: "config.js",
-    },
-  };
+  const nxConfig = nrwlConfig(config);
+
+  if (nxConfig.output.format === "cjs") {
+    nxConfig.input = {
+      index: nxConfig.input,
+      app: join(__dirname, "./src/app/index.ts"),
+      config: join(__dirname, "./src/config/index.ts"),
+      document: join(__dirname, "./src/document/index.ts"),
+    };
+
+    nxConfig.output.entryFileNames = "[name].js";
+    nxConfig.output.chunkFileNames = "[name].js";
+
+    nxConfig.output.inlineDynamicImports = false;
+  }
+
+  return nxConfig;
 };

@@ -1,3 +1,4 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { AppHead } from "./AppHead";
@@ -13,14 +14,12 @@ export type AppAuthEmotionProps = NextAppProps &
  */
 export const AppAuthEmotion: React.FC<AppAuthEmotionProps> = (props) => {
   return (
-    <>
+    <SessionProvider session={props.pageProps.session}>
       <AppHead />
-      <SessionProvider session={props.pageProps.session}>
-        <AppThemeEmotion {...props}>
-          <AppMain {...props} />
-        </AppThemeEmotion>
-      </SessionProvider>
-    </>
+      <AppThemeEmotion {...props}>
+        <AppMain {...props} />
+      </AppThemeEmotion>
+    </SessionProvider>
   );
 };
 

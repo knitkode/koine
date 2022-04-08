@@ -1,3 +1,4 @@
+import React from "react";
 import type { NextSeoProps, DefaultSeoProps } from "next-seo/lib/types";
 import { isArray } from "@koine/utils";
 

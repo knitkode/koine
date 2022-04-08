@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
 import { KoineLink, KoineLinkProps } from "@koine/react";
 

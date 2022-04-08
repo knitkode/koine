@@ -1,7 +1,6 @@
 import { normaliseUrl } from "@koine/utils";
 
 export * from "./api";
-export * from "./emotion";
 
 export const ONE_HOUR = 3600;
 

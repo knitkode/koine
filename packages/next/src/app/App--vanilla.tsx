@@ -1,3 +1,4 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { AppHead } from "./AppHead";
 import { AppThemeVanilla, AppThemeVanillaProps } from "./AppTheme--vanilla";
@@ -12,12 +13,12 @@ export type AppVanillaProps = NextAppProps &
  */
 export const AppVanilla: React.FC<AppVanillaProps> = (props) => {
   return (
-    <>
+    <React.Fragment>
       <AppHead />
       <AppThemeVanilla {...props}>
         <AppMainVanilla {...props} />
       </AppThemeVanilla>
-    </>
+    </React.Fragment>
   );
 };
 

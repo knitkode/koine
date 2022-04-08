@@ -1,10 +1,7 @@
 export * from "./Analytics";
-export * from "./App";
-export * from "./auth";
-// export * from "./config";
-export * from "./Document";
+export * from "./Auth";
 export * from "./Favicon";
-export * from "./forms";
+export * from "./Forms";
 export * from "./Head";
 export * from "./I18n";
 export * from "./Img";

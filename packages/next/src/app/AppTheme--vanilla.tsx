@@ -1,3 +1,4 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 // import { ThemeVanillaProvider, ThemeVanillaValue } from "@koine/react";
 import { ThemeProvider, ThemeProviderProps } from "../Theme";

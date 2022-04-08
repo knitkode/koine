@@ -1,3 +1,4 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { AppHead } from "./AppHead";
 import { AppThemeEmotion, AppThemeEmotionProps } from "./AppTheme--emotion";
@@ -12,12 +13,12 @@ export type AppEmotionProps = NextAppProps &
  */
 export const AppEmotion: React.FC<AppEmotionProps> = (props) => {
   return (
-    <>
+    <React.Fragment>
       <AppHead />
       <AppThemeEmotion {...props}>
         <AppMain {...props} />
       </AppThemeEmotion>
-    </>
+    </React.Fragment>
   );
 };
 

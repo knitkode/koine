@@ -1,3 +1,4 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { AppHead } from "./AppHead";
@@ -11,14 +12,12 @@ export type AppAuthScProps = NextAppProps & AppThemeScProps & AppMainProps;
  */
 export const AppAuthSc: React.FC<AppAuthScProps> = (props) => {
   return (
-    <>
+    <SessionProvider session={props.pageProps.session}>
       <AppHead />
-      <SessionProvider session={props.pageProps.session}>
-        <AppThemeSc {...props}>
-          <AppMain {...props} />
-        </AppThemeSc>
-      </SessionProvider>
-    </>
+      <AppThemeSc {...props}>
+        <AppMain {...props} />
+      </AppThemeSc>
+    </SessionProvider>
   );
 };
 

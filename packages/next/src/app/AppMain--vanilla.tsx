@@ -1,3 +1,4 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { SeoDefaults, SeoDefaultsProps } from "../Seo";
 
@@ -34,13 +35,13 @@ export const AppMainVanilla: React.FC<AppMainVanillaProps> = ({
   post,
 }) => {
   return (
-    <>
+    <React.Fragment>
       <SeoDefaults {...seo} />
       {pre}
       <Layout>
         <Component {...pageProps} />
       </Layout>
       {post}
-    </>
+    </React.Fragment>
   );
 };

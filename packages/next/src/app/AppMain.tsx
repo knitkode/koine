@@ -1,14 +1,15 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { useRouter } from "next/router";
-import { SeoDefaults, SeoDefaultsProps } from "../Seo";
 import { AnimatePresence, LazyMotion, m, HTMLMotionProps } from "framer-motion";
+import { SeoDefaults, SeoDefaultsProps } from "../Seo";
 import { NextProgress } from "../NextProgress";
 
 /**
  * @see https://www.framer.com/docs/guide-reduce-bundle-size/
  */
 const loadMotionFeatures = () =>
-  import("../utils/motion-features").then((m) => m.default);
+  import("./motion-features").then((m) => m.default);
 
 export type AppMainProps = NextAppProps & {
   /**
@@ -57,20 +58,18 @@ export const AppMain: React.FC<AppMainProps> = ({
   const { pathname } = useRouter();
 
   return (
-    <>
+    <React.Fragment>
       <SeoDefaults {...seo} />
       {pre}
-      <LazyMotion features={loadMotionFeatures}>
-        <NextProgress />
-        <Layout>
-          <AnimatePresence exitBeforeEnter initial={false}>
-            <m.div key={pathname} {...transition}>
-              <Component {...pageProps} key={pathname} />
-            </m.div>
-          </AnimatePresence>
-        </Layout>
-      </LazyMotion>
+      <NextProgress />
+      <Layout>
+        {/* <AnimatePresence exitBeforeEnter initial={false}> */}
+        {/* <m.div key={pathname} {...transition}> */}
+        <Component {...pageProps} key={pathname} />
+        {/* </m.div> */}
+        {/* </AnimatePresence> */}
+      </Layout>
       {post}
-    </>
+    </React.Fragment>
   );
 };

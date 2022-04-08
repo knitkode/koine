@@ -1,4 +1,4 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import Head from "next/head";
 import { buildTags, SeoProps } from "./helpers";
 

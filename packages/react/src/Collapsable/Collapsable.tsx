@@ -17,7 +17,7 @@ import { BsBoxArrowInDown as IconCollapse } from "@react-icons/all-files/bs/BsBo
 import { uid } from "@koine/utils";
 import { btnStyleReset } from "../Buttons";
 import { useWindowSize } from "../hooks/useWindowSize";
-import { InputInvisible } from "../Forms";
+import { InputInvisible } from "../Forms/styles";
 
 export type CollapsableStyledProps = {
   $expanded?: boolean;

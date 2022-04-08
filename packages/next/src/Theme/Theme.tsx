@@ -3,7 +3,6 @@
  *
  * Adapted from [next-themes](https://github.com/pacocoursey/next-themes)
  */
-import NextScript from "next/script";
 import React, {
   createContext,
   useCallback,
@@ -12,6 +11,7 @@ import React, {
   useState,
   memo,
 } from "react";
+import NextScript from "next/script";
 import { isServer } from "@koine/utils";
 
 type ValueObject = {

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import Head from "next/head";
 // import { useRouter } from "next/router";
 // import { getSiteUrl } from "../utils";

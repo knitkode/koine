@@ -1,4 +1,10 @@
 {
   "name": "@koine/next",
-  "sideEffects": false
+  "sideEffects": false,
+  "exports": {
+    ".": "./index.js",
+    "./app": "./app.js",
+    "./config": "./config.js",
+    "./document": "./document.js"
+  }
 }

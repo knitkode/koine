@@ -1,7 +1,8 @@
+import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
 import { NoJs } from "@koine/react";
-import { createEmotionCache } from "../utils/emotion";
+import { createEmotionCache } from "./emotion";
 
 export class DocumentEmotion extends Document {
   override render() {

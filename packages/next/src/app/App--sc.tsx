@@ -1,3 +1,4 @@
+import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { AppHead } from "./AppHead";
 import { AppThemeSc, AppThemeScProps } from "./AppTheme--sc";
@@ -10,12 +11,12 @@ export type AppBaseProps = NextAppProps & AppThemeScProps & AppMainProps;
  */
 export const AppBase: React.FC<AppBaseProps> = (props) => {
   return (
-    <>
+    <React.Fragment>
       <AppHead />
       <AppThemeSc {...props}>
         <AppMain {...props} />
       </AppThemeSc>
-    </>
+    </React.Fragment>
   );
 };
 

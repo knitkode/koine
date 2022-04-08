@@ -4,51 +4,31 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-esm": {
+    "build": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/next",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
         "tsConfig": "packages/next/tsconfig.lib.json",
         "project": "packages/next/package.json",
         "entryFile": "packages/next/src/index.ts",
-        "external": ["react", "react/jsx-runtime"],
-        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-        "compiler": "swc",
-        "assets": [
-          {
-            "glob": "packages/next/README.md",
-            "input": ".",
-            "output": "."
-          }
-        ]
-      }
-    },
-    "build-config": {
-      "executor": "@nrwl/web:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/next",
-        "tsConfig": "packages/next/tsconfig.lib.json",
-        "project": "packages/next/package.json",
-        "entryFile": "packages/next/src/config/index.ts",
-        "external": [],
+        "external": ["react/jsx-runtime"],
         "rollupConfig": "packages/next/rollup.config.js",
-        "compiler": "swc",
+        "format": ["esm", "umd", "cjs"],
+        "compiler": "babel",
         "assets": [
           {
             "glob": "packages/next/README.md",
             "input": ".",
             "output": "."
+          },
+          {
+            "glob": "packages/next/src/*.d.ts",
+            "input": ".",
+            "output": "."
           }
         ]
-      }
-    },
-    "build": {
-      "builder": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": ["nx build-esm next", "nx build-config next"],
-        "parallel": true
       }
     },
     "lint": {
