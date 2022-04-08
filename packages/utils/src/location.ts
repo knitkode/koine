@@ -223,11 +223,11 @@ export function mergeUrlParams(
  *
  * @param replace Replace URL instead of pushing it in the history stack. By default it pushes it.
  */
-export function removeUrlParam(paramName?: string, replace?: boolean) {
+export function removeUrlParam(paramKey?: string, replace?: boolean) {
   const params: Record<string, string> = {};
   const currentParams = getUrlQueryParams();
   for (const key in currentParams) {
-    if (key !== paramName) {
+    if (key !== paramKey) {
       params[key] = currentParams[key];
     }
   }
