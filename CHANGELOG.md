@@ -1,3 +1,14 @@
+## [1.0.3](https://github.com/knitkode/koine/compare/v1.0.2...v1.0.3) (2022-04-08)
+
+### Chores
+
+- **setup:** fix deps ([a1489dd](https://github.com/knitkode/koine/commit/a1489ddd125d922406959e499c8636d305668d66))
+- **setup:** trigger ci ([4efa526](https://github.com/knitkode/koine/commit/4efa526f276c8d272acc3ea6c047ff4f9384accf))
+
+### Other
+
+- Merge branch 'main' of github.com:knitkode/koine into main ([c106b44](https://github.com/knitkode/koine/commit/c106b44d137de7d7a1b55dfeaa57c18230b3d32c))
+
 ## [1.0.2](https://github.com/knitkode/koine/compare/v1.0.1...v1.0.2) (2022-04-08)
 
 ### Bug Fixes
