@@ -6,5 +6,8 @@
     "./app": "./app.js",
     "./config": "./config.js",
     "./document": "./document.js"
+  },
+  "dependencies": {
+    "@emotion/styled": "^11.8.1"
   }
 }
