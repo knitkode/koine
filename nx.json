@@ -4,15 +4,9 @@
     "defaultBase": "main"
   },
   "targetDependencies": {
-    "build-esm": [
+    "build": [
       {
-        "target": "build-esm",
-        "projects": "dependencies"
-      }
-    ],
-    "build-web": [
-      {
-        "target": "build-web",
+        "target": "build",
         "projects": "dependencies"
       }
     ]
@@ -22,8 +16,7 @@
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
         "cacheableOperations": [
-          "build-esm",
-          "build-web",
+          "build",
           "pack",
           "lint",
           "test",

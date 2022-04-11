@@ -4,19 +4,7 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-esm": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/utils",
-        "tsConfig": "packages/utils/tsconfig.lib.json",
-        "project": "packages/utils/package.json",
-        "main": "packages/utils/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "assets": ["packages/utils/README.md", "packages/utils/typings.d.ts"]
-      }
-    },
-    "build-web": {
+    "build": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -24,15 +12,10 @@
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "project": "packages/utils/package.json",
         "entryFile": "packages/utils/index.ts",
-        "format": ["umd"],
-        "deleteOutputPath": false
-      }
-    },
-    "pack": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": ["nx build-esm utils", "nx build-web utils"],
-        "parallel": true
+        "deleteOutputPath": false,
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "rollupConfig": "rollup.config.js",
+        "_external": ["tslib", "core-js"]
       }
     },
     "lint": {
