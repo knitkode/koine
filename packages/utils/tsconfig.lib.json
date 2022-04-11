@@ -5,7 +5,7 @@
     "declaration": true,
     "types": ["node"]
   },
-  "files": ["./src/types.d.ts"],
+  "files": ["typings.d.ts"],
   "include": ["**/*.ts"],
   "exclude": ["**/*.spec.ts"]
 }

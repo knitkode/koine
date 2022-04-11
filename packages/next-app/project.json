@@ -1,0 +1,50 @@
+{
+  "root": "packages/next-app",
+  "sourceRoot": "packages/next-app",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build-esm": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/next-app",
+        "tsConfig": "packages/next-app/tsconfig.lib.json",
+        "project": "packages/next-app/package.json",
+        "main": "packages/next-app/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies"
+      }
+    },
+    "build-web": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/next-app",
+        "tsConfig": "packages/next-app/tsconfig.lib.json",
+        "project": "packages/next-app/package.json",
+        "entryFile": "packages/next-app/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "format": ["umd"],
+        "deleteOutputPath": false
+      }
+    },
+    "pack": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "nx build-esm next-app",
+          "nx build-web next-app",
+          "mv dist/packages/next-app/index.js dist/packages/next-app/index.esm.js"
+        ],
+        "parallel": false
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/next-app/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

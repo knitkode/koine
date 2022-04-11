@@ -1,4 +1,6 @@
 {
   "name": "@koine/utils",
-  "sideEffects": false
+  "sideEffects": false,
+  "main": "./index.umd.js",
+  "module": "./index.js"
 }

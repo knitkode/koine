@@ -1,0 +1,6 @@
+{
+  "name": "@koine/next-config",
+  "sideEffects": false,
+  "main": "./index.umd.js",
+  "module": "./index.js"
+}

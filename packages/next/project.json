@@ -1,34 +1,43 @@
 {
   "root": "packages/next",
-  "sourceRoot": "packages/next/src",
+  "sourceRoot": "packages/next",
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
+    "build-esm": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "project": "packages/next/package.json",
+        "main": "packages/next/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "assets": ["packages/next/README.md", "packages/next/typings.d.ts"]
+      }
+    },
+    "build-web": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/next",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
         "tsConfig": "packages/next/tsconfig.lib.json",
         "project": "packages/next/package.json",
-        "entryFile": "packages/next/src/index.ts",
-        "external": ["react/jsx-runtime"],
-        "rollupConfig": "packages/next/rollup.config.js",
-        "format": ["esm", "umd", "cjs"],
-        "compiler": "babel",
-        "assets": [
-          {
-            "glob": "packages/next/README.md",
-            "input": ".",
-            "output": "."
-          },
-          {
-            "glob": "packages/next/src/*.d.ts",
-            "input": ".",
-            "output": "."
-          }
-        ]
+        "entryFile": "packages/next/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "format": ["umd"],
+        "deleteOutputPath": false
+      }
+    },
+    "pack": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "nx build-esm next",
+          "nx build-web next",
+          "mv dist/packages/next/index.js dist/packages/next/index.esm.js"
+        ],
+        "parallel": false
       }
     },
     "lint": {

@@ -14,18 +14,31 @@
     ".eslintrc.json": "*"
   },
   "targetDependencies": {
-    "build": [
+    "build-esm": [
       {
-        "target": "build",
+        "target": "build-esm",
+        "projects": "dependencies"
+      }
+    ],
+    "build-web": [
+      {
+        "target": "build-web",
         "projects": "dependencies"
       }
     ]
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "cacheableOperations": [
+          "build-esm",
+          "build-web",
+          "pack",
+          "lint",
+          "test",
+          "e2e"
+        ],
         "accessToken": "MTU5NzUzZmMtMmMxMS00YTYwLTljZjEtZDAwODNkNGUyZWYxfHJlYWQtd3JpdGU="
       }
     }

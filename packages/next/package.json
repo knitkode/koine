@@ -1,13 +1,6 @@
 {
   "name": "@koine/next",
   "sideEffects": false,
-  "exports": {
-    ".": "./index.js",
-    "./app": "./app.js",
-    "./config": "./config.js",
-    "./document": "./document.js"
-  },
-  "dependencies": {
-    "@emotion/styled": "^11.8.1"
-  }
+  "main": "./index.umd.js",
+  "module": "./index.js"
 }

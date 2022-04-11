@@ -1,33 +1,43 @@
 {
   "root": "packages/react",
-  "sourceRoot": "packages/react/src",
+  "sourceRoot": "packages/react",
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
+    "build-esm": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/react",
+        "tsConfig": "packages/react/tsconfig.lib.json",
+        "project": "packages/react/package.json",
+        "main": "packages/react/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "assets": ["packages/react/README.md", "packages/react/*.d.ts"]
+      }
+    },
+    "build-web": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/react",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
         "tsConfig": "packages/react/tsconfig.lib.json",
         "project": "packages/react/package.json",
-        "entryFile": "packages/react/src/index.ts",
-        "external": ["react/jsx-runtime"],
-        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-        "compiler": "babel",
-        "assets": [
-          {
-            "glob": "packages/react/README.md",
-            "input": ".",
-            "output": "."
-          },
-          {
-            "glob": "packages/react/src/*.d.ts",
-            "input": ".",
-            "output": "."
-          }
-        ]
+        "entryFile": "packages/react/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "format": ["umd"],
+        "deleteOutputPath": false
+      }
+    },
+    "pack": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "nx build-esm react",
+          "nx build-web react",
+          "mv dist/packages/react/index.js dist/packages/react/index.esm.js"
+        ],
+        "parallel": false
       }
     },
     "lint": {

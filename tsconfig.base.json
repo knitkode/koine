@@ -2,15 +2,15 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
-    "sourceMap": true,
+    "sourceMap": false,
     "allowJs": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "module": "es2020",
+    "lib": ["es2020", "dom"], 
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,9 +21,12 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@koine/next": ["packages/next/src/index.ts"],
-      "@koine/react": ["packages/react/src/index.ts"],
-      "@koine/utils": ["packages/utils/src/index.ts"]
+      "@koine/next": ["packages/next/index.ts"],
+      "@koine/next-app": ["packages/next-app/index.ts"],
+      "@koine/next-config": ["packages/next-config/index.ts"],
+      "@koine/next-document": ["packages/next-document/index.ts"],
+      "@koine/react": ["packages/react/index.ts"],
+      "@koine/utils": ["packages/utils/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
