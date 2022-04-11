@@ -1,1 +1,15 @@
-export * from "./index";
+export * from "./Analytics";
+export * from "./Auth";
+export * from "./Favicon";
+export * from "./Forms";
+export * from "./Head";
+export * from "./I18n";
+export * from "./Img";
+export * from "./Link";
+export * from "./NextProgress";
+export * from "./Seo";
+export * from "./Theme";
+export * from "./utils";
+// export * from "./app";
+// export * from "./document";
+// export * from "./config";
