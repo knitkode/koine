@@ -23,7 +23,6 @@
         "tsConfig": "packages/next-app/tsconfig.lib.json",
         "project": "packages/next-app/package.json",
         "entryFile": "packages/next-app/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
         "format": ["umd"],
         "deleteOutputPath": false
       }
@@ -31,12 +30,8 @@
     "pack": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": [
-          "nx build-esm next-app",
-          "nx build-web next-app",
-          "mv dist/packages/next-app/index.js dist/packages/next-app/index.esm.js"
-        ],
-        "parallel": false
+        "commands": ["nx build-esm next-app", "nx build-web next-app"],
+        "parallel": true
       }
     },
     "lint": {

@@ -24,7 +24,6 @@
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "project": "packages/utils/package.json",
         "entryFile": "packages/utils/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
         "format": ["umd"],
         "deleteOutputPath": false
       }
@@ -32,12 +31,8 @@
     "pack": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": [
-          "nx build-esm utils",
-          "nx build-web utils",
-          "mv dist/packages/utils/index.js dist/packages/utils/index.esm.js"
-        ],
-        "parallel": false
+        "commands": ["nx build-esm utils", "nx build-web utils"],
+        "parallel": true
       }
     },
     "lint": {
