@@ -4,12 +4,10 @@
   "main": "./index.umd.js",
   "module": "./index.js",
   "dependencies": {
-    "@types/yup": "^0.29.13"
-  },
-  "peerDependencies": {
     "@types/react": "^17.0.0 || ^18.0.0",
     "@types/react-dom": "^17.0.0 || ^18.0.0",
     "@types/react-is": "^17.0.0 || ^18.0.0",
-    "@types/styled-components": "^5.1.25"
+    "@types/styled-components": "^5.1.25",
+    "@types/yup": "^0.29.13"
   }
 }
