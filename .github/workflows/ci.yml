@@ -44,7 +44,7 @@ jobs:
         id: affected
         with:
           # targets: 'test,build'
-          targets: 'build'
+          targets: 'build-esm,build-web'
           maxDistribution: '10'
 
   execute:
@@ -77,7 +77,7 @@ jobs:
 
       - name: Run semantic-release locally
         id: release
-        if: ${{ matrix.target == 'build' }}
+        if: ${{ matrix.target == 'build-web' }}
         uses: ridedott/release-me-action@master
         with:
           release-branches: '["main"]'
@@ -88,7 +88,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Update package.json version
-        if: ${{ matrix.target == 'build' && steps.release.outputs.released }}
+        if: ${{ matrix.target == 'build-web' && steps.release.outputs.released }}
         run: |
           for path in ./packages/*; do
             if [[ -f "$path/package.json" ]]; then

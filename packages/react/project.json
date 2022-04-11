@@ -32,7 +32,7 @@
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": ["nx build-esm react", "nx build-web react"],
-        "parallel": true
+        "parallel": false
       }
     },
     "lint": {
