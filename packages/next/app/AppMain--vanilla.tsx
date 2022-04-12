@@ -1,6 +1,6 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
-import { SeoDefaults, SeoDefaultsProps } from "@koine/next";
+import { SeoDefaults, SeoDefaultsProps } from "../Seo";
 
 export type AppMainVanillaProps = NextAppProps & {
   /**

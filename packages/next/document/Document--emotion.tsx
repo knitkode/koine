@@ -1,7 +1,7 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
-import { createEmotionCache } from "@koine/next";
+import { createEmotionCache } from "../utils/emotion-cache";
 import { NoJs } from "@koine/react";
 
 export class DocumentEmotion extends Document {

@@ -22,9 +22,6 @@
     "baseUrl": ".",
     "paths": {
       "@koine/next": ["packages/next/index.ts"],
-      "@koine/next-app": ["packages/next-app/index.ts"],
-      "@koine/next-config": ["packages/next-config/index.ts"],
-      "@koine/next-document": ["packages/next-document/index.ts"],
       "@koine/react": ["packages/react/index.ts"],
       "@koine/utils": ["packages/utils/index.ts"]
     }

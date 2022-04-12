@@ -2,9 +2,6 @@
   "version": 2,
   "projects": {
     "next": "packages/next",
-    "next-app": "packages/next-app",
-    "next-config": "packages/next-config",
-    "next-document": "packages/next-document",
     "react": "packages/react",
     "utils": "packages/utils"
   }

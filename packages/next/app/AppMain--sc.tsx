@@ -2,7 +2,8 @@ import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { useRouter } from "next/router";
 import { AnimatePresence, LazyMotion, m, HTMLMotionProps } from "framer-motion";
-import { SeoDefaults, SeoDefaultsProps, NextProgress } from "@koine/next";
+import { SeoDefaults, SeoDefaultsProps } from "../Seo";
+import { NextProgress } from "../NextProgress";
 
 /**
  * @see https://www.framer.com/docs/guide-reduce-bundle-size/
@@ -10,7 +11,7 @@ import { SeoDefaults, SeoDefaultsProps, NextProgress } from "@koine/next";
 const loadMotionFeatures = () =>
   import("./motion-features").then((m) => m.default);
 
-export type AppMainEmotionProps = NextAppProps & {
+export type AppMainScProps = NextAppProps & {
   /**
    * A wrapping layout component
    */
@@ -40,7 +41,7 @@ export type AppMainEmotionProps = NextAppProps & {
  *
  * About the page transition [wallis' blog post](https://wallis.dev/blog/nextjs-page-transitions-with-framer-motion)
  */
-export const AppMainEmotion: React.FC<AppMainEmotionProps> = ({
+export const AppMainSc: React.FC<AppMainScProps> = ({
   Component,
   pageProps,
   Layout,
