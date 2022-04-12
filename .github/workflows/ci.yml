@@ -50,7 +50,7 @@ jobs:
         id: affected
         with:
           # targets: 'test,build'
-          targets: 'build-esm,build-web,build-clean'
+          targets: 'build'
           maxDistribution: '10'
 
   execute:
@@ -89,7 +89,7 @@ jobs:
 
       - name: Run semantic-release locally
         id: release
-        if: ${{ matrix.target == 'build-clean' }}
+        if: ${{ matrix.target == 'build' }}
         uses: ridedott/release-me-action@master
         with:
           release-branches: '["main"]'
@@ -100,7 +100,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Update package.json version
-        if: ${{ matrix.target == 'build-clean' && steps.release.outputs.released }}
+        if: ${{ matrix.target == 'build' && steps.release.outputs.released }}
         run: |
           for path in ./packages/*; do
             if [[ -f "$path/package.json" ]]; then
@@ -210,7 +210,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: build-clean
+          name: build
 
       - name: Publish lib @koine/${{ matrix.package }}
         if: ${{ contains(needs.setup.outputs.matrix, matrix.package) }}

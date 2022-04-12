@@ -18,6 +18,12 @@
         "target": "build-web",
         "projects": "dependencies"
       }
+    ],
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
     ]
   },
   "tasksRunnerOptions": {

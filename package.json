@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
-    "build": "nx run-many --target=build-esm --all=true && nx run-many --target=build-web --all=true && nx run-many --target=build-clean --all=true",
+    "build": "nx run-many --target=build --all=true",
     "test": "nx test",
     "format": "nx format:write",
     "lint": "clear && npx eslint --fix packages/**/*.{ts,tsx}",

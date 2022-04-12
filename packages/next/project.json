@@ -33,7 +33,11 @@
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": ["nx build-esm next", "nx build-web next"],
+        "commands": [
+          "nx build-esm next",
+          "nx build-web next",
+          "nx build-clean next"
+        ],
         "parallel": false
       }
     },
