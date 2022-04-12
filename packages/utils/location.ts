@@ -6,13 +6,13 @@ import { isString, isNull, isUndefined } from "./is";
  *
  * @see https://stackoverflow.com/a/21553982/1938970
  */
-export function parseURL(href: string) {
-  const match = href.match(
+export function parseURL(url: string) {
+  const match = url.match(
     /^(https?:)\/\/(([^:/?#]*)(?::([0-9]+))?)([/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/
   );
   return (
     match && {
-      href: href,
+      href: url,
       protocol: match[1],
       host: match[2],
       hostname: match[3],
