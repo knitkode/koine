@@ -1,3 +1,15 @@
+## [1.0.7](https://github.com/knitkode/koine/compare/v1.0.6...v1.0.7) (2022-04-12)
+
+### Bug Fixes
+
+- **setup:** ci ([9525fb7](https://github.com/knitkode/koine/commit/9525fb74a5e42072e472e95fd7a9bb571688c0f8))
+- **setup:** ci ([3f303c9](https://github.com/knitkode/koine/commit/3f303c93194a504dfc9add0ad0a90fdaad1a7bda))
+- **setup:** ci ([0b173b7](https://github.com/knitkode/koine/commit/0b173b7d1e16f29b5e0a2fa4829b93ae3fb90b5c))
+
+### Other
+
+- Merge branch 'main' of github.com:knitkode/koine into main ([917db65](https://github.com/knitkode/koine/commit/917db65f69f0fa9255017c0683ade7fdfe45a81b))
+
 ## [1.0.6](https://github.com/knitkode/koine/compare/v1.0.5...v1.0.6) (2022-04-12)
 
 ### Bug Fixes
