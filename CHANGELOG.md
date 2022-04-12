@@ -1,3 +1,14 @@
+## [1.0.5](https://github.com/knitkode/koine/compare/v1.0.4...v1.0.5) (2022-04-08)
+
+### Bug Fixes
+
+- **setup:** correct rollup and use fragments ([edb8613](https://github.com/knitkode/koine/commit/edb8613c9abce8dea44750caeb6f720b12abddaa))
+- **setup:** correct rollup and use fragments ([3da9eaa](https://github.com/knitkode/koine/commit/3da9eaad89eeb92734d7411e1d50c13e9dfd25b7))
+
+### Other
+
+- Merge branch 'main' of github.com:knitkode/koine into main ([47c1a97](https://github.com/knitkode/koine/commit/47c1a97ee78efd7bc20fe1df3c8978745f45d0e3))
+
 ## [1.0.4](https://github.com/knitkode/koine/compare/v1.0.3...v1.0.4) (2022-04-08)
 
 ### Bug Fixes
