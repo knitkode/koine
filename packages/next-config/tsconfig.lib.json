@@ -5,7 +5,6 @@
     "declaration": true,
     "types": ["node"]
   },
-  "files": [],
   "exclude": ["**/*.spec.ts"],
   "include": ["**/*.ts"]
 }

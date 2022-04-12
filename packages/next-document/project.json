@@ -23,11 +23,13 @@
         "tsConfig": "packages/next-document/tsconfig.lib.json",
         "project": "packages/next-document/package.json",
         "entryFile": "packages/next-document/index.ts",
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "external": ["react/jsx-runtime"],
         "format": ["umd"],
         "deleteOutputPath": false
       }
     },
-    "pack": {
+    "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
@@ -35,6 +37,12 @@
           "nx build-web next-document"
         ],
         "parallel": false
+      }
+    },
+    "build-clean": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["rm -rf dist/packages/next-document/index.js"]
       }
     },
     "lint": {

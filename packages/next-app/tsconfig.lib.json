@@ -5,7 +5,7 @@
     "declaration": true,
     "types": ["node"]
   },
-  "files": [],
+  "files": ["../react/typings.d.ts"],
   "exclude": ["**/*.spec.ts", "**/*.spec.tsx"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

@@ -23,15 +23,23 @@
         "tsConfig": "packages/next-app/tsconfig.lib.json",
         "project": "packages/next-app/package.json",
         "entryFile": "packages/next-app/index.ts",
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "external": ["react/jsx-runtime"],
         "format": ["umd"],
         "deleteOutputPath": false
       }
     },
-    "pack": {
+    "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": ["nx build-esm next-app", "nx build-web next-app"],
         "parallel": false
+      }
+    },
+    "build-clean": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["rm -rf dist/packages/next-app/index.js"]
       }
     },
     "lint": {

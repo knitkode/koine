@@ -3,6 +3,9 @@
   "affected": {
     "defaultBase": "main"
   },
+  "workspaceLayout": {
+    "libsDir": "packages"
+  },
   "targetDependencies": {
     "build-esm": [
       {
@@ -19,12 +22,12 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
         "cacheableOperations": [
           "build-esm",
           "build-web",
-          "pack",
+          "build",
           "lint",
           "test",
           "e2e"

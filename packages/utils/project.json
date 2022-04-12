@@ -28,11 +28,17 @@
         "deleteOutputPath": false
       }
     },
-    "pack": {
+    "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": ["nx build-esm utils", "nx build-web utils"],
         "parallel": false
+      }
+    },
+    "build-clean": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["rm -rf dist/packages/utils/index.js"]
       }
     },
     "lint": {

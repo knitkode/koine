@@ -24,15 +24,23 @@
         "tsConfig": "packages/react/tsconfig.lib.json",
         "project": "packages/react/package.json",
         "entryFile": "packages/react/index.ts",
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "external": ["react/jsx-runtime"],
         "format": ["umd"],
         "deleteOutputPath": false
       }
     },
-    "pack": {
+    "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": ["nx build-esm react", "nx build-web react"],
         "parallel": false
+      }
+    },
+    "build-clean": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["rm -rf dist/packages/react/index.js"]
       }
     },
     "lint": {
