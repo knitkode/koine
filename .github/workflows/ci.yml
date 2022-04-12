@@ -27,6 +27,12 @@ jobs:
         with:
           node-version: 14
       
+      # FIXME: this should not be needed, @see
+      # https://github.com/bahmutov/npm-install/issues/103#issuecomment-931226602
+      # https://github.com/vercel/next.js/issues/30731#issuecomment-983753570
+      - name: Upgrade NPM
+        run: npm install -g npm
+
       - name: Cache npm
         uses: actions/cache@v2
         with:
@@ -37,7 +43,7 @@ jobs:
             ${{ runner.os }}-
       
       - name: Install Dependencies
-        run: npm install
+        run: npm ci --cache .npm
       
       - name: Calculate affected
         uses: e-square-io/nx-affected-matrix@v2
@@ -63,6 +69,12 @@ jobs:
         with:
           node-version: 14
 
+      # FIXME: this should not be needed, @see
+      # https://github.com/bahmutov/npm-install/issues/103#issuecomment-931226602
+      # https://github.com/vercel/next.js/issues/30731#issuecomment-983753570
+      - name: Upgrade NPM
+        run: npm install -g npm
+
       - name: Cache npm
         uses: actions/cache@v2
         with:
@@ -73,7 +85,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci --cache .npm
 
       - name: Run semantic-release locally
         id: release
