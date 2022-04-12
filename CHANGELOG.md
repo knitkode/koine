@@ -1,3 +1,28 @@
+## [1.0.6](https://github.com/knitkode/koine/compare/v1.0.5...v1.0.6) (2022-04-12)
+
+### Bug Fixes
+
+- **setup:** add types as deps to avoid some npm installs ([9aae17e](https://github.com/knitkode/koine/commit/9aae17e6c91fde152f2b6f78a828ced36c173e43))
+- **setup:** ci ([9353774](https://github.com/knitkode/koine/commit/93537740451accf34adcd64cf604228135905325))
+- **setup:** ci ([244fc26](https://github.com/knitkode/koine/commit/244fc263fc16718ada2bda018e94e009f0fab614))
+- **setup:** ci ([f18a424](https://github.com/knitkode/koine/commit/f18a424c2906034bd2d31174f083f13016200de7))
+- **setup:** ci ([e84537a](https://github.com/knitkode/koine/commit/e84537a7dd70d251fe8f11d4084574a024977187))
+- **setup:** compile and tree shake correctly ([73454e5](https://github.com/knitkode/koine/commit/73454e574438442e7d4aa3d69c17aeebcc53ca75))
+- **setup:** husky ([ad2f810](https://github.com/knitkode/koine/commit/ad2f8101a5cecb0ffe8344fd7b49ff410251d365))
+- **setup:** remove main/module entries in package jsons as web:rollup automatically update them regardless of whether we want it to output esm or not, we output esm with js:tsc for better tree shaking in fact, follow https://github.com/nrwl/nx/issues/7517 https://github.com/nrwl/nx/issues/9498 ([c82c49c](https://github.com/knitkode/koine/commit/c82c49c3bdcc44d28e8325eb4b4192bf35c87aea))
+- **setup:** remove swc configs ([4e1d6cc](https://github.com/knitkode/koine/commit/4e1d6cc8668a56de2302801c5b947f3329ea39f7))
+- **setup:** rollup configs, build-clean task is needed or index.js is picked up by bundlers regardless of main module in package.json ([b2ebdad](https://github.com/knitkode/koine/commit/b2ebdada69cdb64f48cc173fbe3f69c9903e5524))
+- **setup:** settings back ([2b043b3](https://github.com/knitkode/koine/commit/2b043b34a7f5bc2170acaaeb6b7090e71db7e7ce))
+- **setup:** stupid tree shaking and nx rollup, neds duplication ([ace7508](https://github.com/knitkode/koine/commit/ace7508d5b4e34c9ce84fd872ef2476d96424133))
+- **setup:** task orchestration and ci fix ([61e46c0](https://github.com/knitkode/koine/commit/61e46c04a3ab54cd867cba907c18e19cfd3cd584))
+- **setup:** tree shaking seems to work even if all next in same package ([462cc36](https://github.com/knitkode/koine/commit/462cc3677d0b83451d9170930eb7b68c7b441d35))
+- **setup:** trigger ci ([63bbaa5](https://github.com/knitkode/koine/commit/63bbaa5fd4cca5f97ce1559e3b40366d25bdc7d8))
+- **setup:** use index.esm.ts file to fool rollup misbehaviour instead of running a mv operation ([0d0df31](https://github.com/knitkode/koine/commit/0d0df310ef8933ff4c718eb0e54f72a09075bd2e))
+
+### Other
+
+- Merge branch 'main' of github.com:knitkode/koine into main ([e2d1bde](https://github.com/knitkode/koine/commit/e2d1bde6ccdf415542acc24b6d895ea548a4510e))
+
 ## [1.0.5](https://github.com/knitkode/koine/compare/v1.0.4...v1.0.5) (2022-04-08)
 
 ### Bug Fixes
