@@ -10,8 +10,8 @@ export function randomInt(min: number, max: number) {
  *
  * @see https://stackoverflow.com/a/11409944/1938970
  */
-export function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
+export function clamp(num: number, min: number, max: number): number {
+  return Math.min(Math.max(num, min), max);
 }
 
 /**
@@ -19,23 +19,23 @@ export function clamp(value: number, min: number, max: number): number {
  *
  * @see https://stackoverflow.com/a/15762794/1938970
  */
-export function roundTo(input: number, decimals = 2): string {
-  if (isFinite(input) && !isNaN(input)) {
+export function roundTo(num: number, decimals = 2): string {
+  if (isFinite(num) && !isNaN(num)) {
     // method 1
-    // return Number(input).toFixed(decimals);
+    // return Number(num).toFixed(decimals);
 
     // method 2: @see https://stackoverflow.com/a/43532829/1938970
     const multiplicator = Math.pow(10, decimals);
-    return Math.round(input * multiplicator) / multiplicator + "";
+    return Math.round(num * multiplicator) / multiplicator + "";
 
     // method 3: @see https://stackoverflow.com/a/15762794/1938970
     // let negative = false;
-    // if (input < 0) {
+    // if (num < 0) {
     //   negative = true;
-    //   input = input * -1;
+    //   num = num * -1;
     // }
     // const multiplicator = Math.pow(10, decimals);
-    // const outputStr = parseFloat((input * multiplicator).toFixed(11));
+    // const outputStr = parseFloat((num * multiplicator).toFixed(11));
     // let outputNum = (Math.round(outputStr) / multiplicator).toFixed(decimals);
     // if (negative) {
     //   return (Number(outputNum) * -1).toFixed(decimals);
