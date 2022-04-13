@@ -29,27 +29,32 @@
       }
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          "nx build-esm utils",
-          "nx build-web utils",
-          "nx build-clean utils"
-        ],
-        "parallel": false
-      }
-    },
-    "build-clean": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": ["rm -rf dist/packages/utils/index.js"]
-      }
+      "executor": "./tools/executors/build:build"
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/utils/**/*.ts"]
+      }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "postTargets": ["utils:publish", "utils:github"]
+      }
+    },
+    "github": {
+      "executor": "@jscutlery/semver:github",
+      "options": {
+        "tag": "${tag}",
+        "notes": "${notes}"
+      }
+    },
+    "publish": {
+      "executor": "ngx-deploy-npm:deploy",
+      "options": {
+        "access": "public"
       }
     }
   }

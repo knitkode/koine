@@ -31,21 +31,7 @@
       }
     },
     "build": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": [
-          "nx build-esm next",
-          "nx build-web next",
-          "nx build-clean next"
-        ],
-        "parallel": false
-      }
-    },
-    "build-clean": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "commands": ["rm -rf dist/packages/next/index.js"]
-      }
+      "executor": "./tools/executors/build:build"
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

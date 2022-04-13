@@ -11,5 +11,5 @@ export * from "./Seo";
 export * from "./Theme";
 export * from "./utils";
 export * from "./app";
-export * from "./document";
 export * from "./config";
+export * from "./document";

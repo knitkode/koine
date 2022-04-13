@@ -21,19 +21,22 @@
     ],
     "build": [
       {
-        "target": "build",
-        "projects": "dependencies"
+        "target": "build-esm",
+        "projects": "self"
+      },
+      {
+        "target": "build-web",
+        "projects": "self"
       }
     ]
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
         "cacheableOperations": [
           "build-esm",
           "build-web",
-          "build",
           "lint",
           "test",
           "e2e"
