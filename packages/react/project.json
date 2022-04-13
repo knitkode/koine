@@ -3,6 +3,7 @@
   "sourceRoot": "packages/react",
   "projectType": "library",
   "tags": [],
+  "implicitDependencies": ["type-fest"],
   "targets": {
     "build-esm": {
       "executor": "@nrwl/js:tsc",

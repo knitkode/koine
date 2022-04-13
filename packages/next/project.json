@@ -3,6 +3,7 @@
   "sourceRoot": "packages/next",
   "projectType": "library",
   "tags": [],
+  "implicitDependencies": ["@emotion/styled"],
   "targets": {
     "build-esm": {
       "executor": "@nrwl/js:tsc",

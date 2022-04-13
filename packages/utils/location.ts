@@ -277,9 +277,9 @@ export function updateLinkParams(
   const allParams = queryString
     ? mergeUrlQueryParams(getUrlQueryParams(`?${queryString}`), newParams)
     : newParams;
-  const newLink = pre + buildUrlQueryString(allParams);
+  const newHref = pre + buildUrlQueryString(allParams);
 
-  $anchor.href = newLink;
+  $anchor.href = newHref;
 
-  return newLink;
+  return newHref;
 }
