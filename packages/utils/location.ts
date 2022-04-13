@@ -58,9 +58,9 @@ export function normaliseUrlPathname(pathname: string) {
  * - encode the string
  * - replaces whitespaces with dashes
  */
-export function transformToUrlPathname(toUrl?: string) {
-  return isString(toUrl)
-    ? `/${encodeURIComponent(toUrl.replace(/\s/g, "-").toLowerCase())}`
+export function transformToUrlPathname(toPathname?: string) {
+  return isString(toPathname)
+    ? `/${encodeURIComponent(toPathname.replace(/\s/g, "-").toLowerCase())}`
     : "";
 }
 
