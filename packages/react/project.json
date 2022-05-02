@@ -1,9 +1,8 @@
 {
   "root": "packages/react",
-  "sourceRoot": "packages/react",
+  "sourceRoot": "packages/react/src",
   "projectType": "library",
   "tags": [],
-  "implicitDependencies": ["type-fest"],
   "targets": {
     "build-esm": {
       "executor": "@nrwl/js:tsc",
@@ -47,6 +46,37 @@
       "options": {
         "jestConfig": "packages/react/jest.config.js",
         "passWithNoTests": true
+      }
+    },
+    "storybook": {
+      "executor": "@nrwl/storybook:storybook",
+      "options": {
+        "uiFramework": "@storybook/react",
+        "port": 4400,
+        "config": {
+          "configFolder": "packages/react/.storybook"
+        }
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@nrwl/storybook:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "uiFramework": "@storybook/react",
+        "outputPath": "dist/storybook/react",
+        "config": {
+          "configFolder": "packages/react/.storybook"
+        }
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
       }
     }
   }

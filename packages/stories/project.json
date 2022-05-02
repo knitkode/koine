@@ -1,0 +1,25 @@
+{
+  "root": "packages/stories",
+  "sourceRoot": "packages/stories/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/stories",
+        "tsConfig": "packages/stories/tsconfig.lib.json",
+        "project": "packages/stories/package.json",
+        "main": "packages/stories/index.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/stories/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

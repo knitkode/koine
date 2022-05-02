@@ -44,5 +44,15 @@
         "accessToken": "MTU5NzUzZmMtMmMxMS00YTYwLTljZjEtZDAwODNkNGUyZWYxfHJlYWQtd3JpdGU="
       }
     }
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "babel": true
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/react"
   }
 }

@@ -6,7 +6,6 @@ import {
   DialogOverlay as BaseDialogOverlay,
   DialogContent as BaseDialogContent,
 } from "@reach/dialog";
-import { SetRequired } from "@koine/utils";
 import { min } from "../styles/media";
 import { inset0 } from "../styles/styled";
 import { IconButton } from "../Buttons";
@@ -107,7 +106,15 @@ export const KoineDialogBodyChildren = styled.div`
   overflow: auto;
 `;
 
-export type KoineDialogProps = SetRequired<BaseDialogProps, "onDismiss"> & {
+export type KoineDialogProps = Omit<BaseDialogProps, "onDismiss" | "isOpen"> & {
+  /**
+   * Unify `@reach/dialog` props with `@mui/base` props
+   */
+  onClose: BaseDialogProps["onDismiss"];
+  /**
+   * Unify `@reach/dialog` props with `@mui/base` props
+   */
+  open: BaseDialogProps["isOpen"];
   title?: string;
   /** @default true */
   $centered?: boolean;
@@ -116,26 +123,26 @@ export type KoineDialogProps = SetRequired<BaseDialogProps, "onDismiss"> & {
 export const KoineDialog = ({
   children,
   title,
-  onDismiss,
-  isOpen,
+  onClose,
+  open,
   $centered = true,
   ...props
 }: KoineDialogProps) => {
   return (
     <AnimatePresence>
-      {isOpen && (
+      {open && (
         <KoineDialogOverlay
-          key="DialogOverlay"
+          key="KoineDialog"
           {...props}
-          onDismiss={onDismiss}
-          isOpen={isOpen}
+          onDismiss={onClose}
+          isOpen={open}
         >
           <KoineDialogBackdrop {...koineDialogBackdropMotion} />
           <KoineDialogInner {...koineDialogInnerMotion} $centered={$centered}>
             <KoineDialogContent aria-label={title || ""} $centered={$centered}>
               {title && <KoineDialogHeader>{title}</KoineDialogHeader>}
               <KoineDialogBody>
-                <KoineDialogCloseButton onClick={onDismiss}>
+                <KoineDialogCloseButton onClick={onClose}>
                   <IconClose />
                 </KoineDialogCloseButton>
                 <KoineDialogBodyChildren>{children}</KoineDialogBodyChildren>

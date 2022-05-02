@@ -23,6 +23,7 @@
     "paths": {
       "@koine/next": ["packages/next/index.ts"],
       "@koine/react": ["packages/react/index.ts"],
+      "@koine/stories": ["packages/stories/src/index.ts"],
       "@koine/utils": ["packages/utils/index.ts"]
     }
   },

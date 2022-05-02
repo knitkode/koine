@@ -158,6 +158,19 @@ export function withKoine({
       // serverComponents: true,
       // reactRoot: true,
       ...(nextConfig.experimental || {}),
+      // @see https://nextjs.org/docs/advanced-features/compiler#modularize-imports
+      modularizeImports: {
+        ...(nextConfig?.experimental?.modularizeImports || {}),
+        "@koine/next/?(((\\w*)?/?)*)": {
+          transform: "@koine/next/{{ matches.[1] }}/{{member}}",
+        },
+        "@koine/react/?(((\\w*)?/?)*)": {
+          transform: "@koine/react/{{ matches.[1] }}/{{member}}",
+        },
+        "@koine/utils/?(((\\w*)?/?)*)": {
+          transform: "@koine/utils/{{ matches.[1] }}/{{member}}",
+        },
+      },
     },
     // @see https://github.com/vercel/next.js/issues/7322#issuecomment-887330111
     // reactStrictMode: false,

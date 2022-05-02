@@ -25,14 +25,11 @@ export type CalendarLegendProps = KoineComponentProps<
 export const KoineCalendarLegend = ({
   calendarsMap = {},
   toggleCalendarVisibility,
-  Koine,
+  LegendItem = "div",
+  LegendItemStatus = "span",
+  LegendItemLabel = "span",
+  LegendItemEvents = "span",
 }: CalendarLegendProps) => {
-  const {
-    LegendItem = "div",
-    LegendItemStatus = "span",
-    LegendItemLabel = "span",
-    LegendItemEvents = "span",
-  } = Koine;
   // const sorted = Object.entries(calendarsMap).sort((a, b) => {
   //   const { name: nameA } = a[1];
   //   const { name: nameB } = b[1];

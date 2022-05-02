@@ -21,6 +21,9 @@
  * - https://github.com/sindresorhus/type-fest
  * - https://github.com/millsp/ts-toolbelt
  * - https://github.com/ts-essentials/ts-essentials
+ * 
+ * About utilities useful examples @see:
+ * - https://github.com/chakra-ui/chakra-ui/blob/main/packages/utils/src
  */
 
 export * from "./analytics-google";
@@ -29,9 +32,7 @@ export * from "./async";
 export * from "./cast";
 export * from "./cookie";
 export * from "./colors";
-export * from "./detect";
-export * from "./cookie";
-export * from "./detect";
+export * from "./env";
 export * from "./emitter";
 export * from "./is";
 export * from "./location";

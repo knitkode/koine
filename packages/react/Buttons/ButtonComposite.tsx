@@ -121,10 +121,10 @@ export const KoineButtonComposite = ({
   textSub,
   textReverse,
   text,
-  Koine = { Button: "button", ButtonLink: "a" },
+  Button = "button",
+  ButtonLink = "a",
   ...props
 }: ButtonCompositeProps) => {
-  const { ButtonLink, Button } = Koine;
   const Btn = props.href ? ButtonLink : Button;
   const styledProps = {
     $icon: !!Icon,

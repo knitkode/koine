@@ -13,15 +13,11 @@ const AlertInner = styled.div`
   /* color: red; */
 `;
 
-export type AlertProps = {
+export type AlertProps = React.PropsWithChildren<{
   $danger?: boolean;
-};
+}>;
 
-export const Alert: React.FC<AlertProps> = ({
-  $danger,
-  children,
-  ...props
-}) => {
+export const Alert = ({ $danger, children, ...props }: AlertProps) => {
   return (
     <AlertRoot $danger={$danger} {...props}>
       <AlertInner>{children}</AlertInner>

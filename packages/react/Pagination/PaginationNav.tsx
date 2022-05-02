@@ -90,12 +90,9 @@ export const KoinePaginationNav = ({
   currentPage,
   baseUrl,
   showOffset = 2,
-  Koine = {
-    Link: "a",
-    currentUrl: "/",
-  },
+  currentUrl = "/",
+  Link = "a",
 }: PaginationNavProps) => {
-  const { Link, currentUrl } = Koine;
   total = ensureInt(total);
   currentPage = ensureInt(currentPage);
   perPage = ensureInt(perPage);

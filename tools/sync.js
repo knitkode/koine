@@ -9,7 +9,7 @@ const LIBS = ["next", "react", "utils"];
 const TARGETS = [
   //{ dir: "../knitkode/libs/koine", nx: true },
   // { dir: "../../../Your/frontend/libs/koine", nx: true },
-  // { dir: "../../../MKLR/mklr/libs", nx: false },
+  { dir: "../../../MKLR/mklr/libs", nx: false },
   // { dir: "../../../XX", nx: true },
 ];
 
@@ -21,8 +21,8 @@ LIBS.forEach((lib) => {
     const destRelative = path.relative("../../", dest).split("/")[0];
 
     if (!nx) {
-      src = path.join(src, "/src");
-      dest = path.join(dest, "/src");
+      src = path.join(src, "");
+      dest = path.join(dest, "");
     }
     console.log(`syncing ${lib} to ${destRelative}`);
 
