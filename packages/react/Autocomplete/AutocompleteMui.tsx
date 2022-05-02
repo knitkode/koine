@@ -1,4 +1,4 @@
-import {
+import React, {
   // forwardRef,
   useCallback,
   useMemo,
@@ -186,7 +186,7 @@ export const Autocomplete = <
     // update input change only if we are searching as you type, @see
     // https://mui.com/components/autocomplete/#search-as-you-type
     onInputChange: useCallback(
-      async (_event, inputValue) => {
+      async (_event: React.SyntheticEvent<Element>, inputValue?: string) => {
         if (!loadOptions) {
           return;
         }
@@ -223,7 +223,7 @@ export const Autocomplete = <
       const valValue = isString(value) ? value : value.value;
       return optValue === valValue;
     },
-    getOptionLabel: (option: TOption): string => {
+    getOptionLabel: (option: AutocompleteOption): string => {
       // @ts-expect-error TODO: I don't get this error
       return isString(option) ? option : option.label || "";
     },

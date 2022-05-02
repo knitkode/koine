@@ -7,7 +7,7 @@ const Root = styled.div`
 
 const Inner = styled(m.div)``;
 
-export type PaginationResultsProps = unknown;
+export type PaginationResultsProps = React.PropsWithChildren<{}>;
 
 export const PaginationResults: React.FC<PaginationResultsProps> = ({
   children,

@@ -126,20 +126,34 @@ type KoineNextConfig = {
   svg?: boolean;
   /** @default true  Styled components enabled */
   sc?: boolean;
+  /**
+   * When true uses `*.page.ts` or `*.page.tsx` extension for next.js config option [`pageExtensions`](https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory). When `true` it enables the same for `next-translate`
+   * @default false
+   */
+  page?: boolean;
 };
 
 /**
  * Get Next.js config with some basic opinionated defaults
+ *
+ * @param {object} options
+ * @property {boolean} [options.nx=false] Nx monorepo setup
+ * @property {boolean} [options.svg=false] Svg to react components
+ * @property {boolean} [options.sc=false] Styled components enabled
+ * @property {boolean} [options.page=false] When `true` uses `*.page.ts` or `*.page.tsx`
+ *                                          extension for next.js config option [`pageExtensions`](https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory)
+ *                                          and it enables the same for `next-translate`.
  */
 export function withKoine({
   nx = true,
   svg = true,
   sc = true,
+  page,
   ...nextConfig
 }: NextConfig & KoineNextConfig = {}) {
   nextConfig = {
     // @see https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory
-    pageExtensions: ["page.tsx", "page.ts"],
+    pageExtensions: page ? ["page.tsx", "page.ts"] : undefined,
     eslint: {
       ignoreDuringBuilds: true, // we have this strict check on each commit
     },

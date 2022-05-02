@@ -11,16 +11,6 @@ export const KoineImg = styled.img<KoineImgProps>``;
 //   object-fit: ${(p) => p.$fit || "cover"};
 // `;
 
-export type KoineImgSmartWrapProps = {
-  $loaded?: boolean;
-  $error?: boolean;
-  $bg?: React.CSSProperties["backgroundColor"];
-};
-
-export type KoineImgSmartProps = KoineImgProps & {
-  Wrap: React.FC<KoineImgSmartWrapProps>;
-};
-
 // /**
 //  * Replacement core component for native `<img />`
 //  *

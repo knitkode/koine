@@ -76,18 +76,29 @@ export const KoineCalendarDaygridTable = ({
   setEventHovered,
   calendarsMap = {},
   maxEvents = 5,
-  Koine,
-}: CalendarDaygridTableProps) => {
-  const {
-    Table = "table",
-    TableHead = "thead",
-    TableHeadCell = "th",
-    TableBody = "tbody",
-    TableBodyRow = "tr",
-    TableBodyCell = "td",
-    TableBodyCellDate = "div",
-    ...restKoine
-  } = Koine;
+  Table = "table",
+  TableHead = "thead",
+  TableHeadCell = "th",
+  TableBody = "tbody",
+  TableBodyRow = "tr",
+  TableBodyCell = "td",
+  TableBodyCellDate = "div",
+  Cell,
+  CellOverflow,
+  CellEvent,
+  CellEventBtn,
+  CellEventTitle,
+  CellEventStart,
+}: // ...props
+CalendarDaygridTableProps) => {
+  const restKoine = {
+    Cell,
+    CellOverflow,
+    CellEvent,
+    CellEventBtn,
+    CellEventTitle,
+    CellEventStart,
+  };
   const [days, setDays] = useState(dayLabels || [0, 1, 2, 3, 4, 5, 6]);
   const [weeksEvents, setWeeksEvents] = useState<CalendarViewWeeks>([]);
   // const [days, setDays] = useState(dayLabels || [...Array(7).keys()]);
@@ -145,7 +156,7 @@ export const KoineCalendarDaygridTable = ({
                       timestamp: day.timestamp,
                       calendarsMap,
                     }}
-                    Koine={restKoine}
+                    {...restKoine}
                   />
                 )}
               </TableBodyCell>

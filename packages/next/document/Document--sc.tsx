@@ -33,11 +33,12 @@ export class DocumentSc extends NextDocument {
       const initialProps = await NextDocument.getInitialProps(ctx);
       return {
         ...initialProps,
+        // @ts-expect-error FIXME: have they changed type?
         styles: (
-          <>
+          <React.Fragment>
             {initialProps.styles}
             {sheet.getStyleElement()}
-          </>
+          </React.Fragment>
         ),
       };
     } finally {

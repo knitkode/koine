@@ -1,3 +1,5 @@
+export * from "./Img/types";
+
 export type Translate = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   i18nKey: any,

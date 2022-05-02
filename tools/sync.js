@@ -8,7 +8,7 @@ const LIBS = ["next", "react", "utils"];
 
 const TARGETS = [
   //{ dir: "../knitkode/libs/koine", nx: true },
-  // { dir: "../../../Your/frontend/libs/koine", nx: true },
+  { dir: "../../../Your/frontend/libs/koine", nx: true },
   { dir: "../../../MKLR/mklr/libs", nx: false },
   // { dir: "../../../XX", nx: true },
 ];

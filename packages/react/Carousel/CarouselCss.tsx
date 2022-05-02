@@ -64,7 +64,7 @@ export type KoineCarouselCssProps = ColProps & {
   width?: number;
 };
 
-export type CarouselCssProps = KoineCarouselCssProps;
+export type CarouselCssProps = React.PropsWithChildren<KoineCarouselCssProps>;
 
 /**
  * For programmatic usage an example here @see https://stackoverflow.com/a/65902068/9122820

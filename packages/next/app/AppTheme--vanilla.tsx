@@ -3,10 +3,12 @@ import { AppProps as NextAppProps } from "next/app";
 // import { ThemeVanillaProvider, ThemeVanillaValue } from "@koine/react";
 import { ThemeProvider, ThemeProviderProps } from "../Theme";
 
-export type AppThemeVanillaProps = NextAppProps & {
-  // theme: ThemeVanillaValue;
-  theme: ThemeProviderProps["defaultTheme"];
-};
+export type AppThemeVanillaProps = React.PropsWithChildren<
+  NextAppProps & {
+    // theme: ThemeVanillaValue;
+    theme: ThemeProviderProps["defaultTheme"];
+  }
+>;
 
 /**
  * App theme with vanilla class based theme (good for `tailwindcss`)

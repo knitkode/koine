@@ -7,9 +7,11 @@ import { Field } from "./Field";
 import { FieldHint } from "./FieldHint";
 import { InputHoneypot } from "../styles";
 
-type FieldControlRenderProps = Pick<
-  FormControl,
-  "control" | "register" | "setValue" | "name" | "label" | "placeholder"
+type FieldControlRenderProps = React.PropsWithChildren<
+  Pick<
+    FormControl,
+    "control" | "register" | "setValue" | "name" | "label" | "placeholder"
+  >
 >;
 
 export type FieldControlProps = FieldControlRenderProps & {

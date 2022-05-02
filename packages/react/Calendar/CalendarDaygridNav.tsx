@@ -42,20 +42,17 @@ export const KoineCalendarDaygridNav = ({
   handleToday,
   handleView,
   locale: localeCode,
-  Koine,
+  NavRoot = "nav",
+  NavTitle = "div",
+  NavBtns = "div",
+  NavBtnPrev = "button",
+  NavBtnNext = "button",
+  NavBtnToday = "button",
+  NavBtnViewMonth = "button",
+  NavBtnViewWeek = "button",
 }: CalendarDaygridNavProps) => {
   const [start, end] = range;
   const locale = useDateLocale(localeCode);
-  const {
-    NavRoot = "nav",
-    NavTitle = "div",
-    NavBtns = "div",
-    NavBtnPrev = "button",
-    NavBtnNext = "button",
-    NavBtnToday = "button",
-    NavBtnViewMonth = "button",
-    NavBtnViewWeek = "button",
-  } = Koine;
 
   const opts = { locale };
   let formatted = "";

@@ -8,8 +8,8 @@ import {
   extendComponent,
   // type OverridableComponents,
   type WithComponents,
+  type Simplify,
 } from "../helpers";
-import { Simplify } from "type-fest";
 
 // export const koineDialogBg = `
 //   background: var(--bodyBg);

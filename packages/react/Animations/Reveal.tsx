@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 import { useReveal, UseRevealOptions } from "./useReveal";
 
-export type RevealProps = UseRevealOptions;
+export type RevealProps = React.PropsWithChildren<UseRevealOptions>;
 
 export const Reveal: React.FC<RevealProps> = ({
   children,

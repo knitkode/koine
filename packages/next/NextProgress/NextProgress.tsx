@@ -1,28 +1,48 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { ProgressOverlay } from "@koine/react";
+import { useRouter, type Router } from "next/router";
+import { WithComponents, Simplify } from "@koine/react";
 
-export type NextProgressProps = {
+// FIXME: workaround to re-create type that is not exported by next.js
+type RouteProperties = Parameters<Router["getRouteInfo"]>[5];
+
+type OwnProps = {
   /** @default 0.3 */
-  startAt: number;
+  startAt?: number;
   /** @default true */
-  showOnShallow: boolean;
+  showOnShallow?: boolean;
   /** @default 200 */
-  stopDelayMs: number;
+  stopDelayMs?: number;
+  /** @default "div" */
 };
+
+export type Components = {
+  Overlay: {
+    type: "div";
+    props: { running?: boolean };
+  };
+};
+
+export type ComponentsProps = {
+  [Name in keyof Components]: Components[Name]["props"];
+};
+
+type Props = Simplify<WithComponents<OwnProps, Components>>;
+
+export type NextProgressProps = Props;
 
 export const NextProgress = ({
   startAt = 0.3,
   showOnShallow = true,
   stopDelayMs = 200,
-}) => {
+  Overlay = "div",
+}: NextProgressProps) => {
   const { events } = useRouter();
   // const [progress, setProgress] = useState(0);
   const [running, setRunning] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const routeChangeStart = useCallback(
-    (_, { shallow }) => {
+    (_: any, { shallow }: RouteProperties) => {
       if (!shallow || showOnShallow) {
         // setProgress(startAt);
         setRunning(true);
@@ -32,7 +52,7 @@ export const NextProgress = ({
   );
 
   const routeChangeEnd = useCallback(
-    (_, { shallow }) => {
+    (_: any, { shallow }: RouteProperties) => {
       if (!shallow || showOnShallow) {
         if (timer.current) {
           clearTimeout(timer.current);
@@ -58,5 +78,5 @@ export const NextProgress = ({
     };
   }, [events, routeChangeStart, routeChangeEnd]);
 
-  return <ProgressOverlay running={running} />;
+  return <Overlay running={running} />;
 };

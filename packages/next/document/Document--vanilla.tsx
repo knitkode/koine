@@ -8,12 +8,11 @@ import NextDocument, {
   Main,
   NextScript,
 } from "next/document";
+import { Meta, NoJs } from "@koine/react";
 import {
-  Meta,
-  NoJs,
   getInitialThemeFromRequest,
   ThemeVanillaValue,
-} from "@koine/react";
+} from "@koine/react/styles";
 
 /**
  */

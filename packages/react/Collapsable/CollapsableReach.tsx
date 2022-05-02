@@ -74,11 +74,13 @@ export const CollapsableHeadText = styled.div``;
 
 export const CollapsableHeadIcon = styled(m.div)``;
 
-export type CollapsableHeadProps = Pick<CollapsableStyledProps, "$expanded"> &
-  CollapsableComponents & {
-    id: CollapsableProps["id"];
-    onClick: (...args: any) => any;
-  };
+export type CollapsableHeadProps = React.PropsWithChildren<
+  Pick<CollapsableStyledProps, "$expanded"> &
+    CollapsableComponents & {
+      id: CollapsableProps["id"];
+      onClick: (...args: any) => any;
+    }
+>;
 
 export const CollapsableHead: React.FC<CollapsableHeadProps> = ({
   $expanded,

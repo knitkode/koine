@@ -41,12 +41,12 @@ export const InputGroupButtonPost = styled(KoineButton)`
   }
 `;
 
-export type InputGroupProps = {
+export type InputGroupProps = React.PropsWithChildren<{
   pre?: boolean;
   post?: boolean;
   Button?: typeof KoineButton;
   btnProps?: KoineButtonProps;
-};
+}>;
 
 export const InputGroup: React.FC<InputGroupProps> = ({
   pre,

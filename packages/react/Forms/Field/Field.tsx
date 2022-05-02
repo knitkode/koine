@@ -58,13 +58,13 @@ type FieldError = {
   message: string;
 };
 
-export type FieldProps = {
+export type FieldProps = React.PropsWithChildren<{
   name?: string;
   t?: Translate;
   error?: RHF_FieldError;
   errors?: RHF_FieldErrors;
   style?: React.CSSProperties;
-};
+}>;
 
 export const Field: React.FC<FieldProps> = ({
   name,

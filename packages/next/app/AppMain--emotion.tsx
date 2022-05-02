@@ -1,9 +1,9 @@
 import React from "react";
-import { AppProps as NextAppProps } from "next/app";
 import { useRouter } from "next/router";
-import { AnimatePresence, LazyMotion, m, HTMLMotionProps } from "framer-motion";
-import { SeoDefaults, SeoDefaultsProps } from "../Seo";
+import { AnimatePresence, LazyMotion, m } from "framer-motion";
+import { SeoDefaults } from "../Seo";
 import { NextProgress } from "../NextProgress";
+import { AppMainBaseProps } from "./AppMain";
 
 /**
  * @see https://www.framer.com/docs/guide-reduce-bundle-size/
@@ -11,28 +11,7 @@ import { NextProgress } from "../NextProgress";
 const loadMotionFeatures = () =>
   import("./motion-features").then((m) => m.default);
 
-export type AppMainEmotionProps = NextAppProps & {
-  /**
-   * A wrapping layout component
-   */
-  Layout: React.FC<Record<string, unknown>>;
-  /**
-   * Seo site wide default configuration
-   */
-  seo?: SeoDefaultsProps;
-  /**
-   * It defaults to fade in/out
-   */
-  transition?: Omit<HTMLMotionProps<"div">, "key">;
-  /**
-   * JSX to render just after SEO
-   */
-  pre?: React.ReactNode;
-  /**
-   * JSX to render just at the end of the markup
-   */
-  post?: React.ReactNode;
-};
+export type AppMainEmotionProps = AppMainBaseProps & {};
 
 /**
  * App main
@@ -45,6 +24,7 @@ export const AppMainEmotion: React.FC<AppMainEmotionProps> = ({
   Component,
   pageProps,
   Layout,
+  ProgressOverlay,
   // theme,
   seo,
   transition = {
@@ -62,7 +42,7 @@ export const AppMainEmotion: React.FC<AppMainEmotionProps> = ({
       <SeoDefaults {...seo} />
       {pre}
       <LazyMotion features={loadMotionFeatures}>
-        <NextProgress />
+        {ProgressOverlay && <NextProgress Overlay={ProgressOverlay} />}
         <Layout>
           <AnimatePresence exitBeforeEnter initial={false}>
             <m.div key={pathname} {...transition}>

@@ -26,12 +26,13 @@ export const TabsStyled = styled(_Tabs)<TabsProps>`
   }
 `;
 
-export type TabsProps = _TabsProps & {
+export type TabsProps = React.PropsWithChildren<_TabsProps> & {
   $vertical?: boolean;
 };
 
 export const Tabs = (props: TabsProps) => {
   return (
+    // @ts-expect-error FIXME: upgrade framer? FC wrong...
     <AnimateSharedLayout>
       <TabsStyled {...props} />
     </AnimateSharedLayout>

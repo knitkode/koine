@@ -35,7 +35,7 @@ export type UseThemeProps = {
   systemTheme?: "dark" | "light";
 };
 
-export type ThemeProviderProps = {
+export type ThemeProviderProps = React.PropsWithChildren<{
   /** List of all available theme names */
   themes?: string[];
   /** Forced theme name for the current page */
@@ -54,7 +54,7 @@ export type ThemeProviderProps = {
   value?: ValueObject;
   /** Nonce string to pass to the inline script for CSP headers */
   nonce?: string;
-};
+}>;
 
 const colorSchemes = ["light", "dark"];
 const MEDIA = "(prefers-color-scheme: dark)";
@@ -87,9 +87,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const attrs = !value ? themes : Object.values(value);
 
   const applyTheme = useCallback(
-    (theme) => {
+    (theme?: typeof themes[number]) => {
       let resolved = theme;
-      if (isServer) return;
+      if (isServer || !resolved) return;
 
       // If theme is system, resolve it before setting theme
       if (theme === "system" && enableSystem) {
@@ -115,7 +115,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       if (enableColorScheme) {
         const fallback = colorSchemes.includes(defaultTheme)
           ? defaultTheme
-          : null;
+          : "";
         const colorScheme = colorSchemes.includes(resolved)
           ? resolved
           : fallback;
@@ -135,7 +135,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     ]
   );
 
-  const setTheme = useCallback((theme) => {
+  const setTheme = useCallback((theme: typeof themes[number]) => {
     setThemeState(theme);
 
     // Save to storage

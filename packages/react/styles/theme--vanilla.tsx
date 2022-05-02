@@ -48,9 +48,9 @@ export const ThemeVanillaContext = createContext({
   setTheme: undefined,
 } as ThemeVanillaContextType);
 
-export type ThemeVanillaProviderProps = {
+export type ThemeVanillaProviderProps = React.PropsWithChildren<{
   initialTheme: ThemeVanillaValue;
-};
+}>;
 
 export const ThemeVanillaProvider: FC<ThemeVanillaProviderProps> = ({
   initialTheme,

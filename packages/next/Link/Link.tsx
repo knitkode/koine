@@ -1,15 +1,16 @@
 import React, { forwardRef } from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
-import { KoineLink, KoineLinkProps } from "@koine/react";
 
-export type LinkProps = Omit<KoineLinkProps, "href"> &
-  Omit<NextLinkProps, "as" | "passHref" | "children">;
+export type LinkProps = Omit<React.ComponentPropsWithRef<"a">, "href"> &
+  Omit<NextLinkProps, "as" | "passHref" | "children"> & {
+    Link: React.ComponentType<any>;
+  };
 
 /**
  * @see https://next.js.org/docs/api-reference/next/link
  */
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
-  { href, prefetch, replace, scroll, shallow, locale, ...props },
+  { href, prefetch, replace, scroll, shallow, locale, Link, ...props },
   ref
 ) {
   return (
@@ -21,7 +22,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
       locale={locale}
       passHref
     >
-      <KoineLink ref={ref} {...props} />
+      <Link ref={ref} {...props} />
     </NextLink>
   );
 });

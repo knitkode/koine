@@ -78,18 +78,14 @@ export const CalendarDaygridCell = ({
   maxEvents,
   events,
   calendarsMap,
-  Koine,
+  Cell = "div",
+  CellOverflow = "div",
+  CellEvent = "div",
+  CellEventBtn = "div",
+  CellEventTitle = "span",
+  CellEventStart = "span",
 }: CalendarDaygridCellProps) => {
   const [isExpanded, expand] = useState(false);
-  const {
-    Cell = "div",
-    CellOverflow = "div",
-    CellEvent = "div",
-    CellEventBtn = "div",
-    CellEventTitle = "span",
-    CellEventStart = "span",
-  } = Koine;
-
   const eventsWithoutPlaceholders = events.filter(
     (event) => !event.placeholder
   );

@@ -82,14 +82,12 @@ type BreadcrumbsProps = KoineComponentProps<
 
 export const KoineBreadcrumbs = ({
   items = [],
-  Koine,
+  Link,
   ...props
 }: BreadcrumbsProps) => {
   if (!items.length) {
     return null;
   }
-  const { Link } = Koine;
-
   return (
     <Root {...props}>
       <Inner>
