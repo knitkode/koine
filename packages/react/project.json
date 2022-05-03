@@ -4,7 +4,7 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-esm": {
+    "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -13,25 +13,12 @@
         "project": "packages/react/package.json",
         "main": "packages/react/index.ts",
         "buildableProjectDepsInPackageJsonType": "dependencies",
-        "assets": ["packages/react/README.md", "packages/react/*.d.ts"]
+        "assets": [
+          "packages/react/README.md",
+          "packages/react/*.d.ts",
+          "packages/react/**/*.css"
+        ]
       }
-    },
-    "build-web": {
-      "executor": "@nrwl/web:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/react",
-        "tsConfig": "packages/react/tsconfig.lib.json",
-        "project": "packages/react/package.json",
-        "entryFile": "packages/react/index.ts",
-        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-        "external": ["react/jsx-runtime"],
-        "format": ["umd"],
-        "deleteOutputPath": false
-      }
-    },
-    "build": {
-      "executor": "./tools/executors/build:build"
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

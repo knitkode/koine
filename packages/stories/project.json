@@ -4,7 +4,7 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-esm": {
+    "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -13,13 +13,7 @@
         "main": "packages/stories/index.ts"
       }
     },
-    "build-web": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "echo"
-      }
-    },
-    "build": {
+    "build-dummy": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "command": "echo"

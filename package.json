@@ -15,7 +15,7 @@
     "prepare": "husky install",
     "sync": "node ./tools/sync.js",
     "link": "cd ./dist/packages/next && npm link && cd ../react && npm link && cd ../utils && npm link",
-    "tools": "npx tsc tools/executors/pack/impl"
+    "tools": "npx tsc tools/executors/build/impl"
   },
   "private": true,
   "dependencies": {

@@ -1,4 +1,7 @@
-import { useTheme as _useTheme } from "styled-components";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useTheme = exports.createTheme = exports.breakpoints = void 0;
+const styled_components_1 = require("styled-components");
 const DEFAULT_BREAKPOINTS = {
   xs: 0,
   sm: 440,
@@ -18,7 +21,7 @@ const DEFAULT_BREAKPOINTS = {
  * BREAKPOINTS=xs:0,sm:440,md:768,lg:1024,xl:1368,xxl:1690
  * ```
  */
-export const breakpoints = process.env["BREAKPOINTS"]
+exports.breakpoints = process.env["BREAKPOINTS"]
   ? process.env["BREAKPOINTS"].split(",").reduce((map, pair) => {
       const [key, value] = pair.split(":");
       map[key] = parseFloat(value);
@@ -26,14 +29,17 @@ export const breakpoints = process.env["BREAKPOINTS"]
     }, {})
   : DEFAULT_BREAKPOINTS;
 const themeDefault = {
-  maxWidth: breakpoints.xxl,
-  breakpoints,
+  maxWidth: exports.breakpoints.xxl,
+  breakpoints: exports.breakpoints,
   devices: {
     mobile: "sm",
     tablet: "md",
     desktop: "lg",
   },
 };
-export const createTheme = (options) =>
-  Object.assign(Object.assign({}, themeDefault), options);
-export const useTheme = _useTheme;
+const createTheme = (options) => ({
+  ...themeDefault,
+  ...options,
+});
+exports.createTheme = createTheme;
+exports.useTheme = styled_components_1.useTheme;

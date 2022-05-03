@@ -4,7 +4,7 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-esm": {
+    "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -15,23 +15,6 @@
         "buildableProjectDepsInPackageJsonType": "dependencies",
         "assets": ["packages/next/README.md", "packages/next/typings.d.ts"]
       }
-    },
-    "build-web": {
-      "executor": "@nrwl/web:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/next",
-        "tsConfig": "packages/next/tsconfig.lib.json",
-        "project": "packages/next/package.json",
-        "entryFile": "packages/next/index.ts",
-        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
-        "external": ["react/jsx-runtime"],
-        "format": ["umd"],
-        "deleteOutputPath": false
-      }
-    },
-    "build": {
-      "executor": "./tools/executors/build:build"
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

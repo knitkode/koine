@@ -36,41 +36,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var path_1 = require("path");
-var devkit_1 = require("@nrwl/devkit");
 function multipleExecutor(options, context) {
     return __awaiter(this, void 0, void 0, function () {
-        var projectName, packageDist, packageJson;
         return __generator(this, function (_a) {
-            projectName = context.projectName;
-            packageDist = (0, path_1.join)("./dist/packages", projectName, 'package.json');
-            packageJson = (0, devkit_1.readJsonFile)(packageDist);
-            packageJson.main = "./index.umd.js";
-            packageJson.module = "./index.js";
-            // writeJsonFile(`${options.outputPath}/package.json`, packageJson);
-            (0, devkit_1.writeJsonFile)(packageDist, packageJson);
+            // const { projectName } = context;
+            // const packageIndex = join("./dist/packages", projectName, "index.js");
+            // // const packageSrc = join("./packages", projectName, 'package.json');
+            // const packageDist = join("./dist/packages", projectName, "package.json");
+            // // const packageJson = readJsonFile(join(options.projectRoot, 'package.json'));
+            // const packageJson = readJsonFile(packageDist);
+            // if (existsSync(packageIndex)) {
+            //   renameSync(packageIndex, packageIndex.replace(/\.js/, ".esm.js"));
+            //   packageJson.module = "./index.esm.js";
+            // }
+            // packageJson.main = "./index.umd.js";
+            // // writeJsonFile(`${options.outputPath}/package.json`, packageJson);
+            // writeJsonFile(packageDist, packageJson);
             return [2 /*return*/, { success: true }];
         });
     });
 }
 exports["default"] = multipleExecutor;
-// import type { ExecutorContext } from "@nrwl/devkit";
-// import { exec } from "child_process";
-// import { promisify } from "util";
-// export interface EchoExecutorOptions {
-//   textToEcho: string;
-// }
-// export default async function buildExecutor(
-//   options: EchoExecutorOptions,
-//   context: ExecutorContext
-// ): Promise<{ success: boolean }> {
-//   console.info(`Executing "build"...`);
-//   console.info(`Options: ${JSON.stringify(options, null, 2)}`);
-//   const { stdout, stderr } = await promisify(exec)(
-//     `echo ${options.textToEcho} ! in ${context.projectName}`
-//   );
-//   console.log(stdout);
-//   console.error(stderr);
-//   const success = !stderr;
-//   return { success };
-// }

@@ -60,7 +60,7 @@ export function removeAccents(text = "", sets: AccentsSet[] = ACCENTS_SETS) {
 export function slugify(text: string, separator = "-") {
   return removeAccents(
     text.toString().toLowerCase().trim(),
-    ACCENTS_SETS.concat(["-", "[·/_,:;']"])
+    ACCENTS_SETS.concat([["-", "[·/_,:;']"]])
   )
     .replace(/\s+/g, "-") // replace spaces with -
     .replace(/&/g, "-and-") // replace & with 'and'

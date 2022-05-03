@@ -1,6 +1,5 @@
 import { classed, extendComponent } from "../../helpers";
 import * as _ from "../DialogMui";
-import "./bare.css";
 
 export { KoineDialogProps } from "../DialogMui";
 

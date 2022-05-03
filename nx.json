@@ -7,36 +7,20 @@
     "libsDir": "packages"
   },
   "targetDependencies": {
-    "build-esm": [
-      {
-        "target": "build-esm",
-        "projects": "dependencies"
-      }
-    ],
-    "build-web": [
-      {
-        "target": "build-web",
-        "projects": "dependencies"
-      }
-    ],
     "build": [
       {
-        "target": "build-esm",
-        "projects": "self"
-      },
-      {
-        "target": "build-web",
-        "projects": "self"
+        "target": "build",
+        "projects": "dependencies"
       }
     ]
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "nx/tasks-runners/default",
+      "_runner": "@nrwl/nx-cloud",
       "options": {
         "cacheableOperations": [
-          "build-esm",
-          "build-web",
+          "build",
           "lint",
           "test",
           "e2e"
