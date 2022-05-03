@@ -132,7 +132,7 @@ export const KoineButtonComposite = ({
   };
   const innerProps = { textMain, textSub, text, ...styledProps };
   return (
-    <Root forwardedAs={Btn} {...props} {...styledProps}>
+    <Root as={Btn} {...props} {...styledProps}>
       {Icon && <ButtonCompositeIcon as={Icon} {...iconProps} />}
       {Icon ? (
         <BesidesIcon {...styledProps}>
