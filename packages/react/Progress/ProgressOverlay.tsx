@@ -29,7 +29,7 @@ const ProgressOverlayCenterer = styled.div`
 `;
 
 export type ProgressOverlayProps = {
-  running: boolean;
+  running?: boolean;
   // /** @default 0.3 */
   // startAt: number;
   // /** @default true */

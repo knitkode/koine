@@ -8,7 +8,6 @@ import { ButtonLinkProps } from "./ButtonLink";
 const Root = styled.span<ButtonCompositeStyledProps>`
   ${(p) =>
     p.$icon ? `display: flex;` : `display: inline-block; text-align: left;`}
-  padding: 0;
   min-width: 0;
 
   & svg {
@@ -133,7 +132,7 @@ export const KoineButtonComposite = ({
   };
   const innerProps = { textMain, textSub, text, ...styledProps };
   return (
-    <Root as={Btn} {...props} {...styledProps}>
+    <Root forwardedAs={Btn} {...props} {...styledProps}>
       {Icon && <ButtonCompositeIcon as={Icon} {...iconProps} />}
       {Icon ? (
         <BesidesIcon {...styledProps}>

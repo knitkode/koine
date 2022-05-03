@@ -1,3 +1,5 @@
+/// <reference types="@reach/utils/dist/declarations/src/polymorphic" />
+
 /**
  * @file
  *

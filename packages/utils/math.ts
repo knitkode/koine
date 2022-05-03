@@ -1,3 +1,5 @@
+import { __DEV__ } from "./env";
+
 /**
  * Get random int (min and max included)
  */
@@ -43,9 +45,11 @@ export function roundTo(num: number, decimals = 2): string {
     // return outputNum;
   }
 
-  console.warn(
-    "[@koine/utils] math:roundTo -> given not a finite number as first arg"
-  );
+  if (__DEV__) {
+    console.warn(
+      "[@koine/utils] math:roundTo -> given not a finite number as first arg"
+    );
+  }
   return "";
 }
 

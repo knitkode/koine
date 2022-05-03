@@ -4,9 +4,8 @@
  * About accessibility:
  * - minimum target size of 44px https://www.w3.org/TR/WCAG21/#target-size
  */
-
+import { useId } from "react";
 import styled from "styled-components";
-import { uid } from "@koine/utils";
 import { stateFocus } from "../../styles/styled";
 
 export const toggleBase = `
@@ -107,7 +106,7 @@ export type ToggleIndicatorRoundedProps = ToggleIndicatorProps & {
 export const ToggleIndicatorRounded = ({
   r = 6,
 }: ToggleIndicatorRoundedProps) => {
-  const id = uid("Toggle");
+  const id = useId();
 
   return (
     <ToggleIndicatorHolder>

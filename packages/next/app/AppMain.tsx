@@ -1,8 +1,9 @@
 import React from "react";
-import { AppProps as NextAppProps } from "next/app";
-import { HTMLMotionProps } from "framer-motion";
-import { SeoDefaultsProps } from "../Seo";
-import { NextProgressProps } from "../NextProgress";
+import type { AppProps as NextAppProps } from "next/app";
+import type { HTMLMotionProps } from "framer-motion";
+import type { SeoDefaultsProps } from "../Seo";
+import type { NextProgressProps } from "../NextProgress";
+import type { MotionProviderFeatures } from "@koine/react/m";
 
 export type AppMainBaseProps = NextAppProps & {
   /**
@@ -18,10 +19,6 @@ export type AppMainBaseProps = NextAppProps & {
    */
   seo?: SeoDefaultsProps;
   /**
-   * It defaults to fade in/out
-   */
-  transition?: Omit<HTMLMotionProps<"div">, "key">;
-  /**
    * JSX to render just after SEO
    */
   pre?: React.ReactNode;
@@ -29,4 +26,12 @@ export type AppMainBaseProps = NextAppProps & {
    * JSX to render just at the end of the markup
    */
   post?: React.ReactNode;
+};
+
+export type AppMainFramerProps = {
+  motion: MotionProviderFeatures;
+  /**
+   * Default layout transition, by default it is a simple fade in/out
+   */
+  transition?: Omit<HTMLMotionProps<"div">, "key">;
 };

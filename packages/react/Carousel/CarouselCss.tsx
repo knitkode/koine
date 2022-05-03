@@ -1,6 +1,6 @@
-import { Children } from "react";
+import { Children, useId } from "react";
 import styled from "styled-components";
-import { uid, SetRequired } from "@koine/utils";
+import { SetRequired } from "@koine/utils";
 import {
   Row,
   RowProps,
@@ -81,7 +81,7 @@ export const KoineCarouselCss: React.FC<CarouselCssProps> = ({
   ...colProps
 }) => {
   const slides = children ? Children.toArray(children) : items;
-  const id = uid();
+  const id = useId();
 
   if (!slides) return null;
 

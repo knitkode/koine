@@ -18,7 +18,7 @@ type OwnProps = {
 export type Components = {
   Overlay: {
     type: "div";
-    props: { running?: boolean };
+    props: { running?: boolean }; // FIXME: grab these props from @koine/react/Progress once we have ported that to multiframework configuration
   };
 };
 

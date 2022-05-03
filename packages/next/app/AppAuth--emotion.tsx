@@ -14,15 +14,13 @@ export type AppAuthEmotionProps = NextAppProps &
  */
 export const AppAuthEmotion: React.FC<AppAuthEmotionProps> = (props) => {
   return (
-    <>
+    <React.StrictMode>
       <AppHead />
       <SessionProvider session={props.pageProps.session}>
         <AppThemeEmotion {...props}>
           <AppMainEmotion {...props} />
         </AppThemeEmotion>
       </SessionProvider>
-    </>
+    </React.StrictMode>
   );
 };
-
-export default AppAuthEmotion;

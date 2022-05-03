@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import styled from "styled-components";
-import { uid } from "@koine/utils";
 
 export type RatingStarProps = React.ComponentPropsWithoutRef<"svg"> &
   RatingStarModel & {
@@ -27,7 +26,7 @@ export const RatingStar = ({
   size,
   ...props
 }: RatingStarProps) => {
-  const id = uid("Star");
+  const id = useId();
 
   return (
     <RatingStarRoot
@@ -111,7 +110,7 @@ export const Rating = ({
   colorStroke,
   starSize = 16,
 }: RatingProps) => {
-  const id = uid("Rating");
+  const id = useId();
   const [currentValue /* , _setCurrentValue */] = useState(value);
   const [stars, setStars] = useState<RatingStarModel[]>([]);
   const getStars = useCallback(

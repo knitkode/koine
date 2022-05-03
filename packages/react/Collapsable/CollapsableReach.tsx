@@ -4,7 +4,14 @@
  * Maybe do a simplified version following this example:
  * https://codesandbox.io/s/framer-motion-accordion-qx958?file=/src/Example.tsx
  */
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { MotionProps, m } from "framer-motion";
 import {
@@ -13,8 +20,6 @@ import {
   DisclosurePanel,
 } from "@reach/disclosure";
 import { BsBoxArrowInDown as IconCollapse } from "react-icons/bs";
-// FIXME: ssr likely problem
-import { uid } from "@koine/utils";
 import { btnStyleReset } from "../Buttons";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { InputInvisible } from "../Forms/styles";
@@ -202,8 +207,8 @@ export const Collapsable = ({
   const expanded = isControlled ? propExpanded : stateExpanded;
   const [overflow, setOverflow] = useState(expanded ? "unset" : "hidden");
   const content = useRef<HTMLDivElement>(null);
-  // FIXME: ssr likely problem
-  id = id || uid();
+  const defaultId = useId();
+  id = id || defaultId;
 
   const handleClick = useCallback(() => {
     if (hash) {

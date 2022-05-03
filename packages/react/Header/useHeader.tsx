@@ -5,9 +5,14 @@ import { useMedia } from "../styles/media";
 
 // branded types to get good type annotation/hints on the array returned
 // by the hook, a kind of state but more compact than an object...
+
+/** @type {boolean} */
 type isSticky = boolean & { _branded: true };
+/** @type {number} */
 type placeholderHeight = number & { _branded: true };
+/** @type {number} */
 type headerHeight = number & { _branded: true };
+/** @type {number} */
 type logoWidth = number & { _branded: true };
 
 type UseHeaderState = readonly [

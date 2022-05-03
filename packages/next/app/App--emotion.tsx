@@ -13,13 +13,11 @@ export type AppEmotionProps = NextAppProps &
  */
 export const AppEmotion: React.FC<AppEmotionProps> = (props) => {
   return (
-    <>
+    <React.StrictMode>
       <AppHead />
       <AppThemeEmotion {...props}>
         <AppMainEmotion {...props} />
       </AppThemeEmotion>
-    </>
+    </React.StrictMode>
   );
 };
-
-export default AppEmotion;

@@ -1,17 +1,12 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { AnimatePresence, LazyMotion, m } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
+import { MotionProvider } from "@koine/react/m";
 import { SeoDefaults } from "../Seo";
 import { NextProgress } from "../NextProgress";
-import { AppMainBaseProps } from "./AppMain";
+import type { AppMainBaseProps, AppMainFramerProps } from "./AppMain";
 
-/**
- * @see https://www.framer.com/docs/guide-reduce-bundle-size/
- */
-const loadMotionFeatures = () =>
-  import("./motion-features").then((m) => m.default);
-
-export type AppMainScProps = AppMainBaseProps & {};
+export type AppMainScProps = AppMainBaseProps & AppMainFramerProps;
 
 /**
  * App main
@@ -25,8 +20,8 @@ export const AppMainSc: React.FC<AppMainScProps> = ({
   pageProps,
   Layout,
   ProgressOverlay,
-  // theme,
   seo,
+  motion,
   transition = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -41,7 +36,7 @@ export const AppMainSc: React.FC<AppMainScProps> = ({
     <>
       <SeoDefaults {...seo} />
       {pre}
-      <LazyMotion features={loadMotionFeatures}>
+      <MotionProvider features={motion}>
         {ProgressOverlay && <NextProgress Overlay={ProgressOverlay} />}
         <Layout>
           <AnimatePresence exitBeforeEnter initial={false}>
@@ -50,7 +45,7 @@ export const AppMainSc: React.FC<AppMainScProps> = ({
             </m.div>
           </AnimatePresence>
         </Layout>
-      </LazyMotion>
+      </MotionProvider>
       {post}
     </>
   );

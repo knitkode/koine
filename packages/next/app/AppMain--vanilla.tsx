@@ -1,11 +1,8 @@
 import React from "react";
 import { SeoDefaults } from "../Seo";
-import { AppMainBaseProps } from "./AppMain";
+import type { AppMainBaseProps } from "./AppMain";
 
-export type AppMainVanillaProps = Omit<
-  AppMainBaseProps,
-  "ProgressOverlay" | "transition"
-> & {};
+export type AppMainVanillaProps = Omit<AppMainBaseProps, "ProgressOverlay">;
 
 /**
  * App main
