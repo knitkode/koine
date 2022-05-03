@@ -5,7 +5,6 @@
  *
  * Here we manage only "vertical" oriented tabs for now
  */
-import { AnimateSharedLayout } from "framer-motion";
 import styled from "styled-components";
 import {
   Tabs as _Tabs,
@@ -21,7 +20,7 @@ import { min } from "../styles/media";
 import { UnderlineSkewed } from "../Animations/Underline";
 import { btnStyleReset } from "../Buttons";
 
-export const TabsStyled = styled(_Tabs)<TabsProps>`
+export const Tabs = styled(_Tabs)<TabsProps>`
   ${min.sm} {
     display: flex;
     ${(p) => p.$vertical && "flex-direction: column;"}
@@ -30,15 +29,6 @@ export const TabsStyled = styled(_Tabs)<TabsProps>`
 
 export type TabsProps = React.PropsWithChildren<_TabsProps> & {
   $vertical?: boolean;
-};
-
-export const Tabs = (props: TabsProps) => {
-  return (
-    // @ts-expect-error FIXME: upgrade framer? FC wrong...
-    <AnimateSharedLayout>
-      <TabsStyled {...props} />
-    </AnimateSharedLayout>
-  );
 };
 
 export const TabList = styled(_TabList)`
