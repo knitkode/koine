@@ -98,8 +98,8 @@ async function treatEntrypoints(
           let isIndex = srcFilename === "index";
 
           exports[isIndex ? "." : `./${srcFilename}`] = {
-            main: `./node/${srcFilename}.js`,
-            module: `./${srcFilename}.js`,
+            require: `./node/${srcFilename}.js`,
+            import: `./${srcFilename}.js`,
           };
         })
       );
