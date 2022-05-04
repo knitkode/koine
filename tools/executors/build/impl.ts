@@ -1,192 +1,84 @@
-import { ExecutorContext, readJsonFile, writeJsonFile } from "@nrwl/devkit";
-import { glob } from "glob";
-import { move, ensureDir, remove } from "fs-extra";
 import { join, basename, dirname, extname, resolve, relative } from "path";
-// import { ExecutorContext } from '@nrwl/devkit';
+import { move, remove } from "fs-extra";
+import { glob } from "glob";
+import { ExecutorContext, readJsonFile, writeJsonFile } from "@nrwl/devkit";
 import {
   assetGlobsToFiles,
   FileInputOutput,
-} from '@nrwl/workspace/src/utilities/assets';
-import { checkDependencies } from '@nrwl/js/src/utils/check-dependencies';
-import { CopyAssetsHandler } from '@nrwl/js/src/utils/copy-assets-handler';
-import { ExecutorOptions, NormalizedExecutorOptions } from '@nrwl/js/src/utils/schema';
-import { addTslibDependencyIfNeeded } from '@nrwl/js/src/utils/tslib-dependency';
-import { compileTypeScriptFiles } from '@nrwl/js/src/utils/typescript/compile-typescript-files';
-import { updatePackageJson } from '@nrwl/js/src/utils/update-package-json';
-import { watchForSingleFileChanges } from '@nrwl/js/src/utils/watch-for-single-file-changes';
+} from "@nrwl/workspace/src/utilities/assets";
+import { checkDependencies } from "@nrwl/js/src/utils/check-dependencies";
+import { CopyAssetsHandler } from "@nrwl/js/src/utils/copy-assets-handler";
+import {
+  ExecutorOptions,
+  NormalizedExecutorOptions,
+} from "@nrwl/js/src/utils/schema";
+import { addTslibDependencyIfNeeded } from "@nrwl/js/src/utils/tslib-dependency";
+import { compileTypeScriptFiles } from "@nrwl/js/src/utils/typescript/compile-typescript-files";
+import { updatePackageJson } from "@nrwl/js/src/utils/update-package-json";
+import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-file-changes";
 // import { convertNxExecutor } from '@nrwl/devkit';
 
-// export interface MultipleExecutorOptions {}
+// we follow the same structure @mui packages builds
+const OUTPUT_FOLDER_CJS = "node";
+const OUTPUT_FOLDER_MODERN = "modern";
 
-// async function treatTsupOutput(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ) {
-//   const { projectName } = context;
-//   const libDist = join("./dist", projectName);
-//   const cjsFolder = join(libDist, "./node");
-
-//   await ensureDir(cjsFolder);
-
-//   return new Promise((resolve) => {
-//     glob("**/*.js", { cwd: libDist }, async function (er, relativePaths) {
-//       await Promise.all(
-//         relativePaths.map(async (relativePath) => {
-//           const ext = extname(relativePath);
-//           const dir = dirname(relativePath);
-//           const srcDir = join(libDist, dir);
-//           const srcFile = join(libDist, relativePath);
-//           const srcFilename = basename(relativePath, ext);
-//           const destCjs = join(cjsFolder, relativePath);
-//           const pkgDest = join(srcDir, "./package.json");
-
-//           await move(srcFile, destCjs);
-
-//           // only write package.json file deeper than the root
-//           if (dir && dir !== ".") {
-//             writeJsonFile(pkgDest, {
-//               sideEffects: false,
-//               module: `./${srcFilename}.js`,
-//               main: relative(srcDir, destCjs),
-//               types: `./${srcFilename}.d.ts`,
-//             });
-//           }
-//         })
-//       );
-//       resolve(true);
-//     });
-//   });
-// }
-
-// async function treatTscOutput(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ) {
-//   const { projectName } = context;
-//   const libName = `.tsc/${projectName}`;
-//   const libDist = join("./dist", libName);
-
-//   return new Promise((resolve) => {
-//     glob("**/*.{ts,js}", { cwd: libDist }, async function (er, relativePaths) {
-//       await Promise.all(
-//         relativePaths.map(async (relativePath) => {
-//           const srcFile = join(libDist, relativePath);
-//           await move(srcFile, srcFile.replace(libName, projectName));
-//         })
-//       );
-//       resolve(true);
-//     });
-//   });
-// }
-
-// async function treatEntrypoints(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ) {
-//   const { projectName } = context;
-//   const libDist = join("./dist", projectName);
-//   const packagePath = join(libDist, "./package.json");
-//   const packageJson = readJsonFile(packagePath);
-
-//   return new Promise((resolve) => {
-//     packageJson.main = "./node/index.js";
-//     packageJson.module = "./index.js";
-//     writeJsonFile(packagePath, packageJson);
-//     resolve(true);
-//   });
-
-//   // disable package exports for now...they seem to broken deep imports
-//   // const exports = {};
-
-//   // return new Promise((resolve) => {
-//   //   glob("*.js", { cwd: libDist }, async function (er, relativePaths) {
-//   //     await Promise.all(
-//   //       relativePaths.map(async (relativePath) => {
-//   //         const ext = extname(relativePath);
-//   //         const srcFilename = basename(relativePath, ext);
-//   //         let isIndex = srcFilename === "index";
-
-//   //         exports[isIndex ? "." : `./${srcFilename}`] = {
-//   //           require: `./node/${srcFilename}.js`,
-//   //           import: `./${srcFilename}.js`,
-//   //         };
-//   //       })
-//   //     );
-
-//   //     packageJson.main = "./node/index.js";
-//   //     packageJson.module = "./index.js";
-//   //     packageJson.exports = exports;
-
-//   //     writeJsonFile(packagePath, packageJson);
-//   //     resolve(true);
-//   //   });
-
-//   //   packageJson.main = "./node/index.js";
-//   //   packageJson.module = "./index.js";
-
-//   //   writeJsonFile(packagePath, packageJson);
-//   //   resolve(true);
-//   // });
-// }
-
-// export default async function multipleExecutor(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ): Promise<{ success: boolean }> {
-//   await treatTsupOutput(options, context);
-//   await treatTscOutput(options, context);
-//   await treatEntrypoints(options, context);
-
-//   return { success: true };
-// }
-
-async function treatEsmOutput(
-  options: NormalizedExecutorOptions
-) {
-  const libDist = options.outputPath; // here we are in the `/esm` subfolder
+async function treatModernOutput(options: NormalizedExecutorOptions) {
+  const { outputPath } = options; // here we are in the `/OUTPUT_FOLDER_MODERN` subfolder
 
   return new Promise((resolve) => {
-    glob("**/*.{ts,js}", { cwd: libDist }, async function (er, relativePaths) {
-      await Promise.all(
-        relativePaths.map(async (relativePath) => {
-          const srcFile = join(libDist, relativePath);
-          const ext = extname(relativePath);
-          const dir = dirname(relativePath);
-          const filename = basename(relativePath, ext);
-          const destEsmDir = join(libDist, dir).replace("/esm", "");
-          const destCjs = join(libDist.replace("esm", "node"), relativePath);
-          const destPkg = join(destEsmDir, "./package.json");
-          
-          await move(srcFile, srcFile.replace("/esm", ""));
+    glob(
+      `!(${OUTPUT_FOLDER_CJS})/**/*.{ts,js}`,
+      { cwd: outputPath },
+      async function (er, relativePaths) {
+        await Promise.all(
+          relativePaths.map(async (relativePath) => {
+            const dir = dirname(relativePath);
+            const ext = extname(relativePath);
+            const fileName = basename(relativePath, ext);
+            const srcCjsFile = join(outputPath, relativePath);
+            const destEsmFile = srcCjsFile.replace(
+              `/${OUTPUT_FOLDER_MODERN}`,
+              ""
+            );
+            const destEsmDir = join(outputPath, dir).replace(
+              `/${OUTPUT_FOLDER_MODERN}`,
+              ""
+            );
+            const destCjsDir = join(
+              outputPath.replace(OUTPUT_FOLDER_MODERN, OUTPUT_FOLDER_CJS),
+              dir
+            );
+            const destPkg = join(destEsmDir, "./package.json");
 
-          // only write package.json file deeper than the root
-          if (dir && dir !== ".") {
-            writeJsonFile(destPkg, {
-              sideEffects: false,
-              module: `./${filename}.js`,
-              main: relative(destEsmDir, destCjs),
-              types: `./${filename}.d.ts`,
-            });
-          }
-        })
-      );
+            await move(srcCjsFile, destEsmFile);
 
-      await remove(libDist);
+            // only write package.json file deeper than the root and when we have an `index` entry file
+            if (fileName === "index" && dir && dir !== ".") {
+              writeJsonFile(destPkg, {
+                sideEffects: false,
+                module: `./${fileName}.js`,
+                main: join(relative(destEsmDir, destCjsDir), `${fileName}.js`),
+                types: `./${fileName}.d.ts`,
+              });
+            }
+          })
+        );
 
-      resolve(true);
-    });
+        await remove(outputPath);
+
+        resolve(true);
+      }
+    );
   });
 }
 
-async function treatEntries(
-  options: NormalizedExecutorOptions
-) {
+async function treatEntrypoints(options: NormalizedExecutorOptions) {
   const libDist = options.outputPath;
   const packagePath = join(libDist, "./package.json");
   const packageJson = readJsonFile(packagePath);
 
   return new Promise((resolve) => {
-    packageJson.main = "./node/index.js";
+    packageJson.main = `./${OUTPUT_FOLDER_CJS}/index.js`;
     packageJson.module = "./index.js";
     writeJsonFile(packagePath, packageJson);
     resolve(true);
@@ -221,12 +113,12 @@ function normalizeOptions(
     tsConfig: join(contextRoot, options.tsConfig),
     mainOutputPath: resolve(
       outputPath,
-      options.main.replace(`${projectRoot}/`, '').replace('.ts', '.js')
+      options.main.replace(`${projectRoot}/`, "").replace(".ts", ".js")
     ),
   };
 }
 
-async function* tscExecutor(
+async function* executor(
   _options: ExecutorOptions,
   context: ExecutorContext
 ) {
@@ -251,23 +143,23 @@ async function* tscExecutor(
     assets: _options.assets,
   });
 
-  // if (options.watch) {
-  //   const disposeWatchAssetChanges =
-  //     await assetHandler.watchAndProcessOnAssetChange();
-  //   const disposePackageJsonChanged = await watchForSingleFileChanges(
-  //     join(context.root, projectRoot),
-  //     'package.json',
-  //     () => updatePackageJson(options, context, target, dependencies)
-  //   );
-  //   process.on('exit', async () => {
-  //     await disposeWatchAssetChanges();
-  //     await disposePackageJsonChanged();
-  //   });
-  //   process.on('SIGTERM', async () => {
-  //     await disposeWatchAssetChanges();
-  //     await disposePackageJsonChanged();
-  //   });
-  // }
+  if (options.watch) {
+    const disposeWatchAssetChanges =
+      await assetHandler.watchAndProcessOnAssetChange();
+    const disposePackageJsonChanged = await watchForSingleFileChanges(
+      join(context.root, projectRoot),
+      "package.json",
+      () => updatePackageJson(options, context, target, dependencies)
+    );
+    process.on("exit", async () => {
+      await disposeWatchAssetChanges();
+      await disposePackageJsonChanged();
+    });
+    process.on("SIGTERM", async () => {
+      await disposeWatchAssetChanges();
+      await disposePackageJsonChanged();
+    });
+  }
 
   const tsConfigGenerated = readJsonFile(options.tsConfig);
   const initialOutputPath = options.outputPath;
@@ -281,29 +173,29 @@ async function* tscExecutor(
   tsConfigGenerated.compilerOptions.declaration = false;
   writeJsonFile(options.tsConfig, tsConfigGenerated);
 
-  options.outputPath = join(initialOutputPath, "/node");
+  options.outputPath = join(initialOutputPath, `/${OUTPUT_FOLDER_CJS}`);
 
   yield* compileTypeScriptFiles(options, context, async () => {
     await assetHandler.processAllAssetsOnce();
     updatePackageJson(options, context, target, dependencies);
   });
 
-  // generate ESM now:
+  // generate Modern now:
   // ---------------------------------------------------------------------------
   tsConfigGenerated.compilerOptions.module = "esnext";
   tsConfigGenerated.compilerOptions.declaration = true;
   writeJsonFile(options.tsConfig, tsConfigGenerated);
 
-  options.outputPath = join(initialOutputPath, "/esm")
+  options.outputPath = join(initialOutputPath, `/${OUTPUT_FOLDER_MODERN}`);
 
   return yield* compileTypeScriptFiles(options, context, async () => {
-    await treatEsmOutput(options);
+    await treatModernOutput(options);
 
     options.outputPath = initialOutputPath;
 
-    await treatEntries(options);
+    await treatEntrypoints(options);
   });
 }
 
-export default tscExecutor;
-// export default convertNxExecutor(tscExecutor);
+export default executor;
+// export default convertNxExecutor(executor);

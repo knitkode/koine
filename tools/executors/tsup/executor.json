@@ -1,9 +1,0 @@
-{
-  "executors": {
-    "build": {
-      "implementation": "./impl",
-      "schema": "./schema.json",
-      "description": "Runs `build`"
-    }
-  }
-}

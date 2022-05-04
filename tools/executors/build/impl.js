@@ -46,6 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __await = (this && this.__await) || function (v) { return this instanceof __await ? (this.v = v, this) : new __await(v); }
 var __asyncValues = (this && this.__asyncValues) || function (o) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
     var m = o[Symbol.asyncIterator], i;
@@ -53,7 +54,6 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
-var __await = (this && this.__await) || function (v) { return this instanceof __await ? (this.v = v, this) : new __await(v); }
 var __asyncDelegator = (this && this.__asyncDelegator) || function (o) {
     var i, p;
     return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
@@ -82,157 +82,55 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 exports.__esModule = true;
-var devkit_1 = require("@nrwl/devkit");
-var glob_1 = require("glob");
-var fs_extra_1 = require("fs-extra");
 var path_1 = require("path");
-// import { ExecutorContext } from '@nrwl/devkit';
+var fs_extra_1 = require("fs-extra");
+var glob_1 = require("glob");
+var devkit_1 = require("@nrwl/devkit");
 var assets_1 = require("@nrwl/workspace/src/utilities/assets");
 var check_dependencies_1 = require("@nrwl/js/src/utils/check-dependencies");
 var copy_assets_handler_1 = require("@nrwl/js/src/utils/copy-assets-handler");
 var tslib_dependency_1 = require("@nrwl/js/src/utils/tslib-dependency");
 var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
 var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
+var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
 // import { convertNxExecutor } from '@nrwl/devkit';
-// export interface MultipleExecutorOptions {}
-// async function treatTsupOutput(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ) {
-//   const { projectName } = context;
-//   const libDist = join("./dist", projectName);
-//   const cjsFolder = join(libDist, "./node");
-//   await ensureDir(cjsFolder);
-//   return new Promise((resolve) => {
-//     glob("**/*.js", { cwd: libDist }, async function (er, relativePaths) {
-//       await Promise.all(
-//         relativePaths.map(async (relativePath) => {
-//           const ext = extname(relativePath);
-//           const dir = dirname(relativePath);
-//           const srcDir = join(libDist, dir);
-//           const srcFile = join(libDist, relativePath);
-//           const srcFilename = basename(relativePath, ext);
-//           const destCjs = join(cjsFolder, relativePath);
-//           const pkgDest = join(srcDir, "./package.json");
-//           await move(srcFile, destCjs);
-//           // only write package.json file deeper than the root
-//           if (dir && dir !== ".") {
-//             writeJsonFile(pkgDest, {
-//               sideEffects: false,
-//               module: `./${srcFilename}.js`,
-//               main: relative(srcDir, destCjs),
-//               types: `./${srcFilename}.d.ts`,
-//             });
-//           }
-//         })
-//       );
-//       resolve(true);
-//     });
-//   });
-// }
-// async function treatTscOutput(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ) {
-//   const { projectName } = context;
-//   const libName = `.tsc/${projectName}`;
-//   const libDist = join("./dist", libName);
-//   return new Promise((resolve) => {
-//     glob("**/*.{ts,js}", { cwd: libDist }, async function (er, relativePaths) {
-//       await Promise.all(
-//         relativePaths.map(async (relativePath) => {
-//           const srcFile = join(libDist, relativePath);
-//           await move(srcFile, srcFile.replace(libName, projectName));
-//         })
-//       );
-//       resolve(true);
-//     });
-//   });
-// }
-// async function treatEntrypoints(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ) {
-//   const { projectName } = context;
-//   const libDist = join("./dist", projectName);
-//   const packagePath = join(libDist, "./package.json");
-//   const packageJson = readJsonFile(packagePath);
-//   return new Promise((resolve) => {
-//     packageJson.main = "./node/index.js";
-//     packageJson.module = "./index.js";
-//     writeJsonFile(packagePath, packageJson);
-//     resolve(true);
-//   });
-//   // disable package exports for now...they seem to broken deep imports
-//   // const exports = {};
-//   // return new Promise((resolve) => {
-//   //   glob("*.js", { cwd: libDist }, async function (er, relativePaths) {
-//   //     await Promise.all(
-//   //       relativePaths.map(async (relativePath) => {
-//   //         const ext = extname(relativePath);
-//   //         const srcFilename = basename(relativePath, ext);
-//   //         let isIndex = srcFilename === "index";
-//   //         exports[isIndex ? "." : `./${srcFilename}`] = {
-//   //           require: `./node/${srcFilename}.js`,
-//   //           import: `./${srcFilename}.js`,
-//   //         };
-//   //       })
-//   //     );
-//   //     packageJson.main = "./node/index.js";
-//   //     packageJson.module = "./index.js";
-//   //     packageJson.exports = exports;
-//   //     writeJsonFile(packagePath, packageJson);
-//   //     resolve(true);
-//   //   });
-//   //   packageJson.main = "./node/index.js";
-//   //   packageJson.module = "./index.js";
-//   //   writeJsonFile(packagePath, packageJson);
-//   //   resolve(true);
-//   // });
-// }
-// export default async function multipleExecutor(
-//   options: MultipleExecutorOptions,
-//   context: ExecutorContext
-// ): Promise<{ success: boolean }> {
-//   await treatTsupOutput(options, context);
-//   await treatTscOutput(options, context);
-//   await treatEntrypoints(options, context);
-//   return { success: true };
-// }
-function treatEsmOutput(options) {
+// we follow the same structure @mui packages builds
+var OUTPUT_FOLDER_CJS = "node";
+var OUTPUT_FOLDER_MODERN = "modern";
+function treatModernOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
-        var libDist;
+        var outputPath;
         return __generator(this, function (_a) {
-            libDist = options.outputPath;
+            outputPath = options.outputPath;
             return [2 /*return*/, new Promise(function (resolve) {
-                    (0, glob_1.glob)("**/*.{ts,js}", { cwd: libDist }, function (er, relativePaths) {
+                    (0, glob_1.glob)("!(".concat(OUTPUT_FOLDER_CJS, ")/**/*.{ts,js}"), { cwd: outputPath }, function (er, relativePaths) {
                         return __awaiter(this, void 0, void 0, function () {
                             var _this = this;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
-                                            var srcFile, ext, dir, srcDir, srcFilename, destCjs, destEsmDir, pkgDest;
+                                            var dir, ext, fileName, srcCjsFile, destEsmFile, destEsmDir, destCjsDir, destPkg;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
-                                                        srcFile = (0, path_1.join)(libDist, relativePath);
-                                                        ext = (0, path_1.extname)(relativePath);
                                                         dir = (0, path_1.dirname)(relativePath);
-                                                        srcDir = (0, path_1.join)(libDist, dir);
-                                                        srcFilename = (0, path_1.basename)(relativePath, ext);
-                                                        destCjs = (0, path_1.join)(options.outputPath.replace("esm", "node"), relativePath);
-                                                        destEsmDir = srcDir.replace("/esm", "");
-                                                        pkgDest = (0, path_1.join)(destEsmDir, "./package.json");
-                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, srcFile.replace("/esm", ""))];
+                                                        ext = (0, path_1.extname)(relativePath);
+                                                        fileName = (0, path_1.basename)(relativePath, ext);
+                                                        srcCjsFile = (0, path_1.join)(outputPath, relativePath);
+                                                        destEsmFile = srcCjsFile.replace("/".concat(OUTPUT_FOLDER_MODERN), "");
+                                                        destEsmDir = (0, path_1.join)(outputPath, dir).replace("/".concat(OUTPUT_FOLDER_MODERN), "");
+                                                        destCjsDir = (0, path_1.join)(outputPath.replace(OUTPUT_FOLDER_MODERN, OUTPUT_FOLDER_CJS), dir);
+                                                        destPkg = (0, path_1.join)(destEsmDir, "./package.json");
+                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcCjsFile, destEsmFile)];
                                                     case 1:
                                                         _a.sent();
-                                                        // only write package.json file deeper than the root
-                                                        if (dir && dir !== ".") {
-                                                            (0, devkit_1.writeJsonFile)(pkgDest, {
+                                                        // only write package.json file deeper than the root and when we have an `index` entry file
+                                                        if (fileName === "index" && dir && dir !== ".") {
+                                                            (0, devkit_1.writeJsonFile)(destPkg, {
                                                                 sideEffects: false,
-                                                                module: "./".concat(srcFilename, ".js"),
-                                                                main: (0, path_1.relative)(srcDir, destCjs),
-                                                                types: "./".concat(srcFilename, ".d.ts")
+                                                                module: "./".concat(fileName, ".js"),
+                                                                main: (0, path_1.join)((0, path_1.relative)(destEsmDir, destCjsDir), "".concat(fileName, ".js")),
+                                                                types: "./".concat(fileName, ".d.ts")
                                                             });
                                                         }
                                                         return [2 /*return*/];
@@ -241,7 +139,7 @@ function treatEsmOutput(options) {
                                         }); }))];
                                     case 1:
                                         _a.sent();
-                                        return [4 /*yield*/, (0, fs_extra_1.remove)(libDist)];
+                                        return [4 /*yield*/, (0, fs_extra_1.remove)(outputPath)];
                                     case 2:
                                         _a.sent();
                                         resolve(true);
@@ -254,7 +152,7 @@ function treatEsmOutput(options) {
         });
     });
 }
-function treatEntries(options) {
+function treatEntrypoints(options) {
     return __awaiter(this, void 0, void 0, function () {
         var libDist, packagePath, packageJson;
         return __generator(this, function (_a) {
@@ -262,7 +160,7 @@ function treatEntries(options) {
             packagePath = (0, path_1.join)(libDist, "./package.json");
             packageJson = (0, devkit_1.readJsonFile)(packagePath);
             return [2 /*return*/, new Promise(function (resolve) {
-                    packageJson.main = "./node/index.js";
+                    packageJson.main = "./".concat(OUTPUT_FOLDER_CJS, "/index.js");
                     packageJson.module = "./index.js";
                     (0, devkit_1.writeJsonFile)(packagePath, packageJson);
                     resolve(true);
@@ -276,11 +174,11 @@ function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
         options.watch = false;
     }
     var files = (0, assets_1.assetGlobsToFiles)(options.assets, contextRoot, outputPath);
-    return __assign(__assign({}, options), { root: contextRoot, sourceRoot: sourceRoot, projectRoot: projectRoot, files: files, outputPath: outputPath, tsConfig: (0, path_1.join)(contextRoot, options.tsConfig), mainOutputPath: (0, path_1.resolve)(outputPath, options.main.replace("".concat(projectRoot, "/"), '').replace('.ts', '.js')) });
+    return __assign(__assign({}, options), { root: contextRoot, sourceRoot: sourceRoot, projectRoot: projectRoot, files: files, outputPath: outputPath, tsConfig: (0, path_1.join)(contextRoot, options.tsConfig), mainOutputPath: (0, path_1.resolve)(outputPath, options.main.replace("".concat(projectRoot, "/"), "").replace(".ts", ".js")) });
 }
-function tscExecutor(_options, context) {
-    return __asyncGenerator(this, arguments, function tscExecutor_1() {
-        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, assetHandler, tsConfigGenerated, initialOutputPath;
+function executor(_options, context) {
+    return __asyncGenerator(this, arguments, function executor_1() {
+        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tsConfigGenerated, initialOutputPath;
         var _this = this;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -298,6 +196,41 @@ function tscExecutor(_options, context) {
                         outputDir: _options.outputPath,
                         assets: _options.assets
                     });
+                    if (!options.watch) return [3 /*break*/, 3];
+                    return [4 /*yield*/, __await(assetHandler.watchAndProcessOnAssetChange())];
+                case 1:
+                    disposeWatchAssetChanges_1 = _c.sent();
+                    return [4 /*yield*/, __await((0, watch_for_single_file_changes_1.watchForSingleFileChanges)((0, path_1.join)(context.root, projectRoot), "package.json", function () { return (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies); }))];
+                case 2:
+                    disposePackageJsonChanged_1 = _c.sent();
+                    process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, disposeWatchAssetChanges_1()];
+                                case 1:
+                                    _a.sent();
+                                    return [4 /*yield*/, disposePackageJsonChanged_1()];
+                                case 2:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    process.on("SIGTERM", function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, disposeWatchAssetChanges_1()];
+                                case 1:
+                                    _a.sent();
+                                    return [4 /*yield*/, disposePackageJsonChanged_1()];
+                                case 2:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                    _c.label = 3;
+                case 3:
                     tsConfigGenerated = (0, devkit_1.readJsonFile)(options.tsConfig);
                     initialOutputPath = options.outputPath;
                     // immediately get a package.json file?
@@ -307,7 +240,7 @@ function tscExecutor(_options, context) {
                     tsConfigGenerated.compilerOptions.module = "commonjs";
                     tsConfigGenerated.compilerOptions.declaration = false;
                     (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfigGenerated);
-                    options.outputPath = (0, path_1.join)(initialOutputPath, "/node");
+                    options.outputPath = (0, path_1.join)(initialOutputPath, "/".concat(OUTPUT_FOLDER_CJS));
                     return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(options, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
@@ -319,35 +252,35 @@ function tscExecutor(_options, context) {
                                 }
                             });
                         }); }))))];
-                case 1: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 2:
+                case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 5:
                     _c.sent();
-                    // generate ESM now:
+                    // generate Modern now:
                     // ---------------------------------------------------------------------------
                     tsConfigGenerated.compilerOptions.module = "esnext";
                     tsConfigGenerated.compilerOptions.declaration = true;
                     (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfigGenerated);
-                    options.outputPath = (0, path_1.join)(initialOutputPath, "/esm");
+                    options.outputPath = (0, path_1.join)(initialOutputPath, "/".concat(OUTPUT_FOLDER_MODERN));
                     return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(options, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, treatEsmOutput(options)];
+                                    case 0: return [4 /*yield*/, treatModernOutput(options)];
                                     case 1:
                                         _a.sent();
                                         options.outputPath = initialOutputPath;
-                                        return [4 /*yield*/, treatEntries(options)];
+                                        return [4 /*yield*/, treatEntrypoints(options)];
                                     case 2:
                                         _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
                         }); }))))];
-                case 3: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 5: return [2 /*return*/, _c.sent()];
+                case 6: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 7: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 8: return [2 /*return*/, _c.sent()];
             }
         });
     });
 }
-exports["default"] = tscExecutor;
-// export default convertNxExecutor(tscExecutor);
+exports["default"] = executor;
+// export default convertNxExecutor(executor);

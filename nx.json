@@ -7,32 +7,10 @@
     "libsDir": "packages"
   },
   "targetDependencies": {
-    "build-tsup": [
-      {
-        "target": "build-tsup",
-        "projects": "dependencies"
-      }
-    ],
-    "build-tsc": [
-      {
-        "target": "build-tsc",
-        "projects": "dependencies"
-      }
-    ],
     "build": [
       {
         "target": "build",
         "projects": "dependencies"
-      }
-    ],
-    "_build": [
-      {
-        "target": "build-tsc",
-        "projects": "self"
-      },
-      {
-        "target": "build-tsup",
-        "projects": "self"
       }
     ]
   },
@@ -42,8 +20,7 @@
       "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": [
-          "build-tsup",
-          "build-tsc",
+          "build",
           "lint",
           "test",
           "e2e"
