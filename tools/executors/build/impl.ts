@@ -118,10 +118,7 @@ function normalizeOptions(
   };
 }
 
-async function* executor(
-  _options: ExecutorOptions,
-  context: ExecutorContext
-) {
+async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   const { sourceRoot, root } = context.workspace.projects[context.projectName];
   const options = normalizeOptions(_options, context.root, sourceRoot, root);
 
@@ -164,7 +161,7 @@ async function* executor(
   const tsConfigGenerated = readJsonFile(options.tsConfig);
   const initialOutputPath = options.outputPath;
 
-  // immediately get a package.json file?
+  // immediately output a package.json file
   updatePackageJson(options, context, target, dependencies);
 
   // generate CommonJS:

@@ -233,7 +233,7 @@ function executor(_options, context) {
                 case 3:
                     tsConfigGenerated = (0, devkit_1.readJsonFile)(options.tsConfig);
                     initialOutputPath = options.outputPath;
-                    // immediately get a package.json file?
+                    // immediately output a package.json file
                     (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
                     // generate CommonJS:
                     // ---------------------------------------------------------------------------
