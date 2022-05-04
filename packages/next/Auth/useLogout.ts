@@ -2,8 +2,8 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import { parseURL } from "@koine/utils";
-import { useT } from "../I18n";
-import { getAuthRoutes, getCallbackUrl } from "./helpers";
+import { useT } from "../I18n/index.js";
+import { getAuthRoutes, getCallbackUrl } from "./helpers.js";
 
 export function useLogout() {
   const t = useT();

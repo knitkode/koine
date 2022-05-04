@@ -106,7 +106,7 @@ export const buildTags = ({
     defaults.tplTitle = titleTemplate;
   }
 
-  title = title || seo?.title || "";
+  title = title || seo?.title || ".js";
 
   if (title) {
     if (defaults.tplTitle && defaults.tplTitle !== title) {

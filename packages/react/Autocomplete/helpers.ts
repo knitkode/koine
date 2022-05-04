@@ -1,4 +1,4 @@
-import type { Option } from "../types";
+import type { Option } from "../types.js";
 import { isString, isArray } from "@koine/utils";
 
 export type AutocompleteValue =

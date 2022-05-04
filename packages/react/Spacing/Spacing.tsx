@@ -8,7 +8,7 @@ import {
   SpacingProperty,
   SpacingDirectionAxis,
   SpacingDevices,
-} from "../styles/spacing";
+} from "../styles/spacing.js";
 
 const Root = styled.div<SpacingPropsStyled>`
   ${(p) => p.$top && spacingTop.call(p.theme, ...p.$top)}

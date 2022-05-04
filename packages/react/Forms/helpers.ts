@@ -4,7 +4,7 @@ import type {
   UseFormSetValue,
 } from "react-hook-form";
 import { isString, matchSorter } from "@koine/utils";
-import type { Option } from "../types";
+import type { Option } from "../types.js";
 
 type FormControlNativeType = "input" | "select" | "textarea";
 

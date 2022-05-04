@@ -1,4 +1,4 @@
-import { isServer } from "./ssr";
+import { isServer } from "./ssr.js";
 
 /**
  * @see https://stackoverflow.com/a/3540295

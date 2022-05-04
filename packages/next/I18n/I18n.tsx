@@ -9,10 +9,10 @@
  */
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
-import format from "date-fns/format";
+import format from "date-fns/format/index.js";
 import useTranslation from "next-translate/useTranslation";
-import type { Option } from "@koine/react";
-import { useDateLocale } from "@koine/react";
+import type { Option } from "@koine/react/index.js";
+import { useDateLocale } from "@koine/react/index.js";
 
 export { default as T } from "next-translate/Trans";
 // export const T = (props: TransProps) => <Trans {...props} />;

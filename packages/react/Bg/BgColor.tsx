@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { overlay } from "../styles";
-import { Container, ContainerProps } from "../Grid";
+import { overlay } from "../styles/styled.js";
+import { Container, ContainerProps } from "../Grid/index.js";
 
 export const BgColor = styled.div<{
   $bg: BgContainerProps["color"];

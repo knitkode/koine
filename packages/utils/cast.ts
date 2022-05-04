@@ -1,4 +1,4 @@
-import { isNumber } from "./is";
+import { isNumber } from "./is.js";
 
 export function toNumber(input?: string | number, fallback?: number) {
   return isNumber(input) ? input : input ? parseFloat(input) : fallback || 0;

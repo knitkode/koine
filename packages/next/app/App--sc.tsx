@@ -1,8 +1,8 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
-import { AppHead } from "./AppHead";
-import { AppThemeSc, AppThemeScProps } from "./AppTheme--sc";
-import { AppMainSc, AppMainScProps } from "./AppMain--sc";
+import { AppHead } from "./AppHead.js";
+import { AppThemeSc, AppThemeScProps } from "./AppTheme--sc.js";
+import { AppMainSc, AppMainScProps } from "./AppMain--sc.js";
 
 export type AppScProps = NextAppProps & AppThemeScProps & AppMainScProps;
 
@@ -17,11 +17,11 @@ export type AppScProps = NextAppProps & AppThemeScProps & AppMainScProps;
  *   AppAuthScProps,
  *   Favicon,
  *   AnalyticsGoogle,
- * } from "@koine/next";
+ * } from "@koine/next/index.js";
  * import { theme } from "src/helpers/theme";
  * import { Layout, ProgressOverlay } from "src/components/Layout";
- * // import "@fontsource/myfont/800.css";
- * // import "src/helpers/theme.css";
+ * // import "@fontsource/myfont/800.css.js";
+ * // import "src/helpers/theme.css.js";
  *
  * const motion = () => import("@koine/react/m/max").then((m) => m.default);
  *

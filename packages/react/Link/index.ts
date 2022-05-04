@@ -1,2 +1,2 @@
-export * from "./Link";
-export * from "./LinkBlank";
+export * from "./Link.js";
+export * from "./LinkBlank.js";

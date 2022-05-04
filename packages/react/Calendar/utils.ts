@@ -1,21 +1,21 @@
-import isWithinInterval from "date-fns/isWithinInterval";
-import endOfMonth from "date-fns/endOfMonth";
-import startOfWeek from "date-fns/startOfWeek";
-import endOfWeek from "date-fns/endOfWeek";
-import subMonths from "date-fns/subMonths";
-import addMonths from "date-fns/addMonths";
-import subWeeks from "date-fns/subWeeks";
-import addWeeks from "date-fns/addWeeks";
+import isWithinInterval from "date-fns/isWithinInterval/index.js";
+import endOfMonth from "date-fns/endOfMonth/index.js";
+import startOfWeek from "date-fns/startOfWeek/index.js";
+import endOfWeek from "date-fns/endOfWeek/index.js";
+import subMonths from "date-fns/subMonths/index.js";
+import addMonths from "date-fns/addMonths/index.js";
+import subWeeks from "date-fns/subWeeks/index.js";
+import addWeeks from "date-fns/addWeeks/index.js";
+import addDays from "date-fns/addDays/index.js";
 import type {
+  CalendarEventsByTimestamp,
   CalendarEventsMap,
   CalendarEvent,
   CalendarView,
   CalendarViewWeeks,
   CalendarViewWeek,
   CalendarViewDay,
-} from "./types";
-import addDays from "date-fns/addDays";
-import { CalendarEventsByTimestamp } from ".";
+} from "./types.js";
 
 export function getEventTimestamp(dateLike: number | Date | string): number {
   const date = new Date(dateLike);

@@ -1,8 +1,8 @@
-import { classed, extendComponent } from "../../helpers";
-import type { ComponentsProps } from "../DialogMui";
-import * as _ from "../DialogMui";
+import { classed, extendComponent } from "../../helpers/index.js";
+import type { ComponentsProps } from "../DialogMui.js";
+import * as _ from "../DialogMui.js";
 
-export type { KoineDialogProps } from "../DialogMui";
+export type { KoineDialogProps } from "../DialogMui.js";
 
 export const Root = classed(_.Root)`< class="dialog fixed z-[1300] inset-0`;
 

@@ -3,8 +3,8 @@ import type {
   FieldErrors as RHF_FieldErrors,
 } from "react-hook-form";
 import styled, { css } from "styled-components";
-import type { Translate } from "../../types";
-import { Feedback } from "../Feedback";
+import type { Translate } from "../../types.js";
+import { Feedback } from "../Feedback/index.js";
 
 export const field = css`
   padding-bottom: 20px;
@@ -81,7 +81,7 @@ export const Field: React.FC<FieldProps> = ({
   if (err) {
     if (name && t && err.type !== "plain") {
       const translationKey =
-        err.type && YUP_ERROR_TYPES_AS_KEYS[err.type] ? err.type : "";
+        err.type && YUP_ERROR_TYPES_AS_KEYS[err.type] ? err.type : ".js";
       msg = t(`errors.${name}.${translationKey || err.message}`);
     } else {
       msg = err.message;

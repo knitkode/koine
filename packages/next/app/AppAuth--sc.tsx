@@ -1,9 +1,9 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import { AppHead } from "./AppHead";
-import { AppThemeSc, AppThemeScProps } from "./AppTheme--sc";
-import { AppMainSc, AppMainScProps } from "./AppMain--sc";
+import { AppHead } from "./AppHead.js";
+import { AppThemeSc, AppThemeScProps } from "./AppTheme--sc.js";
+import { AppMainSc, AppMainScProps } from "./AppMain--sc.js";
 
 export type AppAuthScProps = NextAppProps & AppThemeScProps & AppMainScProps;
 

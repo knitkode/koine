@@ -1,6 +1,6 @@
 import type { MotionProps } from "framer-motion";
 
-export * from "./index";
+export * from "./index.js";
 
 export const dialogBackdropMotion: MotionProps = {
   initial: {

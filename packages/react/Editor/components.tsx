@@ -1,11 +1,11 @@
 import styled, { createGlobalStyle } from "styled-components";
-import { IconButton } from "../Buttons/IconButton";
-import { inputPadding, inputBorder, inputFocus } from "../Forms/styles";
+import { IconButton } from "../Buttons/IconButton.js";
+import { inputPadding, inputBorder, inputFocus } from "../Forms/styles.js";
 
 export {
   MdFormatBold as EditorIconBold,
   MdFormatItalic as EditorIconItalic,
-} from "react-icons/md";
+} from "react-icons/md/index.js";
 
 export const EditorRoot = styled.div`
   ${inputBorder}

@@ -23,8 +23,8 @@ export const Autocomplete = null;
 //   AutocompleteRoot,
 //   AutocompleteInput,
 //   AutocompleteLabel,
-// } from "./components";
-// import type { Option } from "../types";
+// } from "./components.js";
+// import type { Option } from "../types.js";
 
 // import { SetRequired } from "@koine/utils";
 

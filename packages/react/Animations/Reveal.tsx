@@ -5,7 +5,7 @@ import {
   useSpring,
   useReducedMotion,
 } from "framer-motion";
-import { useReveal, UseRevealOptions } from "./useReveal";
+import { useReveal, UseRevealOptions } from "./useReveal.js";
 
 export type RevealProps = React.PropsWithChildren<UseRevealOptions>;
 

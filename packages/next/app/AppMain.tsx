@@ -1,9 +1,9 @@
 import React from "react";
 import type { AppProps as NextAppProps } from "next/app";
 import type { HTMLMotionProps } from "framer-motion";
-import type { SeoDefaultsProps } from "../Seo";
-import type { NextProgressProps } from "../NextProgress";
-import type { MotionProviderFeatures } from "@koine/react/m";
+import type { SeoDefaultsProps } from "../Seo/index.js";
+import type { NextProgressProps } from "../NextProgress/index.js";
+import type { MotionProviderFeatures } from "@koine/react/m/index.js";
 
 export type AppMainBaseProps = NextAppProps & {
   /**

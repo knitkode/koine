@@ -4,8 +4,8 @@ import { ThemeProvider, Theme } from "@mui/material/styles";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Global, css } from "@emotion/react";
-import { stylesGlobal } from "@koine/react/styles/Global";
-import { createEmotionCache } from "../utils/emotion-cache";
+import { stylesGlobal } from "@koine/react/styles/Global.js";
+import { createEmotionCache } from "../utils/emotion-cache.js";
 
 // client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();

@@ -1,15 +1,15 @@
 import React, { forwardRef } from "react";
 import ModalUnstyled, {
   type ModalUnstyledProps,
-} from "@mui/base/ModalUnstyled";
+} from "@mui/base/ModalUnstyled/index.js";
 import { type MotionProps } from "framer-motion";
-import { MdClear as IconClose } from "react-icons/md";
+import { MdClear as IconClose } from "react-icons/md/index.js";
 import {
   extendComponent,
   // type OverridableComponents,
   type WithComponents,
   type Simplify,
-} from "../helpers";
+} from "../helpers/index.js";
 
 // export const koineDialogBg = `
 //   background: var(--bodyBg);

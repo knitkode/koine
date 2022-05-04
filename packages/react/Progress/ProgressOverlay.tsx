@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import styled from "styled-components";
 import { m } from "framer-motion";
-import { ProgressCircular } from "./ProgressCircular";
-import { ProgressLinear } from "./ProgressLinear";
-import { useHeader } from "../Header";
+import { ProgressCircular } from "./ProgressCircular.js";
+import { ProgressLinear } from "./ProgressLinear.js";
+import { useHeader } from "../Header/useHeader.js";
 
 const ProgressOverlayWrap = styled(m.div)`
   z-index: 10000;
@@ -43,7 +43,7 @@ export const ProgressOverlay = ({ running }: ProgressOverlayProps) => {
   // const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    document.body.style.cursor = running ? "wait" : "";
+    document.body.style.cursor = running ? "wait" : ".js";
   }, [running]);
 
   return (

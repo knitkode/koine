@@ -3,10 +3,10 @@ import styled from "styled-components";
 import {
   ImEye as IconVisible,
   ImEyeBlocked as IconInvisible,
-} from "react-icons/im";
-import { Label } from "../Label/Label";
-import { InputNative } from "../Input/Input";
-import type { FormControl } from "../helpers";
+} from "react-icons/im/index.js";
+import { Label } from "../Label/Label.js";
+import { InputNative } from "../Input/Input.js";
+import type { FormControl } from "../helpers.js";
 
 const ICON_WIDTH = "2em";
 

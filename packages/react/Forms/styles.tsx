@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { stateFocus } from "../styles/styled";
-import { ProgressLinear } from "../Progress/ProgressLinear";
-import { invisible } from "../styles/styled";
+import { stateFocus } from "../styles/styled.js";
+import { ProgressLinear } from "../Progress/ProgressLinear.js";
+import { invisible } from "../styles/styled.js";
 
 export const InputInvisible = styled.input`
   ${invisible}

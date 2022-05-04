@@ -3,7 +3,7 @@ import type { UseFormProps, FieldValues } from "react-hook-form";
 import type { ObjectSchema } from "yup";
 import { useForm as _useForm } from "react-hook-form";
 import { yupResolver as resolver } from "@hookform/resolvers/yup";
-import { useT, TranslateNamespace } from "../I18n";
+import { useT, TranslateNamespace } from "../I18n/index.js";
 
 export function useForm<T extends FieldValues>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

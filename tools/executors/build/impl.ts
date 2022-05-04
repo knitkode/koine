@@ -164,7 +164,7 @@ export async function buildExecutor(
     // minifyIdentifiers: true,
     // replaceNodeEnv: true,
     esbuildOptions(options, ctx) {
-      // options.target = "esnext";
+      // options.target = "esnext.js";
       // options.define.foo = '"bar"'
       options.absWorkingDir = context.root;
     },

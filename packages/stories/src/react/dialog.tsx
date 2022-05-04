@@ -1,6 +1,6 @@
 // import { Story, Meta } from "@storybook/react";
 import React, { useState } from "react";
-import { LoremIpsum } from "./lorem";
+import { LoremIpsum } from "./lorem.js";
 
 type StoryDialogProps = {
   Dialog: React.FC<any>;

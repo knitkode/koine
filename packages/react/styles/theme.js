@@ -1,5 +1,20 @@
 import { useTheme as _useTheme } from "styled-components";
-const DEFAULT_BREAKPOINTS = {
+var __assign =
+  (this && this.__assign) ||
+  function () {
+    __assign =
+      Object.assign ||
+      function (t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s)
+            if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+      };
+    return __assign.apply(this, arguments);
+  };
+var DEFAULT_BREAKPOINTS = {
   xs: 0,
   sm: 440,
   md: 768,
@@ -18,24 +33,25 @@ const DEFAULT_BREAKPOINTS = {
  * BREAKPOINTS=xs:0,sm:440,md:768,lg:1024,xl:1368,xxl:1690
  * ```
  */
-export const breakpoints = process.env["BREAKPOINTS"]
-  ? process.env["BREAKPOINTS"].split(",").reduce((map, pair) => {
-      const [key, value] = pair.split(":");
+export var breakpoints = process.env["BREAKPOINTS"]
+  ? process.env["BREAKPOINTS"].split(",").reduce(function (map, pair) {
+      var _a = pair.split(":"),
+        key = _a[0],
+        value = _a[1];
       map[key] = parseFloat(value);
       return map;
     }, {})
   : DEFAULT_BREAKPOINTS;
-const themeDefault = {
+var themeDefault = {
   maxWidth: breakpoints.xxl,
-  breakpoints,
+  breakpoints: breakpoints,
   devices: {
     mobile: "sm",
     tablet: "md",
     desktop: "lg",
   },
 };
-export const createTheme = (options) => ({
-  ...themeDefault,
-  ...options,
-});
-export const useTheme = _useTheme;
+export var createTheme = function (options) {
+  return __assign(__assign({}, themeDefault), options);
+};
+export var useTheme = _useTheme;

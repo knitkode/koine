@@ -2,9 +2,9 @@ import styled from "styled-components";
 import {
   CgArrowRightR as IconArrowRight,
   CgArrowLeftR as IconArrowLeft,
-} from "react-icons/cg";
+} from "react-icons/cg/index.js";
 import { ensureInt } from "@koine/utils";
-import { KoineComponentProps, KoineComponent } from "../types";
+import { KoineComponentProps, KoineComponent } from "../types.js";
 
 const Root = styled.nav`
   display: flex;

@@ -7,7 +7,7 @@ import {
   Col,
   ColProps,
   GRID_GUTTER_DEFAULT as DF,
-} from "../Grid";
+} from "../Grid/index.js";
 
 export const CarouselCssRow = styled(Row)<SetRequired<RowProps, "$gutter">>`
   ${({ $gutter: cs, theme: { gutter } }) => `

@@ -3,7 +3,7 @@
 
 import { Story, Meta } from "@storybook/react";
 import React, { createElement } from "react";
-import { classed } from "./classed";
+import { classed } from "./classed.js";
 
 type SharedClassedProps = React.PropsWithChildren<{
   test?: string;
@@ -59,7 +59,7 @@ function classedBind<Props extends {} = {}>(
   props: Props
 ) {
   // @ts-expect-error no time now
-  const classNameImpl = props.className ? " " + props.className : "";
+  const classNameImpl = props.className ? " " + props.className : ".js";
   // return <this className={this.props.className + classNameImpl} {...props} />;
   return createElement(
     this.props.as || this.type,
@@ -85,7 +85,7 @@ function classedDynamic(
 ) {
   return function (propsImplementation) {
     const { props, type } = ComponentFn(propsImplementation);
-    const classNameDefault = props.className ? " " + props.className : "";
+    const classNameDefault = props.className ? " " + props.className : ".js";
     return createElement(props.as || type, {
       ...props,
       ...propsImplementation,
@@ -124,7 +124,7 @@ function classedTaggedStatic<Props extends {} = {}, T extends string = string>(
 
   return function (props: Props) {
     // @ts-expect-error no time now
-    const classCustom = props?.className ? " " + props?.className : "";
+    const classCustom = props?.className ? " " + props?.className : ".js";
     return createElement(componentName, {
       ...props,
       className: classDefault + classCustom,

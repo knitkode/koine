@@ -19,10 +19,10 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@reach/disclosure";
-import { BsBoxArrowInDown as IconCollapse } from "react-icons/bs";
-import { btnStyleReset } from "../Buttons";
-import { useWindowSize } from "../hooks/useWindowSize";
-import { InputInvisible } from "../Forms/styles";
+import { BsBoxArrowInDown as IconCollapse } from "react-icons/bs/index.js";
+import { btnStyleReset } from "../Buttons/index.js";
+import { useWindowSize } from "../hooks/useWindowSize.js";
+import { InputInvisible } from "../Forms/styles.js";
 
 export type CollapsableStyledProps = {
   $expanded?: boolean;

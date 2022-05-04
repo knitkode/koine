@@ -1,6 +1,9 @@
-// export type { AutocompleteProps } from "./AutocompleteDownshift";
-// export { Autocomplete } from "./AutocompleteDownshift";
-export type { AutocompleteProps, AutocompleteConfig } from "./AutocompleteMui";
-export { Autocomplete } from "./AutocompleteMui";
-// export type { AutocompleteProps } from "./AutocompleteReach";
-// export { Autocomplete } from "./AutocompleteReach";
+// export type { AutocompleteProps } from "./AutocompleteDownshift.js";
+// export { Autocomplete } from "./AutocompleteDownshift.js";
+export type {
+  AutocompleteProps,
+  AutocompleteConfig,
+} from "./AutocompleteMui.js";
+export { Autocomplete } from "./AutocompleteMui.js";
+// export type { AutocompleteProps } from "./AutocompleteReach.js";
+// export { Autocomplete } from "./AutocompleteReach.js";

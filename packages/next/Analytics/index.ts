@@ -1,1 +1,1 @@
-export * from "./AnalyticsGoogle";
+export * from "./AnalyticsGoogle.js";

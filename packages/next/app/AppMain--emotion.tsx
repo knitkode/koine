@@ -1,10 +1,10 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { AnimatePresence, m } from "framer-motion";
-import { MotionProvider } from "@koine/react/m";
-import { SeoDefaults } from "../Seo";
-import { NextProgress } from "../NextProgress";
-import type { AppMainBaseProps, AppMainFramerProps } from "./AppMain";
+import { MotionProvider } from "@koine/react/m/index.js";
+import { SeoDefaults } from "../Seo/index.js";
+import { NextProgress } from "../NextProgress/index.js";
+import type { AppMainBaseProps, AppMainFramerProps } from "./AppMain.js";
 
 export type AppMainEmotionProps = AppMainBaseProps & AppMainFramerProps;
 

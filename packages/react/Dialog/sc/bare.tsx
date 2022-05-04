@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import { extendComponent } from "../../helpers";
-import { inset0 } from "../../styles/styled";
-import { IconButton } from "../../Buttons";
-import type { Components } from "../DialogMui";
-import * as _ from "../DialogMui";
+import { extendComponent } from "../../helpers/index.js";
+import { inset0 } from "../../styles/styled.js";
+import { IconButton } from "../../Buttons/index.js";
+import type { Components } from "../DialogMui.js";
+import * as _ from "../DialogMui.js";
 
-export type { KoineDialogProps } from "../DialogMui";
+export type { KoineDialogProps } from "../DialogMui.js";
 
 export const Root = styled(_.Root)`
   z-index: 1300;

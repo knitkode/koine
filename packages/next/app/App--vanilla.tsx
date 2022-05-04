@@ -1,8 +1,8 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
-import { AppHead } from "./AppHead";
-import { AppThemeVanilla, AppThemeVanillaProps } from "./AppTheme--vanilla";
-import { AppMainVanilla, AppMainVanillaProps } from "./AppMain--vanilla";
+import { AppHead } from "./AppHead.js";
+import { AppThemeVanilla, AppThemeVanillaProps } from "./AppTheme--vanilla.js";
+import { AppMainVanilla, AppMainVanillaProps } from "./AppMain--vanilla.js";
 
 export type AppVanillaProps = NextAppProps &
   AppThemeVanillaProps &
@@ -19,11 +19,11 @@ export type AppVanillaProps = NextAppProps &
  *   AppVanillaProps,
  *   Favicon,
  *   AnalyticsGoogle,
- * } from "@koine/next";
+ * } from "@koine/next/index.js";
  * import { theme } from "src/helpers/theme";
  * import { Layout } from "src/components/Layout";
- * // import "@fontsource/myfont/800.css";
- * // import "src/helpers/theme.css";
+ * // import "@fontsource/myfont/800.css.js";
+ * // import "src/helpers/theme.css.js";
  *
  * const motion = () => import("@koine/react/m/max").then((m) => m.default);
  *

@@ -29,7 +29,7 @@ export const TextLoopPiece: React.FC<TextLoopPieceProps> = ({
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (!placeholderRef.current) return;
-      placeholderRef.current.innerHTML = text + "";
+      placeholderRef.current.innerHTML = text + ".js";
       if (inline) setWidth(placeholderRef.current.offsetWidth);
       setContent({ data: text + "", key: new Date() + "" });
     }, delay);

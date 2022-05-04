@@ -22,12 +22,12 @@ export const Autocomplete = null;
 // } from "downshift";
 // import { usePopper } from "react-popper"; // imports from downshift demo
 // // import { useDeepCompareEffect } from "react-use"; // imports from downshift demo
-// import type { Option } from "../types";
+// import type { Option } from "../types.js";
 // import {
 //   normaliseOptions,
 //   defaultOptionsFilterFn,
 //   triggerOnChange,
-// } from "../Forms/helpers";
+// } from "../Forms/helpers/index.js";
 // import {
 //   AutocompleteRoot,
 //   AutocompleteLabel,
@@ -41,7 +41,7 @@ export const Autocomplete = null;
 //   AutocompleteInputArrow,
 //   AutocompleteMenu,
 //   AutocompleteMenuItem,
-// } from "./components";
+// } from "./components.js";
 
 // const USE_POPPER = false;
 

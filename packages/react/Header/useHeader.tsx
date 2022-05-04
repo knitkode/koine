@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import { useTheme } from "../styles/theme";
-import { useMedia } from "../styles/media";
+import { useTheme } from "../styles/theme.js";
+import { useMedia } from "../styles/media.js";
 
 // branded types to get good type annotation/hints on the array returned
 // by the hook, a kind of state but more compact than an object...

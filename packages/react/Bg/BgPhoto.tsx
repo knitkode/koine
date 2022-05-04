@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { Container, ContainerProps } from "../Grid";
-import { Hidden } from "../Hidden";
+import { Container, ContainerProps } from "../Grid/index.js";
+import { Hidden } from "../Hidden/index.js";
 
 const BgPhotoWrap = styled(Hidden)`
   z-index: -10;

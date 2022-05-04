@@ -1,5 +1,5 @@
-import type { CalendarsMap } from "./types";
-import type { KoineComponentProps, KoineComponent } from "../types";
+import type { CalendarsMap } from "./types.js";
+import type { KoineComponentProps, KoineComponent } from "../types.js";
 
 export type KoineCalendarLegendProps = {
   toggleCalendarVisibility: (id: string) => void;

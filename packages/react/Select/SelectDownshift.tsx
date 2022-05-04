@@ -1,4 +1,4 @@
-import type { Option } from "../types";
+import type { Option } from "../types.js";
 
 // TODO: remove, just use mui version...
 export type SelectProps = {

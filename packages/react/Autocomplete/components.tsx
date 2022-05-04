@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { Label } from "../Forms/Label/Label";
-import { InputWrap, InputMain } from "../Forms/Input/Input";
-import { SelectArrow } from "../Select/components";
-import { Menu } from "../Menu/Menu";
-import { MenuItem } from "../MenuItem/MenuItem";
-import { btnStyleReset } from "../Buttons";
-import { inputReset } from "../Forms/styles";
-import { ellipsis } from "../styles/styled";
+import { Label } from "../Forms/Label/Label.js";
+import { InputWrap, InputMain } from "../Forms/Input/Input.js";
+import { SelectArrow } from "../Select/components.js";
+import { Menu } from "../Menu/Menu.js";
+import { MenuItem } from "../MenuItem/MenuItem.js";
+import { btnStyleReset } from "../Buttons/index.js";
+import { inputReset } from "../Forms/styles.js";
+import { ellipsis } from "../styles/styled.js";
 
 const AUTOCOMPLETE_ITEM_GUTTER = 3;
 /**

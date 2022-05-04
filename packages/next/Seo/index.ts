@@ -8,6 +8,6 @@
  * - https://nextjs.org/docs/api-reference/next/head
  */
 
-export * from "./helpers";
-export * from "./Seo";
-export * from "./SeoDefaults";
+export * from "./helpers.js";
+export * from "./Seo.js";
+export * from "./SeoDefaults.js";

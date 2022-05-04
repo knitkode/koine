@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { MdLaunch as IconOutboundLink } from "react-icons/md";
-import { max } from "../styles/media";
+import { MdLaunch as IconOutboundLink } from "react-icons/md/index.js";
+import { max } from "../styles/media.js";
 
 export type LinkBlankProps = React.ComponentPropsWithRef<"a">;
 

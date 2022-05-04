@@ -1,14 +1,17 @@
 import { Fragment, useState } from "react";
-import { MdAdd as IconExpand, MdRemove as IconCollapse } from "react-icons/md";
-import type { KoineComponentProps, KoineComponent } from "../types";
+import {
+  MdAdd as IconExpand,
+  MdRemove as IconCollapse,
+} from "react-icons/md/index.js";
+import type { KoineComponentProps, KoineComponent } from "../types.js";
 import type {
   CalendarsMap,
   CalendarView,
   CalendarViewEvent,
   CalendarViewDayProps,
-} from "./types";
-import { getDisplayTime } from "./utils";
-import { UseCalendarReturn } from "./useCalendar";
+} from "./types.js";
+import { getDisplayTime } from "./utils.js";
+import { UseCalendarReturn } from "./useCalendar.js";
 
 export type KoineCalendarDaygridCellProps = {
   eventClicked?: UseCalendarReturn["eventClicked"];
@@ -130,7 +133,7 @@ export const CalendarDaygridCell = ({
 
         if (!calendarsMap[event.calendar.id].on) {
           // @ts-expect-error nevermind
-          styleBtn.display = "none";
+          styleBtn.display = "none.js";
         }
 
         const styledProps = {

@@ -1,5 +1,5 @@
 import { isString } from "@koine/utils";
-import type { Translate } from "../I18n";
+import type { Translate } from "../I18n/index.js";
 
 /**
  * @see next/auth `pages` mapping: https://next-auth.js.org/configuration/pages`
@@ -36,5 +36,5 @@ export function getAuthRoutes(t: Translate) {
  * @param url e.g. "http://localhost:3000/signin?callbackUrl=http://localhost:3000/profile"
  */
 export function getCallbackUrl(url: string = window.location.href) {
-  return url.split("callbackUrl=")[1] || "";
+  return url.split("callbackUrl=")[1] || ".js";
 }

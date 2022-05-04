@@ -16,7 +16,7 @@ export type MotionProviderProps = LazyProps & React.PropsWithChildren<{}>;
  *
  * `lite` version:
  * ```tsx
- * import { MotionProvider } from "@koine/react/m";
+ * import { MotionProvider } from "@koine/react/m/index.js";
  *
  * const features = () => import("@koine/react/m/lite").then((m) => m.default);
  *
@@ -27,7 +27,7 @@ export type MotionProviderProps = LazyProps & React.PropsWithChildren<{}>;
  *
  * ### `max` version
  * ```tsx
- * import { MotionProvider } from "@koine/react/m";
+ * import { MotionProvider } from "@koine/react/m/index.js";
  *
  * const features = () => import("@koine/react/m/max").then((m) => m.default);
  *

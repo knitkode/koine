@@ -1,4 +1,4 @@
-import { __DEV__ } from "./env";
+import { __DEV__ } from "./env.js";
 
 /**
  * Get random int (min and max included)
@@ -28,7 +28,7 @@ export function roundTo(num: number, decimals = 2): string {
 
     // method 2: @see https://stackoverflow.com/a/43532829/1938970
     const multiplicator = Math.pow(10, decimals);
-    return Math.round(num * multiplicator) / multiplicator + "";
+    return Math.round(num * multiplicator) / multiplicator + ".js";
 
     // method 3: @see https://stackoverflow.com/a/15762794/1938970
     // let negative = false;

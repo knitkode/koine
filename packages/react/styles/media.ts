@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useTheme, breakpoints, Breakpoint, Breakpoints } from "./theme";
+import { useTheme, breakpoints, Breakpoint, Breakpoints } from "./theme.js";
 
 export const { min, max, up, down, between, only } =
   generateMediaQueries(breakpoints);
@@ -61,7 +61,7 @@ export function useMedia(media: MediaQuery) {
  *
  * Usage:
  * ```jsx
- * import { generateMediaQueries } from "@koine/react";
+ * import { generateMediaQueries } from "@koine/react/index.js";
  *
  * export const breakpoints = {
  *   xs: 0,

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { min } from "../styles/media";
+import { min } from "../styles/media.js";
 
 export const p = `
   margin: 0 0 1em 0;

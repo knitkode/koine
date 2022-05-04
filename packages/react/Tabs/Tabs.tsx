@@ -16,9 +16,9 @@ import {
   TabsProps as _TabsProps,
   useTabsContext,
 } from "@reach/tabs";
-import { min } from "../styles/media";
-import { UnderlineSkewed } from "../Animations/Underline";
-import { btnStyleReset } from "../Buttons";
+import { min } from "../styles/media.js";
+import { UnderlineSkewed } from "../Animations/Underline.js";
+import { btnStyleReset } from "../Buttons/index.js";
 
 export const Tabs = styled(_Tabs)<TabsProps>`
   ${min.sm} {

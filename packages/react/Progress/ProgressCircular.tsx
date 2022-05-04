@@ -1,5 +1,5 @@
 import styled, { CSSProperties, keyframes } from "styled-components";
-import type { Theme } from "../styles/theme";
+import type { Theme } from "../styles/theme.js";
 
 const animationRotation = keyframes`
   0% {

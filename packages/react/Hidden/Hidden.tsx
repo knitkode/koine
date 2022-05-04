@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Breakpoint } from "../styles/theme";
+import { Breakpoint } from "../styles/theme.js";
 
 export type HiddenProps = {
   $min?: Breakpoint;

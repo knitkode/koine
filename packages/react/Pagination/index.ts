@@ -1,2 +1,2 @@
-export * from "./PaginationNav";
-export * from "./PaginationResults";
+export * from "./PaginationNav.js";
+export * from "./PaginationResults.js";

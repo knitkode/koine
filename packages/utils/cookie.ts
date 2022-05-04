@@ -9,7 +9,7 @@
  *
  */
 
-import { isNumber } from "./is";
+import { isNumber } from "./is.js";
 
 /**
  * RegExp to match field-content in RFC 7230 sec 3.2

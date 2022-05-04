@@ -4,7 +4,7 @@ import {
   btnStyleOutlined,
   btnStyleContained,
   KoineButtonUiProps,
-} from "./Button";
+} from "./Button.js";
 
 export const iconBtnStyleReset = css`
   display: inline-flex;

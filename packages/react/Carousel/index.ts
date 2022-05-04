@@ -1,1 +1,1 @@
-export * from "./CarouselCss";
+export * from "./CarouselCss.js";

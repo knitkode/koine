@@ -1,6 +1,6 @@
 import React from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import { Meta, NoJs } from "@koine/react";
+import { Meta, NoJs } from "@koine/react/index.js";
 
 /**
  * For typescript safety of this component

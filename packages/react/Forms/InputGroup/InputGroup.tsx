@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { KoineButton, KoineButtonProps } from "../../Buttons";
-import { field } from "../Field";
-import { max, min } from "../../styles/media";
+import { KoineButton, KoineButtonProps } from "../../Buttons/index.js";
+import { field } from "../Field/index.js";
+import { max, min } from "../../styles/media.js";
 
 export const InputGroupRoot = styled.div`
   ${field}

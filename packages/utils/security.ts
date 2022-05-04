@@ -1,4 +1,4 @@
-import { isUndefined } from "./is";
+import { isUndefined } from "./is.js";
 
 declare let __webpack_nonce__: string;
 

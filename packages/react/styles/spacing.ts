@@ -1,5 +1,5 @@
 // import type { DefaultTheme } from "styled-components";
-import type { Theme } from "./theme";
+import type { Theme } from "./theme.js";
 
 export type SpacingSize = "sm" | "md" | "lg";
 

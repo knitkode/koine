@@ -1,2 +1,2 @@
-export { NextProgress } from "./NextProgress";
-export type { NextProgressProps } from "./NextProgress";
+export { NextProgress } from "./NextProgress.js";
+export type { NextProgressProps } from "./NextProgress.js";

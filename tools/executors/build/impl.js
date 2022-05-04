@@ -153,7 +153,7 @@ function buildExecutor(options, context) {
                             // minifyIdentifiers: true,
                             // replaceNodeEnv: true,
                             esbuildOptions: function (options, ctx) {
-                                // options.target = "esnext";
+                                // options.target = "esnext.js";
                                 // options.define.foo = '"bar"'
                                 options.absWorkingDir = context.root;
                             }

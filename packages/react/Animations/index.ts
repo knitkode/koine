@@ -1,3 +1,3 @@
-export * from "./Reveal";
-export * from "./Underline";
-export * from "./useReveal";
+export * from "./Reveal.js";
+export * from "./Underline.js";
+export * from "./useReveal.js";

@@ -1,2 +1,2 @@
-export * from "./react";
-export * from "./shared";
+export * from "./react/index.js";
+export * from "./shared/index.js";

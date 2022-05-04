@@ -1,7 +1,7 @@
-import { classed, extendComponent } from "../../helpers";
-import { KoineDialog as _ } from "./bare";
+import { classed, extendComponent } from "../../helpers/index.js";
+import { KoineDialog as _ } from "./bare.js";
 
-export type { KoineDialogProps } from "./bare";
+export type { KoineDialogProps } from "./bare.js";
 
 export const Root = classed(_.Root)``;
 

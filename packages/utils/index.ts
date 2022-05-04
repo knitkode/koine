@@ -26,25 +26,25 @@
  * - https://github.com/chakra-ui/chakra-ui/blob/main/packages/utils/src
  */
 
-export * from "./analytics-google";
-export * from "./arrays";
-export * from "./async";
-export * from "./cast";
-export * from "./cookie";
-export * from "./colors";
-export * from "./env";
-export * from "./emitter";
-export * from "./is";
-export * from "./location";
-export * from "./match-sorter";
-export * from "./math";
-export * from "./misc";
-export * from "./objects";
-export * from "./security";
-export * from "./ssr";
-export * from "./text";
-export * from "./typography";
-export * from "./uid";
+export * from "./analytics-google.js";
+export * from "./arrays.js";
+export * from "./async.js";
+export * from "./cast.js";
+export * from "./cookie.js";
+export * from "./colors.js";
+export * from "./env.js";
+export * from "./emitter.js";
+export * from "./is.js";
+export * from "./location.js";
+export * from "./match-sorter.js";
+export * from "./math.js";
+export * from "./misc.js";
+export * from "./objects.js";
+export * from "./security.js";
+export * from "./ssr.js";
+export * from "./text.js";
+export * from "./typography.js";
+export * from "./uid.js";
 
 export type {
   Primitive,

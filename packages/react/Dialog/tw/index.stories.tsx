@@ -5,13 +5,13 @@ import {
   storyDialogArgs,
   decoratorFramer,
 } from "@koine/stories";
-import { KoineDialogProps } from "../DialogMui";
-import { KoineDialog as bareComp } from "./bare";
-import { KoineDialog as materialComp } from "./material";
-import { KoineDialog as framerComp } from "./framer";
-import { KoineDialog as framerMaterialComp } from "./framerMaterial";
-// import { KoineDialog as elegantComp } from "./elegant";
-import { classed } from "../..//helpers";
+import { KoineDialogProps } from "../DialogMui.js";
+import { KoineDialog as bareComp } from "./bare.js";
+import { KoineDialog as materialComp } from "./material.js";
+import { KoineDialog as framerComp } from "./framer.js";
+import { KoineDialog as framerMaterialComp } from "./framerMaterial.js";
+// import { KoineDialog as elegantComp } from "./elegant.js";
+import { classed } from "../..//helpers/index.js";
 
 export default {
   title: "Base/Dialog/Tailwind",

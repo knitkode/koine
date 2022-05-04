@@ -1,9 +1,9 @@
 import { memo } from "react";
 import styled from "styled-components";
-import { IconBaseProps, IconType } from "react-icons/lib";
-import { KoineComponentProps, KoineComponent } from "../types";
-import { KoineButtonProps } from "./Button";
-import { ButtonLinkProps } from "./ButtonLink";
+import { IconBaseProps, IconType } from "react-icons/lib/esm/index.js";
+import { KoineComponentProps, KoineComponent } from "../types.js";
+import { KoineButtonProps } from "./Button.js";
+import { ButtonLinkProps } from "./ButtonLink.js";
 
 const Root = styled.span<ButtonCompositeStyledProps>`
   ${(p) =>

@@ -1,8 +1,8 @@
 const syncDirectory = require("sync-directory");
 const path = require("path");
 
-// const ROOT = "./";
-const ROOT = "../packages";
+// const ROOT = "./.js";
+const ROOT = "../packages.js";
 
 const LIBS = ["next", "react", "utils"];
 

@@ -1,9 +1,9 @@
 import { forwardRef, useMemo } from "react";
-import { MdClear as IconClose } from "react-icons/md";
+import { MdClear as IconClose } from "react-icons/md/index.js";
 import { AnimatePresence, m } from "framer-motion";
-import { extendComponent } from "../../helpers";
-import type { KoineDialogProps } from "../DialogMui";
-import { mRootStyle } from "./index";
+import { extendComponent } from "../../helpers/index.js";
+import type { KoineDialogProps } from "../DialogMui.js";
+import { mRootStyle } from "./index.js";
 import {
   Root,
   Backdrop,
@@ -12,8 +12,8 @@ import {
   Close,
   Header,
   Body,
-} from "../DialogMui";
-// import { KoineDialog as _ } from "../DialogMui";
+} from "../DialogMui.js";
+// import { KoineDialog as _ } from "../DialogMui.js";
 
 /**
  * About nested `AnimatePresence` and animated dialogs with framer @see:

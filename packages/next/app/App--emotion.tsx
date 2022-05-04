@@ -1,8 +1,8 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
-import { AppHead } from "./AppHead";
-import { AppThemeEmotion, AppThemeEmotionProps } from "./AppTheme--emotion";
-import { AppMainEmotion, AppMainEmotionProps } from "./AppMain--emotion";
+import { AppHead } from "./AppHead.js";
+import { AppThemeEmotion, AppThemeEmotionProps } from "./AppTheme--emotion.js";
+import { AppMainEmotion, AppMainEmotionProps } from "./AppMain--emotion.js";
 
 export type AppEmotionProps = NextAppProps &
   AppThemeEmotionProps &

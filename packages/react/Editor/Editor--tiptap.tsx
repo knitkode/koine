@@ -9,7 +9,7 @@ import {
   EditorBarBtn,
   EditorIconBold,
   EditorIconItalic,
-} from "./components";
+} from "./components.js";
 
 type EditorBarClickBtnType = "Bold" | "Italic";
 

@@ -1,6 +1,6 @@
 import type { UnpackNestedValue } from "react-hook-form";
 import { useAsyncFn } from "react-use";
-import { api, KoineApi } from "../utils/api";
+import { api, KoineApi } from "../utils/api.js";
 
 export function useSubmit<
   RequestBody extends {},

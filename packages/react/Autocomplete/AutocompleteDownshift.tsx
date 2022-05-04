@@ -12,7 +12,7 @@ export const Autocomplete = null;
 // } from "react";
 // import { useCombobox } from "downshift";
 // import { SetRequired } from "@koine/utils";
-// // import debounce from "lodash.debounce";
+// // import debounce from "lodash.debounce.js";
 // import {
 //   AutocompleteRoot,
 //   AutocompleteLabel,
@@ -21,9 +21,9 @@ export const Autocomplete = null;
 //   AutocompleteInputArrow,
 //   AutocompleteMenu,
 //   AutocompleteMenuItem,
-// } from "./components";
-// import { defaultOptionsFilterFn, triggerOnChange } from "../Forms/helpers";
-// import { InputProgress } from "../Forms/styles";
+// } from "./components.js";
+// import { defaultOptionsFilterFn, triggerOnChange } from "../Forms/helpers/index.js";
+// import { InputProgress } from "../Forms/styles.js";
 
 // export type AutocompleteOption = Option;
 

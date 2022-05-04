@@ -1,7 +1,11 @@
 import { forwardRef } from "react";
 import styled from "styled-components";
-import { Toggle, ToggleLabel, ToggleIndicatorSquared } from "../Toggle";
-import { useToggle, UseToggleProps } from "../Toggle/useToggle";
+import {
+  Toggle,
+  ToggleLabel,
+  ToggleIndicatorSquared,
+} from "../Toggle/index.js";
+import { useToggle, UseToggleProps } from "../Toggle/useToggle.js";
 
 export const CheckboxRoot = styled.label`
   display: flex;

@@ -1,21 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import eachWeekOfInterval from "date-fns/eachWeekOfInterval";
+import eachWeekOfInterval from "date-fns/eachWeekOfInterval/index.js";
 import { useSwipeable } from "react-swipeable";
-import { useDateLocale } from "../hooks";
-import type { KoineComponentProps, KoineComponent } from "../types";
+import { useDateLocale } from "../hooks/useDateLocale.js";
+import type { KoineComponentProps, KoineComponent } from "../types.js";
 import type {
   CalendarRange,
   CalendarEventsMap,
   CalendarView,
   CalendarViewWeeks,
   CalendarViewDayProps,
-} from "./types";
-import { processEventsInView } from "./utils";
+} from "./types.js";
+import { processEventsInView } from "./utils.js";
 import {
   CalendarDaygridCell,
   CalendarDaygridCellProps,
   CalendarDaygridCellComponents,
-} from "./CalendarDaygridCell";
+} from "./CalendarDaygridCell.js";
 
 export type CalendarDaygridTableBodyCellProps = CalendarViewDayProps;
 

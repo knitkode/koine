@@ -6,18 +6,18 @@ import type {
   CalendarEvent,
   CalendarEventsMap,
   CalendarView,
-} from "./types";
-import type { KoineCalendarLegendProps } from "./CalendarLegend";
-import type { KoineCalendarDaygridNavProps } from "./CalendarDaygridNav";
-import type { KoineCalendarDaygridTableProps } from "./CalendarDaygridTable";
-import { getCalendarsEventsFromGoogle } from "./calendar-api-google";
+} from "./types.js";
+import type { KoineCalendarLegendProps } from "./CalendarLegend.js";
+import type { KoineCalendarDaygridNavProps } from "./CalendarDaygridNav.js";
+import type { KoineCalendarDaygridTableProps } from "./CalendarDaygridTable.js";
+import { getCalendarsEventsFromGoogle } from "./calendar-api-google.js";
 import {
   getStartDate,
   getEndDate,
   getPrevDate,
   getNextDate,
   isTodayInView,
-} from "./utils";
+} from "./utils.js";
 
 export type UseCalendarProps = {
   /** The locale to format with `date-fns` */

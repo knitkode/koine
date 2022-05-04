@@ -1,13 +1,13 @@
 import { arrayToLookup, isString, isUndefined } from "@koine/utils";
-import differenceInDays from "date-fns/differenceInDays";
-import subDays from "date-fns/subDays";
+import differenceInDays from "date-fns/differenceInDays/index.js";
+import subDays from "date-fns/subDays/index.js";
 import type {
   Calendar,
   Calendars,
   CalendarEvent,
   CalendarEventsMap,
-} from "./types";
-import { getEventTimestamp, addCalendarEvents } from "./utils";
+} from "./types.js";
+import { getEventTimestamp, addCalendarEvents } from "./utils.js";
 
 /**
  * Google event as it comes from Google's API
@@ -51,7 +51,7 @@ type GoogleDate = {
   date?: string;
 };
 
-const baseURL = "https://www.googleapis.com/calendar/v3/calendars/";
+const baseURL = "https://www.googleapis.com/calendar/v3/calendars/.js";
 
 type GetCalendarsEventsFromGoogleOptions = {
   /** Fall back to `process.env.GOOGLE_CALENDAR_API_KEY */
@@ -146,7 +146,7 @@ function transformCalendarEventFromGoogle(
   let end = new Date(event.end.date || event.end.dateTime);
   const color = calendar.color;
   const allDay = isUndefined(event.end.dateTime) && isString(event.end.date);
-  const location = event.location || "";
+  const location = event.location || ".js";
   const description = event.description || ""; // FIXME: he.decode(event.description || '');
   const uid = created.getTime() + "" + start.getTime();
 

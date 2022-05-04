@@ -1,7 +1,7 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
-// import { ThemeVanillaProvider, ThemeVanillaValue } from "@koine/react";
-import { ThemeProvider, ThemeProviderProps } from "../Theme";
+// import { ThemeVanillaProvider, ThemeVanillaValue } from "@koine/react/index.js";
+import { ThemeProvider, ThemeProviderProps } from "../Theme/index.js";
 
 export type AppThemeVanillaProps = React.PropsWithChildren<
   NextAppProps & {

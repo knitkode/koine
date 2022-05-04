@@ -1,4 +1,4 @@
-// import { isUndefined } from "./is";
+// import { isUndefined } from "./is.js";
 
 export type GtmPageviewArgs = [
   page_path?: string,

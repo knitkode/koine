@@ -1,1 +1,1 @@
-export * from "./CollapsableReach";
+export * from "./CollapsableReach.js";

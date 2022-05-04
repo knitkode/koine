@@ -1,3 +1,3 @@
-export * from "./BgColor";
-export * from "./BgPhoto";
-export * from "./BgSvg";
+export * from "./BgColor.js";
+export * from "./BgPhoto.js";
+export * from "./BgSvg.js";

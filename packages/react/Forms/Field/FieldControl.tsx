@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { useFormState } from "react-hook-form";
 import { decode } from "@koine/utils";
-import type { Translate } from "../../types";
-import type { FormControl } from "../helpers";
-import { Field } from "./Field";
-import { FieldHint } from "./FieldHint";
-import { InputHoneypot } from "../styles";
+import type { Translate } from "../../types.js";
+import type { FormControl } from "../helpers.js";
+import { Field } from "./Field.js";
+import { FieldHint } from "./FieldHint.js";
+import { InputHoneypot } from "../styles.js";
 
 type FieldControlRenderProps = React.PropsWithChildren<
   Pick<

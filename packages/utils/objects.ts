@@ -1,4 +1,4 @@
-import { isObject } from "./is";
+import { isObject } from "./is.js";
 
 /**
  * Type safe replacement for `Object.keys(myObject)` to iterate over a record

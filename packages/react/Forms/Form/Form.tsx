@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { overlay, centered } from "../../styles/styled";
-import { Collapsable } from "../../Collapsable";
-import { ProgressCircular } from "../../Progress";
-import { Alert } from "../../Alert";
+import { overlay, centered } from "../../styles/styled.js";
+import { Collapsable } from "../../Collapsable/index.js";
+import { ProgressCircular } from "../../Progress/index.js";
+import { Alert } from "../../Alert/index.js";
 
 export const FormRoot = styled.form`
   position: relative;

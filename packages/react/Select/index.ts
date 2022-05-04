@@ -1,4 +1,4 @@
-export type { SelectProps } from "./SelectDownshift";
-export { Select } from "./SelectDownshift";
-// export type { SelectProps } from "./SelectReach";
-// export { Select } from "./SelectReach";
+export type { SelectProps } from "./SelectDownshift.js";
+export { Select } from "./SelectDownshift.js";
+// export type { SelectProps } from "./SelectReach.js";
+// export { Select } from "./SelectReach.js";

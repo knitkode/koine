@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { stateFocus } from "../styles/styled";
+import { stateFocus } from "../styles/styled.js";
 
 /**
  * Prevent 300ms delay with `touch-action` performance optimization,

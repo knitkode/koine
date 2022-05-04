@@ -1,6 +1,6 @@
 import { Story, Meta } from "@storybook/react";
 import { StoryDialog, LoremIpsum } from "@koine/stories";
-import { KoineDialog, DialogProps } from "./DialogMui";
+import { KoineDialog, DialogProps } from "./DialogMui.js";
 
 export default {
   component: KoineDialog,

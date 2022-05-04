@@ -2,7 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useIsomorphicLayoutEffect } from "react-use";
 import { m, useSpring } from "framer-motion";
-// import { CgArrowsExpandDownRight as IconExpand } from "react-icons/cg";
+// import { CgArrowsExpandDownRight as IconExpand } from "react-icons/cg/index.js";
 
 const Root = styled.div``;
 

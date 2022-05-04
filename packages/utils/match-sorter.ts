@@ -14,7 +14,7 @@
  * @copyright (c) 2020 Kent C. Dodds
  * @author Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)
  */
-import { removeAccents } from "./text";
+import { removeAccents } from "./text.js";
 
 type KeyAttributes = {
   threshold?: Ranking;

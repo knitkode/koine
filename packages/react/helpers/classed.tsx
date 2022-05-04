@@ -87,7 +87,7 @@ export function classed<Props, Component extends React.ElementType = any>(
       // check if we need to clean it or not from the optional structure `< class="..."`
       className = className.match(/class="([^"]*)/)?.[1] || className;
       // add the custom classes from props
-      className += props?.className ? " " + props?.className : "";
+      className += props?.className ? " " + props?.className : ".js";
 
       return createElement(type, {
         // ...props,

@@ -1,3 +1,3 @@
-export * from "./dialog";
-export * from "./framer";
-export * from "./lorem";
+export * from "./dialog.js";
+export * from "./framer.js";
+export * from "./lorem.js";

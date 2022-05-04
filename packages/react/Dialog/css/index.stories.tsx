@@ -1,7 +1,7 @@
 import { Story, Meta } from "@storybook/react";
 import { StoryDialog, storyDialogMeta, storyDialogArgs } from "@koine/stories";
-import { KoineDialogProps } from "../DialogMui";
-import { KoineDialog as bareComp } from "./bare";
+import { KoineDialogProps } from "../DialogMui.js";
+import { KoineDialog as bareComp } from "./bare.js";
 
 export default {
   component: bareComp,

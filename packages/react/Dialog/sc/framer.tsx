@@ -1,8 +1,16 @@
 import { m } from "framer-motion";
-import { extendComponent } from "../../helpers";
-import { dialogBackdropMotion, dialogPaperMotion } from "../m/basic";
-import { KoineDialog as _ } from "../m/bare";
-import { Root, Backdrop, Container, Paper, Close, Header, Body } from "./bare";
+import { extendComponent } from "../../helpers/index.js";
+import { dialogBackdropMotion, dialogPaperMotion } from "../m/basic.js";
+import { KoineDialog as _ } from "../m/bare.js";
+import {
+  Root,
+  Backdrop,
+  Container,
+  Paper,
+  Close,
+  Header,
+  Body,
+} from "./bare.js";
 
 export const KoineDialog = extendComponent(_, {
   Root,

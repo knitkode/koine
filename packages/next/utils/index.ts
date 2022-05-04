@@ -1,7 +1,7 @@
 import { normaliseUrl } from "@koine/utils";
 
-export * from "./api";
-export * from "./emotion-cache";
+export * from "./api.js";
+export * from "./emotion-cache.js";
 
 export const ONE_HOUR = 3600;
 

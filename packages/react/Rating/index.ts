@@ -1,4 +1,4 @@
-export * from "./Rating";
+export * from "./Rating.js";
 
 const RATING_WORDS = {
   0: "Worst",

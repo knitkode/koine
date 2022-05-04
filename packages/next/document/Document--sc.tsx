@@ -8,7 +8,7 @@ import NextDocument, {
   Main,
   NextScript,
 } from "next/document";
-import { Meta, NoJs } from "@koine/react";
+import { Meta, NoJs } from "@koine/react/index.js";
 import { ServerStyleSheet } from "styled-components";
 
 /**

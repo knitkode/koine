@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { KoineComponentProps, KoineComponent } from "../types";
-import { KoineLinkProps } from "../Link";
-import { KoineButton, KoineButtonUiProps } from "./Button";
+import { KoineComponentProps, KoineComponent } from "../types.js";
+import { KoineLinkProps } from "../Link/index.js";
+import { KoineButton, KoineButtonUiProps } from "./Button.js";
 
 const Root = styled(KoineButton)`
   text-decoration: none;

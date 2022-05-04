@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, type Router } from "next/router";
-import { WithComponents, Simplify } from "@koine/react";
+import { WithComponents, Simplify } from "@koine/react/index.js";
 
 // FIXME: workaround to re-create type that is not exported by next.js
 type RouteProperties = Parameters<Router["getRouteInfo"]>[5];

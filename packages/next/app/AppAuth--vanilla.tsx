@@ -1,9 +1,9 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
-import { AppHead } from "./AppHead";
-import { AppThemeVanilla, AppThemeVanillaProps } from "./AppTheme--vanilla";
-import { AppMainVanilla, AppMainVanillaProps } from "./AppMain--vanilla";
+import { AppHead } from "./AppHead.js";
+import { AppThemeVanilla, AppThemeVanillaProps } from "./AppTheme--vanilla.js";
+import { AppMainVanilla, AppMainVanillaProps } from "./AppMain--vanilla.js";
 
 export type AppAuthVanillaProps = NextAppProps &
   AppThemeVanillaProps &

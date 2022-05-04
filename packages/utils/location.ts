@@ -1,5 +1,5 @@
-import { isBrowser } from "./ssr";
-import { isString, isNull, isUndefined } from "./is";
+import { isBrowser } from "./ssr.js";
+import { isString, isNull, isUndefined } from "./is.js";
 
 /**
  * Solution without DOM or specific env native methods
@@ -78,7 +78,7 @@ export function getUrlQueryParams<T extends Record<string, string>>(
   queryString?: string
 ) {
   let params = {};
-  let search = queryString || isBrowser ? location.search : "";
+  let search = queryString || isBrowser ? location.search : ".js";
   search = search.substring(1);
 
   if (!search) {
@@ -136,7 +136,7 @@ export function buildUrlQueryString(
   }
 
   // removes the last &
-  return output ? `?${output.replace(/&+$/, "")}` : "";
+  return output ? `?${output.replace(/&+$/, "")}` : ".js";
 }
 
 /**

@@ -1,3 +1,3 @@
-export * from "./ProgressCircular";
-export * from "./ProgressLinear";
-export * from "./ProgressOverlay";
+export * from "./ProgressCircular.js";
+export * from "./ProgressLinear.js";
+export * from "./ProgressOverlay.js";

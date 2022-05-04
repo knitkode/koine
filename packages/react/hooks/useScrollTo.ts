@@ -1,5 +1,5 @@
 import { isBrowser } from "@koine/utils";
-import { useHeader } from "../Header";
+import { useHeader } from "../Header/useHeader.js";
 
 export function useScrollTo(id = "", offset = 0) {
   const [, , headerHeight] = useHeader();

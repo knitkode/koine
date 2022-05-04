@@ -1,1 +1,1 @@
-export * from "./Hidden";
+export * from "./Hidden.js";

@@ -4,15 +4,15 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useAutocomplete } from "@mui/base/AutocompleteUnstyled";
-import { isString } from "@koine/utils";
-import type { Option } from "../types";
+import { useAutocomplete } from "@mui/base/AutocompleteUnstyled/index.js";
+import { isString } from "@koine/utils/index.js";
+import type { Option } from "../types.js";
 import {
   FormControl,
   // triggerOnChange,
   normaliseOptions,
-} from "../Forms/helpers";
-import { normaliseAutocompleteValue } from "./helpers";
+} from "../Forms/helpers.js";
+import { normaliseAutocompleteValue } from "./helpers.js";
 import {
   AutocompleteRoot,
   AutocompleteLabel,
@@ -26,8 +26,8 @@ import {
   AutocompleteInputArrow,
   AutocompleteMenu,
   AutocompleteMenuItem,
-} from "./components";
-import { InputProgress } from "../Forms/styles";
+} from "./components.js";
+import { InputProgress } from "../Forms/styles.js";
 
 export type AutocompleteOption = Option | string;
 
@@ -225,7 +225,7 @@ export const Autocomplete = <
     },
     getOptionLabel: (option: AutocompleteOption): string => {
       // @ts-expect-error TODO: I don't get this error
-      return isString(option) ? option : option.label || "";
+      return isString(option) ? option : option.label || ".js";
     },
   });
 

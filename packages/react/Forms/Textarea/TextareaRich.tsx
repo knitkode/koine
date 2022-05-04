@@ -1,9 +1,9 @@
 import { forwardRef } from "react";
 import styled from "styled-components";
-// import TextareaAutosize from "@mui/base/TextareaAutosize";
-import { Label } from "../Label/Label";
-import { Editor } from "../../Editor";
-import { FormControl, triggerOnChange } from "../helpers";
+// import TextareaAutosize from "@mui/base/TextareaAutosize/index.js";
+import { Label } from "../Label/Label.js";
+import { Editor } from "../../Editor/index.js";
+import { FormControl, triggerOnChange } from "../helpers.js";
 
 const Root = styled.div`
   .ProseMirror {

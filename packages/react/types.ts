@@ -1,4 +1,7 @@
-export type { KoineImgSmartWrapProps, KoineImgSmartProps } from "./Img/types";
+export type {
+  KoineImgSmartWrapProps,
+  KoineImgSmartProps,
+} from "./Img/types.js";
 
 export type Translate = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
