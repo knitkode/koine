@@ -87,32 +87,45 @@ async function treatEntrypoints(
   const packagePath = join(libDist, "./package.json");
   const packageJson = readJsonFile(packagePath);
 
-  const exports = {};
-
   return new Promise((resolve) => {
-    glob("*.js", { cwd: libDist }, async function (er, relativePaths) {
-      await Promise.all(
-        relativePaths.map(async (relativePath) => {
-          const ext = extname(relativePath);
-          const srcFilename = basename(relativePath, ext);
-          let isIndex = srcFilename === "index";
-
-          exports[isIndex ? "." : `./${srcFilename}`] = {
-            require: `./node/${srcFilename}.js`,
-            import: `./${srcFilename}.js`,
-          };
-        })
-      );
-
-      packageJson.main = "./node/index.js";
-      packageJson.module = "./index.js";
-      packageJson.exports = exports;
-
-      writeJsonFile(packagePath, packageJson);
-
-      resolve(true);
-    });
+    packageJson.main = "./node/index.js";
+    packageJson.module = "./index.js";
+    writeJsonFile(packagePath, packageJson);
+    resolve(true);
   });
+
+  // disable package exports for now...they seem to broken deep imports
+  // const exports = {};
+
+  // return new Promise((resolve) => {
+  //   glob("*.js", { cwd: libDist }, async function (er, relativePaths) {
+  //     await Promise.all(
+  //       relativePaths.map(async (relativePath) => {
+  //         const ext = extname(relativePath);
+  //         const srcFilename = basename(relativePath, ext);
+  //         let isIndex = srcFilename === "index";
+
+  //         exports[isIndex ? "." : `./${srcFilename}`] = {
+  //           require: `./node/${srcFilename}.js`,
+  //           import: `./${srcFilename}.js`,
+  //         };
+  //       })
+  //     );
+
+  //     packageJson.main = "./node/index.js";
+  //     packageJson.module = "./index.js";
+  //     packageJson.exports = exports;
+
+  //     writeJsonFile(packagePath, packageJson);
+  //     resolve(true);
+  //   });
+
+  //   packageJson.main = "./node/index.js";
+  //   packageJson.module = "./index.js";
+
+  //   writeJsonFile(packagePath, packageJson);
+  //   resolve(true);
+  // });
 }
 
 export default async function multipleExecutor(

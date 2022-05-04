@@ -4,4 +4,4 @@
  * In this file we only have exports related to `framer-motion`
  */
 
-export * from "./m/MotionProvider";
+export * from "./MotionProvider";

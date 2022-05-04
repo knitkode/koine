@@ -144,44 +144,17 @@ function treatTscOutput(options, context) {
 }
 function treatEntrypoints(options, context) {
     return __awaiter(this, void 0, void 0, function () {
-        var projectName, libDist, packagePath, packageJson, exports;
+        var projectName, libDist, packagePath, packageJson;
         return __generator(this, function (_a) {
             projectName = context.projectName;
             libDist = (0, path_1.join)("./dist", projectName);
             packagePath = (0, path_1.join)(libDist, "./package.json");
             packageJson = (0, devkit_1.readJsonFile)(packagePath);
-            exports = {};
             return [2 /*return*/, new Promise(function (resolve) {
-                    (0, glob_1.glob)("*.js", { cwd: libDist }, function (er, relativePaths) {
-                        return __awaiter(this, void 0, void 0, function () {
-                            var _this = this;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
-                                            var ext, srcFilename, isIndex;
-                                            return __generator(this, function (_a) {
-                                                ext = (0, path_1.extname)(relativePath);
-                                                srcFilename = (0, path_1.basename)(relativePath, ext);
-                                                isIndex = srcFilename === "index";
-                                                exports[isIndex ? "." : "./".concat(srcFilename)] = {
-                                                    main: "./node/".concat(srcFilename, ".js"),
-                                                    module: "./".concat(srcFilename, ".js")
-                                                };
-                                                return [2 /*return*/];
-                                            });
-                                        }); }))];
-                                    case 1:
-                                        _a.sent();
-                                        packageJson.main = "./node/index.js";
-                                        packageJson.module = "./index.js";
-                                        packageJson.exports = exports;
-                                        (0, devkit_1.writeJsonFile)(packagePath, packageJson);
-                                        resolve(true);
-                                        return [2 /*return*/];
-                                }
-                            });
-                        });
-                    });
+                    packageJson.main = "./node/index.js";
+                    packageJson.module = "./index.js";
+                    (0, devkit_1.writeJsonFile)(packagePath, packageJson);
+                    resolve(true);
                 })];
         });
     });
