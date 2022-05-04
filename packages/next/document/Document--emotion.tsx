@@ -1,8 +1,8 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import { Meta, NoJs } from "@koine/react";
 import createEmotionServer from "@emotion/server/create-instance";
 import { createEmotionCache } from "../utils/emotion-cache";
-import { NoJs } from "@koine/react";
 
 export class DocumentEmotion extends Document {
   override render() {
@@ -11,6 +11,7 @@ export class DocumentEmotion extends Document {
     return (
       <Html lang={locale || defaultLocale} className="no-js">
         <Head>
+          <Meta />
           <NoJs />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}

@@ -1,4 +1,5 @@
-import type { DefaultTheme } from "styled-components";
+// import type { DefaultTheme } from "styled-components";
+import type { Theme } from "./theme";
 
 export type SpacingSize = "sm" | "md" | "lg";
 
@@ -11,10 +12,10 @@ export type SpacingDirection = "top" | "bottom";
 
 export type SpacingDirectionAxis = "vertical" | SpacingDirection;
 
-export type SpacingDevices = keyof DefaultTheme["devices"];
+export type SpacingDevices = keyof Theme["devices"];
 
 function _spacing(
-  theme: DefaultTheme,
+  theme: Theme,
   size: SpacingSize = "md",
   factor: SpacingFactor = 1,
   property: SpacingProperty = "padding",
@@ -24,7 +25,7 @@ function _spacing(
   const { breakpoints, devices: DEVICES, spaces: SPACES } = theme;
   let css = "";
   const prop = `${property}-${direction}`;
-  if (devices === ["mobile"]) {
+  if (!devices.length || devices[0] === "mobile") {
     css += `@media(max-width: ${breakpoints[DEVICES.mobile]}px){
         ${prop}: ${SPACES["mobile"][size] * factor}px;
       }`;
@@ -50,7 +51,7 @@ function _spacing(
 export type SpacingArgs = Parameters<typeof spacing>;
 
 export function spacing(
-  this: DefaultTheme,
+  this: Theme,
   size?: SpacingSize,
   factor?: SpacingFactor,
   property?: SpacingProperty,
@@ -68,7 +69,7 @@ export function spacing(
 }
 
 export function spacingTop(
-  this: DefaultTheme,
+  this: Theme,
   size?: SpacingSize,
   factor?: SpacingFactor,
   property?: SpacingProperty,
@@ -78,7 +79,7 @@ export function spacingTop(
 }
 
 export function spacingBottom(
-  this: DefaultTheme,
+  this: Theme,
   size?: SpacingSize,
   factor?: SpacingFactor,
   property?: SpacingProperty,
@@ -88,7 +89,7 @@ export function spacingBottom(
 }
 
 export function spacingVertical(
-  this: DefaultTheme,
+  this: Theme,
   size?: SpacingSize,
   factor?: SpacingFactor,
   property?: SpacingProperty,

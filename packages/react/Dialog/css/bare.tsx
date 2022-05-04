@@ -1,7 +1,7 @@
 import { classed, extendComponent } from "../../helpers";
 import * as _ from "../DialogMui";
 
-export { KoineDialogProps } from "../DialogMui";
+// export type { KoineDialogProps } from "../DialogMui";
 
 export const Root = classed(_.Root)`dialog`;
 

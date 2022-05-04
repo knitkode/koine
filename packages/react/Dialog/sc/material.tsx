@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { extendComponent } from "../../helpers";
 import { KoineDialog as _ } from "./bare";
 
-export { KoineDialogProps } from "./bare";
+export type { KoineDialogProps } from "./bare";
 
 export const Root = styled(_.Root)``;
 

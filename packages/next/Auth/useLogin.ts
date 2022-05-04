@@ -6,7 +6,7 @@ import { parseURL } from "@koine/utils";
 import { useT } from "../I18n";
 import { getAuthRoutes, getCallbackUrl } from "./helpers";
 
-export function useLogin<LoginForm = {}>() {
+export function useLogin<LoginForm extends {} = {}>() {
   const t = useT();
   const { push } = useRouter();
   const [loading, setLoading] = useState(false);

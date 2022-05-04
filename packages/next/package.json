@@ -1,4 +1,5 @@
 {
   "name": "@koine/next",
-  "sideEffects": false
+  "sideEffects": false,
+  "type": "module"
 }

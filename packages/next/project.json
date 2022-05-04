@@ -4,6 +4,17 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "_build": {
+      "executor": "./tools/executors/build:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "packageJson": "packages/next/package.json",
+        "main": "packages/next/**/*.ts*",
+        "assets": ["packages/next/*.md", "packages/next/*.d.ts"]
+      }
+    },
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],

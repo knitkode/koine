@@ -9,7 +9,7 @@ export * from "./shared";
 // export * from "./Carousel";
 // export * from "./Collapsable";
 // export * from "./Debug";
-export { KoineDialog, KoineDialogProps } from "./Dialog/tw/bare";
+export { KoineDialog, type KoineDialogProps } from "./Dialog/tw/bare";
 // export * from "./Forms";
 // export * from "./Grid";
 // export * from "./Hamburger";

@@ -10,7 +10,7 @@
  * - https://stackoverflow.com/q/53299743/1938970
  * - https://github.com/Microsoft/TypeScript/pull/26349
  */
-export function Emitter<EventMap extends Record<string, any>>(
+export function Emitter<EventMap extends { [key: string]: any }>(
   namespace: string
 ) {
   const all = new Map();
@@ -23,10 +23,10 @@ export function Emitter<EventMap extends Record<string, any>>(
       name: EventName,
       handler: (data?: EventMap[EventName]) => any
     ) {
-      const handlers = all.get(`${namespace}.${name}`);
+      const handlers = all.get(`${namespace}.${String(name)}`);
       const added = handlers && handlers.push(handler);
       if (!added) {
-        all.set(`${namespace}.${name}`, [handler]);
+        all.set(`${namespace}.${String(name)}`, [handler]);
       }
     },
 
@@ -37,7 +37,7 @@ export function Emitter<EventMap extends Record<string, any>>(
       name: EventName,
       data?: EventMap[EventName]
     ) {
-      (all.get(`${namespace}.${name}`) || [])
+      (all.get(`${namespace}.${String(name)}`) || [])
         .slice()
         .map((handler: (data?: EventMap[EventName]) => any) => {
           handler(data);

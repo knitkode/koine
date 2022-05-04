@@ -63,15 +63,18 @@ declare namespace Koine {
    * type with something like:
    *
    * ```ts
-   * "~": typeof import("./public/locales/en/~.json");
-   * _: typeof import("./public/locales/en/_.json");
-   * $team: typeof import("./public/locales/en/$team.json");
-   * home: typeof import("./public/locales/en/home.json");
-   * Footer: typeof import("./public/locales/en/Footer.json");
-   * Header: typeof import("./public/locales/en/Header.json");
+   * declare namespace Koine {
+   *   interface NextTranslations {
+   *     "~": typeof import("./public/locales/en/~.json");
+   *     _: typeof import("./public/locales/en/_.json");
+   *     $team: typeof import("./public/locales/en/$team.json");
+   *     home: typeof import("./public/locales/en/home.json");
+   *     Footer: typeof import("./public/locales/en/Footer.json");
+   *     Header: typeof import("./public/locales/en/Header.json");
+   *   }
+   * }
    * ```
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface NextTranslations {
     /** Convention for app wide `common` translations */
     _: Record<string, string>;

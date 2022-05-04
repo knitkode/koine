@@ -8,8 +8,8 @@ import NextDocument, {
   Main,
   NextScript,
 } from "next/document";
-import { ServerStyleSheet } from "styled-components";
 import { Meta, NoJs } from "@koine/react";
+import { ServerStyleSheet } from "styled-components";
 
 /**
  * For typescript safety of this component

@@ -10,7 +10,7 @@
     "story": "npx nx storybook react",
     "build:story": "npx nx build-storybook react",
     "lint": "clear && npx eslint --fix packages/**/*.{ts,tsx}",
-    "clean": "rm -rf ./tmp && rm -rf ./dist && rm -rf ./node_modules/.cache/nx",
+    "clean": "killall node && npx nx reset && rm -rf ./tmp && rm -rf ./dist && rm -rf ./node_modules/.cache",
     "cz": "git-cz",
     "prepare": "husky install",
     "sync": "node ./tools/sync.js",
@@ -107,7 +107,8 @@
     "prettier": "^2.6.2",
     "sync-directory": "^5.0.4",
     "ts-jest": "^28.0.0",
-    "typescript": "^4.6.4",
+    "tsup": "^5.12.6",
+    "typescript": "^4.7.0-beta",
     "webpack": "^5.72.0"
   },
   "workspaces": [

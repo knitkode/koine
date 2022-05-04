@@ -5,7 +5,7 @@ import { IconButton } from "../../Buttons";
 import type { Components } from "../DialogMui";
 import * as _ from "../DialogMui";
 
-export { KoineDialogProps } from "../DialogMui";
+export type { KoineDialogProps } from "../DialogMui";
 
 export const Root = styled(_.Root)`
   z-index: 1300;

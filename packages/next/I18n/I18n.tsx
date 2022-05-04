@@ -1,13 +1,11 @@
+/// <reference types="@koine/next/typings" />
+
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /**
  * @file
  *
  * About the typescript support for translation strings @see:
  * - https://github.com/vinissimus/next-translate/issues/721
- *
- * About the issue with page transitions @see:
- * - https://github.com/vinissimus/next-translate/issues/447
- * - https://github.com/vinissimus/next-translate/pull/743
  */
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
@@ -32,10 +30,6 @@ type Paths<T> = {
     ? Join<K, Paths<T[K]>>
     : K;
 }[keyof T];
-
-// type AllPaths = {
-//   [N in keyof Koine.NextTranslations]: Koine.NextTranslations[N] extends Record<string, unknown> ? object : never;
-// }[keyof Koine.NextTranslations];
 
 export type AllPaths = {
   [N in keyof Koine.NextTranslations]: {
@@ -186,17 +180,6 @@ export function useT<N extends TranslateNamespace | undefined>(namespace?: N) {
     [t, namespace]
   );
   // return tMemoized as Translate<N>;
-  return tMemoized;
-}
-
-/**
- * @deprecated Not sure whether this will ever be useful
- */
-export function useLooseT(namespace?: string) {
-  const { t } = useTranslation(namespace);
-  // return t;
-  const tMemoized = useMemo(() => t, [t]);
-
   return tMemoized;
 }
 
