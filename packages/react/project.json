@@ -4,19 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-cjs": {
-      "executor": "@nrwl/web:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/react",
-        "tsConfig": "packages/react/tsconfig.lib.json",
-        "project": "packages/react/package.json",
-        "entryFile": "packages/react/index.ts",
-        "external": ["react/jsx-runtime"],
-        "format": ["umd"],
-        "deleteOutputPath": false
-      }
-    },
     "build-tsc": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],

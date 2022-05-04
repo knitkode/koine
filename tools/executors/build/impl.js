@@ -164,8 +164,8 @@ function treatEntrypoints(options, context) {
                                                 srcFilename = (0, path_1.basename)(relativePath, ext);
                                                 isIndex = srcFilename === "index";
                                                 exports[isIndex ? "." : "./".concat(srcFilename)] = {
-                                                    require: "./node/".concat(srcFilename, ".js"),
-                                                    "import": "./".concat(srcFilename, ".js")
+                                                    main: "./node/".concat(srcFilename, ".js"),
+                                                    module: "./".concat(srcFilename, ".js")
                                                 };
                                                 return [2 /*return*/];
                                             });

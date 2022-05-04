@@ -4,12 +4,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-cjs": {
-      "executor": "@nrwl/workspace:run-commands",
-      "options": {
-        "command": "echo"
-      }
-    },
     "build-tsc": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
