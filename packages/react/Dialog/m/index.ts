@@ -1,4 +1,4 @@
-import { KoineDialogProps } from "../DialogMui";
+import type { KoineDialogProps } from "../DialogMui";
 
 export const mRootStyle = (props: Pick<KoineDialogProps, "open" | "style">) =>
   ({

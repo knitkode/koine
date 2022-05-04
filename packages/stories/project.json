@@ -4,16 +4,28 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
+    "build-cjs": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "echo"
+      }
+    },
+    "build-tsc": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/stories",
+        "outputPath": "dist/.stories",
         "tsConfig": "packages/stories/tsconfig.lib.json",
         "main": "packages/stories/index.ts"
       }
     },
-    "build-dummy": {
+    "build-tsup": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "echo"
+      }
+    },
+    "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "command": "echo"

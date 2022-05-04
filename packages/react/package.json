@@ -1,7 +1,6 @@
 {
   "name": "@koine/react",
   "sideEffects": false,
-  "type": "module",
   "dependencies": {
     "@types/react": "^17.0.0 || ^18.0.0",
     "@types/react-dom": "^17.0.0 || ^18.0.0",

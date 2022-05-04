@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,127 +36,243 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.buildExecutor = exports.generatePackageJson = exports.updatePackageJson = exports.normalizeBuildOptions = exports.watchFileIsExist = void 0;
-var fs_1 = require("fs");
-var path_1 = require("path");
-var tsup_1 = require("tsup");
 var devkit_1 = require("@nrwl/devkit");
-var project_graph_1 = require("@nrwl/workspace/src/core/project-graph");
-var create_package_json_1 = require("@nrwl/workspace/src/utilities/create-package-json");
-var watchFileIsExist = function (file) {
-    return new Promise(function (success, err) {
-        var loopIndex = 0;
-        var loop = function () {
-            loopIndex++;
-            if ((0, fs_1.existsSync)(file)) {
-                success();
-            }
-            else if (loopIndex === 100) {
-                err("not found file ".concat(file));
-            }
-            else {
-                setTimeout(function () { return loop(); }, 100);
-            }
-        };
-        loop();
-    });
-};
-exports.watchFileIsExist = watchFileIsExist;
-function normalizeBuildOptions(options, root, sourceRoot, projectRoot) {
-    return __assign(__assign({}, options), { root: root, sourceRoot: sourceRoot, projectRoot: projectRoot, main: (0, path_1.resolve)(root, options.main), outputPath: (0, path_1.resolve)(root, options.outputPath), tsConfig: (0, path_1.resolve)(root, options.tsConfig) });
-}
-exports.normalizeBuildOptions = normalizeBuildOptions;
-function getMainFileDirRelativeToProjectRoot(main, projectRoot) {
-    var mainFileDir = (0, path_1.dirname)(main);
-    var relativeDir = (0, devkit_1.normalizePath)((0, path_1.relative)(projectRoot, mainFileDir));
-    return relativeDir === "" ? "./" : "./".concat(relativeDir, "/");
-}
-function updatePackageJson(main, outputPath, projectRoot, withTypings) {
-    var _a, _b;
-    if (withTypings === void 0) { withTypings = true; }
-    var packageJson = (0, devkit_1.readJsonFile)((0, path_1.join)(projectRoot, "package.json"));
-    if (packageJson.main && packageJson.typings) {
-        return;
-    }
-    var mainFile = (0, path_1.basename)(main).replace(/\.[tj]s$/, "");
-    var relativeMainFileDir = getMainFileDirRelativeToProjectRoot(main, projectRoot);
-    var mainJsFile = "".concat(relativeMainFileDir).concat(mainFile, ".js");
-    var typingsFile = "".concat(relativeMainFileDir).concat(mainFile, ".d.ts");
-    packageJson.main = (_a = packageJson.main) !== null && _a !== void 0 ? _a : mainJsFile;
-    if (withTypings) {
-        packageJson.typings = (_b = packageJson.typings) !== null && _b !== void 0 ? _b : typingsFile;
-    }
-    var outputPackageJson = (0, path_1.join)(outputPath, "package.json");
-    (0, devkit_1.writeJsonFile)(outputPackageJson, packageJson);
-}
-exports.updatePackageJson = updatePackageJson;
-function generatePackageJson(projectName, graph, options) {
-    var packageJson = (0, create_package_json_1.createPackageJson)(projectName, graph, options);
-    delete packageJson.devDependencies;
-    delete packageJson.scripts;
-    (0, devkit_1.writeJsonFile)("".concat(options.outputPath, "/package.json"), __assign(__assign({}, packageJson)));
-}
-exports.generatePackageJson = generatePackageJson;
-function buildExecutor(options, context) {
+var glob_1 = require("glob");
+var fs_extra_1 = require("fs-extra");
+// import { ExecutorContext } from '@nrwl/devkit';
+// import {
+//   assetGlobsToFiles,
+//   FileInputOutput,
+// } from '@nrwl/workspace/src/utilities/assets';
+var path_1 = require("path");
+function treatTsupOutput(options, context) {
     return __awaiter(this, void 0, void 0, function () {
-        var main, outputPath, tsConfig, _a, sourceRoot, root, opt, projGraph, /* firstLevelFiles, */ stat;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var projectName, libDist, cjsFolder;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
-                    main = options.main, outputPath = options.outputPath, tsConfig = options.tsConfig;
-                    _a = context.workspace.projects[context.projectName], sourceRoot = _a.sourceRoot, root = _a.root;
-                    if (!sourceRoot) {
-                        throw new Error("".concat(context.projectName, " does not have a sourceRoot."));
-                    }
-                    if (!root) {
-                        throw new Error("".concat(context.projectName, " does not have a root."));
-                    }
-                    opt = normalizeBuildOptions(options, context.root, sourceRoot, root);
-                    projGraph = (0, project_graph_1.readCachedProjectGraph)();
-                    // firstLevelFiles = (0, fs_1.readdirSync)(sourceRoot)
-                    //     .filter(function (filename) { return filename.endsWith(".ts"); })
-                    //     .filter(function (filename) { return !filename.endsWith(".d.ts"); })
-                    //     .map(function (filename) { return (0, path_1.join)(sourceRoot, filename); });
-                    // 清空 outputPath
-                    try {
-                        stat = (0, fs_1.statSync)(opt.outputPath);
-                        if (stat.isDirectory()) {
-                            (0, fs_1.rmdirSync)(opt.outputPath, { recursive: true });
-                        }
-                        else {
-                            (0, fs_1.unlinkSync)(opt.outputPath);
-                        }
-                    }
-                    catch (error) { }
-                    return [4 /*yield*/, (0, tsup_1.build)({
-                            // entry: [main],
-                            entry: [main],//.concat(firstLevelFiles),
-                            splitting: false,
-                            format: [/* "cjs", */ "esm"],
-                            dts: false,
-                            sourcemap: false,
-                            outDir: outputPath,
-                            tsconfig: tsConfig,
-                            // minify: false,
-                            legacyOutput: true,
-                            // minifyIdentifiers: true,
-                            // replaceNodeEnv: true,
-                            esbuildOptions: function (options, ctx) {
-                                // options.target = "esnext";
-                                // options.define.foo = '"bar"'
-                                options.absWorkingDir = context.root;
-                            }
-                        })];
+                    projectName = context.projectName;
+                    libDist = (0, path_1.join)("./dist", projectName);
+                    cjsFolder = (0, path_1.join)(libDist, "./node");
+                    return [4 /*yield*/, (0, fs_extra_1.ensureDir)(cjsFolder)];
                 case 1:
-                    _b.sent();
-                    generatePackageJson(context.projectName, projGraph, opt);
-                    // await watchFileIsExist(resolve(outputPath, "index.d.ts"));
-                    return [2 /*return*/, {
-                            success: true
-                        }];
+                    _a.sent();
+                    return [2 /*return*/, new Promise(function (resolve) {
+                            (0, glob_1.glob)("**/*.js", { cwd: libDist }, function (er, relativePaths) {
+                                return __awaiter(this, void 0, void 0, function () {
+                                    var _this = this;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
+                                                    var ext, dir, srcDir, srcFile, srcFilename, destCjs, pkgDest;
+                                                    return __generator(this, function (_a) {
+                                                        switch (_a.label) {
+                                                            case 0:
+                                                                ext = (0, path_1.extname)(relativePath);
+                                                                dir = (0, path_1.dirname)(relativePath);
+                                                                srcDir = (0, path_1.join)(libDist, dir);
+                                                                srcFile = (0, path_1.join)(libDist, relativePath);
+                                                                srcFilename = (0, path_1.basename)(relativePath, ext);
+                                                                destCjs = (0, path_1.join)(cjsFolder, relativePath);
+                                                                pkgDest = (0, path_1.join)(srcDir, "./package.json");
+                                                                return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destCjs)];
+                                                            case 1:
+                                                                _a.sent();
+                                                                // only write package.json file deeper than the root
+                                                                if (dir && dir !== ".") {
+                                                                    (0, devkit_1.writeJsonFile)(pkgDest, {
+                                                                        sideEffects: false,
+                                                                        module: "./".concat(srcFilename, ".js"),
+                                                                        main: (0, path_1.relative)(srcDir, destCjs),
+                                                                        types: "./".concat(srcFilename, ".d.ts")
+                                                                    });
+                                                                }
+                                                                return [2 /*return*/];
+                                                        }
+                                                    });
+                                                }); }))];
+                                            case 1:
+                                                _a.sent();
+                                                resolve(true);
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                });
+                            });
+                        })];
             }
         });
     });
 }
-exports.buildExecutor = buildExecutor;
-exports["default"] = buildExecutor;
+function treatTscOutput(options, context) {
+    return __awaiter(this, void 0, void 0, function () {
+        var projectName, libName, libDist;
+        return __generator(this, function (_a) {
+            projectName = context.projectName;
+            libName = ".tsc/".concat(projectName);
+            libDist = (0, path_1.join)("./dist", libName);
+            return [2 /*return*/, new Promise(function (resolve) {
+                    (0, glob_1.glob)("**/*.{ts,js}", { cwd: libDist }, function (er, relativePaths) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var _this = this;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
+                                            var srcFile;
+                                            return __generator(this, function (_a) {
+                                                switch (_a.label) {
+                                                    case 0:
+                                                        srcFile = (0, path_1.join)(libDist, relativePath);
+                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, srcFile.replace(libName, projectName))];
+                                                    case 1:
+                                                        _a.sent();
+                                                        return [2 /*return*/];
+                                                }
+                                            });
+                                        }); }))];
+                                    case 1:
+                                        _a.sent();
+                                        resolve(true);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    });
+                })];
+        });
+    });
+}
+function treatEntrypoints(options, context) {
+    return __awaiter(this, void 0, void 0, function () {
+        var projectName, libDist, packagePath, packageJson, exports;
+        return __generator(this, function (_a) {
+            projectName = context.projectName;
+            libDist = (0, path_1.join)("./dist", projectName);
+            packagePath = (0, path_1.join)(libDist, "./package.json");
+            packageJson = (0, devkit_1.readJsonFile)(packagePath);
+            exports = {};
+            return [2 /*return*/, new Promise(function (resolve) {
+                    (0, glob_1.glob)("*.js", { cwd: libDist }, function (er, relativePaths) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var _this = this;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
+                                            var ext, srcFilename, isIndex;
+                                            return __generator(this, function (_a) {
+                                                ext = (0, path_1.extname)(relativePath);
+                                                srcFilename = (0, path_1.basename)(relativePath, ext);
+                                                isIndex = srcFilename === "index";
+                                                exports[isIndex ? "." : "./".concat(srcFilename)] = {
+                                                    require: "./node/".concat(srcFilename, ".js"),
+                                                    "import": "./".concat(srcFilename, ".js")
+                                                };
+                                                return [2 /*return*/];
+                                            });
+                                        }); }))];
+                                    case 1:
+                                        _a.sent();
+                                        packageJson.main = "./node/index.js";
+                                        packageJson.module = "./index.js";
+                                        packageJson.exports = exports;
+                                        (0, devkit_1.writeJsonFile)(packagePath, packageJson);
+                                        resolve(true);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    });
+                })];
+        });
+    });
+}
+function multipleExecutor(options, context) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, treatTsupOutput(options, context)];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, treatTscOutput(options, context)];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, treatEntrypoints(options, context)];
+                case 3:
+                    _a.sent();
+                    return [2 /*return*/, { success: true }];
+            }
+        });
+    });
+}
+exports["default"] = multipleExecutor;
+// export function normalizeOptions(
+//   options: ExecutorOptions,
+//   contextRoot: string,
+//   sourceRoot?: string,
+//   projectRoot?: string
+// ): NormalizedExecutorOptions {
+//   const outputPath = join(contextRoot, options.outputPath);
+//   if (options.watch == null) {
+//     options.watch = false;
+//   }
+//   const files: FileInputOutput[] = assetGlobsToFiles(
+//     options.assets,
+//     contextRoot,
+//     outputPath
+//   );
+//   return {
+//     ...options,
+//     root: contextRoot,
+//     sourceRoot,
+//     projectRoot,
+//     files,
+//     outputPath,
+//     tsConfig: join(contextRoot, options.tsConfig),
+//     mainOutputPath: resolve(
+//       outputPath,
+//       options.main.replace(`${projectRoot}/`, '').replace('.ts', '.js')
+//     ),
+//   };
+// }
+// export async function* tscExecutor(
+//   _options: ExecutorOptions,
+//   context: ExecutorContext
+// ) {
+//   const { sourceRoot, root } = context.workspace.projects[context.projectName];
+//   const options = normalizeOptions(_options, context.root, sourceRoot, root);
+//   const { projectRoot, tmpTsConfig, target, dependencies } = checkDependencies(
+//     context,
+//     _options.tsConfig
+//   );
+//   if (tmpTsConfig) {
+//     options.tsConfig = tmpTsConfig;
+//   }
+//   addTslibDependencyIfNeeded(options, context, dependencies);
+//   const assetHandler = new CopyAssetsHandler({
+//     projectDir: projectRoot,
+//     rootDir: context.root,
+//     outputDir: _options.outputPath,
+//     assets: _options.assets,
+//   });
+//   if (options.watch) {
+//     const disposeWatchAssetChanges =
+//       await assetHandler.watchAndProcessOnAssetChange();
+//     const disposePackageJsonChanged = await watchForSingleFileChanges(
+//       join(context.root, projectRoot),
+//       'package.json',
+//       () => updatePackageJson(options, context, target, dependencies)
+//     );
+//     process.on('exit', async () => {
+//       await disposeWatchAssetChanges();
+//       await disposePackageJsonChanged();
+//     });
+//     process.on('SIGTERM', async () => {
+//       await disposeWatchAssetChanges();
+//       await disposePackageJsonChanged();
+//     });
+//   }
+//   return yield* compileTypeScriptFiles(options, context, async () => {
+//     await assetHandler.processAllAssetsOnce();
+//     updatePackageJson(options, context, target, dependencies);
+//   });
+// }

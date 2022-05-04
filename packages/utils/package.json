@@ -1,5 +1,4 @@
 {
   "name": "@koine/utils",
-  "sideEffects": false,
-  "type": "module"
+  "sideEffects": false
 }

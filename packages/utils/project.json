@@ -4,11 +4,35 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "_build": {
-      "executor": "./tools/executors/build:build",
+    "build-cjs": {
+      "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/utils",
+        "outputPath": "dist/utils",
+        "tsConfig": "packages/utils/tsconfig.lib.json",
+        "project": "packages/utils/package.json",
+        "entryFile": "packages/utils/index.ts",
+        "format": ["umd"],
+        "deleteOutputPath": false
+      }
+    },
+    "build-tsc": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/.tsc/utils",
+        "tsConfig": "packages/utils/tsconfig.lib.json",
+        "project": "packages/utils/package.json",
+        "main": "packages/utils/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "assets": ["packages/utils/*.md", "packages/utils/*.d.ts"]
+      }
+    },
+    "build-tsup": {
+      "executor": "./tools/executors/tsup:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/utils",
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "packageJson": "packages/utils/package.json",
         "main": "packages/utils/**/*.ts*",
@@ -16,16 +40,7 @@
       }
     },
     "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/utils",
-        "tsConfig": "packages/utils/tsconfig.lib.json",
-        "project": "packages/utils/package.json",
-        "main": "packages/utils/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "assets": ["packages/utils/README.md", "packages/utils/typings.d.ts"]
-      }
+      "executor": "./tools/executors/build:build"
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

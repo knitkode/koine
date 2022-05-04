@@ -15,6 +15,8 @@ import {
 } from "../DialogMui";
 // import { KoineDialog as _ } from "../DialogMui";
 
+export type { KoineDialogProps } from "../DialogMui";
+
 /**
  * About nested `AnimatePresence` and animated dialogs with framer @see:
  *

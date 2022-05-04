@@ -216,6 +216,6 @@ jobs:
         if: ${{ contains(needs.setup.outputs.matrix, matrix.package) }}
         uses: JS-DevTools/npm-publish@v1
         with:
-          package: ./dist/packages/${{ matrix.package }}/package.json
+          package: ./dist/${{ matrix.package }}/package.json
           access: public
           token: ${{ secrets.NPM_TOKEN }}

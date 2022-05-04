@@ -9,7 +9,10 @@ import NextDocument, {
   NextScript,
 } from "next/document";
 import { Meta, NoJs } from "@koine/react";
-import { getInitialThemeFromRequest, ThemeVanillaValue } from "@koine/react/sc"; // FIXME: this should be imported from another entrypoint
+import {
+  getInitialThemeFromRequest,
+  ThemeVanillaValue,
+} from "@koine/react/styles";
 
 /**
  */

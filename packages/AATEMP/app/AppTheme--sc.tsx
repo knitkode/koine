@@ -1,7 +1,7 @@
 import React from "react";
 import { AppProps as NextAppProps } from "next/app";
 import { ThemeProvider } from "styled-components";
-import { StylesGlobal, Theme } from "@koine/react/sc";
+import { StylesGlobal, Theme } from "@koine/react/styles";
 
 export type AppThemeScProps = React.PropsWithChildren<
   NextAppProps & {

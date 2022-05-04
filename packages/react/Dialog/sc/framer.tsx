@@ -4,6 +4,8 @@ import { dialogBackdropMotion, dialogPaperMotion } from "../m/basic";
 import { KoineDialog as _ } from "../m/bare";
 import { Root, Backdrop, Container, Paper, Close, Header, Body } from "./bare";
 
+export type { KoineDialogProps } from "../DialogMui";
+
 export const KoineDialog = extendComponent(_, {
   Root,
   Backdrop: m(Backdrop),

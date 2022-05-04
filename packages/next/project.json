@@ -4,11 +4,36 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "_build": {
-      "executor": "./tools/executors/build:build",
+    "build-cjs": {
+      "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/next",
+        "outputPath": "dist/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "project": "packages/next/package.json",
+        "entryFile": "packages/next/index.ts",
+        "external": ["react/jsx-runtime"],
+        "format": ["umd"],
+        "deleteOutputPath": false
+      }
+    },
+    "build-tsc": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/.tsc/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "project": "packages/next/package.json",
+        "main": "packages/next/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "assets": ["packages/next/*.md", "packages/next/*.d.ts"]
+      }
+    },
+    "build-tsup": {
+      "executor": "./tools/executors/tsup:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/next",
         "tsConfig": "packages/next/tsconfig.lib.json",
         "packageJson": "packages/next/package.json",
         "main": "packages/next/**/*.ts*",
@@ -16,16 +41,7 @@
       }
     },
     "build": {
-      "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/next",
-        "tsConfig": "packages/next/tsconfig.lib.json",
-        "project": "packages/next/package.json",
-        "main": "packages/next/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "assets": ["packages/next/README.md", "packages/next/typings.d.ts"]
-      }
+      "executor": "./tools/executors/build:build"
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
