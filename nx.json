@@ -21,6 +21,12 @@
     ],
     "build": [
       {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ],
+    "_build": [
+      {
         "target": "build-tsc",
         "projects": "self"
       },
