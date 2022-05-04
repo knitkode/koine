@@ -28,7 +28,16 @@
       }
     },
     "build": {
-      "executor": "./tools/executors/build:build"
+      "executor": "./tools/executors/build:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "project": "packages/next/package.json",
+        "main": "packages/next/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "assets": ["packages/next/*.md", "packages/next/*.d.ts"]
+      }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
