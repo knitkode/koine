@@ -20,6 +20,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
+    "composite": true,
     "baseUrl": ".",
     "paths": {
       "@koine/next": ["packages/next/index.ts"],

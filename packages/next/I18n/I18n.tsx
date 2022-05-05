@@ -46,7 +46,8 @@ export type AllPaths = {
       ? Join<
           K extends string ? `${N}:${K}` : `${N}:`,
           Paths<Koine.NextTranslations[N][K]>
-        >
+        > &
+          Record<Koine.NextTranslations[N][K], object>
       : // if we have an array of primitives
       Koine.NextTranslations[N][K] extends Array<string | number | boolean>
       ? Join<
@@ -107,18 +108,28 @@ export type TranslateNamespace = keyof Koine.NextTranslations;
 export type TranslateKey = AllPaths;
 
 export type Translate<
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-  R extends unknown = string,
-  N extends undefined | keyof Koine.NextTranslations = undefined,
-  Q extends TranslationQuery = undefined,
-  O extends TranslationOptions = undefined
-> = (
-  s: N extends keyof Koine.NextTranslations
+  N extends undefined | keyof Koine.NextTranslations = undefined
+> = <R extends unknown = string>(
+  s: N extends TranslateNamespace
     ? Paths<Koine.NextTranslations[N]> | AllPaths
     : AllPaths,
-  q?: Q,
-  o?: O
-) => R extends undefined | unknown ? TranslateReturn<Q, O> : R;
+  q?: TranslationQuery,
+  o?: TranslationOptions
+) => R;
+
+// export type Translate<
+//   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
+//   R extends unknown = string,
+//   N extends undefined | keyof Koine.NextTranslations = undefined,
+//   Q extends TranslationQuery = undefined,
+//   O extends TranslationOptions = undefined
+// > = (
+//   s: N extends keyof Koine.NextTranslations
+//     ? Paths<Koine.NextTranslations[N]> | AllPaths
+//     : AllPaths,
+//   q?: Q,
+//   o?: O
+// ) => R extends undefined | unknown ? TranslateReturn<Q, O> : R;
 
 export type TranslateLoose = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

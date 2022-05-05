@@ -82,6 +82,11 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 exports.__esModule = true;
+/**
+ * @file
+ *
+ * Inspired by https://github.com/nrwl/nx/blob/master/packages/js/src/executors/tsc/tsc.impl.ts
+ */
 var path_1 = require("path");
 var fs_extra_1 = require("fs-extra");
 var glob_1 = require("glob");
@@ -93,43 +98,131 @@ var tslib_dependency_1 = require("@nrwl/js/src/utils/tslib-dependency");
 var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
 var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
-// import { convertNxExecutor } from '@nrwl/devkit';
+// import { convertNxExecutor }  '@nrwl/devkit';
 // we follow the same structure @mui packages builds
-var OUTPUT_FOLDER_CJS = "node";
-var OUTPUT_FOLDER_MODERN = "modern";
+var TMP_FOLDER_CJS = ".node";
+var TMP_FOLDER_MODERN = ".modern";
+var DEST_FOLDER_CJS = "node";
+var DEST_FOLDER_MODERN = "";
+/**
+ *
+ * @see https://github.com/nrwl/nx/blob/master/packages/nx/src/command-line/workspace-generators.ts#L171-L188
+ */
+function createTmpTsConfig(tsconfigPath, updateConfig) {
+    var tmpTsConfigPath = (0, path_1.join)((0, path_1.dirname)(tsconfigPath), ".tsconfig.".concat(performance.now(), ".json"));
+    var originalTSConfig = (0, devkit_1.readJsonFile)(tsconfigPath);
+    var generatedTSConfig = __assign(__assign({}, originalTSConfig), updateConfig);
+    process.on("exit", function () { return cleanupTmpTsConfigFile(tmpTsConfigPath); });
+    (0, devkit_1.writeJsonFile)(tmpTsConfigPath, generatedTSConfig);
+    return tmpTsConfigPath;
+}
+/**
+ *
+ * @see https://github.com/nrwl/nx/blob/master/packages/nx/src/command-line/workspace-generators.ts#L190-L194
+ */
+function cleanupTmpTsConfigFile(tmpTsConfigPath) {
+    if (tmpTsConfigPath) {
+        (0, fs_extra_1.removeSync)(tmpTsConfigPath);
+    }
+}
+function concatPaths() {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    // always prepend a slash
+    return "/".concat(args
+        // remove initial slashes and ending slashes
+        .map(function (p) { return p.replace(/$\/+/, "").replace(/\/+$/, ""); })
+        // remove empty parts
+        .filter(function (p) { return p; })
+        //join by slash
+        .join("/"));
+}
+function treatCjsOutput(options) {
+    return __awaiter(this, void 0, void 0, function () {
+        var outputPath, tmpOutputPath;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    outputPath = options.outputPath;
+                    tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_CJS);
+                    return [4 /*yield*/, (0, fs_extra_1.ensureDir)((0, path_1.join)(outputPath, DEST_FOLDER_CJS))];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/, new Promise(function (resolve) {
+                            (0, glob_1.glob)("**/*.js", { cwd: tmpOutputPath }, function (er, relativePaths) {
+                                return __awaiter(this, void 0, void 0, function () {
+                                    var _this = this;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
+                                                    var dir, ext, fileName, srcFile, destDir, destFile;
+                                                    return __generator(this, function (_a) {
+                                                        switch (_a.label) {
+                                                            case 0:
+                                                                dir = (0, path_1.dirname)(relativePath);
+                                                                ext = (0, path_1.extname)(relativePath);
+                                                                fileName = (0, path_1.basename)(relativePath, ext);
+                                                                srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
+                                                                destDir = (0, path_1.join)(outputPath, DEST_FOLDER_CJS, dir);
+                                                                destFile = (0, path_1.join)(destDir, "".concat(fileName).concat(ext));
+                                                                return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile)];
+                                                            case 1:
+                                                                _a.sent();
+                                                                return [2 /*return*/];
+                                                        }
+                                                    });
+                                                }); }))];
+                                            case 1:
+                                                _a.sent();
+                                                return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
+                                            case 2:
+                                                _a.sent();
+                                                resolve(true);
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                });
+                            });
+                        })];
+            }
+        });
+    });
+}
 function treatModernOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
-        var outputPath;
+        var outputPath, tmpOutputPath;
         return __generator(this, function (_a) {
             outputPath = options.outputPath;
+            tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_MODERN);
             return [2 /*return*/, new Promise(function (resolve) {
-                    (0, glob_1.glob)("!(".concat(OUTPUT_FOLDER_CJS, ")/**/*.{ts,js}"), { cwd: outputPath }, function (er, relativePaths) {
+                    (0, glob_1.glob)("**/*.{ts,js}", { cwd: tmpOutputPath }, function (er, relativePaths) {
                         return __awaiter(this, void 0, void 0, function () {
                             var _this = this;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
-                                            var dir, ext, fileName, srcCjsFile, destEsmFile, destEsmDir, destCjsDir, destPkg;
+                                            var dir, ext, fileName, srcFile, destDir, destFile, destCjsDir;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
                                                         dir = (0, path_1.dirname)(relativePath);
                                                         ext = (0, path_1.extname)(relativePath);
                                                         fileName = (0, path_1.basename)(relativePath, ext);
-                                                        srcCjsFile = (0, path_1.join)(outputPath, relativePath);
-                                                        destEsmFile = srcCjsFile.replace("/".concat(OUTPUT_FOLDER_MODERN), "");
-                                                        destEsmDir = (0, path_1.join)(outputPath, dir).replace("/".concat(OUTPUT_FOLDER_MODERN), "");
-                                                        destCjsDir = (0, path_1.join)(outputPath.replace(OUTPUT_FOLDER_MODERN, OUTPUT_FOLDER_CJS), dir);
-                                                        destPkg = (0, path_1.join)(destEsmDir, "./package.json");
-                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcCjsFile, destEsmFile)];
+                                                        srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
+                                                        destDir = (0, path_1.join)(outputPath, DEST_FOLDER_MODERN, dir);
+                                                        destFile = (0, path_1.join)(destDir, "".concat(fileName).concat(ext));
+                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile)];
                                                     case 1:
                                                         _a.sent();
                                                         // only write package.json file deeper than the root and when we have an `index` entry file
                                                         if (fileName === "index" && dir && dir !== ".") {
-                                                            (0, devkit_1.writeJsonFile)(destPkg, {
+                                                            destCjsDir = (0, path_1.join)(outputPath, DEST_FOLDER_CJS, dir);
+                                                            (0, devkit_1.writeJsonFile)((0, path_1.join)(destDir, "./package.json"), {
                                                                 sideEffects: false,
                                                                 module: "./".concat(fileName, ".js"),
-                                                                main: (0, path_1.join)((0, path_1.relative)(destEsmDir, destCjsDir), "".concat(fileName, ".js")),
+                                                                main: (0, path_1.join)((0, path_1.relative)(destDir, destCjsDir), "".concat(fileName, ".js")),
                                                                 types: "./".concat(fileName, ".d.ts")
                                                             });
                                                         }
@@ -139,7 +232,7 @@ function treatModernOutput(options) {
                                         }); }))];
                                     case 1:
                                         _a.sent();
-                                        return [4 /*yield*/, (0, fs_extra_1.remove)(outputPath)];
+                                        return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
                                     case 2:
                                         _a.sent();
                                         resolve(true);
@@ -154,14 +247,14 @@ function treatModernOutput(options) {
 }
 function treatEntrypoints(options) {
     return __awaiter(this, void 0, void 0, function () {
-        var libDist, packagePath, packageJson;
+        var outputPath, packagePath, packageJson;
         return __generator(this, function (_a) {
-            libDist = options.outputPath;
-            packagePath = (0, path_1.join)(libDist, "./package.json");
+            outputPath = options.outputPath;
+            packagePath = (0, path_1.join)(outputPath, "./package.json");
             packageJson = (0, devkit_1.readJsonFile)(packagePath);
             return [2 /*return*/, new Promise(function (resolve) {
-                    packageJson.main = "./".concat(OUTPUT_FOLDER_CJS, "/index.js");
-                    packageJson.module = "./index.js";
+                    packageJson.main = ".".concat(concatPaths(DEST_FOLDER_CJS, "index.js"));
+                    packageJson.module = ".".concat(concatPaths(DEST_FOLDER_MODERN, "index.js"));
                     (0, devkit_1.writeJsonFile)(packagePath, packageJson);
                     resolve(true);
                 })];
@@ -178,7 +271,7 @@ function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
 }
 function executor(_options, context) {
     return __asyncGenerator(this, arguments, function executor_1() {
-        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tsConfigGenerated, initialOutputPath;
+        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tmpTsConfigPath, tmpTsConfigFile, tmpOptions, initialTsConfig;
         var _this = this;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -231,17 +324,20 @@ function executor(_options, context) {
                     }); });
                     _c.label = 3;
                 case 3:
-                    tsConfigGenerated = (0, devkit_1.readJsonFile)(options.tsConfig);
-                    initialOutputPath = options.outputPath;
+                    tmpTsConfigPath = createTmpTsConfig(options.tsConfig, {});
+                    tmpTsConfigFile = (0, devkit_1.readJsonFile)(tmpTsConfigPath);
+                    tmpOptions = Object.assign({}, options);
+                    initialTsConfig = Object.assign({}, tmpTsConfigFile);
                     // immediately output a package.json file
                     (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
                     // generate CommonJS:
                     // ---------------------------------------------------------------------------
-                    tsConfigGenerated.compilerOptions.module = "commonjs";
-                    tsConfigGenerated.compilerOptions.declaration = false;
-                    (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfigGenerated);
-                    options.outputPath = (0, path_1.join)(initialOutputPath, "/".concat(OUTPUT_FOLDER_CJS));
-                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(options, context, function () { return __awaiter(_this, void 0, void 0, function () {
+                    tmpTsConfigFile.compilerOptions.module = "commonjs";
+                    tmpTsConfigFile.compilerOptions.composite = false;
+                    tmpTsConfigFile.compilerOptions.declaration = false;
+                    (0, devkit_1.writeJsonFile)(options.tsConfig, tmpTsConfigFile);
+                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, "/".concat(TMP_FOLDER_CJS));
+                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, assetHandler.processAllAssetsOnce()];
@@ -255,22 +351,26 @@ function executor(_options, context) {
                 case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
                 case 5:
                     _c.sent();
-                    // generate Modern now:
+                    // generate Modern:
                     // ---------------------------------------------------------------------------
-                    tsConfigGenerated.compilerOptions.module = "esnext";
-                    tsConfigGenerated.compilerOptions.declaration = true;
-                    (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfigGenerated);
-                    options.outputPath = (0, path_1.join)(initialOutputPath, "/".concat(OUTPUT_FOLDER_MODERN));
-                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(options, context, function () { return __awaiter(_this, void 0, void 0, function () {
+                    tmpTsConfigFile.compilerOptions.module = "esnext";
+                    tmpTsConfigFile.compilerOptions.composite = true;
+                    tmpTsConfigFile.compilerOptions.declaration = true;
+                    (0, devkit_1.writeJsonFile)(options.tsConfig, tmpTsConfigFile);
+                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, "/".concat(TMP_FOLDER_MODERN));
+                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, treatModernOutput(options)];
+                                    case 0: return [4 /*yield*/, treatCjsOutput(options)];
                                     case 1:
                                         _a.sent();
-                                        options.outputPath = initialOutputPath;
-                                        return [4 /*yield*/, treatEntrypoints(options)];
+                                        return [4 /*yield*/, treatModernOutput(options)];
                                     case 2:
                                         _a.sent();
+                                        return [4 /*yield*/, treatEntrypoints(options)];
+                                    case 3:
+                                        _a.sent();
+                                        (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
                                         return [2 /*return*/];
                                 }
                             });
@@ -283,4 +383,6 @@ function executor(_options, context) {
     });
 }
 exports["default"] = executor;
+// @see https://github.com/nrwl/nx/blob/master/packages/js/src/executors/tsc/compat.ts
+// not sure if that is needed, locally it works only without it, no time to investigate now
 // export default convertNxExecutor(executor);

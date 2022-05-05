@@ -1,5 +1,10 @@
+/**
+ * @file
+ *
+ * Inspired by https://github.com/nrwl/nx/blob/master/packages/js/src/executors/tsc/tsc.impl.ts
+ */
 import { join, basename, dirname, extname, resolve, relative } from "path";
-import { move, remove } from "fs-extra";
+import { move, remove, removeSync, ensureDir } from "fs-extra";
 import { glob } from "glob";
 import { ExecutorContext, readJsonFile, writeJsonFile } from "@nrwl/devkit";
 import {
@@ -16,55 +21,136 @@ import { addTslibDependencyIfNeeded } from "@nrwl/js/src/utils/tslib-dependency"
 import { compileTypeScriptFiles } from "@nrwl/js/src/utils/typescript/compile-typescript-files";
 import { updatePackageJson } from "@nrwl/js/src/utils/update-package-json";
 import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-file-changes";
-// import { convertNxExecutor } from '@nrwl/devkit';
+import type { CompilerOptions } from "typescript";
+// import { convertNxExecutor }  '@nrwl/devkit';
 
 // we follow the same structure @mui packages builds
-const OUTPUT_FOLDER_CJS = "node";
-const OUTPUT_FOLDER_MODERN = "modern";
+const TMP_FOLDER_CJS = ".node";
+const TMP_FOLDER_MODERN = ".modern";
+const DEST_FOLDER_CJS = "node";
+const DEST_FOLDER_MODERN = "";
+
+/**
+ * Copied from @nrwl/nx
+ *
+ * @see https://github.com/nrwl/nx/blob/master/packages/nx/src/command-line/workspace-generators.ts#L23-L30
+ */
+type TsConfig = {
+  extends: string;
+  compilerOptions: CompilerOptions;
+  files?: string[];
+  include?: string[];
+  exclude?: string[];
+  references?: Array<{ path: string }>;
+};
+
+/**
+ *
+ * @see https://github.com/nrwl/nx/blob/master/packages/nx/src/command-line/workspace-generators.ts#L171-L188
+ */
+function createTmpTsConfig(
+  tsconfigPath: string,
+  updateConfig: Partial<TsConfig>
+) {
+  const tmpTsConfigPath = join(
+    dirname(tsconfigPath),
+    `.tsconfig.${performance.now()}.json`
+  );
+  const originalTSConfig = readJsonFile<TsConfig>(tsconfigPath);
+  const generatedTSConfig: TsConfig = {
+    ...originalTSConfig,
+    ...updateConfig,
+  };
+  process.on("exit", () => cleanupTmpTsConfigFile(tmpTsConfigPath));
+  writeJsonFile(tmpTsConfigPath, generatedTSConfig);
+
+  return tmpTsConfigPath;
+}
+
+/**
+ *
+ * @see https://github.com/nrwl/nx/blob/master/packages/nx/src/command-line/workspace-generators.ts#L190-L194
+ */
+function cleanupTmpTsConfigFile(tmpTsConfigPath: string) {
+  if (tmpTsConfigPath) {
+    removeSync(tmpTsConfigPath);
+  }
+}
+
+function concatPaths(...args: string[]) {
+  // always prepend a slash
+  return `/${args
+    // remove initial slashes and ending slashes
+    .map((p) => p.replace(/$\/+/, "").replace(/\/+$/, ""))
+    // remove empty parts
+    .filter((p) => p)
+    //join by slash
+    .join("/")}`;
+}
+
+async function treatCjsOutput(options: NormalizedExecutorOptions) {
+  const { outputPath } = options;
+  const tmpOutputPath = join(outputPath, TMP_FOLDER_CJS);
+
+  await ensureDir(join(outputPath, DEST_FOLDER_CJS));
+
+  return new Promise((resolve) => {
+    glob("**/*.js", { cwd: tmpOutputPath }, async function (er, relativePaths) {
+      await Promise.all(
+        relativePaths.map(async (relativePath) => {
+          const dir = dirname(relativePath);
+          const ext = extname(relativePath);
+          const fileName = basename(relativePath, ext);
+          const srcFile = join(tmpOutputPath, relativePath);
+          const destDir = join(outputPath, DEST_FOLDER_CJS, dir);
+          const destFile = join(destDir, `${fileName}${ext}`);
+
+          await move(srcFile, destFile);
+        })
+      );
+
+      await remove(tmpOutputPath);
+
+      resolve(true);
+    });
+  });
+}
 
 async function treatModernOutput(options: NormalizedExecutorOptions) {
-  const { outputPath } = options; // here we are in the `/OUTPUT_FOLDER_MODERN` subfolder
+  const { outputPath } = options;
+  const tmpOutputPath = join(outputPath, TMP_FOLDER_MODERN);
 
   return new Promise((resolve) => {
     glob(
-      `!(${OUTPUT_FOLDER_CJS})/**/*.{ts,js}`,
-      { cwd: outputPath },
+      "**/*.{ts,js}",
+      { cwd: tmpOutputPath },
       async function (er, relativePaths) {
         await Promise.all(
           relativePaths.map(async (relativePath) => {
             const dir = dirname(relativePath);
             const ext = extname(relativePath);
             const fileName = basename(relativePath, ext);
-            const srcCjsFile = join(outputPath, relativePath);
-            const destEsmFile = srcCjsFile.replace(
-              `/${OUTPUT_FOLDER_MODERN}`,
-              ""
-            );
-            const destEsmDir = join(outputPath, dir).replace(
-              `/${OUTPUT_FOLDER_MODERN}`,
-              ""
-            );
-            const destCjsDir = join(
-              outputPath.replace(OUTPUT_FOLDER_MODERN, OUTPUT_FOLDER_CJS),
-              dir
-            );
-            const destPkg = join(destEsmDir, "./package.json");
+            const srcFile = join(tmpOutputPath, relativePath);
+            const destDir = join(outputPath, DEST_FOLDER_MODERN, dir);
+            const destFile = join(destDir, `${fileName}${ext}`);
 
-            await move(srcCjsFile, destEsmFile);
+            await move(srcFile, destFile);
 
             // only write package.json file deeper than the root and when we have an `index` entry file
             if (fileName === "index" && dir && dir !== ".") {
-              writeJsonFile(destPkg, {
+              const destCjsDir = join(outputPath, DEST_FOLDER_CJS, dir);
+
+              writeJsonFile(join(destDir, "./package.json"), {
                 sideEffects: false,
                 module: `./${fileName}.js`,
-                main: join(relative(destEsmDir, destCjsDir), `${fileName}.js`),
+                main: join(relative(destDir, destCjsDir), `${fileName}.js`),
                 types: `./${fileName}.d.ts`,
               });
             }
           })
         );
 
-        await remove(outputPath);
+        await remove(tmpOutputPath);
 
         resolve(true);
       }
@@ -73,13 +159,13 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
 }
 
 async function treatEntrypoints(options: NormalizedExecutorOptions) {
-  const libDist = options.outputPath;
-  const packagePath = join(libDist, "./package.json");
+  const { outputPath } = options;
+  const packagePath = join(outputPath, "./package.json");
   const packageJson = readJsonFile(packagePath);
 
   return new Promise((resolve) => {
-    packageJson.main = `./${OUTPUT_FOLDER_CJS}/index.js`;
-    packageJson.module = "./index.js";
+    packageJson.main = `.${concatPaths(DEST_FOLDER_CJS, "index.js")}`;
+    packageJson.module = `.${concatPaths(DEST_FOLDER_MODERN, "index.js")}`;
     writeJsonFile(packagePath, packageJson);
     resolve(true);
   });
@@ -158,41 +244,47 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
     });
   }
 
-  const tsConfigGenerated = readJsonFile(options.tsConfig);
-  const initialOutputPath = options.outputPath;
+  const tmpTsConfigPath = createTmpTsConfig(options.tsConfig, {});
+  const tmpTsConfigFile = readJsonFile(tmpTsConfigPath);
+  const tmpOptions = Object.assign({}, options);
+  const initialTsConfig = Object.assign({}, tmpTsConfigFile);
 
   // immediately output a package.json file
   updatePackageJson(options, context, target, dependencies);
 
   // generate CommonJS:
   // ---------------------------------------------------------------------------
-  tsConfigGenerated.compilerOptions.module = "commonjs";
-  tsConfigGenerated.compilerOptions.declaration = false;
-  writeJsonFile(options.tsConfig, tsConfigGenerated);
+  tmpTsConfigFile.compilerOptions.module = "commonjs";
+  tmpTsConfigFile.compilerOptions.composite = false;
+  tmpTsConfigFile.compilerOptions.declaration = false;
+  writeJsonFile(options.tsConfig, tmpTsConfigFile);
 
-  options.outputPath = join(initialOutputPath, `/${OUTPUT_FOLDER_CJS}`);
+  tmpOptions.outputPath = join(options.outputPath, `/${TMP_FOLDER_CJS}`);
 
-  yield* compileTypeScriptFiles(options, context, async () => {
+  yield* compileTypeScriptFiles(tmpOptions, context, async () => {
     await assetHandler.processAllAssetsOnce();
     updatePackageJson(options, context, target, dependencies);
   });
 
-  // generate Modern now:
+  // generate Modern:
   // ---------------------------------------------------------------------------
-  tsConfigGenerated.compilerOptions.module = "esnext";
-  tsConfigGenerated.compilerOptions.declaration = true;
-  writeJsonFile(options.tsConfig, tsConfigGenerated);
+  tmpTsConfigFile.compilerOptions.module = "esnext";
+  tmpTsConfigFile.compilerOptions.composite = true;
+  tmpTsConfigFile.compilerOptions.declaration = true;
+  writeJsonFile(options.tsConfig, tmpTsConfigFile);
 
-  options.outputPath = join(initialOutputPath, `/${OUTPUT_FOLDER_MODERN}`);
+  tmpOptions.outputPath = join(options.outputPath, `/${TMP_FOLDER_MODERN}`);
 
-  return yield* compileTypeScriptFiles(options, context, async () => {
+  return yield* compileTypeScriptFiles(tmpOptions, context, async () => {
+    await treatCjsOutput(options);
     await treatModernOutput(options);
-
-    options.outputPath = initialOutputPath;
-
     await treatEntrypoints(options);
+
+    writeJsonFile(options.tsConfig, initialTsConfig);
   });
 }
 
 export default executor;
+// @see https://github.com/nrwl/nx/blob/master/packages/js/src/executors/tsc/compat.ts
+// not sure if that is needed, locally it works only without it, no time to investigate now
 // export default convertNxExecutor(executor);
