@@ -1,4 +1,9 @@
 {
   "name": "@koine/utils",
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "core-js": "^3.22.4",
+    "regenerator-runtime": "^0.13.9",
+    "tslib": "^2.4.0"
+  }
 }
