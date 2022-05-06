@@ -23,7 +23,7 @@ import { updatePackageJson } from "@nrwl/js/src/utils/update-package-json";
 import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-file-changes";
 import type { CompilerOptions } from "typescript";
 // import { rollupExecutor } from "./rollup";
-import { tsupExecutor } from "./tsup";
+// import { tsupExecutor } from "./tsup";
 // import { convertNxExecutor }  '@nrwl/devkit';
 
 // we follow the same structure as in @mui packages builds
@@ -199,15 +199,15 @@ function getPackageJsonData(pkgPath, modernPath, cjsPath) {
     module: modernFile,
     main: cjsFile,
     // @see https://webpack.js.org/guides/package-exports/
-    exports: {
-      // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
-      development: umdFile,
-      default: modernFile,
-      // FIXME: this should not point to parent folders according to the linting
-      // on the package.json, it is probably not needed anyway as we already
-      // have `main` key in the package.json
-      // node: cjsFile,
-    },
+    // exports: {
+    //   // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
+    //   development: umdFile,
+    //   default: modernFile,
+    //   // FIXME: this should not point to parent folders according to the linting
+    //   // on the package.json, it is probably not needed anyway as we already
+    //   // have `main` key in the package.json
+    //   // node: cjsFile,
+    // },
     types: modernFile.replace(".js", ".d.ts"),
   };
 }
@@ -334,17 +334,19 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
     // restore initial tsConfig
     writeJsonFile(options.tsConfig, initialTsConfig);
   });
+
+  return { success: true };
   
   // generate UMD dev bundle:
   // ---------------------------------------------------------------------------
-  tmpTsConfigFile.compilerOptions.module = "esnext";
-  tmpTsConfigFile.compilerOptions.composite = true;
-  tmpTsConfigFile.compilerOptions.declaration = true;
+  // tmpTsConfigFile.compilerOptions.module = "esnext";
+  // tmpTsConfigFile.compilerOptions.composite = true;
+  // tmpTsConfigFile.compilerOptions.declaration = true;
   
-  // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
-  yield* tsupExecutor(options, context, dependencies, entrypointsDirs);
+  // // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
+  // yield* tsupExecutor(options, context, dependencies, entrypointsDirs);
 
-  return { success: true };
+  // return { success: true };
 }
 
 export default executor;

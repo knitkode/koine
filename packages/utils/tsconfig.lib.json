@@ -3,9 +3,9 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
-    "module": "esnext",
-    "declaration": true,
-    "composite": true
+    "module": "commonjs",
+    "declaration": false,
+    "composite": false
   },
   "files": ["typings.d.ts"],
   "include": ["**/*.ts"],

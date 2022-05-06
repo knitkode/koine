@@ -99,7 +99,7 @@ var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-
 var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
 // import { rollupExecutor } from "./rollup";
-var tsup_1 = require("./tsup");
+// import { tsupExecutor } from "./tsup";
 // import { convertNxExecutor }  '@nrwl/devkit';
 // we follow the same structure as in @mui packages builds
 var TMP_FOLDER_CJS = "node";
@@ -283,11 +283,15 @@ function getPackageJsonData(pkgPath, modernPath, cjsPath) {
         module: modernFile,
         main: cjsFile,
         // @see https://webpack.js.org/guides/package-exports/
-        exports: {
-            // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
-            development: umdFile,
-            "default": modernFile
-        },
+        // exports: {
+        //   // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
+        //   development: umdFile,
+        //   default: modernFile,
+        //   // FIXME: this should not point to parent folders according to the linting
+        //   // on the package.json, it is probably not needed anyway as we already
+        //   // have `main` key in the package.json
+        //   // node: cjsFile,
+        // },
         types: modernFile.replace(".js", ".d.ts")
     };
 }
@@ -423,21 +427,8 @@ function executor(_options, context) {
                 case 6: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
                 case 7:
                     _c.sent();
-                    // generate UMD dev bundle:
-                    // ---------------------------------------------------------------------------
-                    tmpTsConfigFile.compilerOptions.module = "esnext";
-                    tmpTsConfigFile.compilerOptions.composite = true;
-                    tmpTsConfigFile.compilerOptions.declaration = true;
-                    // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
-                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, tsup_1.tsupExecutor)(options, context, dependencies, entrypointsDirs))))];
-                case 8: 
-                // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
-                return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 9:
-                    // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
-                    _c.sent();
                     return [4 /*yield*/, __await({ success: true })];
-                case 10: return [2 /*return*/, _c.sent()];
+                case 8: return [2 /*return*/, _c.sent()];
             }
         });
     });
