@@ -63,12 +63,7 @@ const extractDirectionArgs = (raw: SpacingSyntax) => {
  * <Spacing top="sm:2:padding:tablet,desktop" />
  * ```
  */
-export const Spacing: React.FC<SpacingProps> = ({
-  top,
-  bottom,
-  vertical,
-  ...props
-}) => {
+export const Spacing = ({ top, bottom, vertical, ...props }: SpacingProps) => {
   let $top;
   let $bottom;
 

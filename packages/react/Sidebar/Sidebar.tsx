@@ -43,9 +43,9 @@ const SidebarToggle = styled.span`
   }
 `;
 
-export type SidebarProps = React.PropsWithChildren<{}>;
+export type SidebarProps = React.PropsWithChildren<unknown>;
 
-export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+export const Sidebar = ({ children }: SidebarProps) => {
   const [open, setOpen] = useState(false);
   const [, , headerHeight] = useHeader();
 

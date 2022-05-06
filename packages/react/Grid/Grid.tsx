@@ -12,10 +12,12 @@ export type GridProps = {
   $gutter?: keyof Theme["gutter"];
 };
 
-export type ContainerProps = GridProps & {
-  size: Breakpoint;
-  clamp?: boolean;
-};
+export type ContainerProps = React.PropsWithChildren<
+  GridProps & {
+    size: Breakpoint;
+    clamp?: boolean;
+  }
+>;
 
 export const Container = styled.div<ContainerProps>`
   max-width: ${(p) => p.theme.breakpoints[p.size]}px;
@@ -24,9 +26,11 @@ export const Container = styled.div<ContainerProps>`
   ${(p) => (p.clamp ? "overflow: hidden;" : "")}
 `;
 
-export type ContainerFluidProps = GridProps & {
-  size: Breakpoint;
-};
+export type ContainerFluidProps = React.PropsWithChildren<
+  GridProps & {
+    size: Breakpoint;
+  }
+>;
 
 export const ContainerFluid = styled.div<ContainerFluidProps>`
   padding: 0 ${(p) => p.theme.gutter[p.$gutter || GRID_GUTTER_DEFAULT]}px;

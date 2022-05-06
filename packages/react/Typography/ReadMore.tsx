@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useIsomorphicLayoutEffect } from "react-use";
 import { m, useSpring } from "framer-motion";
@@ -51,7 +51,7 @@ type ReadMoreStyledProps = {
   $lineHeight?: number;
 };
 
-export type ReadMoreProps = {
+export type ReadMoreProps = React.ComponentPropsWithoutRef<"div"> & {
   lines?: number;
   lineHeight?: number;
   fontSize?: number;
@@ -62,7 +62,7 @@ export type ReadMoreProps = {
   collapse?: string;
 };
 
-export const ReadMore: React.FC<ReadMoreProps> = ({
+export const ReadMore = ({
   lines = 3,
   lineHeight = 1.6,
   fontSize = 14,
@@ -70,7 +70,7 @@ export const ReadMore: React.FC<ReadMoreProps> = ({
   expand = "Expand",
   collapse = "Collapse",
   ...props
-}) => {
+}: ReadMoreProps) => {
   const defaultMaxHeight = lines * (lineHeight * fontSize);
   const [expanded, setExpanded] = useState(false);
   const [maxHeight, setMaxHeight] = useState(defaultMaxHeight);

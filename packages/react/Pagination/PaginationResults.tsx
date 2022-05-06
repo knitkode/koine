@@ -7,11 +7,9 @@ const Root = styled.div`
 
 const Inner = styled(m.div)``;
 
-export type PaginationResultsProps = React.PropsWithChildren<{}>;
+export type PaginationResultsProps = React.PropsWithChildren<unknown>;
 
-export const PaginationResults: React.FC<PaginationResultsProps> = ({
-  children,
-}) => {
+export const PaginationResults = ({ children }: PaginationResultsProps) => {
   return (
     <AnimatePresence exitBeforeEnter initial={true}>
       <Root>

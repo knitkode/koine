@@ -66,7 +66,7 @@ const ThemeContext = createContext<UseThemeProps>({
 
 export const useTheme = () => useContext(ThemeContext);
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+export const ThemeProvider = ({
   forcedTheme,
   disableTransitionOnChange = false,
   enableSystem = true,
@@ -77,7 +77,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   value,
   children,
   nonce,
-}) => {
+}: ThemeProviderProps) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(THEME_STORAGE_KEY, defaultTheme)
   );

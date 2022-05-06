@@ -1,5 +1,4 @@
 import React from "react";
-/* ? eslint-disable @next/next/no-document-import-in-page */
 import NextDocument, {
   DocumentContext,
   DocumentInitialProps,
@@ -12,8 +11,18 @@ import { Meta, NoJs } from "@koine/react";
 import { getInitialThemeFromRequest, ThemeVanillaValue } from "@koine/react/sc"; // FIXME: this should be imported from another entrypoint
 
 /**
+ * Next Document wrapper for `css/tailwind` based projects
+ *
+ * Uses cookie to manage the current theme
+ *
+ * @example
+ *
+ * in your `myapp/pages/_document.tsx`:
+ * ```tsx
+ * export { Document as default } from "@koine/next/document/css";
+ * ```
  */
-export class DocumentVanilla extends NextDocument {
+export class Document extends NextDocument {
   static override async getInitialProps(
     ctx: DocumentContext
   ): Promise<DocumentInitialProps & { theme: ThemeVanillaValue }> {
@@ -43,3 +52,5 @@ export class DocumentVanilla extends NextDocument {
     );
   }
 }
+
+export default Document;

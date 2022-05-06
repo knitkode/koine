@@ -1,7 +1,7 @@
-export type StickyCssProps = {
+export type StickyCssProps = React.ComponentProps<"div"> & {
   top: number;
 };
 
-export const StickyCss: React.FC<StickyCssProps> = ({ top, ...props }) => {
+export const StickyCss = ({ top, ...props }: StickyCssProps) => {
   return <div style={{ position: "sticky", top: 100 }} {...props} />;
 };

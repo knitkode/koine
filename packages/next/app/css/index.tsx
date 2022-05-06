@@ -1,10 +1,10 @@
 import React from "react";
-import { AppProps as NextAppProps } from "next/app";
-import { AppHead } from "./AppHead";
-import { AppThemeSc, AppThemeScProps } from "./AppTheme--sc";
-import { AppMainSc, AppMainScProps } from "./AppMain--sc";
+import { AppProps } from "next/app";
+import { AppHead } from "../AppHead";
+import { AppTheme, AppThemeProps } from "./AppTheme";
+import { AppMain, AppMainProps } from "./AppMain";
 
-export type AppScProps = NextAppProps & AppThemeScProps & AppMainScProps;
+export type NextAppProps = AppProps & AppThemeProps & AppMainProps;
 
 /**
  * App
@@ -12,27 +12,21 @@ export type AppScProps = NextAppProps & AppThemeScProps & AppMainScProps;
  * @example
  *
  * ```tsx
- * import {
- *   AppAuthSc,
- *   AppAuthScProps,
- *   Favicon,
- *   AnalyticsGoogle,
- * } from "@koine/next";
+ * import { NextApp, NextAppProps } from "@koine/next/app/css/auth";
+ * import { Favicon, AnalyticsGoogle } from "@koine/next";
  * import { theme } from "src/helpers/theme";
- * import { Layout, ProgressOverlay } from "src/components/Layout";
+ * import { Layout } from "src/components/Layout";
  * // import "@fontsource/myfont/800.css";
  * // import "src/helpers/theme.css";
  *
  * const motion = () => import("@koine/react/m/max").then((m) => m.default);
  *
- * export default function App(props: AppAuthScProps) {
+ * export default function App(props: NextAppProps) {
  *   return (
- *     <AppAuthSc
+ *     <NextApp
  *       {...props}
  *       Layout={Layout}
- *       ProgressOverlay={ProgressOverlay}
  *       theme={theme}
- *       motion={motion}
  *       seo={{
  *         titleTemplate: "%s | MyApp",
  *         defaultTitle: "MyApp",
@@ -60,13 +54,15 @@ export type AppScProps = NextAppProps & AppThemeScProps & AppMainScProps;
  *
  * ```
  */
-export const AppSc: React.FC<AppScProps> = (props) => {
+export const NextApp = (props: NextAppProps) => {
   return (
     <React.StrictMode>
       <AppHead />
-      <AppThemeSc {...props}>
-        <AppMainSc {...props} />
-      </AppThemeSc>
+      <AppTheme {...props}>
+        <AppMain {...props} />
+      </AppTheme>
     </React.StrictMode>
   );
 };
+
+export default NextApp;

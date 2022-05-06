@@ -58,22 +58,21 @@ type FieldError = {
   message: string;
 };
 
-export type FieldProps = React.PropsWithChildren<{
+export type FieldProps = React.ComponentPropsWithoutRef<"div"> & {
   name?: string;
   t?: Translate;
   error?: RHF_FieldError;
   errors?: RHF_FieldErrors;
-  style?: React.CSSProperties;
-}>;
+};
 
-export const Field: React.FC<FieldProps> = ({
+export const Field = ({
   name,
   t,
   error,
   errors,
   children,
   ...props
-}) => {
+}: FieldProps) => {
   const err: FieldError = errors && name ? errors[name] : error;
 
   let msg = "";

@@ -6,11 +6,11 @@ const Root = styled.div<Pick<FeedbackProps, "$danger">>`
   ${(p) => (p.$danger ? `color: var(--danger);` : "")}
 `;
 
-export type FeedbackProps = React.PropsWithChildren<{
+export type FeedbackProps = React.ComponentPropsWithoutRef<"div"> & {
   $danger?: boolean;
-}>;
+};
 
-export const Feedback: React.FC<FeedbackProps> = ({ $danger, children }) => {
+export const Feedback = ({ $danger, children }: FeedbackProps) => {
   return (
     <Root role="alert" $danger={$danger}>
       {children}

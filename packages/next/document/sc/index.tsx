@@ -12,11 +12,19 @@ import { Meta, NoJs } from "@koine/react";
 import { ServerStyleSheet } from "styled-components";
 
 /**
- * For typescript safety of this component
+ * Next Document wrapper for `styled-components` based projects
  *
+ * For typescript safety of this component
  * @see https://bit.ly/3ceuF8m
+ *
+ * @example
+ *
+ * in your `myapp/pages/_document.tsx`:
+ * ```tsx
+ * export { Document as default } from "@koine/next/document/sc";
+ * ```
  */
-export class DocumentSc extends NextDocument {
+export class Document extends NextDocument {
   static override async getInitialProps(
     ctx: DocumentContext
   ): Promise<DocumentInitialProps> {
@@ -63,3 +71,5 @@ export class DocumentSc extends NextDocument {
     );
   }
 }
+
+export default Document;

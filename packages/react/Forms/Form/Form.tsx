@@ -51,7 +51,7 @@ export type FormProps = React.ComponentPropsWithoutRef<"form"> & {
 
 type FormFeedbackView = "" | "ok" | "fail";
 
-export const Form: React.FC<FormProps> = ({
+export const Form = ({
   ok,
   fail,
   loading,
@@ -69,7 +69,7 @@ export const Form: React.FC<FormProps> = ({
   failTimeout = 3000,
   children,
   ...props
-}) => {
+}: FormProps) => {
   const [expanded, setExpanded] = useState<FormFeedbackView>("");
   const commonProps = {
     head: null,

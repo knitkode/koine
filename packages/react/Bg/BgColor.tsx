@@ -53,7 +53,7 @@ export type BgContainerProps = ContainerProps & {
   perspective?: number;
 };
 
-export const BgContainer: React.FC<BgContainerProps> = ({
+export const BgContainer = ({
   color,
   skewY = 0,
   rotate = 0,
@@ -61,7 +61,7 @@ export const BgContainer: React.FC<BgContainerProps> = ({
   scaleX = 1, // 4,
   perspective = 0, //100,
   ...containerProps
-}) => {
+}: BgContainerProps) => {
   let $transform = "";
 
   if (skewY || rotate) {

@@ -25,12 +25,12 @@ export const LinkBlankIcon = styled(IconOutboundLink)`
   }
 `;
 
-export const LinkBlank: React.FC<LinkBlankProps> = ({
+export const LinkBlank = ({
   children,
   target,
   rel,
   ...props
-}) => {
+}: LinkBlankProps) => {
   return (
     <LinkBlankA {...props}>
       {children}

@@ -1,4 +1,2 @@
-export * from "./Document";
-export * from "./Document--emotion";
-export * from "./Document--sc";
-export * from "./Document--vanilla";
+export { Document } from "./Document";
+export { Document as default } from "./Document";

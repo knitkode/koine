@@ -65,12 +65,12 @@ declare namespace Koine {
    * ```ts
    * declare namespace Koine {
    *   interface NextTranslations {
-   *     "~": typeof import("./public/locales/en/~.json");
-   *     _: typeof import("./public/locales/en/_.json");
-   *     $team: typeof import("./public/locales/en/$team.json");
-   *     home: typeof import("./public/locales/en/home.json");
-   *     Footer: typeof import("./public/locales/en/Footer.json");
-   *     Header: typeof import("./public/locales/en/Header.json");
+   *     "~": typeof import("./locales/en/~.json");
+   *     _: typeof import("./locales/en/_.json");
+   *     $team: typeof import("./locales/en/$team.json");
+   *     home: typeof import("./locales/en/home.json");
+   *     Footer: typeof import("./locales/en/Footer.json");
+   *     Header: typeof import("./locales/en/Header.json");
    *   }
    * }
    * ```

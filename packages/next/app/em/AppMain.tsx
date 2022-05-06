@@ -2,11 +2,11 @@ import React from "react";
 import { useRouter } from "next/router";
 import { AnimatePresence, m } from "framer-motion";
 import { MotionProvider } from "@koine/react/m";
-import { SeoDefaults } from "../Seo";
-import { NextProgress } from "../NextProgress";
-import type { AppMainBaseProps, AppMainFramerProps } from "./AppMain";
+import { SeoDefaults } from "../../Seo";
+import { NextProgress } from "../../NextProgress";
+import type { AppMainBaseProps, AppMainFramerProps } from "../AppMain";
 
-export type AppMainScProps = AppMainBaseProps & AppMainFramerProps;
+export type AppMainProps = AppMainBaseProps & AppMainFramerProps;
 
 /**
  * App main
@@ -15,7 +15,7 @@ export type AppMainScProps = AppMainBaseProps & AppMainFramerProps;
  *
  * About the page transition [wallis' blog post](https://wallis.dev/blog/nextjs-page-transitions-with-framer-motion)
  */
-export const AppMainSc: React.FC<AppMainScProps> = ({
+export const AppMain = ({
   Component,
   pageProps,
   Layout,
@@ -29,7 +29,7 @@ export const AppMainSc: React.FC<AppMainScProps> = ({
   },
   pre,
   post,
-}) => {
+}: AppMainProps) => {
   const { pathname } = useRouter();
 
   return (

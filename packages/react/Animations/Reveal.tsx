@@ -9,14 +9,14 @@ import { useReveal, UseRevealOptions } from "./useReveal";
 
 export type RevealProps = React.PropsWithChildren<UseRevealOptions>;
 
-export const Reveal: React.FC<RevealProps> = ({
+export const Reveal = ({
   children,
   direction,
   offsetStartY,
   offsetEndY,
   offsetStartX,
   ...props
-}) => {
+}: RevealProps) => {
   const effectOptions = { direction, offsetStartY, offsetEndY, offsetStartX };
   const prefersReducedMotion = useReducedMotion();
   const { ref, startY, endY, startX } =

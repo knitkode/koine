@@ -1,22 +1,22 @@
 import React from "react";
-import { SeoDefaults } from "../Seo";
-import type { AppMainBaseProps } from "./AppMain";
+import { SeoDefaults } from "../../Seo";
+import type { AppMainBaseProps } from "../AppMain";
 
-export type AppMainVanillaProps = Omit<AppMainBaseProps, "ProgressOverlay">;
+export type AppMainProps = Omit<AppMainBaseProps, "ProgressOverlay">;
 
 /**
  * App main
  *
  * It does not imply any specific styling or animation solution
  */
-export const AppMainVanilla: React.FC<AppMainVanillaProps> = ({
+export const AppMain = ({
   Component,
   pageProps,
   Layout,
   seo,
   pre,
   post,
-}) => {
+}: AppMainProps) => {
   return (
     <React.Fragment>
       <SeoDefaults {...seo} />

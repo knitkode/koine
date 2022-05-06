@@ -16,14 +16,11 @@ export type ButtonLinkProps = KoineComponentProps<
   }
 >;
 
-// export const KoineButtonLink: FC<ButtonLinkProps> = ({ Koine, ...props }) => {
-//   return <Root {...props} as={Koine.Link} />;
-// }
-export const KoineButtonLink: React.FC<ButtonLinkProps> = ({
+export const KoineButtonLink = ({
   href,
   Link = "a",
   ...props
-}) => {
+}: React.PropsWithChildren<ButtonLinkProps>) => {
   const isRelative = href && href.startsWith("/");
 
   return isRelative ? (

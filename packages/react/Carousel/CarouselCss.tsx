@@ -69,7 +69,7 @@ export type CarouselCssProps = React.PropsWithChildren<KoineCarouselCssProps>;
 /**
  * For programmatic usage an example here @see https://stackoverflow.com/a/65902068/9122820
  */
-export const KoineCarouselCss: React.FC<CarouselCssProps> = ({
+export const KoineCarouselCss = ({
   items,
   $gutterRow,
   $gutterCol,
@@ -79,7 +79,7 @@ export const KoineCarouselCss: React.FC<CarouselCssProps> = ({
   width,
   children,
   ...colProps
-}) => {
+}: CarouselCssProps) => {
   const slides = children ? Children.toArray(children) : items;
   const id = useId();
 

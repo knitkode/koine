@@ -1,10 +1,20 @@
 import React from "react";
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import NextDocument, { Html, Head, Main, NextScript } from "next/document";
 import { Meta, NoJs } from "@koine/react";
 import createEmotionServer from "@emotion/server/create-instance";
-import { createEmotionCache } from "../utils/emotion-cache";
+import { createEmotionCache } from "../../utils/emotion-cache";
 
-export class DocumentEmotion extends Document {
+/**
+ * Next Document wrapper for `emotion` based projects
+ *
+ * @example
+ *
+ * in your `myapp/pages/_document.tsx`:
+ * ```tsx
+ * export { Document as default } from "@koine/next/document/em";
+ * ```
+ */
+export class Document extends NextDocument {
   override render() {
     const { locale, defaultLocale } = this.props.__NEXT_DATA__;
 
@@ -28,7 +38,7 @@ export class DocumentEmotion extends Document {
 
 // `getInitialProps` belongs to `_document` (instead of `_app`),
 // it's compatible with static-site generation (SSG).
-DocumentEmotion.getInitialProps = async (ctx) => {
+Document.getInitialProps = async (ctx) => {
   // Resolution order
   //
   // On the server:
@@ -84,3 +94,5 @@ DocumentEmotion.getInitialProps = async (ctx) => {
     emotionStyleTags,
   };
 };
+
+export default Document;

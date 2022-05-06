@@ -53,12 +53,12 @@ const barStyles: React.CSSProperties = {
   transition,
 };
 
-export type HamburgerProps = {
+export type HamburgerProps = React.ComponentProps<"div"> & {
   /** A way to provide your own state value. Can be used together with a state action (the `toggle` prop). */
   toggled?: boolean;
 };
 
-export const Hamburger: React.FC<HamburgerProps> = ({ toggled, ...props }) => {
+export const Hamburger = ({ toggled, ...props }: HamburgerProps) => {
   return (
     <div
       style={{

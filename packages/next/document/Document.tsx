@@ -3,9 +3,14 @@ import NextDocument, { Html, Head, Main, NextScript } from "next/document";
 import { Meta, NoJs } from "@koine/react";
 
 /**
- * For typescript safety of this component
+ * Next Document wrapper for bare projects
  *
- * @see https://bit.ly/3ceuF8m
+ * @example
+ *
+ * in your `myapp/pages/_document.tsx`:
+ * ```tsx
+ * export { Document as default } from "@koine/next/document";
+ * ```
  */
 export class Document extends NextDocument {
   override render() {

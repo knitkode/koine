@@ -3,7 +3,6 @@ export type StickyProps = {};
 export const Sticky = null;
 
 // import {
-//   FC,
 //   Ref,
 //   CSSProperties,
 //   useState,

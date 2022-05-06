@@ -142,9 +142,9 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
 
               writeJsonFile(join(destDir, "./package.json"), {
                 sideEffects: false,
-                module: `./${fileName}.js`,
-                main: join(relative(destDir, destCjsDir), `${fileName}.js`),
-                types: `./${fileName}.d.ts`,
+                module: `./index.js`,
+                main: join(relative(destDir, destCjsDir), `index.js`),
+                types: `./index.d.ts`,
               });
             }
           })

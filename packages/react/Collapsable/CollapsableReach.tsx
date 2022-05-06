@@ -87,7 +87,7 @@ export type CollapsableHeadProps = React.PropsWithChildren<
     }
 >;
 
-export const CollapsableHead: React.FC<CollapsableHeadProps> = ({
+export const CollapsableHead = ({
   $expanded,
   id,
   onClick,
@@ -95,7 +95,7 @@ export const CollapsableHead: React.FC<CollapsableHeadProps> = ({
   HeadAction = CollapsableHeadAction,
   HeadIcon = CollapsableHeadIcon,
   children,
-}) => {
+}: CollapsableHeadProps) => {
   return (
     <DisclosureButton
       onClick={onClick}

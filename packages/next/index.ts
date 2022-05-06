@@ -10,6 +10,3 @@ export * from "./NextProgress";
 export * from "./Seo";
 export * from "./Theme";
 export * from "./utils";
-// export * from "./app";
-// export * from "./config";
-// export * from "./document";

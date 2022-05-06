@@ -221,9 +221,9 @@ function treatModernOutput(options) {
                                                             destCjsDir = (0, path_1.join)(outputPath, DEST_FOLDER_CJS, dir);
                                                             (0, devkit_1.writeJsonFile)((0, path_1.join)(destDir, "./package.json"), {
                                                                 sideEffects: false,
-                                                                module: "./".concat(fileName, ".js"),
-                                                                main: (0, path_1.join)((0, path_1.relative)(destDir, destCjsDir), "".concat(fileName, ".js")),
-                                                                types: "./".concat(fileName, ".d.ts")
+                                                                module: "./index.js",
+                                                                main: (0, path_1.join)((0, path_1.relative)(destDir, destCjsDir), "index.js"),
+                                                                types: "./index.d.ts"
                                                             });
                                                         }
                                                         return [2 /*return*/];

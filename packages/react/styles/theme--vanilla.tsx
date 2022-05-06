@@ -1,4 +1,4 @@
-import { FC, createContext, useState } from "react";
+import { createContext, useState } from "react";
 import { isBrowser, setCookie, parseCookie } from "@koine/utils";
 import { useMount, useUpdateEffect } from "react-use";
 
@@ -52,10 +52,10 @@ export type ThemeVanillaProviderProps = React.PropsWithChildren<{
   initialTheme: ThemeVanillaValue;
 }>;
 
-export const ThemeVanillaProvider: FC<ThemeVanillaProviderProps> = ({
+export const ThemeVanillaProvider = ({
   initialTheme,
   children,
-}) => {
+}: ThemeVanillaProviderProps) => {
   const [theme, setTheme] = useState(initialTheme);
 
   const rawSetTheme = (rawTheme: ThemeVanillaValue) => {

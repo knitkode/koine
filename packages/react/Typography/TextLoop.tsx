@@ -3,7 +3,7 @@ import { m, AnimatePresence } from "framer-motion";
 
 type TextObj = { key: string; data: string };
 
-export type TextLoopPieceProps = {
+export type TextLoopPieceProps = React.PropsWithChildren<{
   text: string | number;
   direction?: "up" | "down";
   inline?: boolean;
@@ -11,9 +11,9 @@ export type TextLoopPieceProps = {
   delay?: number;
   className?: string;
   style?: React.CSSProperties;
-};
+}>;
 
-export const TextLoopPiece: React.FC<TextLoopPieceProps> = ({
+export const TextLoopPiece = ({
   text = "",
   style = {},
   className = "",
@@ -21,7 +21,7 @@ export const TextLoopPiece: React.FC<TextLoopPieceProps> = ({
   inline = true,
   noOverflow = true,
   delay = 400,
-}) => {
+}: TextLoopPieceProps) => {
   const placeholderRef = useRef<HTMLSpanElement | null>(null);
   const [content, setContent] = useState<TextObj>({ data: "", key: "" });
   const [width, setWidth] = useState(inline ? 0 : "auto");
