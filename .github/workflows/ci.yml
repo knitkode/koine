@@ -3,6 +3,7 @@
 # About th authentication through a Github App
 # see https://dev.to/dtinth/authenticating-as-a-github-app-in-a-github-actions-workflow-27co
 name: CI
+
 on:
   push:
     branches:
@@ -111,7 +112,7 @@ jobs:
         uses: e-square-io/nx-distributed-task@v2
         id: run
         with:
-          nxCloud: false
+          nxCloud: true
           target: ${{ matrix.target }}
           projects: ${{ matrix.projects }}
 
