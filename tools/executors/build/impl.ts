@@ -257,6 +257,14 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   // store initial tsConfig
   const initialTsConfig = Object.assign({}, tmpTsConfigFile);
 
+  // restore initial tsConfig
+  process.on("exit", async () => {
+    writeJsonFile(options.tsConfig, initialTsConfig);
+  });
+  process.on("SIGTERM", async () => {
+    writeJsonFile(options.tsConfig, initialTsConfig);
+  });
+
   // immediately output a package.json file
   updatePackageJson(options, context, target, dependencies);
 

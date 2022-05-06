@@ -332,6 +332,19 @@ function executor(_options, context) {
                     tmpTsConfigFile = (0, devkit_1.readJsonFile)(tmpTsConfigPath);
                     tmpOptions = Object.assign({}, options);
                     initialTsConfig = Object.assign({}, tmpTsConfigFile);
+                    // restore initial tsConfig
+                    process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
+                            return [2 /*return*/];
+                        });
+                    }); });
+                    process.on("SIGTERM", function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
+                            return [2 /*return*/];
+                        });
+                    }); });
                     // immediately output a package.json file
                     (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
                     // generate Modern:

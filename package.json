@@ -17,7 +17,7 @@
     "sync": "node ./tools/sync.js",
     "link": "cd ./dist/next && npm link && cd ../react && npm link && cd ../utils && npm link",
     "tools": "npx tsc tools/executors/build/impl --skipLibCheck true",
-    "bt": "npm run tools && npm run clean && clear && npm run b"
+    "bt": "npm run tools && npm run clean && clear && npm run build"
   },
   "private": true,
   "dependencies": {
