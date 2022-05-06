@@ -24,8 +24,8 @@ import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-f
 import type { CompilerOptions } from "typescript";
 // import { convertNxExecutor }  '@nrwl/devkit';
 
-// we follow the same structure @mui packages builds
-const TMP_FOLDER_CJS = ".node";
+// we follow the same structure as in @mui packages builds
+const TMP_FOLDER_CJS = "node";
 const TMP_FOLDER_MODERN = ".modern";
 const DEST_FOLDER_CJS = "node";
 const DEST_FOLDER_MODERN = "";
@@ -88,37 +88,10 @@ function concatPaths(...args: string[]) {
     .join("/")}`;
 }
 
-async function treatCjsOutput(options: NormalizedExecutorOptions) {
-  const { outputPath } = options;
-  const tmpOutputPath = join(outputPath, TMP_FOLDER_CJS);
-
-  await ensureDir(join(outputPath, DEST_FOLDER_CJS));
-
-  return new Promise((resolve) => {
-    glob("**/*.js", { cwd: tmpOutputPath }, async function (er, relativePaths) {
-      await Promise.all(
-        relativePaths.map(async (relativePath) => {
-          const dir = dirname(relativePath);
-          const ext = extname(relativePath);
-          const fileName = basename(relativePath, ext);
-          const srcFile = join(tmpOutputPath, relativePath);
-          const destDir = join(outputPath, DEST_FOLDER_CJS, dir);
-          const destFile = join(destDir, `${fileName}${ext}`);
-
-          await move(srcFile, destFile);
-        })
-      );
-
-      await remove(tmpOutputPath);
-
-      resolve(true);
-    });
-  });
-}
-
 async function treatModernOutput(options: NormalizedExecutorOptions) {
   const { outputPath } = options;
   const tmpOutputPath = join(outputPath, TMP_FOLDER_MODERN);
+  const destOutputPath = join(outputPath, DEST_FOLDER_MODERN);
 
   return new Promise((resolve) => {
     glob(
@@ -131,20 +104,22 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
             const ext = extname(relativePath);
             const fileName = basename(relativePath, ext);
             const srcFile = join(tmpOutputPath, relativePath);
-            const destDir = join(outputPath, DEST_FOLDER_MODERN, dir);
-            const destFile = join(destDir, `${fileName}${ext}`);
+            const destFile = join(destOutputPath, relativePath);
 
-            await move(srcFile, destFile);
+            if (srcFile !== destFile) {
+              await move(srcFile, destFile);
+            }
 
             // only write package.json file deeper than the root and when we have an `index` entry file
             if (fileName === "index" && dir && dir !== ".") {
+              const destDir = join(destOutputPath, dir);
               const destCjsDir = join(outputPath, DEST_FOLDER_CJS, dir);
 
               writeJsonFile(join(destDir, "./package.json"), {
                 sideEffects: false,
-                module: `./index.js`,
-                main: join(relative(destDir, destCjsDir), `index.js`),
-                types: `./index.d.ts`,
+                module: "./index.js",
+                main: join(relative(destDir, destCjsDir), "index.js"),
+                types: "./index.d.ts",
               });
             }
           })
@@ -155,6 +130,38 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
         resolve(true);
       }
     );
+  });
+}
+
+async function treatCjsOutput(options: NormalizedExecutorOptions) {
+  const { outputPath } = options;
+  const tmpOutputPath = join(outputPath, TMP_FOLDER_CJS);
+  const destOutputPath = join(outputPath, DEST_FOLDER_CJS);
+
+  return new Promise((resolve) => {
+    if (tmpOutputPath === destOutputPath) {
+      resolve(true);
+      return;
+    }
+
+    glob("**/*.js", { cwd: tmpOutputPath }, async function (er, relativePaths) {
+      await ensureDir(destOutputPath);
+
+      await Promise.all(
+        relativePaths.map(async (relativePath) => {
+          const srcFile = join(tmpOutputPath, relativePath);
+          const destFile = join(destOutputPath, relativePath);
+
+          if (srcFile !== destFile) {
+            await move(srcFile, destFile);
+          }
+        })
+      );
+
+      await remove(tmpOutputPath);
+
+      resolve(true);
+    });
   });
 }
 
@@ -247,24 +254,11 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   const tmpTsConfigPath = createTmpTsConfig(options.tsConfig, {});
   const tmpTsConfigFile = readJsonFile(tmpTsConfigPath);
   const tmpOptions = Object.assign({}, options);
+  // store initial tsConfig
   const initialTsConfig = Object.assign({}, tmpTsConfigFile);
 
   // immediately output a package.json file
   updatePackageJson(options, context, target, dependencies);
-
-  // generate CommonJS:
-  // ---------------------------------------------------------------------------
-  tmpTsConfigFile.compilerOptions.module = "commonjs";
-  tmpTsConfigFile.compilerOptions.composite = false;
-  tmpTsConfigFile.compilerOptions.declaration = false;
-  writeJsonFile(options.tsConfig, tmpTsConfigFile);
-
-  tmpOptions.outputPath = join(options.outputPath, `/${TMP_FOLDER_CJS}`);
-
-  yield* compileTypeScriptFiles(tmpOptions, context, async () => {
-    await assetHandler.processAllAssetsOnce();
-    updatePackageJson(options, context, target, dependencies);
-  });
 
   // generate Modern:
   // ---------------------------------------------------------------------------
@@ -273,13 +267,32 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   tmpTsConfigFile.compilerOptions.declaration = true;
   writeJsonFile(options.tsConfig, tmpTsConfigFile);
 
-  tmpOptions.outputPath = join(options.outputPath, `/${TMP_FOLDER_MODERN}`);
+  tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_MODERN);
+
+  yield* compileTypeScriptFiles(tmpOptions, context, async () => {
+    await assetHandler.processAllAssetsOnce();
+
+    await treatModernOutput(options);
+  });
+
+  // generate CommonJS:
+  // ---------------------------------------------------------------------------
+  tmpTsConfigFile.compilerOptions.module = "commonjs";
+  tmpTsConfigFile.compilerOptions.composite = false;
+  tmpTsConfigFile.compilerOptions.declaration = false;
+  tmpTsConfigFile.skipLibCheck = true;
+  writeJsonFile(options.tsConfig, tmpTsConfigFile);
+
+  tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_CJS);
 
   return yield* compileTypeScriptFiles(tmpOptions, context, async () => {
     await treatCjsOutput(options);
-    await treatModernOutput(options);
+    
+    updatePackageJson(options, context, target, dependencies);
+    
     await treatEntrypoints(options);
-
+    
+    // restore initial tsConfig
     writeJsonFile(options.tsConfig, initialTsConfig);
   });
 }

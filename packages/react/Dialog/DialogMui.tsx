@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useRef } from "react";
 import ModalUnstyled, {
   type ModalUnstyledProps,
 } from "@mui/base/ModalUnstyled";
@@ -108,7 +108,7 @@ export const Body = "div" as unknown as Props["Body"];
 //   Body: _Body,
 //   ...props
 // }: KoineDialogProps) => (
-//   <Root BackdropComponent={Backdrop} {...props}>
+//   <Root BackdropComponent={Backdrop} onBackdropClick={props.onClose} {...props}>
 //     <Container $scrollPaper={$scrollPaper}>
 //       <Paper aria-label={title || ""} $scrollPaper={$scrollPaper}>
 //         {title && <Header>{title}</Header>}
@@ -144,16 +144,43 @@ const DialogWithRef = forwardRef<HTMLDivElement, KoineDialogProps>(
       Close: _Close,
       Header: _Header,
       Body: _Body,
+      onClose,
       ...props
     },
     ref
   ) {
+    // click handling is taken from
+    // @see https://github.com/mui/material-ui/blob/c758b6c0b30f0831110458a746690b33147c45df/packages/mui-material/src/Dialog/Dialog.js#L205-L226
+    const backdropClick = useRef<boolean | null>();
+    const handleMouseDown: React.MouseEventHandler = (event) => {
+      // We don't want to close the dialog when clicking the dialog content.
+      // Make sure the event starts and ends on the same DOM element.
+      backdropClick.current = event.target === event.currentTarget;
+    };
+    const handleBackdropClick: React.MouseEventHandler = (event) => {
+      // Ignore the events not coming from the "backdrop".
+      if (!backdropClick.current) {
+        return;
+      }
+      backdropClick.current = null;
+      // if (onBackdropClick) onBackdropClick(event);
+      if (onClose) {
+        onClose(event, "backdropClick");
+      }
+    };
+
     return (
-      <Root BackdropComponent={Backdrop} ref={ref} {...props}>
-        <Container $scrollPaper={$scrollPaper}>
+      <Root
+        BackdropComponent={Backdrop}
+        onClick={handleBackdropClick}
+        onClose={onClose}
+        ref={ref}
+        {...props}
+      >
+        <Container $scrollPaper={$scrollPaper} onMouseDown={handleMouseDown}>
           <Paper aria-label={title || ""} $scrollPaper={$scrollPaper}>
             {title && <Header>{title}</Header>}
-            <Close onClick={props.onClose}>
+            <Close onClick={onClose}>
               <IconClose />
             </Close>
             <Body>{children}</Body>

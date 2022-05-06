@@ -31,3 +31,7 @@ Deep import paths considered as public and safe always need a folder with an `in
 - About storybook having problmes to generate docs from props @see:
   - https://github.com/storybookjs/storybook/issues/5073
   - https://github.com/storybookjs/storybook/issues/12292
+
+### Optimization
+
+- TODO: check wether deep default imports from `react-use` affect tree shaking

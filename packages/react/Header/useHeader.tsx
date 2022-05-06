@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useScrollPosition } from "@n8tb1t/use-scroll-position";
+import { useScrollPosition } from "../hooks/useScrollPosition";
 import { useTheme } from "../styles/theme";
 import { useMedia } from "../styles/media";
 
@@ -38,8 +38,8 @@ export const useHeader = () => {
   );
 
   useScrollPosition(
-    ({ currPos }) => {
-      const isPastThreshold = currPos.y * -1 > 40;
+    (currentPosition) => {
+      const isPastThreshold = currentPosition.y * -1 > 40;
       if (isSticky !== isPastThreshold) setIsSticky(isPastThreshold);
     },
     [isSticky]

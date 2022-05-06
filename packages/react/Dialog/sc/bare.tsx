@@ -13,6 +13,10 @@ export const Root = styled(_.Root)`
   ${inset0}
 `;
 
+// export const Backdrop = (props) => {
+//   return <div {...props} />;
+// }
+
 export const Backdrop = styled(_.Backdrop)`
   z-index: -1;
   position: fixed;
@@ -30,7 +34,7 @@ export const Container = styled(_.Container)<Components["Container"]["props"]>`
   ${(p) =>
     p.$scrollPaper
       ? "display: flex; justify-content: center; align-items: center;"
-      : "overflow: auto hidden; text-align: center; &:after { content: ''; display: inline-block; vertical-align: middle; height: 100%; width: 0; }"}
+      : "overflow: hidden auto; text-align: center; &:after { content: ''; display: inline-block; vertical-align: middle; height: 100%; width: 0; }"}
 `;
 
 /**

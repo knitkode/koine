@@ -99,8 +99,8 @@ var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-
 var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
 // import { convertNxExecutor }  '@nrwl/devkit';
-// we follow the same structure @mui packages builds
-var TMP_FOLDER_CJS = ".node";
+// we follow the same structure as in @mui packages builds
+var TMP_FOLDER_CJS = "node";
 var TMP_FOLDER_MODERN = ".modern";
 var DEST_FOLDER_CJS = "node";
 var DEST_FOLDER_MODERN = "";
@@ -139,63 +139,13 @@ function concatPaths() {
         //join by slash
         .join("/"));
 }
-function treatCjsOutput(options) {
-    return __awaiter(this, void 0, void 0, function () {
-        var outputPath, tmpOutputPath;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    outputPath = options.outputPath;
-                    tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_CJS);
-                    return [4 /*yield*/, (0, fs_extra_1.ensureDir)((0, path_1.join)(outputPath, DEST_FOLDER_CJS))];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/, new Promise(function (resolve) {
-                            (0, glob_1.glob)("**/*.js", { cwd: tmpOutputPath }, function (er, relativePaths) {
-                                return __awaiter(this, void 0, void 0, function () {
-                                    var _this = this;
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
-                                                    var dir, ext, fileName, srcFile, destDir, destFile;
-                                                    return __generator(this, function (_a) {
-                                                        switch (_a.label) {
-                                                            case 0:
-                                                                dir = (0, path_1.dirname)(relativePath);
-                                                                ext = (0, path_1.extname)(relativePath);
-                                                                fileName = (0, path_1.basename)(relativePath, ext);
-                                                                srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
-                                                                destDir = (0, path_1.join)(outputPath, DEST_FOLDER_CJS, dir);
-                                                                destFile = (0, path_1.join)(destDir, "".concat(fileName).concat(ext));
-                                                                return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile)];
-                                                            case 1:
-                                                                _a.sent();
-                                                                return [2 /*return*/];
-                                                        }
-                                                    });
-                                                }); }))];
-                                            case 1:
-                                                _a.sent();
-                                                return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
-                                            case 2:
-                                                _a.sent();
-                                                resolve(true);
-                                                return [2 /*return*/];
-                                        }
-                                    });
-                                });
-                            });
-                        })];
-            }
-        });
-    });
-}
 function treatModernOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
-        var outputPath, tmpOutputPath;
+        var outputPath, tmpOutputPath, destOutputPath;
         return __generator(this, function (_a) {
             outputPath = options.outputPath;
             tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_MODERN);
+            destOutputPath = (0, path_1.join)(outputPath, DEST_FOLDER_MODERN);
             return [2 /*return*/, new Promise(function (resolve) {
                     (0, glob_1.glob)("**/*.{ts,js}", { cwd: tmpOutputPath }, function (er, relativePaths) {
                         return __awaiter(this, void 0, void 0, function () {
@@ -203,7 +153,7 @@ function treatModernOutput(options) {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
-                                            var dir, ext, fileName, srcFile, destDir, destFile, destCjsDir;
+                                            var dir, ext, fileName, srcFile, destFile, destDir, destCjsDir;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
@@ -211,13 +161,16 @@ function treatModernOutput(options) {
                                                         ext = (0, path_1.extname)(relativePath);
                                                         fileName = (0, path_1.basename)(relativePath, ext);
                                                         srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
-                                                        destDir = (0, path_1.join)(outputPath, DEST_FOLDER_MODERN, dir);
-                                                        destFile = (0, path_1.join)(destDir, "".concat(fileName).concat(ext));
+                                                        destFile = (0, path_1.join)(destOutputPath, relativePath);
+                                                        if (!(srcFile !== destFile)) return [3 /*break*/, 2];
                                                         return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile)];
                                                     case 1:
                                                         _a.sent();
+                                                        _a.label = 2;
+                                                    case 2:
                                                         // only write package.json file deeper than the root and when we have an `index` entry file
                                                         if (fileName === "index" && dir && dir !== ".") {
+                                                            destDir = (0, path_1.join)(destOutputPath, dir);
                                                             destCjsDir = (0, path_1.join)(outputPath, DEST_FOLDER_CJS, dir);
                                                             (0, devkit_1.writeJsonFile)((0, path_1.join)(destDir, "./package.json"), {
                                                                 sideEffects: false,
@@ -234,6 +187,57 @@ function treatModernOutput(options) {
                                         _a.sent();
                                         return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
                                     case 2:
+                                        _a.sent();
+                                        resolve(true);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    });
+                })];
+        });
+    });
+}
+function treatCjsOutput(options) {
+    return __awaiter(this, void 0, void 0, function () {
+        var outputPath, tmpOutputPath, destOutputPath;
+        return __generator(this, function (_a) {
+            outputPath = options.outputPath;
+            tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_CJS);
+            destOutputPath = (0, path_1.join)(outputPath, DEST_FOLDER_CJS);
+            return [2 /*return*/, new Promise(function (resolve) {
+                    if (tmpOutputPath === destOutputPath) {
+                        resolve(true);
+                        return;
+                    }
+                    (0, glob_1.glob)("**/*.js", { cwd: tmpOutputPath }, function (er, relativePaths) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var _this = this;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, (0, fs_extra_1.ensureDir)(destOutputPath)];
+                                    case 1:
+                                        _a.sent();
+                                        return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
+                                                var srcFile, destFile;
+                                                return __generator(this, function (_a) {
+                                                    switch (_a.label) {
+                                                        case 0:
+                                                            srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
+                                                            destFile = (0, path_1.join)(destOutputPath, relativePath);
+                                                            if (!(srcFile !== destFile)) return [3 /*break*/, 2];
+                                                            return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile)];
+                                                        case 1:
+                                                            _a.sent();
+                                                            _a.label = 2;
+                                                        case 2: return [2 /*return*/];
+                                                    }
+                                                });
+                                            }); }))];
+                                    case 2:
+                                        _a.sent();
+                                        return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
+                                    case 3:
                                         _a.sent();
                                         resolve(true);
                                         return [2 /*return*/];
@@ -330,20 +334,22 @@ function executor(_options, context) {
                     initialTsConfig = Object.assign({}, tmpTsConfigFile);
                     // immediately output a package.json file
                     (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
-                    // generate CommonJS:
+                    // generate Modern:
                     // ---------------------------------------------------------------------------
-                    tmpTsConfigFile.compilerOptions.module = "commonjs";
-                    tmpTsConfigFile.compilerOptions.composite = false;
-                    tmpTsConfigFile.compilerOptions.declaration = false;
+                    tmpTsConfigFile.compilerOptions.module = "esnext";
+                    tmpTsConfigFile.compilerOptions.composite = true;
+                    tmpTsConfigFile.compilerOptions.declaration = true;
                     (0, devkit_1.writeJsonFile)(options.tsConfig, tmpTsConfigFile);
-                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, "/".concat(TMP_FOLDER_CJS));
+                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, TMP_FOLDER_MODERN);
                     return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, assetHandler.processAllAssetsOnce()];
                                     case 1:
                                         _a.sent();
-                                        (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
+                                        return [4 /*yield*/, treatModernOutput(options)];
+                                    case 2:
+                                        _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
@@ -351,25 +357,25 @@ function executor(_options, context) {
                 case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
                 case 5:
                     _c.sent();
-                    // generate Modern:
+                    // generate CommonJS:
                     // ---------------------------------------------------------------------------
-                    tmpTsConfigFile.compilerOptions.module = "esnext";
-                    tmpTsConfigFile.compilerOptions.composite = true;
-                    tmpTsConfigFile.compilerOptions.declaration = true;
+                    tmpTsConfigFile.compilerOptions.module = "commonjs";
+                    tmpTsConfigFile.compilerOptions.composite = false;
+                    tmpTsConfigFile.compilerOptions.declaration = false;
+                    tmpTsConfigFile.skipLibCheck = true;
                     (0, devkit_1.writeJsonFile)(options.tsConfig, tmpTsConfigFile);
-                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, "/".concat(TMP_FOLDER_MODERN));
+                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, TMP_FOLDER_CJS);
                     return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, treatCjsOutput(options)];
                                     case 1:
                                         _a.sent();
-                                        return [4 /*yield*/, treatModernOutput(options)];
+                                        (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
+                                        return [4 /*yield*/, treatEntrypoints(options)];
                                     case 2:
                                         _a.sent();
-                                        return [4 /*yield*/, treatEntrypoints(options)];
-                                    case 3:
-                                        _a.sent();
+                                        // restore initial tsConfig
                                         (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
                                         return [2 /*return*/];
                                 }

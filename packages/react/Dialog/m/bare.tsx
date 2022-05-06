@@ -1,4 +1,4 @@
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo, useRef } from "react";
 import { MdClear as IconClose } from "react-icons/md";
 import { AnimatePresence, m } from "framer-motion";
 import { extendComponent } from "../../helpers";
@@ -37,6 +37,7 @@ const Dialog = forwardRef<HTMLDivElement, KoineDialogProps>(function Dialog(
     Body,
     mBackdrop,
     mPaper,
+    onClose,
     ...props
   },
   ref
@@ -52,14 +53,38 @@ const Dialog = forwardRef<HTMLDivElement, KoineDialogProps>(function Dialog(
     [Backdrop, mBackdrop]
   );
 
+  // FIXME: extract this logic either in a useDialog hook or in a useclickOutside hook
+  // click handling is taken from
+  // @see https://github.com/mui/material-ui/blob/c758b6c0b30f0831110458a746690b33147c45df/packages/mui-material/src/Dialog/Dialog.js#L205-L226
+  const backdropClick = useRef<boolean | null>();
+  const handleMouseDown: React.MouseEventHandler = (event) => {
+    // We don't want to close the dialog when clicking the dialog content.
+    // Make sure the event starts and ends on the same DOM element.
+    backdropClick.current = event.target === event.currentTarget;
+  };
+  const handleBackdropClick: React.MouseEventHandler = (event) => {
+    // Ignore the events not coming from the "backdrop".
+    if (!backdropClick.current) {
+      return;
+    }
+    backdropClick.current = null;
+    // if (onBackdropClick) onBackdropClick(event);
+    if (onClose) {
+      onClose(event, "backdropClick");
+    }
+  };
+
   return (
     <Root
       keepMounted
       BackdropComponent={BackdropMotion}
+      onClick={handleBackdropClick}
+      onClose={onClose}
+      ref={ref}
       {...props}
       style={mRootStyle(props)}
     >
-      <Container $scrollPaper={$scrollPaper}>
+      <Container $scrollPaper={$scrollPaper} onMouseDown={handleMouseDown}>
         <AnimatePresence>
           {props.open && (
             // @ts-expect-error framer props collision...
@@ -69,7 +94,7 @@ const Dialog = forwardRef<HTMLDivElement, KoineDialogProps>(function Dialog(
               $scrollPaper={$scrollPaper}
             >
               {title && <Header>{title}</Header>}
-              <Close onClick={props.onClose}>
+              <Close onClick={onClose}>
                 <IconClose />
               </Close>
               <Body>{children}</Body>
