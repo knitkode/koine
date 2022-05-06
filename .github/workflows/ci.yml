@@ -112,7 +112,7 @@ jobs:
         uses: e-square-io/nx-distributed-task@v2
         id: run
         with:
-          nxCloud: true
+          nxCloud: false
           target: ${{ matrix.target }}
           projects: ${{ matrix.projects }}
 
