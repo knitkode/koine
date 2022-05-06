@@ -1,31 +1,4 @@
 {
   "name": "@koine/next",
-  "sideEffects": false,
-  "dependencies": {
-    "@emotion/react": "^11.9.0",
-    "@emotion/server": "^11.4.0",
-    "@emotion/styled": "^11.8.1",
-    "@koine/react": "latest",
-    "@koine/utils": "latest",
-    "@hookform/resolvers": "^2.8.8",
-    "@mui/material": "^5.6.4",
-    "@types/react": "^17.0.0 || ^18.0.0",
-    "@types/react-dom": "^17.0.0 || ^18.0.0",
-    "@types/react-is": "^17.0.0",
-    "@types/styled-components": "^5.1.25",
-    "@types/yup": "^0.29.13",
-    "date-fns": "^2.28.0",
-    "framer-motion": "^6.3.3",
-    "next": "^12.1.6",
-    "next-auth": "^4.3.4",
-    "next-seo": "^5.4.0",
-    "next-translate": "^1.4.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0",
-    "react-hook-form": "^7.30.0",
-    "react-icons": "^4.3.1",
-    "react-is": "^17.0.0 || ^18.0.0",
-    "react-use": "^17.3.2",
-    "yup": "^0.32.11"
-  }
+  "sideEffects": false
 }

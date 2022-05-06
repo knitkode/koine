@@ -98,6 +98,8 @@ var tslib_dependency_1 = require("@nrwl/js/src/utils/tslib-dependency");
 var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
 var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
+// import { rollupExecutor } from "./rollup";
+var tsup_1 = require("./tsup");
 // import { convertNxExecutor }  '@nrwl/devkit';
 // we follow the same structure as in @mui packages builds
 var TMP_FOLDER_CJS = "node";
@@ -141,11 +143,12 @@ function concatPaths() {
 }
 function treatModernOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
-        var outputPath, tmpOutputPath, destOutputPath;
+        var outputPath, tmpOutputPath, destOutputPath, entrypointsDirs;
         return __generator(this, function (_a) {
             outputPath = options.outputPath;
             tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_MODERN);
             destOutputPath = (0, path_1.join)(outputPath, DEST_FOLDER_MODERN);
+            entrypointsDirs = [];
             return [2 /*return*/, new Promise(function (resolve) {
                     (0, glob_1.glob)("**/*.{ts,js}", { cwd: tmpOutputPath }, function (er, relativePaths) {
                         return __awaiter(this, void 0, void 0, function () {
@@ -153,7 +156,7 @@ function treatModernOutput(options) {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
-                                            var dir, ext, fileName, srcFile, destFile, destDir, destCjsDir;
+                                            var dir, ext, fileName, srcFile, destFile, destDir, destModernDir, destCjsDir;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
@@ -171,13 +174,11 @@ function treatModernOutput(options) {
                                                         // only write package.json file deeper than the root and when we have an `index` entry file
                                                         if (fileName === "index" && dir && dir !== ".") {
                                                             destDir = (0, path_1.join)(destOutputPath, dir);
+                                                            destModernDir = destDir;
                                                             destCjsDir = (0, path_1.join)(outputPath, DEST_FOLDER_CJS, dir);
-                                                            (0, devkit_1.writeJsonFile)((0, path_1.join)(destDir, "./package.json"), {
-                                                                sideEffects: false,
-                                                                module: "./index.js",
-                                                                main: (0, path_1.join)((0, path_1.relative)(destDir, destCjsDir), "index.js"),
-                                                                types: "./index.d.ts"
-                                                            });
+                                                            // populate the entrypointsDirs array
+                                                            entrypointsDirs.push(dir);
+                                                            (0, devkit_1.writeJsonFile)((0, path_1.join)(destDir, "./package.json"), getPackageJsonData(destDir, destModernDir, destCjsDir));
                                                         }
                                                         return [2 /*return*/];
                                                 }
@@ -188,7 +189,7 @@ function treatModernOutput(options) {
                                         return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
                                     case 2:
                                         _a.sent();
-                                        resolve(true);
+                                        resolve(entrypointsDirs);
                                         return [2 /*return*/];
                                 }
                             });
@@ -249,7 +250,11 @@ function treatCjsOutput(options) {
         });
     });
 }
-function treatEntrypoints(options) {
+/**
+ * We treat these seprataly as they carry the `dependencies` of the actual
+ * packages
+ */
+function treatRootEntrypoints(options) {
     return __awaiter(this, void 0, void 0, function () {
         var outputPath, packagePath, packageJson;
         return __generator(this, function (_a) {
@@ -257,13 +262,34 @@ function treatEntrypoints(options) {
             packagePath = (0, path_1.join)(outputPath, "./package.json");
             packageJson = (0, devkit_1.readJsonFile)(packagePath);
             return [2 /*return*/, new Promise(function (resolve) {
-                    packageJson.main = ".".concat(concatPaths(DEST_FOLDER_CJS, "index.js"));
-                    packageJson.module = ".".concat(concatPaths(DEST_FOLDER_MODERN, "index.js"));
-                    (0, devkit_1.writeJsonFile)(packagePath, packageJson);
+                    (0, devkit_1.writeJsonFile)(packagePath, Object.assign(packageJson, getPackageJsonData(outputPath, (0, path_1.join)(outputPath, DEST_FOLDER_MODERN), (0, path_1.join)(outputPath, DEST_FOLDER_CJS))));
                     resolve(true);
                 })];
         });
     });
+}
+function getPackageJsonData(pkgPath, modernPath, cjsPath) {
+    var modernFile = (0, path_1.relative)(pkgPath, (0, path_1.join)(modernPath, "index.js"));
+    var cjsFile = (0, path_1.relative)(pkgPath, (0, path_1.join)(cjsPath, "index.js"));
+    var umdFile = (0, path_1.relative)(pkgPath, (0, path_1.join)(modernPath, "umd", "index.js"));
+    if (!modernFile.startsWith("."))
+        modernFile = "./".concat(modernFile);
+    if (!cjsFile.startsWith("."))
+        cjsFile = "./".concat(cjsFile);
+    if (!umdFile.startsWith("."))
+        umdFile = "./".concat(umdFile);
+    return {
+        sideEffects: false,
+        module: modernFile,
+        main: cjsFile,
+        // @see https://webpack.js.org/guides/package-exports/
+        exports: {
+            // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
+            development: umdFile,
+            "default": modernFile
+        },
+        types: modernFile.replace(".js", ".d.ts")
+    };
 }
 function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
     var outputPath = (0, path_1.join)(contextRoot, options.outputPath);
@@ -275,13 +301,14 @@ function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
 }
 function executor(_options, context) {
     return __asyncGenerator(this, arguments, function executor_1() {
-        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tmpTsConfigPath, tmpTsConfigFile, tmpOptions, initialTsConfig;
+        var _a, sourceRoot, root, options, entrypointsDirs, _b, projectRoot, tmpTsConfig, target, dependencies, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tmpTsConfigPath, tmpTsConfigFile, tmpOptions, initialTsConfig;
         var _this = this;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
                     _a = context.workspace.projects[context.projectName], sourceRoot = _a.sourceRoot, root = _a.root;
                     options = normalizeOptions(_options, context.root, sourceRoot, root);
+                    entrypointsDirs = [];
                     _b = (0, check_dependencies_1.checkDependencies)(context, _options.tsConfig), projectRoot = _b.projectRoot, tmpTsConfig = _b.tmpTsConfig, target = _b.target, dependencies = _b.dependencies;
                     if (tmpTsConfig) {
                         options.tsConfig = tmpTsConfig;
@@ -362,7 +389,7 @@ function executor(_options, context) {
                                         _a.sent();
                                         return [4 /*yield*/, treatModernOutput(options)];
                                     case 2:
-                                        _a.sent();
+                                        entrypointsDirs = _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
@@ -384,8 +411,7 @@ function executor(_options, context) {
                                     case 0: return [4 /*yield*/, treatCjsOutput(options)];
                                     case 1:
                                         _a.sent();
-                                        (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
-                                        return [4 /*yield*/, treatEntrypoints(options)];
+                                        return [4 /*yield*/, treatRootEntrypoints(options)];
                                     case 2:
                                         _a.sent();
                                         // restore initial tsConfig
@@ -395,8 +421,23 @@ function executor(_options, context) {
                             });
                         }); }))))];
                 case 6: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 7: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 8: return [2 /*return*/, _c.sent()];
+                case 7:
+                    _c.sent();
+                    // generate UMD dev bundle:
+                    // ---------------------------------------------------------------------------
+                    tmpTsConfigFile.compilerOptions.module = "esnext";
+                    tmpTsConfigFile.compilerOptions.composite = true;
+                    tmpTsConfigFile.compilerOptions.declaration = true;
+                    // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
+                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, tsup_1.tsupExecutor)(options, context, dependencies, entrypointsDirs))))];
+                case 8: 
+                // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
+                return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 9:
+                    // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
+                    _c.sent();
+                    return [4 /*yield*/, __await({ success: true })];
+                case 10: return [2 /*return*/, _c.sent()];
             }
         });
     });

@@ -13,6 +13,7 @@
         "project": "packages/react/package.json",
         "main": "packages/react/index.ts",
         "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": "dependencies",
         "assets": ["packages/react/*.md", "packages/react/*.d.ts"]
       }
     },

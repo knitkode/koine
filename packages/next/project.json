@@ -13,6 +13,7 @@
         "project": "packages/next/package.json",
         "main": "packages/next/index.ts",
         "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": "dependencies",
         "assets": ["packages/next/*.md", "packages/next/*.d.ts"]
       }
     },
