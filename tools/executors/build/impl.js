@@ -166,7 +166,7 @@ function treatModernOutput(options) {
                                                         srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
                                                         destFile = (0, path_1.join)(destOutputPath, relativePath);
                                                         if (!(srcFile !== destFile)) return [3 /*break*/, 2];
-                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile)];
+                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile, { overwrite: true })];
                                                     case 1:
                                                         _a.sent();
                                                         _a.label = 2;
@@ -227,7 +227,7 @@ function treatCjsOutput(options) {
                                                             srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
                                                             destFile = (0, path_1.join)(destOutputPath, relativePath);
                                                             if (!(srcFile !== destFile)) return [3 /*break*/, 2];
-                                                            return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile)];
+                                                            return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile, { overwrite: true })];
                                                         case 1:
                                                             _a.sent();
                                                             _a.label = 2;

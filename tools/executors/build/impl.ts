@@ -110,7 +110,7 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
             const destFile = join(destOutputPath, relativePath);
 
             if (srcFile !== destFile) {
-              await move(srcFile, destFile);
+              await move(srcFile, destFile, { overwrite: true });
             }
             
             // only write package.json file deeper than the root and when we have an `index` entry file
@@ -158,7 +158,7 @@ async function treatCjsOutput(options: NormalizedExecutorOptions) {
           const destFile = join(destOutputPath, relativePath);
 
           if (srcFile !== destFile) {
-            await move(srcFile, destFile);
+            await move(srcFile, destFile, { overwrite: true });
           }
         })
       );
