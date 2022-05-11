@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { useId } from "../hooks/useId";
 
 export type RatingStarProps = React.ComponentPropsWithoutRef<"svg"> &
   RatingStarModel & {

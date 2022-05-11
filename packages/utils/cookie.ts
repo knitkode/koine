@@ -91,7 +91,7 @@ export function serializeCookie(
 
   const value = encode(val);
 
-  if ("production" !== process.env["NODE_ENV"]) {
+  if (process.env["NODE_ENV"] !== "production") {
     if (!fieldContentRegExp.test(name)) {
       throw new TypeError("argument name is invalid");
     }
@@ -116,7 +116,7 @@ export function serializeCookie(
   }
 
   if (domain) {
-    if ("production" !== process.env["NODE_ENV"]) {
+    if (process.env["NODE_ENV"] !== "production") {
       if (!fieldContentRegExp.test(domain)) {
         throw new TypeError("option domain is invalid");
       }
@@ -126,7 +126,7 @@ export function serializeCookie(
   }
 
   if (path) {
-    if ("production" !== process.env["NODE_ENV"]) {
+    if (process.env["NODE_ENV"] !== "production") {
       if (!fieldContentRegExp.test(path)) {
         throw new TypeError("option path is invalid");
       }
@@ -260,7 +260,7 @@ export function readCookie<
   N extends string = string
 >(name?: N | null): T[N] | T {
   if (typeof document === "undefined") {
-    if ("production" !== process.env["NODE_ENV"]) {
+    if (process.env["NODE_ENV"] !== "production") {
       console.warn("@koine/utils:cookie readCookie, document is undefined");
     }
     return name ? ("" as T[N]) : ({} as T);
@@ -281,7 +281,7 @@ export function readCookie<
         break;
       }
     } catch (e) {
-      if ("production" !== process.env["NODE_ENV"]) {
+      if (process.env["NODE_ENV"] !== "production") {
         console.warn("@koine/utils:cookie readCookie, failed to decode", value);
       }
     }
@@ -306,7 +306,7 @@ export function setCookie<T extends string = string>(
   };
 
   if (typeof document === "undefined") {
-    if ("production" !== process.env["NODE_ENV"]) {
+    if (process.env["NODE_ENV"] !== "production") {
       console.warn("@koine/utils:cookie setCookie, document is undefined");
     }
     return;

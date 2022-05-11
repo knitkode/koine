@@ -77,6 +77,7 @@ export function classed<Props, Component extends React.ElementType = any>(
         for (const key in props) {
           // like styled-components `transient` props
           if (!key.startsWith("$")) {
+            // FIXME: for react 18 we need: @ts-expect-error
             propsToForward[key] = props[key];
           }
         }

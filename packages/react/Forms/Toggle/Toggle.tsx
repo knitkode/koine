@@ -4,9 +4,9 @@
  * About accessibility:
  * - minimum target size of 44px https://www.w3.org/TR/WCAG21/#target-size
  */
-import { useId } from "react";
 import styled from "styled-components";
 import { stateFocus } from "../../styles/styled";
+import { useId } from "../../hooks/useId";
 
 export const toggleBase = `
   border: 1px solid var(--forms-border-color);

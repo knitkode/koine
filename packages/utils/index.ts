@@ -32,7 +32,7 @@ export * from "./async";
 export * from "./cast";
 export * from "./cookie";
 export * from "./colors";
-export * from "./env";
+// export * from "./env";
 export * from "./emitter";
 export * from "./is";
 export * from "./location";

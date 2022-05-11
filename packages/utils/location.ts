@@ -94,7 +94,7 @@ export function getUrlQueryParams<T extends Record<string, string>>(
       return key === "" ? value : decodeURIComponent(value);
     });
   } catch (e) {
-    // do nothing or warn on __DEV__
+    // do nothing or warn on process.env["NODE_ENV"] !== "production"
   }
 
   return params as T;

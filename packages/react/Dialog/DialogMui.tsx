@@ -6,15 +6,9 @@ import { type MotionProps } from "framer-motion";
 import { MdClear as IconClose } from "react-icons/md";
 import {
   extendComponent,
-  // type OverridableComponents,
   type WithComponents,
   type Simplify,
 } from "../helpers";
-
-// export const koineDialogBg = `
-//   background: var(--bodyBg);
-//   box-shadow: var(--shadow);
-// `;
 
 type ReducedModalUnstyledProps = Omit<
   ModalUnstyledProps,

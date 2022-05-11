@@ -4,14 +4,7 @@
  * Maybe do a simplified version following this example:
  * https://codesandbox.io/s/framer-motion-accordion-qx958?file=/src/Example.tsx
  */
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { MotionProps, m } from "framer-motion";
 import {
@@ -23,6 +16,7 @@ import { BsBoxArrowInDown as IconCollapse } from "react-icons/bs";
 import { btnStyleReset } from "../Buttons";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { InputInvisible } from "../Forms/styles";
+import { useId } from "../hooks/useId";
 
 export type CollapsableStyledProps = {
   $expanded?: boolean;

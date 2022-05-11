@@ -18,7 +18,7 @@ export function useSubmit<
       const response = await api.post<ResponseSuccesfull, ResponseFailed>(url, {
         json,
       });
-      if ("production" !== process.env["NODE_ENV"]) {
+      if (process.env["NODE_ENV"] !== "production") {
         console.log("[@koine/next] useSubmit response", response);
       }
       return response;
