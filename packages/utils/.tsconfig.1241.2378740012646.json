@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "types": ["node"],
+    "module": "esnext",
+    "declaration": true,
+    "composite": true
+  },
+  "files": ["typings.d.ts"],
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.spec.ts"]
+}

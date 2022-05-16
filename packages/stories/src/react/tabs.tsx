@@ -8,21 +8,30 @@ type StoryTabsProps = {
 
 export const StoryTabs = ({ Tabs, ...props }: StoryTabsProps) => {
   return (
-    <>
-      <h2>Tabs example</h2>
-      <Tabs {...props}>
-        <Tabs.List>
-          <Tabs.Tab>One</Tabs.Tab>
-          <Tabs.Tab>Two</Tabs.Tab>
-          <Tabs.Tab>Three</Tabs.Tab>
-        </Tabs.List>
-      </Tabs>
-    </>
+    <Tabs defaultValue={0} {...props}>
+      <Tabs.List>
+        <Tabs.Tab Indicator={Tabs.Indicator}>One</Tabs.Tab>
+        <Tabs.Tab Indicator={Tabs.Indicator}>Two</Tabs.Tab>
+        <Tabs.Tab Indicator={Tabs.Indicator}>Three</Tabs.Tab>
+      </Tabs.List>
+      <Tabs.Panel value={0}>First content</Tabs.Panel>
+      <Tabs.Panel value={1}>Second content</Tabs.Panel>
+      <Tabs.Panel value={2}>Third content</Tabs.Panel>
+    </Tabs>
   );
 };
 
 export const storyTabsMeta = {
   argTypes: {
+    // value: {
+    //   control: { type: "radio" },
+    //   options: [1, 2, 3],
+    //   mapping: {
+    //     1: 0,
+    //     2: 1,
+    //     3: 2
+    //   },
+    // },
     children: {
       control: { type: "radio" },
       options: ["Long", "Medium", "Short"],
@@ -40,7 +49,6 @@ export const storyTabsMeta = {
 };
 
 export const storyTabsArgs = {
-  title: "Tabs title",
-  children: "Medium" as unknown as React.ReactElement,
-  $scrollPaper: false,
+  // value: 2
+  // children: "Medium" as unknown as React.ReactElement,
 };

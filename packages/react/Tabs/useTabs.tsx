@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, /* useId, */ useMemo } from "react";
 import { unstable_useControlled as useControlled } from "@mui/utils";
 import { useId } from "../hooks/useId";
 
@@ -52,7 +52,7 @@ export const useTabs = (props: UseTabsProps) => {
 
   const idPrefix = useId();
 
-  const onSelected = React.useCallback(
+  const onSelected = useCallback<NonNullable<UseTabsProps["onChange"]>>(
     (e, newValue) => {
       setValue(newValue);
       if (onChange) {
@@ -66,7 +66,7 @@ export const useTabs = (props: UseTabsProps) => {
     return {};
   };
 
-  const tabsContextValue = React.useMemo(() => {
+  const tabsContextValue = useMemo(() => {
     return {
       idPrefix,
       value,

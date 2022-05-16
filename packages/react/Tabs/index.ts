@@ -1,1 +1,1 @@
-// export * from "./TabsMui";
+export * from "./TabsMui";

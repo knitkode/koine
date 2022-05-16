@@ -1,10 +1,11 @@
 import { Story, Meta } from "@storybook/react";
-import { StoryTabs, LoremIpsum } from "@koine/stories";
+import { StoryTabs, storyTabsMeta, storyTabsArgs } from "@koine/stories";
 import { KoineTabs, TabsProps } from "./TabsMui";
 
 export default {
   component: KoineTabs,
   title: "Base/Tabs",
+  ...storyTabsMeta,
 } as Meta;
 
 const BareTemplate: Story<TabsProps> = (args) => {
@@ -16,6 +17,5 @@ const BareTemplate: Story<TabsProps> = (args) => {
 export const Bare = BareTemplate.bind({});
 
 Bare.args = {
-  title: "Tabs title",
-  children: LoremIpsum,
+  ...storyTabsArgs,
 };

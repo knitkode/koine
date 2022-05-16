@@ -127,20 +127,6 @@ function cleanupTmpTsConfigFile(tmpTsConfigPath) {
         (0, fs_extra_1.removeSync)(tmpTsConfigPath);
     }
 }
-function concatPaths() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    // always prepend a slash
-    return "/".concat(args
-        // remove initial slashes and ending slashes
-        .map(function (p) { return p.replace(/$\/+/, "").replace(/\/+$/, ""); })
-        // remove empty parts
-        .filter(function (p) { return p; })
-        //join by slash
-        .join("/"));
-}
 function treatModernOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
         var outputPath, tmpOutputPath, destOutputPath, entrypointsDirs;
@@ -385,6 +371,7 @@ function executor(_options, context) {
                     tmpTsConfigFile.compilerOptions.declaration = true;
                     (0, devkit_1.writeJsonFile)(options.tsConfig, tmpTsConfigFile);
                     tmpOptions.outputPath = (0, path_1.join)(options.outputPath, TMP_FOLDER_MODERN);
+                    // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
                     return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
@@ -393,13 +380,17 @@ function executor(_options, context) {
                                         _a.sent();
                                         return [4 /*yield*/, treatModernOutput(options)];
                                     case 2:
+                                        // console.log("options", options);
                                         entrypointsDirs = _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
                         }); }))))];
-                case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 4: 
+                // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
+                return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
                 case 5:
+                    // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
                     _c.sent();
                     // generate CommonJS:
                     // ---------------------------------------------------------------------------

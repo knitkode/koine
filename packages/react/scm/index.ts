@@ -10,6 +10,7 @@ export * from "../Carousel";
 export * from "../Collapsable";
 export * from "../Debug";
 export { KoineDialog, type KoineDialogProps } from "../Dialog/sc/framer";
+// export { KoineForm, type KoineFormProps} from "../Form/sc/framer";
 export * from "../Forms";
 export * from "../Grid";
 export * from "../Hamburger";

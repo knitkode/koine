@@ -79,17 +79,6 @@ function cleanupTmpTsConfigFile(tmpTsConfigPath: string) {
   }
 }
 
-function concatPaths(...args: string[]) {
-  // always prepend a slash
-  return `/${args
-    // remove initial slashes and ending slashes
-    .map((p) => p.replace(/$\/+/, "").replace(/\/+$/, ""))
-    // remove empty parts
-    .filter((p) => p)
-    //join by slash
-    .join("/")}`;
-}
-
 async function treatModernOutput(options: NormalizedExecutorOptions) {
   const { outputPath } = options;
   const tmpOutputPath = join(outputPath, TMP_FOLDER_MODERN);
@@ -112,12 +101,12 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
             if (srcFile !== destFile) {
               await move(srcFile, destFile, { overwrite: true });
             }
-            
+
             // only write package.json file deeper than the root and when we have an `index` entry file
             if (fileName === "index" && dir && dir !== ".") {
               const destDir = join(destOutputPath, dir);
               const destModernDir = destDir;
-              const destCjsDir = join(outputPath, DEST_FOLDER_CJS, dir)
+              const destCjsDir = join(outputPath, DEST_FOLDER_CJS, dir);
 
               // populate the entrypointsDirs array
               entrypointsDirs.push(dir);
@@ -180,7 +169,17 @@ async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
   const packageJson = readJsonFile(packagePath);
 
   return new Promise((resolve) => {
-    writeJsonFile(packagePath, Object.assign(packageJson, getPackageJsonData(outputPath, join(outputPath, DEST_FOLDER_MODERN), join(outputPath, DEST_FOLDER_CJS))));
+    writeJsonFile(
+      packagePath,
+      Object.assign(
+        packageJson,
+        getPackageJsonData(
+          outputPath,
+          join(outputPath, DEST_FOLDER_MODERN),
+          join(outputPath, DEST_FOLDER_CJS)
+        )
+      )
+    );
     resolve(true);
   });
 }
@@ -189,7 +188,7 @@ function getPackageJsonData(pkgPath, modernPath, cjsPath) {
   let modernFile = relative(pkgPath, join(modernPath, "index.js"));
   let cjsFile = relative(pkgPath, join(cjsPath, "index.js"));
   let umdFile = relative(pkgPath, join(modernPath, "umd", "index.js"));
-  
+
   if (!modernFile.startsWith(".")) modernFile = `./${modernFile}`;
   if (!cjsFile.startsWith(".")) cjsFile = `./${cjsFile}`;
   if (!umdFile.startsWith(".")) umdFile = `./${umdFile}`;
@@ -248,6 +247,7 @@ function normalizeOptions(
 async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   const { sourceRoot, root } = context.workspace.projects[context.projectName];
   const options = normalizeOptions(_options, context.root, sourceRoot, root);
+  // console.log("executor", options);
   let entrypointsDirs: string[] = [];
   const { projectRoot, tmpTsConfig, target, dependencies } = checkDependencies(
     context,
@@ -310,10 +310,10 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   writeJsonFile(options.tsConfig, tmpTsConfigFile);
 
   tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_MODERN);
-
+  // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
   yield* compileTypeScriptFiles(tmpOptions, context, async () => {
     await assetHandler.processAllAssetsOnce();
-
+    // console.log("options", options);
     entrypointsDirs = await treatModernOutput(options);
   });
 
@@ -330,19 +330,19 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   yield* compileTypeScriptFiles(tmpOptions, context, async () => {
     await treatCjsOutput(options);
     await treatRootEntrypoints(options);
-    
+
     // restore initial tsConfig
     writeJsonFile(options.tsConfig, initialTsConfig);
   });
 
   return { success: true };
-  
+
   // generate UMD dev bundle:
   // ---------------------------------------------------------------------------
   // tmpTsConfigFile.compilerOptions.module = "esnext";
   // tmpTsConfigFile.compilerOptions.composite = true;
   // tmpTsConfigFile.compilerOptions.declaration = true;
-  
+
   // // return yield* rollupExecutor(options, context, dependencies, entrypointsDirs);
   // yield* tsupExecutor(options, context, dependencies, entrypointsDirs);
 

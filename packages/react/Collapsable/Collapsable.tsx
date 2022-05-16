@@ -1,1 +1,1 @@
-export const Collasable = null;
+export const Collapsable = null;

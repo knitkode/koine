@@ -5,7 +5,6 @@ export * from "./InputGroup";
 export * from "./Feedback";
 export * from "./Field";
 export * from "./InputGroup";
-export * from "./Form";
 export * from "./Label";
 export * from "./Password";
 export * from "./Radio";

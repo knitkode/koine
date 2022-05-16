@@ -10,6 +10,7 @@ export * from "../shared";
 // export * from "../Collapsable";
 // export * from "../Debug";
 export { KoineDialog, type KoineDialogProps } from "../Dialog/tw/bare";
+// export * from "../Form";
 // export * from "../Forms";
 // export * from "../Grid";
 // export * from "../Hamburger";

@@ -1,4 +1,10 @@
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  /* useId, */ useRef,
+  useState,
+} from "react";
 import { type MotionProps } from "framer-motion";
 import { useWindowSize } from "../hooks/useWindowSize";
 import {
@@ -42,7 +48,6 @@ export type Components = {
     props: React.PropsWithChildren<
       {
         $open: OwnProps["open"];
-        "aria-label": string;
       } & Pick<OwnProps, "onChange">
     >;
     motionable: true;
@@ -52,6 +57,8 @@ export type Components = {
     props: React.PropsWithChildren<
       {
         $open: OwnProps["open"];
+        "aria-expanded"?: React.AriaAttributes["aria-expanded"];
+        "aria-label"?: React.AriaAttributes["aria-label"];
       } & Pick<OwnProps, "onChange">
     >;
     motionable: true;
@@ -145,9 +152,9 @@ const DetailsWithRef = forwardRef<HTMLDivElement, KoineDetailsProps>(
         </Summary>
         <Body $open={open} style={{ overflow }}>
           <Content
-            ref={content}
+            // ref={content}
             $open={open}
-            // aria-open={open}
+            // aria-expanded={open}
             // aria-label={open ? ariaCollapse : ariaExpand}
             style={{
               pointerEvents: open ? "all" : "none",

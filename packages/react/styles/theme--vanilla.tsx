@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { isBrowser, setCookie, parseCookie } from "@koine/utils";
-import { useMount, useUpdateEffect } from "react-use";
+import { useMount, useUpdateEffect } from "../hooks";
 
 export const THEME_KEY = "theme";
 

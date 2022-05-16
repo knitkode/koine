@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import useIsomorphicLayoutEffect from "react-use/esm/useIsomorphicLayoutEffect";
 import { isBrowser } from "@koine/utils";
+import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
 
 type Position = {
   x: number;

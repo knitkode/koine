@@ -14,8 +14,10 @@ type ReducedModalUnstyledProps = Omit<
   ModalUnstyledProps,
   | "onClose"
   | "BackdropComponent"
+  // | "BackdropProps"
   | "classes"
   | "closeAfterTransition"
+  | "component"
   | "components"
   | "componentsProps"
 >;
