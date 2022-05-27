@@ -341,15 +341,13 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
 
   tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_CJS);
 
-  yield* compileTypeScriptFiles(tmpOptions, context, async () => {
+  return yield* compileTypeScriptFiles(tmpOptions, context, async () => {
     await treatCjsOutput(options);
     await treatRootEntrypoints(options);
     
     // restore initial tsConfig
     writeJsonFile(options.tsConfig, initialTsConfig);
   });
-
-  return { success: true };
 
   // generate UMD dev bundle:
   // ---------------------------------------------------------------------------

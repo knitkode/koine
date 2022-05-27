@@ -15,7 +15,7 @@ import {
 } from "../helpers";
 import { useId } from "../hooks/useId";
 
-export type OwnProps = React.ComponentProps<"details"> & {
+export type OwnProps = React.ComponentPropsWithoutRef<"details"> & {
   open?: boolean;
   onChange?: () => any;
   summary: null | React.ReactNode;
