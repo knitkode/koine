@@ -47,7 +47,7 @@ export function normaliseUrl(absoluteUrl = "") {
  * - replaces too many consecutive slashes
  * - removes the trailing slash
  */
-export function normaliseUrlPathname(pathname: string) {
+export function normaliseUrlPathname(pathname = "") {
   return removeTralingSlash(pathname.replace(/\/+/g, "/"));
 }
 

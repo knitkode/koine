@@ -2,6 +2,29 @@ import type { NextConfig } from "next";
 import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 
 /**
+ * Transform to path any absolute or relative URL
+ *
+ * Useful when setting up `rewrites` and `redirects` especally in a [multi-zones
+ * setup](https://nextjs.org/docs/advanced-features/multi-zones).
+ *
+ * From a path like `http://localhost/some//malformed/path///` it returns `/some/malformed/path`
+ *
+ * - just get the pathname form an absolute URL (if that is given)
+ * - Removes subsequent slashes
+ * - Removing initial and ending slashes
+ */
+export function toPath(urlOrPathname = "") {
+  let pathname = "";
+  try {
+    const parsed = new URL(urlOrPathname);
+    pathname = parsed.pathname;
+  } catch (e) {
+    pathname = urlOrPathname;
+  }
+  return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
+}
+
+/**
  * Normalise pathname
  *
  * From a path like `/some//malformed/path///` it returns `some/malformed/path`
@@ -188,7 +211,7 @@ export function withKoine({
       },
     },
     // @see https://github.com/vercel/next.js/issues/7322#issuecomment-887330111
-    // reactStrictMode: false,
+    reactStrictMode: true,
     ...nextConfig,
   } as NextConfig;
 

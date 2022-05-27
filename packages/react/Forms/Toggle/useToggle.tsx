@@ -13,7 +13,7 @@ export type UseToggleProps = Omit<FormControl, "value"> & {
 };
 
 /**
- * This hook is meant to powere Checkboxes, Switches and checkbox-like Radios
+ * This hook is meant to power Checkboxes, Switches and checkbox-like Radios
  * components, it works in fact in two modes:
  *
  * 1: behaviour as standard checkbox

@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "noEmitHelpers": true,
     "target": "es5",
     "module": "esnext",
     "lib": ["es2020", "DOM", "DOM.Iterable"],

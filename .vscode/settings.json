@@ -28,3 +28,10 @@
 //     "**/tsconfig.spec.json": true
 //   }
 // }
+{
+  "window.title": "${dirty} KnitKode/koine - ${activeFolderMedium}",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#000",
+    "activityBar.foreground": "#fff"
+  }
+}
