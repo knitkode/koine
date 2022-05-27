@@ -93,8 +93,8 @@ var glob_1 = require("glob");
 var devkit_1 = require("@nrwl/devkit");
 var assets_1 = require("@nrwl/workspace/src/utilities/assets");
 var check_dependencies_1 = require("@nrwl/js/src/utils/check-dependencies");
-var copy_assets_handler_1 = require("@nrwl/js/src/utils/copy-assets-handler");
 var compiler_helper_dependency_1 = require("@nrwl/js/src/utils/compiler-helper-dependency");
+var copy_assets_handler_1 = require("@nrwl/js/src/utils/copy-assets-handler");
 var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
 var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
@@ -291,7 +291,7 @@ function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
 }
 function executor(_options, context) {
     return __asyncGenerator(this, arguments, function executor_1() {
-        var _a, sourceRoot, root, options, entrypointsDirs, _b, projectRoot, tmpTsConfig, target, dependencies, tsLibDependency, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tmpTsConfigPath, tmpTsConfigFile, tmpOptions, initialTsConfig;
+        var _a, sourceRoot, root, options, entrypointsDirs, _b, projectRoot, tmpTsConfig, target, dependencies, tsLibDependency, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, initialTsConfig, tsConfig, tmpOptions;
         var _this = this;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -348,10 +348,9 @@ function executor(_options, context) {
                     }); });
                     _c.label = 3;
                 case 3:
-                    tmpTsConfigPath = createTmpTsConfig(options.tsConfig, {});
-                    tmpTsConfigFile = (0, devkit_1.readJsonFile)(tmpTsConfigPath);
+                    initialTsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
+                    tsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
                     tmpOptions = Object.assign({}, options);
-                    initialTsConfig = Object.assign({}, tmpTsConfigFile);
                     // restore initial tsConfig
                     process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
@@ -369,10 +368,10 @@ function executor(_options, context) {
                     (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
                     // generate Modern:
                     // ---------------------------------------------------------------------------
-                    tmpTsConfigFile.compilerOptions.module = "esnext";
-                    tmpTsConfigFile.compilerOptions.composite = true;
-                    tmpTsConfigFile.compilerOptions.declaration = true;
-                    (0, devkit_1.writeJsonFile)(options.tsConfig, tmpTsConfigFile);
+                    tsConfig.compilerOptions.module = "esnext";
+                    tsConfig.compilerOptions.composite = true;
+                    tsConfig.compilerOptions.declaration = true;
+                    (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfig);
                     tmpOptions.outputPath = (0, path_1.join)(options.outputPath, TMP_FOLDER_MODERN);
                     // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
                     return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
@@ -397,11 +396,11 @@ function executor(_options, context) {
                     _c.sent();
                     // generate CommonJS:
                     // ---------------------------------------------------------------------------
-                    tmpTsConfigFile.compilerOptions.module = "commonjs";
-                    tmpTsConfigFile.compilerOptions.composite = false;
-                    tmpTsConfigFile.compilerOptions.declaration = false;
-                    tmpTsConfigFile.skipLibCheck = true;
-                    (0, devkit_1.writeJsonFile)(options.tsConfig, tmpTsConfigFile);
+                    tsConfig.compilerOptions.module = "commonjs";
+                    tsConfig.compilerOptions.composite = false;
+                    tsConfig.compilerOptions.declaration = false;
+                    tsConfig.skipLibCheck = true;
+                    (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfig);
                     tmpOptions.outputPath = (0, path_1.join)(options.outputPath, TMP_FOLDER_CJS);
                     return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
                             return __generator(this, function (_a) {

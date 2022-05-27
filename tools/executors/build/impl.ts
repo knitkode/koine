@@ -12,15 +12,15 @@ import {
   FileInputOutput,
 } from "@nrwl/workspace/src/utilities/assets";
 import { checkDependencies } from "@nrwl/js/src/utils/check-dependencies";
+import {
+  getHelperDependency,
+  HelperDependency,
+} from "@nrwl/js/src/utils/compiler-helper-dependency";
 import { CopyAssetsHandler } from "@nrwl/js/src/utils/copy-assets-handler";
 import {
   ExecutorOptions,
   NormalizedExecutorOptions,
 } from "@nrwl/js/src/utils/schema";
-import {
-  getHelperDependency,
-  HelperDependency,
-} from "@nrwl/js/src/utils/compiler-helper-dependency";
 import { compileTypeScriptFiles } from "@nrwl/js/src/utils/typescript/compile-typescript-files";
 import { updatePackageJson } from "@nrwl/js/src/utils/update-package-json";
 import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-file-changes";
@@ -296,11 +296,10 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
     });
   }
 
-  const tmpTsConfigPath = createTmpTsConfig(options.tsConfig, {});
-  const tmpTsConfigFile = readJsonFile(tmpTsConfigPath);
-  const tmpOptions = Object.assign({}, options);
   // store initial tsConfig
-  const initialTsConfig = Object.assign({}, tmpTsConfigFile);
+  const initialTsConfig = readJsonFile(options.tsConfig);
+  const tsConfig = readJsonFile(options.tsConfig);
+  const tmpOptions = Object.assign({}, options);
 
   // restore initial tsConfig
   process.on("exit", async () => {
@@ -315,10 +314,10 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
 
   // generate Modern:
   // ---------------------------------------------------------------------------
-  tmpTsConfigFile.compilerOptions.module = "esnext";
-  tmpTsConfigFile.compilerOptions.composite = true;
-  tmpTsConfigFile.compilerOptions.declaration = true;
-  writeJsonFile(options.tsConfig, tmpTsConfigFile);
+  tsConfig.compilerOptions.module = "esnext";
+  tsConfig.compilerOptions.composite = true;
+  tsConfig.compilerOptions.declaration = true;
+  writeJsonFile(options.tsConfig, tsConfig);
 
   tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_MODERN);
   // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
@@ -330,18 +329,18 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
 
   // generate CommonJS:
   // ---------------------------------------------------------------------------
-  tmpTsConfigFile.compilerOptions.module = "commonjs";
-  tmpTsConfigFile.compilerOptions.composite = false;
-  tmpTsConfigFile.compilerOptions.declaration = false;
-  tmpTsConfigFile.skipLibCheck = true;
-  writeJsonFile(options.tsConfig, tmpTsConfigFile);
+  tsConfig.compilerOptions.module = "commonjs";
+  tsConfig.compilerOptions.composite = false;
+  tsConfig.compilerOptions.declaration = false;
+  tsConfig.skipLibCheck = true;
+  writeJsonFile(options.tsConfig, tsConfig);
 
   tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_CJS);
 
   yield* compileTypeScriptFiles(tmpOptions, context, async () => {
     await treatCjsOutput(options);
     await treatRootEntrypoints(options);
-
+    
     // restore initial tsConfig
     writeJsonFile(options.tsConfig, initialTsConfig);
   });
