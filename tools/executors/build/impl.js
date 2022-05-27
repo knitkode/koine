@@ -242,13 +242,16 @@ function treatCjsOutput(options) {
  */
 function treatRootEntrypoints(options) {
     return __awaiter(this, void 0, void 0, function () {
-        var outputPath, packagePath, packageJson;
+        var outputPath, packagePath, packageJson, rootPackageJson;
         return __generator(this, function (_a) {
             outputPath = options.outputPath;
             packagePath = (0, path_1.join)(outputPath, "./package.json");
             packageJson = (0, devkit_1.readJsonFile)(packagePath);
+            rootPackageJson = (0, devkit_1.readJsonFile)((0, path_1.join)(options.root, "./package.json"));
             return [2 /*return*/, new Promise(function (resolve) {
-                    (0, devkit_1.writeJsonFile)(packagePath, Object.assign(packageJson, getPackageJsonData(outputPath, (0, path_1.join)(outputPath, DEST_FOLDER_MODERN), (0, path_1.join)(outputPath, DEST_FOLDER_CJS))));
+                    (0, devkit_1.writeJsonFile)(packagePath, Object.assign(packageJson, getPackageJsonData(outputPath, (0, path_1.join)(outputPath, DEST_FOLDER_MODERN), (0, path_1.join)(outputPath, DEST_FOLDER_CJS)), {
+                        version: rootPackageJson.version
+                    }));
                     resolve(true);
                 })];
         });

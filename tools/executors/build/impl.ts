@@ -170,6 +170,7 @@ async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
   const { outputPath } = options;
   const packagePath = join(outputPath, "./package.json");
   const packageJson = readJsonFile(packagePath);
+  const rootPackageJson = readJsonFile(join(options.root, "./package.json"));
 
   return new Promise((resolve) => {
     writeJsonFile(
@@ -180,7 +181,9 @@ async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
           outputPath,
           join(outputPath, DEST_FOLDER_MODERN),
           join(outputPath, DEST_FOLDER_CJS)
-        )
+        ), {
+          version: rootPackageJson.version
+        }
       )
     );
     resolve(true);
