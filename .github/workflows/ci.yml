@@ -191,7 +191,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ['react', 'next', 'utils']
+        package: ['api', 'react', 'next', 'utils']
     needs: [setup, execute, release]
     steps:
       - name: Checkout
