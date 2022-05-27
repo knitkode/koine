@@ -24,6 +24,7 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
+      "@koine/api": ["packages/api/index.ts"],
       "@koine/next": ["packages/next/index.ts"],
       "@koine/react": ["packages/react/index.ts"],
       "@koine/stories": ["packages/stories/src/index.ts"],

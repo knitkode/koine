@@ -17,7 +17,10 @@ import {
   ExecutorOptions,
   NormalizedExecutorOptions,
 } from "@nrwl/js/src/utils/schema";
-import { addTslibDependencyIfNeeded } from "@nrwl/js/src/utils/tslib-dependency";
+import {
+  getHelperDependency,
+  HelperDependency,
+} from "@nrwl/js/src/utils/compiler-helper-dependency";
 import { compileTypeScriptFiles } from "@nrwl/js/src/utils/typescript/compile-typescript-files";
 import { updatePackageJson } from "@nrwl/js/src/utils/update-package-json";
 import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-file-changes";
@@ -258,7 +261,15 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
     options.tsConfig = tmpTsConfig;
   }
 
-  addTslibDependencyIfNeeded(options, context, dependencies);
+  const tsLibDependency = getHelperDependency(
+    HelperDependency.tsc,
+    options.tsConfig,
+    dependencies
+  );
+
+  if (tsLibDependency) {
+    dependencies.push(tsLibDependency);
+  }
 
   const assetHandler = new CopyAssetsHandler({
     projectDir: projectRoot,

@@ -94,7 +94,7 @@ var devkit_1 = require("@nrwl/devkit");
 var assets_1 = require("@nrwl/workspace/src/utilities/assets");
 var check_dependencies_1 = require("@nrwl/js/src/utils/check-dependencies");
 var copy_assets_handler_1 = require("@nrwl/js/src/utils/copy-assets-handler");
-var tslib_dependency_1 = require("@nrwl/js/src/utils/tslib-dependency");
+var compiler_helper_dependency_1 = require("@nrwl/js/src/utils/compiler-helper-dependency");
 var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
 var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
@@ -291,7 +291,7 @@ function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
 }
 function executor(_options, context) {
     return __asyncGenerator(this, arguments, function executor_1() {
-        var _a, sourceRoot, root, options, entrypointsDirs, _b, projectRoot, tmpTsConfig, target, dependencies, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tmpTsConfigPath, tmpTsConfigFile, tmpOptions, initialTsConfig;
+        var _a, sourceRoot, root, options, entrypointsDirs, _b, projectRoot, tmpTsConfig, target, dependencies, tsLibDependency, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, tmpTsConfigPath, tmpTsConfigFile, tmpOptions, initialTsConfig;
         var _this = this;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -303,7 +303,10 @@ function executor(_options, context) {
                     if (tmpTsConfig) {
                         options.tsConfig = tmpTsConfig;
                     }
-                    (0, tslib_dependency_1.addTslibDependencyIfNeeded)(options, context, dependencies);
+                    tsLibDependency = (0, compiler_helper_dependency_1.getHelperDependency)(compiler_helper_dependency_1.HelperDependency.tsc, options.tsConfig, dependencies);
+                    if (tsLibDependency) {
+                        dependencies.push(tsLibDependency);
+                    }
                     assetHandler = new copy_assets_handler_1.CopyAssetsHandler({
                         projectDir: projectRoot,
                         rootDir: context.root,

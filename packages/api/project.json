@@ -1,0 +1,28 @@
+{
+  "root": "packages/api",
+  "sourceRoot": "packages/api",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "./tools/executors/build:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/api",
+        "tsConfig": "packages/api/tsconfig.lib.json",
+        "project": "packages/api/package.json",
+        "main": "packages/api/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": "dependencies",
+        "assets": ["packages/api/*.md", "packages/api/*.d.ts"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/api/**/*.ts"]
+      }
+    }
+  }
+}

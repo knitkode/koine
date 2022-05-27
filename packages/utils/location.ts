@@ -124,7 +124,7 @@ export function getUrlPathnameParts(urlPathname = "") {
  * TODO: at some point replace with `URLSearchParams`, @see [caniuse](https://caniuse.com/?search=URLSearchParams)
  */
 export function buildUrlQueryString(
-  params: Record<string | number, unknown> = {}
+  params: undefined | null | Record<string | number, unknown> = {}
 ) {
   let output = "";
 

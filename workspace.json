@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
+    "api": "packages/api",
     "next": "packages/next",
     "react": "packages/react",
     "stories": "packages/stories",
