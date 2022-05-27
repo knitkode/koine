@@ -33,7 +33,7 @@ export type OwnProps = React.ComponentProps<"details"> & {
 export type Components = {
   Root: {
     type: "details";
-    props: React.PropsWithChildren<{}>;
+    props: {};
   };
   Summary: {
     type: "summary";
@@ -85,7 +85,7 @@ export const Content = "div" as unknown as Props["Content"];
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details
  */
-const DetailsWithRef = forwardRef<HTMLDivElement, KoineDetailsProps>(
+const DetailsWithRef = forwardRef<HTMLDetailsElement, KoineDetailsProps>(
   function Details(
     {
       id,

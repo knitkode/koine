@@ -177,13 +177,14 @@ async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
       packagePath,
       Object.assign(
         packageJson,
+        {
+          version: rootPackageJson.version
+        },
         getPackageJsonData(
           outputPath,
           join(outputPath, DEST_FOLDER_MODERN),
           join(outputPath, DEST_FOLDER_CJS)
-        ), {
-          version: rootPackageJson.version
-        }
+        ) 
       )
     );
     resolve(true);
