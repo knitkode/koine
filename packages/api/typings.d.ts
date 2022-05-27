@@ -272,7 +272,7 @@ declare namespace Koine.Api {
     Failed extends DataFailed = DataFailed
   >(
     response: _Response,
-    options: RequestOptions<Koine.Api.RequestMethod, RequestJson, RequestParams>
+    options: TOptions
   ) => Promise<Koine.Api.Response<Succesfull, Failed>>;
 
   //////////////////////////////////////////////////////////////////////////////

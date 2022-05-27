@@ -123,7 +123,10 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         if (shouldThrow) {
           try {
             if (adapter) {
-              result = await adapter<TSuccesfull, TFailed>(response, options);
+              result = await adapter<TSuccesfull, TFailed>(
+                response,
+                options || {}
+              );
             } else {
               result = await response.json();
             }
@@ -133,7 +136,10 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           }
         } else {
           if (adapter) {
-            result = await adapter<TSuccesfull, TFailed>(response, options);
+            result = await adapter<TSuccesfull, TFailed>(
+              response,
+              options || {}
+            );
           } else {
             result = await response.json();
           }
