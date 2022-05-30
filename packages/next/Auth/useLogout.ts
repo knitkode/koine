@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import { parseURL } from "@koine/utils";
-import { useT } from "../I18n";
+import { useT } from "../i18n";
 import { getAuthRoutes, getCallbackUrl } from "./helpers";
 
 export function useLogout() {

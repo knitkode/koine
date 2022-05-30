@@ -3,16 +3,15 @@ import type { UseFormProps, FieldValues } from "react-hook-form";
 import type { ObjectSchema } from "yup";
 import { useForm as _useForm } from "react-hook-form";
 import { yupResolver as resolver } from "@hookform/resolvers/yup";
-import { useT, TranslateNamespace } from "../I18n";
+import { type TranslateLoose } from "../i18n";
 
 export function useForm<T extends FieldValues>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema: ObjectSchema<any>,
-  i18nNamespace: TranslateNamespace,
+  t: TranslateLoose,
   formProps: UseFormProps = {},
   debug?: boolean
 ) {
-  const t = useT(i18nNamespace);
   // const form = _useForm<InferType<ObjectSchema<T, object>>>({
   const form = _useForm<T>({
     // @ts-expect-error FIXME:

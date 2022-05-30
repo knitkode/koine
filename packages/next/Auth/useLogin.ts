@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { SubmitHandler } from "react-hook-form";
 import { parseURL } from "@koine/utils";
-import { useT } from "../I18n";
+import { useT } from "../i18n";
 import { getAuthRoutes, getCallbackUrl } from "./helpers";
 
 export function useLogin<LoginForm extends {} = {}>() {

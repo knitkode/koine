@@ -59,28 +59,37 @@ declare namespace Koine {
   };
 
   /**
-   * Translations dictionary extracted from JSON files. You need to extend this
-   * type with something like:
+   * Translations dictionary extracted from JSON files.
+   * You need to augment this type with something like:
    *
    * ```ts
    * declare namespace Koine {
    *   interface NextTranslations {
    *     "~": typeof import("./locales/en/~.json");
-   *     _: typeof import("./locales/en/_.json");
-   *     $team: typeof import("./locales/en/$team.json");
-   *     home: typeof import("./locales/en/home.json");
-   *     Footer: typeof import("./locales/en/Footer.json");
-   *     Header: typeof import("./locales/en/Header.json");
+   *     "_": typeof import("./locales/en/_.json");
+   *     "$team": typeof import("./locales/en/$team.json");
+   *     "home": typeof import("./locales/en/home.json");
+   *     "Header": typeof import("./locales/en/Header.json");
    *   }
    * }
    * ```
+   *
+   * Best to follow a convention to name the files which become the namespaces:
+   *
+   * - `~`: for app wide **urls** translated definitions
+   * - `_`: for app wide **common** translations
+   * - `${data}`: dollar prefix for static **data** like arrays, objects, .etc
+   * - `{route-name}`: lower cased for **route** specific data
+   * - `{ComponentName}`: pascal cased for **components** specific data
    */
   interface NextTranslations {
-    /** Convention for app wide `common` translations */
-    _: Record<string, string>;
-    /** Convention for app wide `routes` translated definitions */
     "~": Record<string, string>;
+    _: Record<string, string>;
   }
+  // interface NextTranslations {
+  //   "~": Record<string, string>;
+  //   _: Record<string, string>;
+  // }
 }
 
 /**

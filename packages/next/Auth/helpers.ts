@@ -1,5 +1,5 @@
 import { isString } from "@koine/utils";
-import type { Translate } from "../I18n";
+import type { TranslateLoose } from "../i18n";
 
 /**
  * @see next/auth `pages` mapping: https://next-auth.js.org/configuration/pages`
@@ -19,7 +19,7 @@ export const AUTH_ROUTES: AuthRoutesMap = {
   secured: JSON.parse(process.env["AUTH_ROUTES_SECURED"] || "[]"),
 };
 
-export function getAuthRoutes(t: Translate) {
+export function getAuthRoutes(t: TranslateLoose) {
   return (Object.keys(AUTH_ROUTES) as Array<keyof AuthRoutesMap>).reduce(
     (map, name) => {
       const routePage = AUTH_ROUTES[name];

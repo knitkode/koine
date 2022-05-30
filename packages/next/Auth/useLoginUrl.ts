@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useT } from "../I18n";
+import { useT } from "../i18n";
 import { getAuthRoutes } from "./helpers";
 
 export function useLoginUrl() {

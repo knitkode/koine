@@ -3,7 +3,7 @@ export * from "./Auth";
 export * from "./Favicon";
 export * from "./Forms";
 export * from "./Head";
-export * from "./I18n";
+export * from "./i18n";
 export * from "./Img";
 export * from "./Link";
 export * from "./NextProgress";
