@@ -293,4 +293,96 @@ declare namespace Koine.Api {
   };
 
   type HooksMapsByName = { [K in keyof HooksMaps as HooksMaps[K]]: K };
+
+  //////////////////////////////////////////////////////////////////////////////
+  //
+  // Generate shortcuts
+  //
+  //////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * To generate all available helpers use in your `API` types:
+   *
+   * ```ts
+   * type Response = Koine.Api.GenerateResponseHelpers<Endpoints>;
+   * type Request = Koine.Api.GenerateRequestHelpers<Endpoints>;
+   * type Get = Koine.Api.GenerateGetHelpers<Endpoints>;
+   * type Post = Koine.Api.GeneratePostHelpers<Endpoints>;
+   * ```
+   */
+  type Generate = "here just to read the example usage";
+
+  type _ShortcutsMaps = {
+    [TMethod in RequestMethod]: Capitalize<TMethod>;
+  };
+
+  type _ShortcutsMapsByMethod = {
+    [K in keyof _ShortcutsMaps as _ShortcutsMaps[K]]: K;
+  };
+
+  /**
+   * @example
+   * ```ts
+   * // define the type on your `API` types:
+   * type Response = Koine.Api.GenerateResponseShortcuts<Endpoints>;
+   *
+   * // consume the type wherever in your app:
+   * type MyData = API.Response["get"]["my/endpoint"];
+   * ```
+   */
+  type GenerateResponseShortcuts<TEndpoints extends Endpoints> = {
+    [TMethod in RequestMethod]: {
+      [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl][Uppercase<TMethod>]["response"];
+    };
+  };
+
+  /**
+   * @example
+   * ```ts
+   * // define the type on your `API` types:
+   * type Get = Koine.Api.GenerateResponseShortcuts<Endpoints>;
+   *
+   * // consume the type wherever in your app:
+   * type MyData = API.Get["my/endpoint"];
+   * ```
+   */
+  type GenerateGetShortcuts<TEndpoints extends Endpoints> = {
+    [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl]["GET"]["response"];
+  };
+
+  /**
+   * @example
+   * ```ts
+   * // define the type on your `API` types:
+   * type Post = Koine.Api.GenerateResponseShortcuts<Endpoints>;
+   *
+   * // consume the type wherever in your app:
+   * type MyData = API.Post["my/endpoint"];
+   * ```
+   */
+  type GeneratePostShortcuts<TEndpoints extends Endpoints> = {
+    [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl]["POST"]["response"];
+  };
+
+  /**
+   * This is not useful as it is the same as doing
+   * `API.Endpoints["my/endpoint"]["GET"]["response"];`
+   *
+   * @example
+   * ```ts
+   * // define the type on your `API` types:
+   * type Response = Koine.Api.GenerateResponseShortcuts<Endpoints>;
+   *
+   * // consume the type wherever in your app:
+   * type MyData = API.$["my/endpoint"]["get"]["response"];
+   * ```
+   * @deprecated
+   */
+  // type GenerateAllShortcuts<TEndpoints extends Endpoints> = {
+  //   [TEndpointUrl in keyof TEndpoints]: {
+  //     [TMethod in RequestMethod]: {
+  //       [DataType in EndpointDataType]: TEndpoints[TEndpointUrl][Uppercase<TMethod>][DataType];
+  //     }
+  //   }
+  // }
 }

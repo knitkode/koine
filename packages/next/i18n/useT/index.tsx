@@ -14,7 +14,7 @@ export type TranslateNamespace = Extract<keyof Koine.NextTranslations, string>;
 type Join<S1, S2> = S1 extends string
   ? S2 extends string
     ? `${S1}.${S2}`
-    : never
+    : S1
   : never;
 
 export type TranslationsPaths<
@@ -22,11 +22,12 @@ export type TranslationsPaths<
   TAddRoot extends true | undefined = undefined
 > = {
   [K in keyof T]: T[K] extends Record<string, unknown>
-    ? K extends string
+    ? // if we have an object
+      K extends string
       ? TAddRoot extends true
         ? `${K}` | Join<K, TranslationsPaths<T[K]>>
         : Join<K, TranslationsPaths<T[K]>>
-      : Join<K, TranslationsPaths<T[K], TAddRoot>>
+      : K
     : K;
 }[keyof T];
 
@@ -39,23 +40,16 @@ export type TranslationsAllPaths = {
       // if we have an array of objects
       Record<string, unknown>
     >
-      ? Join<
-          K extends string ? `${N}:${K}` : `${N}:`,
-          TranslationsPaths<Koine.NextTranslations[N][K], true>
-        >
+      ? `${N}:${K}`
       : // if we have an object
       Koine.NextTranslations[N][K] extends Record<string, unknown>
       ? Join<
           K extends string ? `${N}:${K}` : `${N}:`,
           TranslationsPaths<Koine.NextTranslations[N][K], true>
-        > /* &
-          Record<Koine.NextTranslations[N][K], object> */
+        >
       : // if we have an array of primitives
       Koine.NextTranslations[N][K] extends Array<string | number | boolean>
-      ? Join<
-          K extends string ? `${N}:${K}` : `${N}:`,
-          TranslationsPaths<Koine.NextTranslations[N][K], true>
-        >
+      ? `${N}:${K}`
       : // if we have a primitve string/number/boolean
       Koine.NextTranslations[N][K] extends string | number | boolean
       ? K extends string
