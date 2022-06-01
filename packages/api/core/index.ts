@@ -28,7 +28,17 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   baseUrl: string,
   options?: Koine.Api.ClientOptions
 ) => {
-  const { adapter: adapterBase, shouldThrow: shouldThrowBase } = options || {};
+  const {
+    adapter: adapterBase,
+    request: requestBase = {
+      // mode: "cors",
+      // redirect: "follow",
+      credentials: "include",
+      // cache: "no-cache",
+      referrerPolicy: "no-referrer",
+    },
+    shouldThrow: shouldThrowBase,
+  } = options || {};
 
   return (
     ["get", "post", "put", "patch", "delete"] as Koine.Api.RequestMethod[]
@@ -61,6 +71,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         const {
           json,
           params,
+          request = requestBase,
           headers = {},
           timeout = 10000,
           adapter = adapterBase,
@@ -69,11 +80,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
 
         const requestInit: RequestInit = {
           method: method.toUpperCase(),
-          // mode: "cors",
-          // redirect: "follow",
-          credentials: "include",
-          // cache: "no-cache",
-          referrerPolicy: "no-referrer",
+          ...request,
           headers: {
             "content-type": "application/json",
             ...headers,

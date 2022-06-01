@@ -1,21 +1,30 @@
 import Trans from "next-translate/Trans";
 import type { TransProps } from "next-translate";
-import type { TranslationsPaths, TranslationsAllPaths } from "../useT";
+import type { /* TranslationsPaths, */ TranslationsAllPaths } from "../useT";
 
-export type TProps<
-  TNamespace extends keyof Koine.NextTranslations | undefined = undefined
-> = Omit<TransProps, "i18nKey" | "ns"> & {
-  i18nKey: TNamespace extends keyof Koine.NextTranslations
-    ? TranslationsPaths<Koine.NextTranslations[TNamespace]>
-    : TranslationsAllPaths;
-  ns?: TNamespace;
+export type TProps = Omit<TransProps, "i18nKey" | "ns"> & {
+  i18nKey: TranslationsAllPaths;
 };
 
-export function T(props: TProps): JSX.Element;
-export function T<TNamespace extends keyof Koine.NextTranslations>(
-  props: TProps<TNamespace>
-) {
-  return <Trans {...props} />;
-}
+export const T = (props: TProps) => <Trans {...props} />;
+
+// export type TProps = Omit<TransProps, "i18nKey" | "ns"> & {
+//     i18nKey: TranslationsAllPaths;
+// };
+
+// export type TPropsNamespaced<
+//     TNamespace extends keyof Koine.NextTranslations
+// > = Omit<TransProps, "i18nKey" | "ns"> & {
+//     i18nKey: TranslationsPaths<Koine.NextTranslations[TNamespace]>;
+//     ns?: TNamespace;
+// };
+
+// export function T(props: TProps): JSX.Element;
+// export function T<TNamespace extends keyof Koine.NextTranslations>(props: TPropsNamespaced<TNamespace>): JSX.Element;
+// export function T<TNamespace extends keyof Koine.NextTranslations>(
+//   props: TProps<TNamespace>
+// ) {
+//   return <Trans {...props} />;
+// }
 
 // export { default as T } from "next-translate/Trans";

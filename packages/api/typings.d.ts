@@ -19,6 +19,14 @@ declare namespace Koine.Api {
   ) => Client<TEndpoints>;
 
   type ClientOptions = {
+    /**
+     * Basic request options to supply to `fetch`
+     *
+     * @see RequestInit
+     *
+     * @default { credentials: "include", referrerPolicy: "no-referrer" }
+     */
+    request?: Omit<RequestInit, "body" | "headers" | "method">;
     adapter?: ResponseAdapter;
     shouldThrow?: boolean;
   };
@@ -175,6 +183,14 @@ declare namespace Koine.Api {
      * @default 10000
      */
     timeout?: number | false | null;
+    /**
+     * Basic request options to supply to `fetch`
+     *
+     * @see RequestInit
+     *
+     * @default { credentials: "include", referrerPolicy: "no-referrer" }
+     */
+    request?: Omit<RequestInit, "body" | "headers" | "method">;
   };
 
   /**
