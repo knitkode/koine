@@ -20,23 +20,23 @@ type KoineApiMethodHookSWR<
   options?: Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
   config?: THookName extends "useGet"
     ? SWRConfiguration<
-        Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-        Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>
+        Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >
     : SWRMutationConfiguration<
-        Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-        Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
         TEndpoint
       >
 ) => THookName extends "useGet"
   ? SWRResponse<
-      Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-      Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>
+      Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
     >
   : SWRMutationResponse<
-      Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-      Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
       Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
       TEndpoint
     >;
@@ -60,9 +60,9 @@ function createUseApi<
       //       if (ok) {
       //         return data;
       //       }
-      //       throw new Error() as unknown as Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>;
+      //       throw new Error() as unknown as Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>;
       //     } catch(e) {
-      //       throw new Error() as unknown as Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>;;
+      //       throw new Error() as unknown as Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>;;
       //     }
       //   };
       // }
@@ -72,39 +72,51 @@ function createUseApi<
           ...(options || {}),
           shouldThrow: true,
         });
-        return data as Koine.Api.EndpointResponseSuccesfull<
+        return data as Koine.Api.EndpointResponseOk<
           TEndpoints,
           TEndpoint,
           TMethod
         >;
       };
       const config = _config as SWRConfiguration<
-        Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>
-        // Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>
+        Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>
+        // Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >;
 
       // <Data = any, Error = any>(key: Key, config: SWRConfiguration<Data, Error, Fetcher<Data>> | undefined): SWRResponse<Data, Error>;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return useSWR<
-        Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-        Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>
+        Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >(options ? [endpoint, options] : [endpoint], fetcher, config);
     }
 
     const config = _config as SWRMutationConfiguration<
-      Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-      Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
       Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
       TEndpoint
     >;
 
     const sender = async (
-      _endpoint: TEndpoint,
+      // if the first argument is an array the second tem are the base options
+      // defined when calling the usePost/Put/etc. hook, these will be overriden
+      // by the _options just here below
+      _endpoint:
+        | [
+            TEndpoint,
+            Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>
+          ]
+        | TEndpoint,
+      // these are the options arriving when calling `trigger({ json, params, etc... })
       _options: Readonly<{
         arg: Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>;
       }>
     ) => {
-      const { ok, data } = await api[method](_endpoint, {
+      const endpoint = Array.isArray(_endpoint) ? _endpoint[0] : _endpoint;
+      const options = Array.isArray(_endpoint) ? _endpoint[1] : {};
+      const { ok, data } = await api[method](endpoint, {
+        ...options,
         ...(_options.arg || {}),
         shouldThrow: true,
       });
@@ -115,13 +127,13 @@ function createUseApi<
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useSWRMutation<
-      Koine.Api.EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-      Koine.Api.EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
       TEndpoint,
       Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>
     >(
       // @ts-expect-error FIXME: I can't get it...
-      options ? [endpoint, options] : [endpoint],
+      options ? [endpoint, options] : endpoint,
       sender,
       config
     );

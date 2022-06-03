@@ -8,9 +8,9 @@ import { buildUrlQueryString } from "@koine/utils";
  *
  */
 export class ApiError<
-  DataFailed extends Koine.Api.DataFailed = unknown
+  TResponseFail extends Koine.Api.ResponseFail = unknown
 > extends Error {
-  constructor(result: Koine.Api.ResponseFailed<DataFailed>) {
+  constructor(result: Koine.Api.ResultFail<TResponseFail>) {
     super(`Request failed with ${result.status} ${result.msg}`);
     this.name = "ApiError";
     Object.assign(this, result);
@@ -31,11 +31,11 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   const {
     adapter: adapterBase,
     request: requestBase = {
+      credentials: "include",
+      referrerPolicy: "no-referrer",
       // mode: "cors",
       // redirect: "follow",
-      credentials: "include",
       // cache: "no-cache",
-      referrerPolicy: "no-referrer",
     },
     shouldThrow: shouldThrowBase,
   } = options || {};
@@ -54,12 +54,12 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           TEndpoint,
           TMethod
         >,
-        TSuccesfull extends Koine.Api.DataSuccesfull = Koine.Api.EndpointResponseSuccesfull<
+        TResponseOk extends Koine.Api.ResponseOk = Koine.Api.EndpointResponseOk<
           TEndpoints,
           TEndpoint,
           TMethod
         >,
-        TFailed extends Koine.Api.DataFailed = Koine.Api.EndpointResponseFailed<
+        TResponseFail extends Koine.Api.ResponseFail = Koine.Api.EndpointResponseFail<
           TEndpoints,
           TEndpoint,
           TMethod
@@ -125,12 +125,12 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           clearTimeout(timeoutId);
         }
 
-        let result: Koine.Api.Response<TSuccesfull, TFailed>;
+        let result: Koine.Api.Result<TResponseOk, TResponseFail>;
 
         if (shouldThrow) {
           try {
             if (adapter) {
-              result = await adapter<TSuccesfull, TFailed>(
+              result = await adapter<TResponseOk, TResponseFail>(
                 response,
                 options || {}
               );
@@ -143,7 +143,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           }
         } else {
           if (adapter) {
-            result = await adapter<TSuccesfull, TFailed>(
+            result = await adapter<TResponseOk, TResponseFail>(
               response,
               options || {}
             );
@@ -160,11 +160,13 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         }
 
         if (process.env["NODE_ENV"] !== "production") {
-          const pre = `api[${apiName}] ${method.toUpperCase()} to ${url}`;
+          const msg = `${
+            result.status
+          }: api[${apiName}] ${method.toUpperCase()} ${url}`;
           if (result.ok) {
-            console.log(`${pre} success.`);
+            console.log(`[@koine] 🟢 ${msg}`);
           } else {
-            console.log(`${pre} failed.`);
+            console.log(`[@koine] 🔴 ${msg}`);
           }
         }
         return result;

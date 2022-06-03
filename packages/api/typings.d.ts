@@ -37,12 +37,12 @@ declare namespace Koine.Api {
   > = <
     TEndpoint extends EndpointUrl<TEndpoints>,
     TOptions extends EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
-    TSuccesfull extends Koine.Api.DataSuccesfull = Koine.Api.EndpointResponseSuccesfull<
+    TSuccesfull extends Koine.Api.DataSuccesfull = Koine.Api.EndpointResponseOk<
       TEndpoints,
       TEndpoint,
       TMethod
     >,
-    TFailed extends Koine.Api.DataFailed = Koine.Api.EndpointResponseFailed<
+    TFailed extends Koine.Api.DataFailed = Koine.Api.EndpointResponseFail<
       TEndpoints,
       TEndpoint,
       TMethod
@@ -72,29 +72,41 @@ declare namespace Koine.Api {
     TMethod extends RequestMethod
   > = RequestOptions<
     TMethod,
-    TEndpoints[TEndpoint][Uppercase<TMethod>]["request"],
+    TEndpoints[TEndpoint][Uppercase<TMethod>]["json"],
     TEndpoints[TEndpoint][Uppercase<TMethod>]["params"]
   >;
 
-  type EndpointResponseSuccesfull<
+  type EndpointResultOk<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod
-  > = TEndpoints[TEndpoint][Uppercase<TMethod>]["response"];
+  > = ResultOk<TEndpoints[TEndpoint][Uppercase<TMethod>]["ok"]>;
 
-  type EndpointResponseFailed<
+  type EndpointResultFail<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod
-  > = TEndpoints[TEndpoint][Uppercase<TMethod>]["error"];
+  > = ResultFail<TEndpoints[TEndpoint][Uppercase<TMethod>]["fail"]>;
+
+  type EndpointResponseOk<
+    TEndpoints extends Endpoints,
+    TEndpoint extends EndpointUrl<TEndpoints>,
+    TMethod extends RequestMethod
+  > = TEndpoints[TEndpoint][Uppercase<TMethod>]["ok"];
+
+  type EndpointResponseFail<
+    TEndpoints extends Endpoints,
+    TEndpoint extends EndpointUrl<TEndpoints>,
+    TMethod extends RequestMethod
+  > = TEndpoints[TEndpoint][Uppercase<TMethod>]["fail"];
 
   type EndpointResponse<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod
   > = Response<
-    EndpointResponseSuccesfull<TEndpoints, TEndpoint, TMethod>,
-    EndpointResponseFailed<TEndpoints, TEndpoint, TMethod>
+    EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
+    EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
   >;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -138,20 +150,20 @@ declare namespace Koine.Api {
     /**
      * The request body of a non-GET request
      */
-    request?: RequestJson;
-    /**
-     * The JSON response data returned by the request in case of success
-     */
-    response?: null | unknown;
+    json?: RequestJson;
     /**
      * The parameters to encode in the URL of the request
      */
     params?: RequestParams;
     /**
+     * The JSON response data returned by the request in case of success
+     */
+    ok?: null | unknown;
+    /**
      * The shape of the error data returned by the request in case of
      * failure
      */
-    error?: null | unknown;
+    fail?: null | unknown;
   };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -231,65 +243,68 @@ declare namespace Koine.Api {
 
   //////////////////////////////////////////////////////////////////////////////
   //
-  // Response
+  // Response/Result
   //
   //////////////////////////////////////////////////////////////////////////////
 
-  type DataSuccesfull = unknown;
+  type ResponseOk = unknown;
 
-  type DataFailed = unknown;
+  type ResponseFail = unknown;
 
-  type ResponseShared<
+  type ResultShared<
     T extends Record<string, unknown> = Record<string, unknown>
   > = T & {
     status: _Response["status"];
     msg: _Response["statusText"];
   };
 
-  type ResponseSuccesfull<Data extends DataSuccesfull = DataSuccesfull> = {
+  type ResultOk<TResponse extends ResponseOk = ResponseOk> = {
     status: _Response["status"];
     msg: _Response["statusText"];
     ok: true;
     fail?: false;
-    data: Data;
+    data: TResponse;
   };
 
-  type ResponseFailed<Data extends DataFailed = DataFailed> = {
+  type ResultFail<TResponse extends ResponseFail = ResponseFail> = {
     status: _Response["status"];
     msg: _Response["statusText"];
     ok?: false;
     fail: true;
-    data: Data;
+    data: TResponse;
   };
 
-  type Response<Succesfull extends DataSuccesfull, Failed extends DataFailed> =
+  type Result<
+    TResponseOk extends ResponseOk,
+    TResponseFail extends ResponseFail
+  > =
     // FIXME: without the type duplication below the following two lines do not
     // work as they do not narrow the type when checking for the boolean values
     // truthiness
-    // | ResponseSuccesfull<Succesfull>
-    // | ResponseFailed<Succesfull>;
+    // | ResultOk<TOk>
+    // | ResultFail<TOk>;
     | {
         status: _Response["status"];
         msg: _Response["statusText"];
         ok: true;
         fail?: false;
-        data: Succesfull;
+        data: TResponseOk;
       }
     | {
         status: _Response["status"];
         msg: _Response["statusText"];
         ok?: false;
         fail: true;
-        data: Failed;
+        data: TResponseFail;
       };
 
   type ResponseAdapter = <
-    Succesfull extends DataSuccesfull = DataSuccesfull,
-    Failed extends DataFailed = DataFailed
+    TResponseOk extends ResponseOk = ResponseOk,
+    TResponseFail extends ResponseFailed = ResponseFailed
   >(
     response: _Response,
     options: TOptions
-  ) => Promise<Koine.Api.Response<Succesfull, Failed>>;
+  ) => Promise<Koine.Api.Result<TResponseOk, TResponseFail>>;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -348,7 +363,7 @@ declare namespace Koine.Api {
    */
   type GenerateResponseShortcuts<TEndpoints extends Endpoints> = {
     [TMethod in RequestMethod]: {
-      [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl][Uppercase<TMethod>]["response"];
+      [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl][Uppercase<TMethod>]["ok"];
     };
   };
 
@@ -363,7 +378,7 @@ declare namespace Koine.Api {
    * ```
    */
   type GenerateGetShortcuts<TEndpoints extends Endpoints> = {
-    [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl]["GET"]["response"];
+    [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl]["GET"]["ok"];
   };
 
   /**
@@ -377,12 +392,12 @@ declare namespace Koine.Api {
    * ```
    */
   type GeneratePostShortcuts<TEndpoints extends Endpoints> = {
-    [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl]["POST"]["response"];
+    [TEndpointUrl in keyof TEndpoints]: TEndpoints[TEndpointUrl]["POST"]["ok"];
   };
 
   /**
    * This is not useful as it is the same as doing
-   * `API.Endpoints["my/endpoint"]["GET"]["response"];`
+   * `API.Endpoints["my/endpoint"]["GET"]["ok"];`
    *
    * @example
    * ```ts
@@ -390,7 +405,7 @@ declare namespace Koine.Api {
    * type Response = Koine.Api.GenerateResponseShortcuts<Endpoints>;
    *
    * // consume the type wherever in your app:
-   * type MyData = API.$["my/endpoint"]["get"]["response"];
+   * type MyData = API.$["my/endpoint"]["get"]["ok"];
    * ```
    * @deprecated
    */

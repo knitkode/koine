@@ -1,6 +1,8 @@
 import { isBrowser } from "./ssr";
 import { isString, isNull, isUndefined } from "./is";
 
+type AnyQueryParams = undefined | null | Record<string | number, unknown>;
+
 /**
  * Solution without DOM or specific env native methods
  *
@@ -74,7 +76,7 @@ export function transformToUrlPathname(toPathname?: string) {
  *                    the `href` of a `<a href="...">` HTML tag.
  *
  */
-export function getUrlQueryParams<T extends Record<string, string>>(
+export function getUrlQueryParams<T extends AnyQueryParams>(
   queryString?: string
 ) {
   let params = {};
@@ -121,11 +123,11 @@ export function getUrlPathnameParts(urlPathname = "") {
 /**
  * Get clean query string for URL
  *
+ * It returns the query string **with** the initial `?`
+ *
  * TODO: at some point replace with `URLSearchParams`, @see [caniuse](https://caniuse.com/?search=URLSearchParams)
  */
-export function buildUrlQueryString(
-  params: undefined | null | Record<string | number, unknown> = {}
-) {
+export function buildUrlQueryString(params: AnyQueryParams = {}) {
   let output = "";
 
   for (const key in params) {
@@ -166,7 +168,7 @@ export function changeUrlPath(
  * @param replace Replace URL instead of pushing it in the history stack. By default it pushes it.
  */
 export function changeUrlParams(
-  params: string | Record<string, string> = {},
+  params: string | AnyQueryParams = {},
   replace?: boolean
 ) {
   const queryString =
@@ -186,9 +188,9 @@ export function changeUrlParams(
 /**
  * Merge query parameters objects, it *mutates* the first given object argument
  */
-export function mergeUrlQueryParams<T extends Record<string, string>>(
-  oldParams: Record<string, string> = {},
-  newParams: Record<string, string> = {}
+export function mergeUrlQueryParams<T extends AnyQueryParams>(
+  oldParams: NonNullable<AnyQueryParams> = {},
+  newParams: NonNullable<AnyQueryParams> = {}
 ) {
   for (const key in newParams) {
     const value = newParams[key];
@@ -209,7 +211,7 @@ export function mergeUrlQueryParams<T extends Record<string, string>>(
  * @param replace Replace URL instead of pushing it in the history stack. By default it pushes it.
  */
 export function mergeUrlParams(
-  params: Record<string, string> = {},
+  params: NonNullable<AnyQueryParams> = {},
   replace?: boolean
 ) {
   return changeUrlParams(
@@ -224,7 +226,7 @@ export function mergeUrlParams(
  * @param replace Replace URL instead of pushing it in the history stack. By default it pushes it.
  */
 export function removeUrlParam(paramName?: string, replace?: boolean) {
-  const params: Record<string, string> = {};
+  const params: NonNullable<AnyQueryParams> = {};
   const currentParams = getUrlQueryParams();
   for (const key in currentParams) {
     if (key !== paramName) {
@@ -239,7 +241,7 @@ export function removeUrlParam(paramName?: string, replace?: boolean) {
  * Redirect to url with params {optionally}, removes eventual trailing question
  * marks from the given URL.
  */
-export function redirectTo(url: string, params?: Record<string, string>) {
+export function redirectTo(url: string, params?: AnyQueryParams) {
   if (isBrowser) {
     const queryString = buildUrlQueryString(params);
     location.href = url.replace(/\?+$/g, "") + queryString;
@@ -263,23 +265,28 @@ export function isExternalUrl(url: string) {
 }
 
 /**
- * Update link `<a href="">` query parameters, it returns the newly created `href`
- * URL value
+ * Update a URL string query parameters merging the given new query parameters
+ */
+export function updateUrlParams(
+  url: string,
+  newParams: NonNullable<AnyQueryParams> = {}
+) {
+  const parts = url.split("?");
+  const allParams = parts[1]
+    ? mergeUrlQueryParams(getUrlQueryParams(`?${parts[1]}`), newParams)
+    : newParams;
+  return parts[0] + buildUrlQueryString(allParams);
+}
+
+/**
+ * Update link `<a href="">` merging the given new query parameters.
+ * it returns the newly created `href` URL value
  */
 export function updateLinkParams(
   $anchor: HTMLAnchorElement,
-  newParams: Record<string, string> = {}
+  newParams: NonNullable<AnyQueryParams>
 ) {
-  const { href } = $anchor;
-  const parts = href.split("?");
-  const pre = parts[0];
-  const queryString = parts[1];
-  const allParams = queryString
-    ? mergeUrlQueryParams(getUrlQueryParams(`?${queryString}`), newParams)
-    : newParams;
-  const newHref = pre + buildUrlQueryString(allParams);
-
-  $anchor.href = newHref;
-
-  return newHref;
+  const href = updateUrlParams($anchor.href, newParams);
+  $anchor.href = href;
+  return href;
 }
