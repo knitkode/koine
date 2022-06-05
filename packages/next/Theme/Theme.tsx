@@ -2,6 +2,12 @@
  * @file
  *
  * Adapted from [next-themes](https://github.com/pacocoursey/next-themes)
+ *
+ * Differences:
+ *
+ * - enableColorScheme: `false` by default (instead of `true`), this plays more
+ * nicely with tailwind `dark` class mode as dark theme is supposed to be only
+ * controlled by tailwind modifiers
  */
 import React, {
   createContext,
@@ -70,7 +76,7 @@ export const ThemeProvider = ({
   forcedTheme,
   disableTransitionOnChange = false,
   enableSystem = true,
-  enableColorScheme = true,
+  enableColorScheme,
   themes = ["light", "dark"],
   defaultTheme = enableSystem ? "system" : "light",
   attribute = "data-theme",
