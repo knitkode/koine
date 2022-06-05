@@ -52,7 +52,7 @@ export type TranslationsAllPaths = {
       : // if we have an array of primitives
       Koine.NextTranslations[N][K] extends Array<string | number | boolean>
       ? `${N}:${K}`
-      : // if we have a primitve string/number/boolean
+      : // if we have a primitive string/number/boolean
       Koine.NextTranslations[N][K] extends string | number | boolean
       ? K extends string
         ? `${N}:${K}`
@@ -108,7 +108,7 @@ export type TranslateDefault = <TReturn extends unknown = string>(
 export type TranslateNamespaced<
   TNamespace extends keyof Koine.NextTranslations
 > = <TReturn extends unknown = string>(
-  s: TranslationsPaths<Koine.NextTranslations[TNamespace]>,
+  s: TranslationsPaths<Koine.NextTranslations[TNamespace], true>,
   q?: TranslationQuery,
   o?: TranslationOptions
 ) => TReturn;
