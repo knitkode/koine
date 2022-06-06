@@ -1,4 +1,4 @@
-import { Children /* , useId */ } from "react";
+import { Children, useId } from "react";
 import styled from "styled-components";
 import { SetRequired } from "@koine/utils";
 import {
@@ -8,7 +8,6 @@ import {
   ColProps,
   GRID_GUTTER_DEFAULT as DF,
 } from "../Grid";
-import { useId } from "../hooks/useId";
 
 export const CarouselCssRow = styled(Row)<SetRequired<RowProps, "$gutter">>`
   ${({ $gutter: cs, theme: { gutter } }) => `

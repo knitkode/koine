@@ -2,7 +2,8 @@ import {
   forwardRef,
   useCallback,
   useEffect,
-  /* useId, */ useRef,
+  useId,
+  useRef,
   useState,
 } from "react";
 import { type MotionProps } from "framer-motion";
@@ -13,7 +14,6 @@ import {
   type WithComponents,
   type Simplify,
 } from "../helpers";
-import { useId } from "../hooks/useId";
 
 export type OwnProps = React.ComponentPropsWithoutRef<"details"> & {
   open?: boolean;

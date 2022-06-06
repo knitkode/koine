@@ -12,8 +12,8 @@
         "tsConfig": "packages/react/tsconfig.lib.json",
         "project": "packages/react/package.json",
         "main": "packages/react/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "updateBuildableProjectDepsInPackageJson": "dependencies",
+        "buildableProjectDepsInPackageJsonType": "peerDependencies",
+        "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/react/*.md", "packages/react/*.d.ts"]
       }
     },
