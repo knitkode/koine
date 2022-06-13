@@ -72,19 +72,22 @@ export function transformToUrlPathname(toPathname?: string) {
 /**
  * Get parsed query parameters as object dictionary (from URL or given query string)
  *
- * @param queryString A full query string that starts with a `?`, e.g. `?myparam=x`.
- *                    It defaults to reading the current URL query string with
+ * @param url A URL which contains a  `?`, e.g. `?myparam=x` or `https://a.com?myparams=x`.
+ *                    If not provided it defaults reading the current URL query string with
  *                    `location.search`. Through this argument you can use this
  *                    same function to parse, for instance, the query params of
  *                    the `href` of a `<a href="...">` HTML tag.
  *
  */
-export function getUrlQueryParams<T extends AnyQueryParams>(
-  queryString?: string
+export function getUrlQueryParams<T extends NonNullable<AnyQueryParams>>(
+  url?: string
 ) {
   let params = {};
-  let search = queryString || isBrowser ? location.search : "";
-  search = search.substring(1);
+  const search = url
+    ? url.split("?")?.[1]
+    : isBrowser
+    ? location.search.substring(1)
+    : "";
 
   if (!search) {
     return {} as T;
@@ -95,9 +98,9 @@ export function getUrlQueryParams<T extends AnyQueryParams>(
     const paramsAsObj = `{"${search
       .replace(/&/g, '","')
       .replace(/=/g, '":"')}"}`;
-    params = JSON.parse(paramsAsObj, (key, value) => {
-      return key === "" ? value : decodeURIComponent(value);
-    });
+    params = JSON.parse(paramsAsObj, (key, value) =>
+      key === "" ? value : decodeURIComponent(value)
+    );
   } catch (e) {
     // do nothing or warn on process.env["NODE_ENV"] !== "production"
   }
@@ -113,11 +116,10 @@ export function getUrlQueryParams<T extends AnyQueryParams>(
  * Given a pathname like: `"/en/{prefix}/{collection}/{slug}"` we obtain
  * `[locale, prefix, collection, slug]`
  */
-export function getUrlPathnameParts(urlPathname = "") {
-  if (isBrowser && !urlPathname) {
-    urlPathname = location.pathname;
-  }
-  return urlPathname
+export function getUrlPathnameParts(pathname = "") {
+  pathname = pathname || isBrowser ? location.pathname : "";
+
+  return pathname
     .replace(/^\//, "")
     .split("/")
     .filter((part) => part);
@@ -169,8 +171,9 @@ export function changeUrlPath(
  * Change current URL query parameters, it uses `history`.
  *
  * @param replace Replace URL instead of pushing it in the history stack. By default it pushes it.
+ * @returns The query string with initial `?`
  */
-export function changeUrlParams(
+export function navigateToParams(
   params: string | AnyQueryParams = {},
   replace?: boolean
 ) {
@@ -193,11 +196,11 @@ export function changeUrlParams(
  *
  * @param replace Replace URL instead of pushing it in the history stack. By default it pushes it.
  */
-export function mergeUrlParams(
+export function navigateToMergedParams(
   params: NonNullable<AnyQueryParams> = {},
   replace?: boolean
 ) {
-  return changeUrlParams(
+  return navigateToParams(
     mergeUrlQueryParams(getUrlQueryParams(), params),
     replace
   );
@@ -208,7 +211,7 @@ export function mergeUrlParams(
  *
  * @param replace Replace URL instead of pushing it in the history stack. By default it pushes it.
  */
-export function removeUrlParam(paramName?: string, replace?: boolean) {
+export function navigateWithoutUrlParam(paramName?: string, replace?: boolean) {
   const params: NonNullable<AnyQueryParams> = {};
   const currentParams = getUrlQueryParams();
   for (const key in currentParams) {
@@ -217,7 +220,7 @@ export function removeUrlParam(paramName?: string, replace?: boolean) {
     }
   }
 
-  return changeUrlParams(params, replace);
+  return navigateToParams(params, replace);
 }
 
 /**
@@ -253,7 +256,7 @@ export function updateUrlQueryParams(
 ) {
   const parts = url.split("?");
   const allParams = parts[1]
-    ? mergeUrlQueryParams(getUrlQueryParams(`?${parts[1]}`), newParams)
+    ? mergeUrlQueryParams(getUrlQueryParams(url), newParams)
     : newParams;
   return parts[0] + buildUrlQueryString(allParams);
 }
@@ -305,35 +308,60 @@ export function isExternalUrl(url: string, currentUrl?: string) {
 }
 
 /**
- * It updates the `location.hash` with the given query params, it uses `location`
+ * It updates the `location.hash` with the given query params, it uses `location.hash`
+ * if a second argument `hash` is not provded
  */
-export function changeUrlHashParams(params: string | AnyQueryParams = {}) {
-  const hashQueryLess = getUrlHashPathname();
+export function navigateToHashParams(
+  params: string | AnyQueryParams = {},
+  hash = ""
+) {
+  const useLocation = !hash;
+  hash = hash || location.hash;
+  const hashQueryLess = getUrlHashPathname(hash);
   const queryString =
     typeof params === "string" ? params : buildUrlQueryString(params);
-  location.hash = "#/" + hashQueryLess + queryString;
+  const newHash = "#/" + hashQueryLess + queryString;
+  if (useLocation) {
+    location.hash = newHash;
+  }
 
-  return queryString;
-}
-
-export function mergeUrlHashParams(params: NonNullable<AnyQueryParams> = {}) {
-  return changeUrlHashParams(mergeUrlQueryParams(getUrlHashParams(), params));
+  return newHash;
 }
 
 /**
- * It reads the "query params" within the `location.hash`
+ * It updates the "query params" within the `location.hash`, it uses `location`
  */
-export function getUrlHashParams<T extends AnyQueryParams>() {
-  const hashParts = location.hash.split("?");
+export function navigateToMergedHashParams(
+  params: NonNullable<AnyQueryParams> = {},
+  hash = ""
+) {
+  return navigateToHashParams(
+    mergeUrlQueryParams(getUrlHashParams(hash), params),
+    hash
+  );
+}
+
+/**
+ * It returns the "query params" as an object extracting it from the given `hash`
+ *string or, if not provided, failling back reading the `location.hash`
+ */
+export function getUrlHashParams<T extends NonNullable<AnyQueryParams>>(
+  hash = ""
+) {
+  hash = hash || location.hash;
+  const hashParts = hash.split("?");
   if (hashParts.length >= 1) {
     return Object.fromEntries(new URLSearchParams(hashParts[1])) as T;
   }
-  return {} as never;
+  return {} as T;
 }
 
 /**
- * It reads the "pathname" within the `location.hash`
+ * It returns the "pathname" cleaned up from the `#` and the initial slashes
+ *  extracting it from the given `hash` string or, if not provided, failling
+ * back reading the `location.hash`
  */
-export function getUrlHashPathname() {
-  return location.hash.split("?")[0].replace(/^#\//, "");
+export function getUrlHashPathname(hash = "") {
+  hash = hash || location.hash;
+  return hash.split("?")[0].replace(/^#\//, "");
 }
