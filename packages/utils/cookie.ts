@@ -344,7 +344,7 @@ export function setCookie<T extends string = string>(
     // not including, the first %x3B (";") character.
     // ...
     stringifiedAttributes +=
-      "=" + (attributes[attrName] as string).split(";")[0];
+      "=" + (String(attributes[attrName]) as string).split(";")[0];
   }
 
   return (document.cookie =
