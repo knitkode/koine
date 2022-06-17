@@ -97,7 +97,6 @@ declare namespace Koine {
  * the `koine` ecosystem. For instance Google Analytics globally available
  * variables.
  */
-
-declare const gtag: (
-  ...args: Record<string, unknown>[]
-) => Record<string, unknown>;
+declare interface Window {
+  gtag: (...args: Record<string, unknown>[]) => Record<string, unknown>;
+}

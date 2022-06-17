@@ -28,7 +28,6 @@
 
 export * from "./accentSets";
 export * from "./addOrReplaceAtIdx";
-export * from "./analytics-google";
 export * from "./arrayToLookup";
 export * from "./buildUrlQueryString";
 export * from "./changeUrlPath";
@@ -108,6 +107,7 @@ export * from "./navigateToParams";
 export * from "./navigateWithoutUrlParam";
 export * from "./normaliseUrlPathname";
 export * from "./normaliseUrl";
+export * from "./pageview";
 export * from "./parseCookie";
 export * from "./parseURL";
 export * from "./randomInt";
