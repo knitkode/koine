@@ -14,7 +14,7 @@ import {
 import ModalUnstyled from "@mui/base/ModalUnstyled";
 import ClickAwayListener from "@mui/base/ClickAwayListener";
 import { usePopper, type PopperChildrenProps } from "react-popper";
-import { clsx } from "../clsx";
+import { clsx } from "@koine/utils/clsx";
 
 const MenuRoot = m.div;
 
@@ -80,6 +80,7 @@ export const Menu = forwardRef(function Menu(props: MenuProps, ref) {
     getItemState,
   } = useMenu({
     listboxId: id,
+    // @ts-expect-error fix if we are going to use all this...
     listboxRef: setPopperElement,
     // these two make the Tab key behaviour correct, closing the menu on Tab
     // press and re-focusing the Button trigger element

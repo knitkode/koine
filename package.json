@@ -1,6 +1,6 @@
 {
   "name": "koine",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
@@ -46,6 +46,7 @@
     "react-hook-form": "^7.31.3",
     "react-icons": "^4.4.0",
     "react-is": "^16.8 || ^17 || ^18",
+    "react-popper": "^2.3.0",
     "react-swipeable": "^7.0.0",
     "regenerator-runtime": "^0.13.9",
     "styled-components": "^5.3.5",

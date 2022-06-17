@@ -1,14 +1,15 @@
 import React, { forwardRef } from "react";
 import { useMenuItem } from "@mui/base/MenuItemUnstyled";
 // import { useMenuItem } from "./useMenuItem";
-import { clsx } from "../clsx";
-import { type MenuItemsProps } from "../Menu";
+import { clsx } from "@koine/utils/clsx";
+import { type MenuItemsProps } from "../Menu/MenuMui";
+import { Polymorphic } from "../typings";
 
 export type MenuItemProps = React.PropsWithChildren<Partial<MenuItemsProps>>;
 
 export const MenuItem = forwardRef(function MenuItem<
   T extends React.ElementType = "button"
->(props: PolymorphicComponentProps<T, MenuItemProps>, ref: PolymorphicRef<T>) {
+>(props: Polymorphic.Props<T, MenuItemProps>, ref: Polymorphic.Ref<T>) {
   const {
     as: As = "button",
     children,
@@ -30,6 +31,6 @@ export const MenuItem = forwardRef(function MenuItem<
       {children}
     </As>
   );
-}) as PolymorphicComponentForwarded<"button", MenuItemProps>;
+}) as Polymorphic.ComponentForwarded<"button", MenuItemProps>;
 
 export default MenuItem;

@@ -208,6 +208,7 @@ export function withKoine({
         // "@koine/utils/?(((\\w*)?/?)*)": {
         //   transform: "@koine/utils/{{ matches.[1] }}/{{member}}",
         // },
+        "@koine/utils": { transform: "@koine/utils/{{member}}" },
       },
     },
     // @see https://github.com/vercel/next.js/issues/7322#issuecomment-887330111

@@ -10,7 +10,7 @@ import { unstable_useForkRef as useForkRef } from "@mui/utils";
 import { MenuUnstyledContext } from "@mui/base/MenuUnstyled";
 import { UseMenuItemParameters } from "@mui/base/MenuItemUnstyled";
 
-import { unstable_useIsFocusVisible as useIsFocusVisible } from "@mui/utils";
+// import { unstable_useIsFocusVisible as useIsFocusVisible } from "@mui/utils";
 
 export function useMenuItem(props: UseMenuItemParameters) {
   const { disabled = false, ref, label } = props;
