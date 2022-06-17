@@ -24,8 +24,8 @@ type KoineApiMethodHookSWR<
         Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >
     : SWRMutationConfiguration<
-        Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
-        Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
         TEndpoint
       >
@@ -35,8 +35,8 @@ type KoineApiMethodHookSWR<
       Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
     >
   : SWRMutationResponse<
-      Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
-      Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>,
       Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
       TEndpoint
     >;
