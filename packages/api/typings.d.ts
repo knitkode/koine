@@ -27,7 +27,8 @@ declare namespace Koine.Api {
      * @default { credentials: "include", referrerPolicy: "no-referrer" }
      */
     request?: Omit<RequestInit, "body" | "headers" | "method">;
-    adapter?: ResponseAdapter;
+    transformRequest?: RequestTransformer;
+    transformResponse?: ResponseTransformer;
     shouldThrow?: boolean;
   };
 
@@ -298,7 +299,9 @@ declare namespace Koine.Api {
         data: TResponseFail;
       };
 
-  type ResponseAdapter = <
+  type RequestTransformer = (request: RequestInit) => RequestInit;
+
+  type ResponseTransformer = <
     TResponseOk extends ResponseOk = ResponseOk,
     TResponseFail extends ResponseFailed = ResponseFailed
   >(

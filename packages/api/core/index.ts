@@ -29,7 +29,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   options?: Koine.Api.ClientOptions
 ) => {
   const {
-    adapter: adapterBase,
+    transformRequest: transformRequestBase,
+    transformResponse: transformResponseBase,
     request: requestBase = {
       credentials: "include",
       referrerPolicy: "no-referrer",
@@ -74,11 +75,12 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           request = requestBase,
           headers = {},
           timeout = 10000,
-          adapter = adapterBase,
+          transformRequest = transformRequestBase,
+          transformResponse = transformResponseBase,
           shouldThrow = shouldThrowBase,
         } = options || {};
 
-        const requestInit: RequestInit = {
+        let requestInit: RequestInit = {
           method: method.toUpperCase(),
           ...request,
           headers: {
@@ -100,6 +102,11 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           timeoutId = setTimeout(() => controller.abort(), timeoutNumber);
           requestInit.signal = controller.signal;
         }
+
+        if (transformRequest) {
+          requestInit = transformRequest(requestInit);
+        }
+
         if (params) {
           // FIXME: ts-expect-error this assertion is not the best, but nevermind for now
           // url += buildUrlQueryString(params as unknown as Koine.Api.RequestParams);
@@ -129,8 +136,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
 
         if (shouldThrow) {
           try {
-            if (adapter) {
-              result = await adapter<TResponseOk, TResponseFail>(
+            if (transformResponse) {
+              result = await transformResponse<TResponseOk, TResponseFail>(
                 response,
                 options || {}
               );
@@ -142,8 +149,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             throw { e };
           }
         } else {
-          if (adapter) {
-            result = await adapter<TResponseOk, TResponseFail>(
+          if (transformResponse) {
+            result = await transformResponse<TResponseOk, TResponseFail>(
               response,
               options || {}
             );
