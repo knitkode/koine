@@ -1,4 +1,4 @@
-import type { TranslateLoose } from "../useT";
+import type { TranslateLoose } from "../types";
 import type { Option } from "@koine/react";
 
 export function translationAsOptions(

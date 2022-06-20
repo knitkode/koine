@@ -83,13 +83,8 @@ declare namespace Koine {
    * - `{ComponentName}`: pascal cased for **components** specific data
    */
   interface NextTranslations {
-    "~": Record<string, string>;
-    _: Record<string, string>;
+    [key: string]: any;
   }
-  // interface NextTranslations {
-  //   "~": Record<string, string>;
-  //   _: Record<string, string>;
-  // }
 }
 
 /**

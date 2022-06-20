@@ -1,19 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 
-/**
- * @file
- *
- * About the typescript support for translation strings @see:
- * - https://github.com/vinissimus/next-translate/issues/721
- */
 import getTranslation from "next-translate/getT";
-import type { Translate } from "../useT";
+import type { Translate, TranslateNamespace } from "../types";
 
 export type GetT = <
-  TNamespace extends keyof Koine.NextTranslations | undefined
+  TNamespace extends TranslateNamespace | undefined = undefined
 >(
   locale?: string,
   namespace?: TNamespace
 ) => Promise<Translate<TNamespace>>;
 
+/**
+ * **NOTE**: To make typescript work nicely here make sure to enable
+ * [`resolveJsonModule`](https://www.typescriptlang.org/tsconfig#resolveJsonModule)
+ * in your `tsconfig.json` file.
+ */
 export const getT = getTranslation as GetT;

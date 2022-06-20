@@ -4,3 +4,4 @@ export * from "./translationAsOptions";
 export * from "./useDateFormat";
 export * from "./useLocale";
 export * from "./useT";
+export * from "./types";

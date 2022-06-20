@@ -79,8 +79,8 @@ function createUseApi<
         >;
       };
       const config = _config as SWRConfiguration<
-        Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>
-        // Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
+        Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >;
 
       // <Data = any, Error = any>(key: Key, config: SWRConfiguration<Data, Error, Fetcher<Data>> | undefined): SWRResponse<Data, Error>;
