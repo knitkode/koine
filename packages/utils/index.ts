@@ -51,7 +51,6 @@ export * from "./getUrlHashParams";
 export * from "./getUrlHashPathname";
 export * from "./getUrlPathnameParts";
 export * from "./getUrlQueryParams";
-export * from "./index";
 export * from "./isAnyObject";
 export * from "./isArray";
 export * from "./isBlob";
