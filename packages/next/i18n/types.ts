@@ -116,10 +116,10 @@ export type TranslationsAllPaths = {
  * Unlike in `next-translate` we add passing some predefined arguments as
  * shortcuts for common use cases:
  * - `"obj"` as a shortcut for `{ returnObjects: true }`
- * - `"safe"` as a shortcut for `{ fallback: "" }`
+ * - `""` as a shortcut for `{ fallback: "" }`
  *
  */
-export type TranslationShortcut = "obj" | "safe";
+export type TranslationShortcut = "obj" | "";
 
 /**
  * Query object to populate the returned translated string interpolating data

@@ -40,10 +40,10 @@ export function useT<TNamespace extends TranslateNamespace>(
       ): TReturn {
         return t(
           namespace ? `${namespace}:${s}` : s,
-          q === "obj" || q === "safe" ? null : q,
+          q === "obj" || q === "" ? null : q,
           q === "obj" || o === "obj"
             ? { returnObjects: true }
-            : q === "safe" || o === "safe"
+            : q === "" || o === ""
             ? { fallback: "" }
             : o
           // ) as TReturn extends (undefined | never | unknown) ? TranslateReturn<TranslationQuery, TranslationOptions> : TReturn;
