@@ -11,8 +11,8 @@ import type {
 } from "../types";
 
 /**
- * Wrap `next-translate` useTranslations for type safet and adding the `obj`
- * second argument shortcut for `{ returnObjects: true }`
+ * Wrap `next-translate` useTranslations for type safety and adds TranslationShortcut
+ * as second/thir argument.
  *
  * @see https://github.com/vinissimus/next-translate/issues/513#issuecomment-779826418
  *
@@ -33,17 +33,22 @@ export function useT<TNamespace extends TranslateNamespace>(
   const t = useTranslation().t;
   const tMemoized = useMemo(
     () =>
-      <TReturn = string,>(
+      function <TReturn = string>(
         s: TranslationsPaths<TranslationsDictionary[TNamespace], true>,
         q?: TranslationQuery,
         o?: TranslationOptions
-      ): TReturn =>
-        t(
+      ): TReturn {
+        return t(
           namespace ? `${namespace}:${s}` : s,
-          q === "obj" ? null : q,
-          q === "obj" || o === "obj" ? { returnObjects: true } : o
+          q === "obj" || q === "safe" ? null : q,
+          q === "obj" || o === "obj"
+            ? { returnObjects: true }
+            : q === "safe" || o === "safe"
+            ? { fallback: "" }
+            : o
           // ) as TReturn extends (undefined | never | unknown) ? TranslateReturn<TranslationQuery, TranslationOptions> : TReturn;
-        ),
+        );
+      },
     [t, namespace]
   );
   return tMemoized;

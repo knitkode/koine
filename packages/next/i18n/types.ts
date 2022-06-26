@@ -113,27 +113,38 @@ export type TranslationsAllPaths = {
 }[Extract<keyof TranslationsDictionary, string>];
 
 /**
- * Query object to populate the returned translated string interpolating data.
- *  Unlike in `next-translate` we allow passing just `obj` as a shortcut for
- * `{ returnObjects: true }`. In such case the thrid argument will not exists.
+ * Unlike in `next-translate` we add passing some predefined arguments as
+ * shortcuts for common use cases:
+ * - `"obj"` as a shortcut for `{ returnObjects: true }`
+ * - `"safe"` as a shortcut for `{ fallback: "" }`
  *
+ */
+export type TranslationShortcut = "obj" | "safe";
+
+/**
+ * Query object to populate the returned translated string interpolating data
+ * or a TranslationShortcut.
+ *
+ * NOTE: when using a shortcut passing TranslationOptions to `t()` is not supported
  * TODO: type safe this behaviour of the third argument (options).
  */
 export type TranslationQuery =
   | undefined
   | null
-  | "obj"
+  | TranslationShortcut
   | {
       [key: string]: string | number | boolean;
     };
 
 /**
- * Opions of the translate function. Unlike in `next-translate` we allow passing
- * just `obj` as a shortcut for `{ returnObjects: true }`.
+ * Opions of the translate function or a TranslationShortcut.
+ *
+ * NOTE: when using a shortcut passing TranslationOptions to `t()` is not supported
+ * TODO: type safe this behaviour of the third argument (options).
  */
 export type TranslationOptions =
   | undefined
-  | "obj"
+  | TranslationShortcut
   | {
       returnObjects?: boolean;
       fallback?: string | string[];
