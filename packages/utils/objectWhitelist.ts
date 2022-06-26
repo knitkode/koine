@@ -4,7 +4,7 @@
  *
  * @category objects
  */
-export function whitelistObject<T extends object, Keys extends (keyof T)[]>(
+export function objectWhitelist<T extends object, Keys extends (keyof T)[]>(
   object: T,
   keys: Keys
 ) {
@@ -17,4 +17,4 @@ export function whitelistObject<T extends object, Keys extends (keyof T)[]>(
   return output as Pick<T, Keys[number]>;
 }
 
-export default whitelistObject;
+export default objectWhitelist;

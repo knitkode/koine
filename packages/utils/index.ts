@@ -106,6 +106,8 @@ export * from "./navigateToParams";
 export * from "./navigateWithoutUrlParam";
 export * from "./normaliseUrlPathname";
 export * from "./normaliseUrl";
+export * from "./objectBlacklist";
+export * from "./objectWhitelist";
 export * from "./pageview";
 export * from "./parseCookie";
 export * from "./parseURL";
@@ -135,7 +137,6 @@ export * from "./updateLinkParams";
 export * from "./updateUrlQueryParams";
 export * from "./uuid";
 export * from "./wait";
-export * from "./whitelistObject";
 
 export type {
   Primitive,
