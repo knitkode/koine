@@ -37,6 +37,7 @@ export * from "./clamp";
 export * from "./clsx";
 export * from "./convertRange";
 export * from "./cookie";
+export * from "./createStorage";
 export * from "./decode";
 export * from "./Defer";
 export * from "./Emitter";
