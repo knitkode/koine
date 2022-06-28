@@ -1,4 +1,3 @@
-import React from "react";
 import { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { AppHead } from "../../AppHead";
@@ -12,14 +11,14 @@ export type NextAppProps = AppProps & AppThemeProps & AppMainProps;
  */
 export const NextApp = (props: NextAppProps) => {
   return (
-    <React.StrictMode>
+    <>
       <AppHead />
       <SessionProvider session={props.pageProps.session}>
         <AppTheme {...props}>
           <AppMain {...props} />
         </AppTheme>
       </SessionProvider>
-    </React.StrictMode>
+    </>
   );
 };
 

@@ -32,7 +32,7 @@ export function toPath(urlOrPathname = "") {
  * - Removes subsequent slashes
  * - Removing initial and ending slashes
  */
-export function normaliseUrlPathname(pathname: string) {
+export function normaliseUrlPathname(pathname = "") {
   return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
 }
 
@@ -41,7 +41,7 @@ export function normaliseUrlPathname(pathname: string) {
  *
  * @see {@link normaliseUrlPathname}
  */
-export function encodePathname(pathname: string) {
+export function encodePathname(pathname = "") {
   const parts = normaliseUrlPathname(pathname).split("/");
 
   return parts
@@ -54,15 +54,21 @@ export function encodePathname(pathname: string) {
  */
 export function getPathRedirect(
   locale: string,
-  localisedPathname: string,
-  templateName: string,
+  pathname: string,
+  template: string,
   dynamic?: boolean,
   permanent?: boolean
 ) {
   const suffix = dynamic ? `/:slug*` : "";
+  const source = `/${locale ? locale + "/" : ""}${encodePathname(
+    pathname
+  )}${suffix}`;
+  const destination = `/${encodePathname(template)}${suffix}`;
+  // console.log(`redirect pathname "${source}" to template "${destination}"`);
+
   return {
-    source: `/${locale}/${encodePathname(localisedPathname)}${suffix}`,
-    destination: `/${encodePathname(templateName)}${suffix}`,
+    source,
+    destination,
     permanent: Boolean(permanent),
     locale: false as const,
   };
@@ -71,14 +77,17 @@ export function getPathRedirect(
 /**
  */
 export function getPathRewrite(
-  source: string,
-  destination: string,
+  pathname: string,
+  template: string,
   dynamic?: boolean
 ) {
   const suffix = dynamic ? `/:path*` : "";
+  const source = `/${encodePathname(pathname)}${suffix}`;
+  const destination = `/${encodePathname(template)}${suffix}`;
+  // console.log(`rewriting pathname "${source}" to template "${destination}"`);
   return {
-    source: `/${encodePathname(source)}${suffix}`,
-    destination: `/${encodePathname(destination)}${suffix}`,
+    source,
+    destination,
   };
 }
 

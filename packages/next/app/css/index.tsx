@@ -1,4 +1,3 @@
-import React from "react";
 import { AppProps } from "next/app";
 import { AppHead } from "../AppHead";
 import { AppTheme, AppThemeProps } from "./AppTheme";
@@ -56,12 +55,12 @@ export type NextAppProps = AppProps & AppThemeProps & AppMainProps;
  */
 export const NextApp = (props: NextAppProps) => {
   return (
-    <React.StrictMode>
+    <>
       <AppHead />
       <AppTheme {...props}>
         <AppMain {...props} />
       </AppTheme>
-    </React.StrictMode>
+    </>
   );
 };
 
