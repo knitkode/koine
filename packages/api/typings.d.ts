@@ -204,6 +204,15 @@ declare namespace Koine.Api {
      * @default { credentials: "include", referrerPolicy: "no-referrer" }
      */
     request?: Omit<RequestInit, "body" | "headers" | "method">;
+    /**
+     * A dictionary to dynamically interpolate endpoint url values, e.g.:
+     *
+     * ```
+     * "user/{id}" endpoint with { path: { id: "12" }} results in a call
+     * to the endpoint "user/12"
+     * ```
+     */
+    path?: Record<string, string | number>;
   };
 
   /**

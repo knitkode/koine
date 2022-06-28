@@ -71,6 +71,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
       ) => {
         const {
           json,
+          path,
           params,
           request = requestBase,
           headers = {},
@@ -88,6 +89,12 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             ...headers,
           },
         };
+
+        if (path && Object.keys(path).length) {
+          for (const key in path) {
+            endpoint.replace(`{${key}}`, path[key].toString());
+          }
+        }
 
         const timeoutNumber = Number(timeout);
         let controller: AbortController;
