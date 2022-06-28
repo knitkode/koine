@@ -1,8 +1,7 @@
 /**
  * @file 
  * 
- * TODO: libraries to encapsulate and re-export from here,
- * the selection is based on:
+ * Libraries to encapsulate and re-export from here, the selection is based on:
  * 
  * [x] full typescript support
  * [x] treeshake-ability
@@ -24,6 +23,14 @@
  * 
  * About utilities useful examples @see:
  * - https://github.com/chakra-ui/chakra-ui/blob/main/packages/utils/src
+ * 
+ * TODO:
+ * We could also re-exports direct dependencies of packages that we often use
+ * anyway like [those of `yup`](https://github.com/jquense/yup/blob/master/package.json#L103):
+ * 
+ * - [tiny-case](https://github.com/jquense/tiny-case)
+ * - [property-expr](https://github.com/jquense/expr/blob/master/index.js)
+ * - [toposort](https://github.com/marcelklehr/toposort)
  */
 
 export * from "./accentSets";
