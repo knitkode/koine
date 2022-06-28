@@ -1,4 +1,15 @@
 {
   "name": "@koine/next",
-  "sideEffects": false
+  "sideEffects": false,
+  "peerDependenciesMeta": {
+    "@mui/material": {
+      "optional": true
+    },
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/server": {
+      "optional": true
+    }
+  }
 }
