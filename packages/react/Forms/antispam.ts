@@ -1,5 +1,4 @@
-import type { ObjectShape } from "yup/lib/object";
-import { object } from "yup";
+import { object, ObjectShape } from "@kuus/yup";
 import { encode, decode, isUndefined } from "@koine/utils";
 
 /**
@@ -10,6 +9,8 @@ import { encode, decode, isUndefined } from "@koine/utils";
  *
  * We skip the names prefixed wth an underscore which are considered programmatic
  * form data not created by user input.
+ *
+ * FIXME: types https://github.com/jquense/yup/issues/1700
  */
 export function encodeForm<T extends ObjectShape = {}>(validationRules: T) {
   const encoded = {} as Record<string, T[keyof T]>;

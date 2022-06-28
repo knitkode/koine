@@ -3,7 +3,7 @@ import { useFormState } from "react-hook-form";
 import { decode } from "@koine/utils";
 import type { Translate } from "../../types";
 import type { FormControl } from "../helpers";
-import { Field } from "./Field";
+import { Field, type FieldError } from "./Field";
 import { FieldHint } from "./FieldHint";
 import { InputHoneypot } from "../styles";
 
@@ -51,7 +51,7 @@ export const FieldControl = ({
 }: FieldControlProps) => {
   const name = encode ? decode(maybeEncodedName) : maybeEncodedName;
   const { errors } = useFormState({ name, control });
-  const error = showError && errors[name] ? errors[name] : null;
+  const error = showError && errors[name] ? (errors[name] as FieldError) : null;
 
   const FormFieldContent = useMemo(
     () =>

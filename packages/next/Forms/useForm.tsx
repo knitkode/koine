@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { UseFormProps, FieldValues } from "react-hook-form";
-import type { ObjectSchema } from "yup";
+import type { ObjectSchema } from "@kuus/yup";
 import { useForm as _useForm } from "react-hook-form";
 import { yupResolver as resolver } from "@hookform/resolvers/yup";
 import { type TranslateLoose } from "../i18n";

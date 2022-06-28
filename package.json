@@ -1,6 +1,6 @@
 {
   "name": "koine",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
@@ -26,6 +26,7 @@
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.9.3",
     "@hookform/resolvers": "^2.9.3",
+    "@kuus/yup": "^1.0.0-beta.4",
     "@mui/base": "^5.0.0-alpha.87",
     "@mui/material": "^5.8.6",
     "@tiptap/react": "^2.0.0-beta.114",
@@ -52,8 +53,7 @@
     "swr": "^2.0.0-beta.5",
     "tailwindcss": "^3.1.4",
     "tslib": "^2.4.0",
-    "type-fest": "^2.14.0",
-    "yup": "^1.0.0-beta.4"
+    "type-fest": "^2.14.0"
   },
   "devDependencies": {
     "@babel/core": "7.18.6",

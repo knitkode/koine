@@ -43,25 +43,22 @@ export const FieldRoot = styled(FieldBase)<{ $danger: boolean }>`
  * We assume these as standard translations keys without needing to pass
  * a string into the validation, e.g. `required("mySpecialKey")`.
  */
-const YUP_ERROR_TYPES_AS_KEYS = {
-  required: 1,
-  email: 1,
-} as const;
+type FieldErrorType = "required" | "email" | "plain" | string;
 
-type FieldError = {
+export type FieldError = {
   /**
    * use `type: "plain"` when the error message should not act as a translation
    * key, that is often the case with server side error messages from external
    * APIs.
    */
-  type?: keyof typeof YUP_ERROR_TYPES_AS_KEYS | "plain";
+  type: FieldErrorType;
   message: string;
 };
 
 export type FieldProps = React.ComponentPropsWithoutRef<"div"> & {
   name?: string;
   t?: Translate;
-  error?: RHF_FieldError;
+  error?: null | RHF_FieldError;
   errors?: RHF_FieldErrors;
 };
 
@@ -73,15 +70,13 @@ export const Field = ({
   children,
   ...props
 }: FieldProps) => {
-  const err: FieldError = errors && name ? errors[name] : error;
+  const err = (errors && name ? errors[name] : error) as FieldError;
 
   let msg = "";
 
   if (err) {
     if (name && t && err.type !== "plain") {
-      const translationKey =
-        err.type && YUP_ERROR_TYPES_AS_KEYS[err.type] ? err.type : "";
-      msg = t(`errors.${name}.${translationKey || err.message}`);
+      msg = t(`errors.${name}.${err.type || err.message}`);
     } else {
       msg = err.message;
     }
