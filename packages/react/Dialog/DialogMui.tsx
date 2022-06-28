@@ -41,7 +41,7 @@ export type Components = {
   };
   Backdrop: {
     type: "div";
-    props: ModalUnstyledProps["BackdropProps"] & {
+    props: /* ModalUnstyledProps["componentsProps"]["backdrop"] & */ {
       open?: OwnProps["open"];
     };
     motionable: true;
@@ -104,7 +104,7 @@ export const Body = "div" as unknown as Props["Body"];
 //   Body: _Body,
 //   ...props
 // }: KoineDialogProps) => (
-//   <Root BackdropComponent={Backdrop} onBackdropClick={props.onClose} {...props}>
+//   <Root components={{ Backdrop }} onBackdropClick={props.onClose} {...props}>
 //     <Container $scrollPaper={$scrollPaper}>
 //       <Paper aria-label={title || ""} $scrollPaper={$scrollPaper}>
 //         {title && <Header>{title}</Header>}
@@ -167,7 +167,7 @@ const DialogWithRef = forwardRef<HTMLDivElement, KoineDialogProps>(
 
     return (
       <Root
-        BackdropComponent={Backdrop}
+        components={{ Backdrop }}
         onClick={handleBackdropClick}
         onClose={onClose}
         ref={ref}

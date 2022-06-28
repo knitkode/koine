@@ -139,7 +139,7 @@ export const Menu = forwardRef(function Menu(props: MenuProps, ref) {
       <AnimatePresence>
         {open && (
           <ModalUnstyled
-            BackdropComponent={MenuBackdrop}
+            components={{ Backdrop: MenuBackdrop }}
             onClose={close}
             onBackdropClick={close}
             open={open}

@@ -77,7 +77,7 @@ const Dialog = forwardRef<HTMLDivElement, KoineDialogProps>(function Dialog(
   return (
     <Root
       keepMounted
-      BackdropComponent={BackdropMotion}
+      components={{ Backdrop: BackdropMotion }}
       onClick={handleBackdropClick}
       onClose={onClose}
       ref={ref}
