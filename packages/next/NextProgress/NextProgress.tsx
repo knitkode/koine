@@ -3,7 +3,7 @@ import { useRouter, type Router } from "next/router";
 import { WithComponents, Simplify } from "@koine/react";
 
 // FIXME: workaround to re-create type that is not exported by next.js
-type RouteProperties = Parameters<Router["getRouteInfo"]>[5];
+type RouteProperties = Parameters<Router["getRouteInfo"]>[0]["routeProps"];
 
 type OwnProps = {
   /** @default 0.3 */

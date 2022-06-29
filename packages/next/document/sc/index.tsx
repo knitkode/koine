@@ -41,7 +41,6 @@ export class Document extends NextDocument {
       const initialProps = await NextDocument.getInitialProps(ctx);
       return {
         ...initialProps,
-        // @ts-expect-error FIXME: have they changed type?
         styles: (
           <React.Fragment>
             {initialProps.styles}
