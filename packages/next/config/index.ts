@@ -219,7 +219,14 @@ type KoineNextConfig = {
    * }
    * ```
    *
-   * NOTE:
+   * NOTE1:
+   * You cannot name your dynamic template file "index.tsx" when they have nested
+   * segments or the rewrites won't work. So while this is allowed:
+   * `/pages/cats/[category]/index.tsx` it is not when you also have e.g.:
+   * `/pages/cats/[category]/reviews.tsx`
+   * TODO: This might be fixable?
+   *
+   * NOTE2:
    * When `routes` is used be sure to pass before than the `i18n.defaultLocale`
    * configuration. That is used for localised routing. By default we set `i18n`
    * as such:
