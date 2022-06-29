@@ -1,6 +1,29 @@
 import type { NextConfig } from "next";
 import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 
+// type Route = string | Record<string, string | Record<string, string | Record<string, string | Record<string, string | Record<string, string>>>>>;
+type Route =
+  | string
+  | {
+      [key: string]: Route | string;
+    };
+type Routes = Record<string, Route>;
+
+/**
+ * Normalise pathname
+ *
+ * From a path like `/some//malformed/path///` it returns `some/malformed/path`
+ *
+ * - Removes subsequent slashes
+ * - Removing initial and ending slashes
+ * - Returns an empty string `"""` if only slashes are given
+ */
+export function normaliseUrlPathname(pathname = "") {
+  // with return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
+  // we would instead return a single slash if only slashes are given
+  return pathname.replace(/\/+\//g, "/").replace(/^\/*(.*?)\/*$/, "$1");
+}
+
 /**
  * Transform to path any absolute or relative URL
  *
@@ -9,9 +32,7 @@ import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
  *
  * From a path like `http://localhost/some//malformed/path///` it returns `/some/malformed/path`
  *
- * - just get the pathname form an absolute URL (if that is given)
- * - Removes subsequent slashes
- * - Removing initial and ending slashes
+ * @see {@link normaliseUrlPathname}
  */
 export function toPath(urlOrPathname = "") {
   let pathname = "";
@@ -21,19 +42,9 @@ export function toPath(urlOrPathname = "") {
   } catch (e) {
     pathname = urlOrPathname;
   }
-  return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
-}
-
-/**
- * Normalise pathname
- *
- * From a path like `/some//malformed/path///` it returns `some/malformed/path`
- *
- * - Removes subsequent slashes
- * - Removing initial and ending slashes
- */
-export function normaliseUrlPathname(pathname = "") {
-  return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
+  // with return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
+  // we would instead return a single slash if only slashes are given
+  return pathname.replace(/\/+\//g, "/").replace(/^\/*(.*?)\/*$/, "$1");
 }
 
 /**
@@ -51,20 +62,75 @@ export function encodePathname(pathname = "") {
 }
 
 /**
+ * It replaces `/[dynamic-slug]/` with the given replacer.
+ */
+function transformRoutePathname(rawPathname: string, replacer: string) {
+  const pathNameParts = rawPathname.split("/").filter((part) => !!part);
+  return pathNameParts
+    .map((part, _idx) => {
+      const isDynamic = part.startsWith("[") && part.endsWith("]");
+      part = isDynamic ? replacer : part;
+      // if (isDynamic && _idx === pathNameParts.length - 1) {
+      //   part += "*";
+      // }
+      return isDynamic ? part : encodeURIComponent(part);
+    })
+    .join("/");
+}
+
+/**
+ * Get flat key/value routes map dictionary
+ */
+function getRoutesMap(
+  map: Record<string, string> = {},
+  routes: Routes,
+  pathnameBuffer = "",
+  templateBuffer = ""
+) {
+  for (const key in routes) {
+    const pathOrNestedRoutes = routes[key];
+    const template = `${templateBuffer}/${key}`;
+    if (typeof pathOrNestedRoutes === "string") {
+      map[template] = pathOrNestedRoutes;
+    } else {
+      getRoutesMap(map, pathOrNestedRoutes, pathnameBuffer, template);
+    }
+  }
+
+  return map;
+}
+
+/**
+ * Get path rewrite
+ */
+export function getPathRewrite(pathname: string, template: string) {
+  pathname = transformRoutePathname(pathname, ":path");
+  template = transformRoutePathname(template, ":path");
+  const source = `/${normaliseUrlPathname(pathname)}`;
+  const destination = `/${normaliseUrlPathname(template)}`;
+  // console.log(`rewrite pathname "${source}" to template "${destination}"`);
+  return {
+    source,
+    destination,
+  };
+}
+
+/**
+ * Get path redirect
  */
 export function getPathRedirect(
-  locale: string,
+  locale = "",
   pathname: string,
   template: string,
-  dynamic?: boolean,
   permanent?: boolean
 ) {
-  const suffix = dynamic ? `/:slug*` : "";
-  const source = `/${locale ? locale + "/" : ""}${encodePathname(
-    pathname
-  )}${suffix}`;
-  const destination = `/${encodePathname(template)}${suffix}`;
-  // console.log(`redirect pathname "${source}" to template "${destination}"`);
+  template = transformRoutePathname(template, ":slug");
+  pathname = transformRoutePathname(pathname, ":slug");
+  const source = `/${normaliseUrlPathname(
+    (locale ? `/${locale}/` : "/") + template
+  )}`;
+  const destination = `/${normaliseUrlPathname(pathname)}`;
+  // console.log(`redirect template "${source}" to pathname "${destination}"`);
 
   return {
     source,
@@ -76,77 +142,43 @@ export function getPathRedirect(
 
 /**
  */
-export function getPathRewrite(
-  pathname: string,
-  template: string,
-  dynamic?: boolean
+export async function getRedirects(
+  defaultLocale: string,
+  routes: Routes,
+  permanent?: boolean,
+  debug?: boolean
 ) {
-  const suffix = dynamic ? `/:path*` : "";
-  const source = `/${encodePathname(pathname)}${suffix}`;
-  const destination = `/${encodePathname(template)}${suffix}`;
-  // console.log(`rewriting pathname "${source}" to template "${destination}"`);
-  return {
-    source,
-    destination,
-  };
-}
-
-/**
- */
-export async function getRedirects({
-  defaultLocale,
-  routes,
-  dynamicRoutes,
-  permanent,
-}: {
-  defaultLocale: string;
-  routes: Record<string, string>;
-  dynamicRoutes: Record<string, boolean>;
-  permanent?: boolean;
-}) {
   const redirects: Redirect[] = [];
+  const routesMap = getRoutesMap({}, routes);
 
-  Object.keys(routes).forEach((page) => {
-    const dynamic = dynamicRoutes[page];
-    if (routes[page] !== page) {
-      if (dynamic) {
-        redirects.push(
-          getPathRedirect(defaultLocale, page, routes[page], true, permanent)
-        );
-      } else {
-        redirects.push(
-          getPathRedirect(defaultLocale, page, routes[page], false, permanent)
-        );
-      }
+  Object.keys(routesMap).forEach((template) => {
+    const pathname = routesMap[template];
+
+    if (pathname !== template) {
+      redirects.push(
+        getPathRedirect(defaultLocale, pathname, template, permanent)
+      );
+      redirects.push(getPathRedirect("", pathname, template, permanent));
     }
   });
-  // console.log("redirects", redirects);
+  if (debug) console.log("redirects", redirects);
 
   return redirects;
 }
 
 /**
  */
-export async function getRewrites({
-  routes,
-  dynamicRoutes,
-}: {
-  routes: Record<string, string>;
-  dynamicRoutes: Record<string, boolean>;
-}) {
+export async function getRewrites(routes: Routes, debug?: boolean) {
   const rewrites: Rewrite[] = [];
+  const routesMap = getRoutesMap({}, routes);
 
-  Object.keys(routes).forEach((page) => {
-    const dynamic = dynamicRoutes[page];
-    if (routes[page] !== page) {
-      if (dynamic) {
-        rewrites.push(getPathRewrite(routes[page], page, true));
-      } else {
-        rewrites.push(getPathRewrite(routes[page], page));
-      }
+  Object.keys(routesMap).forEach((template) => {
+    const pathname = routesMap[template];
+    if (pathname !== template) {
+      rewrites.push(getPathRewrite(pathname, template));
     }
   });
-  // console.log("rewrites", rewrites);
+  if (debug) console.log("rewrites", rewrites);
 
   return rewrites;
 }
@@ -163,6 +195,51 @@ type KoineNextConfig = {
    * @default false
    */
   page?: boolean;
+  /**
+   * A JSON file containing the routes definition mapping template folders
+   * to localised slugs. It supports slugs's dynamic portions.
+   * All translated slugs needs to be defined starting from root `/`.
+   * The `require("...json")` file for each locale should look like:
+   *
+   * ```json
+   * {
+   *   "home": "/",
+   *   "products": {
+   *     "list": "/products",
+   *     "[category]": "/products/[category]",
+   *     "[tag]": {
+   *       "view": "/products/[category]/[tag]",
+   *       "related": "/products/[category]/[tag]/related"
+   *     }
+   *   },
+   *   "company": {
+   *     "about": "/about",
+   *     "contact": "/contact"
+   *   }
+   * }
+   * ```
+   *
+   * NOTE:
+   * When `routes` is used be sure to pass before than the `i18n.defaultLocale`
+   * configuration. That is used for localised routing. By default we set `i18n`
+   * as such:
+   * ```js
+   * {
+   *   // ...nextConfig,
+   *   i18n: {
+   *     defaultLocale: "en",
+   *     locales: ["en"],
+   *   }
+   * }
+   * ```
+   */
+  routes?: Routes;
+  /**
+   * Whether the routes redirecting should be permanent. Switch this on once you
+   * go live and the routes structure is stable.
+   */
+  permanent?: boolean;
+  debug?: boolean;
 };
 
 /**
@@ -176,14 +253,21 @@ type KoineNextConfig = {
  *                                          extension for next.js config option [`pageExtensions`](https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory)
  *                                          and it enables the same for `next-translate`.
  */
-export function withKoine({
-  nx = true,
-  svg = true,
-  sc = true,
-  page,
-  ...nextConfig
-}: NextConfig & KoineNextConfig = {}) {
-  nextConfig = {
+export function withKoine(
+  {
+    nx = true,
+    svg = true,
+    sc = true,
+    page,
+    routes,
+    permanent,
+    debug,
+    ...custom
+  }: NextConfig & KoineNextConfig = {
+    i18n: { locales: ["en"], defaultLocale: "en" },
+  } as NextConfig & KoineNextConfig
+) {
+  const nextConfig: NextConfig = {
     // @see https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory
     pageExtensions: page ? ["page.tsx", "page.ts"] : undefined,
     eslint: {
@@ -203,10 +287,10 @@ export function withKoine({
       // concurrentFeatures: true,
       // serverComponents: true,
       // reactRoot: true,
-      ...(nextConfig.experimental || {}),
+      ...(custom["experimental"] || {}),
       // @see https://nextjs.org/docs/advanced-features/compiler#modularize-imports
       modularizeImports: {
-        ...(nextConfig?.experimental?.modularizeImports || {}),
+        ...(custom?.["experimental"]?.modularizeImports || {}),
         // FIXME: make these work with the right file/folder structure?
         // "@koine/next/?(((\\w*)?/?)*)": {
         //   transform: "@koine/next/{{ matches.[1] }}/{{member}}",
@@ -222,8 +306,8 @@ export function withKoine({
     },
     // @see https://github.com/vercel/next.js/issues/7322#issuecomment-887330111
     reactStrictMode: true,
-    ...nextConfig,
-  } as NextConfig;
+    ...custom,
+  };
 
   if (svg) {
     if (nx) {
@@ -269,7 +353,54 @@ export function withKoine({
     };
   }
 
-  return nextConfig as NextConfig;
+  if (routes) {
+    // we pass the default values, so we can assert I guess
+    const defaultLocale = nextConfig?.i18n?.defaultLocale as string;
+
+    return {
+      ...nextConfig,
+      async redirects() {
+        const defaults = await getRedirects(
+          defaultLocale,
+          routes,
+          permanent,
+          debug
+        );
+        if (nextConfig.redirects) {
+          const customs = await nextConfig.redirects();
+          return [...defaults, ...customs];
+        }
+        return defaults;
+      },
+      async rewrites() {
+        const defaults = await getRewrites(routes, debug);
+
+        if (nextConfig.rewrites) {
+          const customs = await nextConfig.rewrites();
+
+          if (Array.isArray(customs)) {
+            return {
+              beforeFiles: defaults,
+              afterFiles: customs,
+              fallback: [],
+            };
+          }
+
+          return {
+            ...customs,
+            beforeFiles: [...defaults, ...(customs.beforeFiles || [])],
+          };
+        }
+        return {
+          afterFiles: [],
+          beforeFiles: defaults,
+          fallback: [],
+        };
+      },
+    };
+  }
+
+  return nextConfig;
 }
 
 export default withKoine;
