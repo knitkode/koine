@@ -33,9 +33,9 @@ function toVal(mix: any) {
 }
 
 /**
- * Class names utility, embedded from [clsx](https://github.com/lukeed/clsx)
+ * Class names utility
  *
- * @see https://github.com/lukeed/clsx
+ * @borrows [lukeed/clsx](https://github.com/lukeed/clsx)
  * @license [MIT: Luke Edwards](https://github.com/lukeed/clsx/blob/master/license)
  */
 export const clsx: (...args: ClassValue[]) => string = function () {

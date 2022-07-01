@@ -70,8 +70,14 @@ const ThemeContext = createContext<UseThemeProps>({
   themes: [],
 });
 
+/**
+ * @borrows [next-themes](https://github.com/pacocoursey/next-themes)
+ */
 export const useTheme = () => useContext(ThemeContext);
 
+/**
+ * @borrows [next-themes](https://github.com/pacocoursey/next-themes)
+ */
 export const ThemeProvider = ({
   forcedTheme,
   disableTransitionOnChange = false,
