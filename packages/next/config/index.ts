@@ -62,9 +62,26 @@ export function encodePathname(pathname = "") {
 }
 
 /**
- * It replaces `/[dynamic-slug]/` with the given replacer.
+ * It replaces `/{{ slug }}/` with the given replacer.
  */
 function transformRoutePathname(rawPathname: string, replacer: string) {
+  const pathNameParts = rawPathname.split("/").filter((part) => !!part);
+  return pathNameParts
+    .map((part, _idx) => {
+      const isDynamic = part.startsWith("{{") && part.endsWith("}}");
+      part = isDynamic ? replacer : part;
+      // if (isDynamic && _idx === pathNameParts.length - 1) {
+      //   part += "*";
+      // }
+      return isDynamic ? part : encodeURIComponent(part);
+    })
+    .join("/");
+}
+
+/**
+ * It replaces `/[slug]/` with the given replacer.
+ */
+function transformRouteTemplate(rawPathname: string, replacer: string) {
   const pathNameParts = rawPathname.split("/").filter((part) => !!part);
   return pathNameParts
     .map((part, _idx) => {
@@ -105,7 +122,7 @@ function getRoutesMap(
  */
 export function getPathRewrite(pathname: string, template: string) {
   pathname = transformRoutePathname(pathname, ":path");
-  template = transformRoutePathname(template, ":path");
+  template = transformRouteTemplate(template, ":path");
   const source = `/${normaliseUrlPathname(pathname)}`;
   const destination = `/${normaliseUrlPathname(template)}`;
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
@@ -124,7 +141,7 @@ export function getPathRedirect(
   template: string,
   permanent?: boolean
 ) {
-  template = transformRoutePathname(template, ":slug");
+  template = transformRouteTemplate(template, ":slug");
   pathname = transformRoutePathname(pathname, ":slug");
   const source = `/${normaliseUrlPathname(
     (locale ? `/${locale}/` : "/") + template
@@ -206,10 +223,10 @@ type KoineNextConfig = {
    *   "home": "/",
    *   "products": {
    *     "list": "/products",
-   *     "[category]": "/products/[category]",
+   *     "[category]": "/products/{{ category }}",
    *     "[tag]": {
-   *       "view": "/products/[category]/[tag]",
-   *       "related": "/products/[category]/[tag]/related"
+   *       "view": "/products/{{ category }}/{{ tag }}",
+   *       "related": "/products/{{ category }}/{{ tag }}/related"
    *     }
    *   },
    *   "company": {
