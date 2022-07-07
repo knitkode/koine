@@ -51,7 +51,8 @@ export const FieldControl = ({
 }: FieldControlProps) => {
   const name = encode ? decode(maybeEncodedName) : maybeEncodedName;
   const { errors } = useFormState({ name, control });
-  const error = showError && errors[name] ? (errors[name] as FieldError) : null;
+  const error =
+    showError && errors[name] ? (errors[name] as unknown as FieldError) : null;
 
   const FormFieldContent = useMemo(
     () =>
