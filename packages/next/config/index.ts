@@ -64,11 +64,14 @@ export function encodePathname(pathname = "") {
 /**
  * It replaces `/{{ slug }}/` with the given replacer.
  */
-function transformRoutePathname(rawPathname: string, replacer: string) {
+function transformRoutePathname(rawPathname: string) {
   const pathNameParts = rawPathname.split("/").filter((part) => !!part);
   return pathNameParts
     .map((part, _idx) => {
       const isDynamic = part.startsWith("{{") && part.endsWith("}}");
+      const replacer = isDynamic
+        ? `:${part.match(/{{(.+)}}/)?.[1].trim()}`
+        : "";
       part = isDynamic ? replacer : part;
       // if (isDynamic && _idx === pathNameParts.length - 1) {
       //   part += "*";
@@ -81,11 +84,14 @@ function transformRoutePathname(rawPathname: string, replacer: string) {
 /**
  * It replaces `/[slug]/` with the given replacer.
  */
-function transformRouteTemplate(rawPathname: string, replacer: string) {
+function transformRouteTemplate(rawPathname: string) {
   const pathNameParts = rawPathname.split("/").filter((part) => !!part);
   return pathNameParts
     .map((part, _idx) => {
       const isDynamic = part.startsWith("[") && part.endsWith("]");
+      const replacer = isDynamic
+        ? `:${part.match(/\[(.+)\]/)?.[1].trim()}`
+        : "";
       part = isDynamic ? replacer : part;
       // if (isDynamic && _idx === pathNameParts.length - 1) {
       //   part += "*";
@@ -121,8 +127,8 @@ function getRoutesMap(
  * Get path rewrite
  */
 export function getPathRewrite(pathname: string, template: string) {
-  pathname = transformRoutePathname(pathname, ":path");
-  template = transformRouteTemplate(template, ":path");
+  pathname = transformRoutePathname(pathname);
+  template = transformRouteTemplate(template);
   const source = `/${normaliseUrlPathname(pathname)}`;
   const destination = `/${normaliseUrlPathname(template)}`;
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
@@ -141,8 +147,8 @@ export function getPathRedirect(
   template: string,
   permanent?: boolean
 ) {
-  template = transformRouteTemplate(template, ":slug");
-  pathname = transformRoutePathname(pathname, ":slug");
+  template = transformRouteTemplate(template);
+  pathname = transformRoutePathname(pathname);
   const source = `/${normaliseUrlPathname(
     (locale ? `/${locale}/` : "/") + template
   )}`;
