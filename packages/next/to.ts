@@ -4,15 +4,15 @@ type OnlyStatic<T extends string> = T extends
   | `${string}.[${string}]`
   | `[${string}].${string}`
   | `[${string}]`
-  ? T
-  : never;
+  ? never
+  : T;
 
 type OnlyDynamic<T extends string> = T extends
   | `${string}.[${string}]`
   | `[${string}].${string}`
   | `[${string}]`
-  ? never
-  : T;
+  ? T
+  : never;
 
 /**
  * @borrows [awesome-template-literal-types](https://github.com/ghoullier/awesome-template-literal-types#router-params-parsing)
