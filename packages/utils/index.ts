@@ -129,6 +129,7 @@ export * from "./removeDuplicatesByKey";
 export * from "./removeDuplicatesComparing";
 export * from "./removeIndexesFromArray";
 export * from "./removeTrailingSlash";
+export * from "./removeUrlQueryParams";
 export * from "./roundTo";
 export * from "./serializeCookie";
 export * from "./setCookie";
