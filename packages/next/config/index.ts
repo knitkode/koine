@@ -316,15 +316,10 @@ export function withKoine(
       modularizeImports: {
         ...(custom?.["experimental"]?.modularizeImports || {}),
         // FIXME: make these work with the right file/folder structure?
-        // "@koine/next/?(((\\w*)?/?)*)": {
-        //   transform: "@koine/next/{{ matches.[1] }}/{{member}}",
-        // },
         // "@koine/react/?(((\\w*)?/?)*)": {
         //   transform: "@koine/react/{{ matches.[1] }}/{{member}}",
         // },
-        // "@koine/utils/?(((\\w*)?/?)*)": {
-        //   transform: "@koine/utils/{{ matches.[1] }}/{{member}}",
-        // },
+        "@koine/next": { transform: "@koine/next/{{member}}" },
         "@koine/utils": { transform: "@koine/utils/{{member}}" },
       },
     },

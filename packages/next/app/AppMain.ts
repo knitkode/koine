@@ -1,7 +1,7 @@
 import React from "react";
 import type { AppProps as NextAppProps } from "next/app";
 import type { HTMLMotionProps } from "framer-motion";
-import type { SeoDefaultsProps } from "../Seo";
+import type { SeoDefaultsProps } from "../SeoDefaults";
 import type { NextProgressProps } from "../NextProgress";
 import type { MotionProviderFeatures } from "@koine/react/m";
 

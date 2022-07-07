@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { AnimatePresence, m } from "framer-motion";
 import { MotionProvider } from "@koine/react/m";
-import { SeoDefaults } from "../../Seo";
+import { SeoDefaults } from "../../SeoDefaults";
 import { NextProgress } from "../../NextProgress";
 import type { AppMainBaseProps, AppMainFramerProps } from "../AppMain";
 

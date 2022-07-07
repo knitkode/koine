@@ -1,5 +1,5 @@
 import React from "react";
-import { SeoDefaults } from "../../Seo";
+import { SeoDefaults } from "../../SeoDefaults";
 import type { AppMainBaseProps } from "../AppMain";
 
 export type AppMainProps = Omit<AppMainBaseProps, "ProgressOverlay">;

@@ -2,7 +2,7 @@ import React from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
 import { Meta, NoJs } from "@koine/react";
 import createEmotionServer from "@emotion/server/create-instance";
-import { createEmotionCache } from "../../utils/emotion-cache";
+import { createEmotionCache } from "../../createEmotionCache";
 
 /**
  * Next Document wrapper for `emotion` based projects
