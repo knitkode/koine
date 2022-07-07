@@ -21,10 +21,10 @@ type ExtractRouteParams<T extends string> = string extends T
   ? Record<string, string>
   : // eslint-disable-next-line @typescript-eslint/no-unused-vars
   T extends `${infer _Start}[${infer Param}].${infer Rest}`
-  ? { [k in Param | keyof ExtractRouteParams<Rest>]: string }
+  ? { [k in Param | keyof ExtractRouteParams<Rest>]: string | number }
   : // eslint-disable-next-line @typescript-eslint/no-unused-vars
   T extends `${infer _Start}[${infer Param}]`
-  ? { [k in Param]: string }
+  ? { [k in Param]: string | number }
   : {};
 
 export type ToTranslate = TranslateNamespaced<"~">;
