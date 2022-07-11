@@ -1,4 +1,4 @@
-import { buildUrlQueryString } from "@koine/utils";
+import { buildUrlQueryString, isFullObject } from "@koine/utils";
 
 /**
  * Custom `ApiError` class extending `Error` to throw in failed response.
@@ -29,8 +29,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   options?: Koine.Api.ClientOptions
 ) => {
   const {
-    transformRequest: transformRequestBase,
-    transformResponse: transformResponseBase,
+    headers: headersBase = {},
     request: requestBase = {
       credentials: "include",
       referrerPolicy: "no-referrer",
@@ -39,6 +38,9 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
       // cache: "no-cache",
     },
     shouldThrow: shouldThrowBase,
+    timeout: timeoutBase = 10000,
+    transformRequest: transformRequestBase,
+    transformResponse: transformResponseBase,
   } = options || {};
 
   return (
@@ -70,12 +72,12 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         options?: TOptions
       ) => {
         const {
-          json,
-          path,
           params,
+          json,
+          query,
           request = requestBase,
-          headers = {},
-          timeout = 10000,
+          headers = headersBase,
+          timeout = timeoutBase,
           transformRequest = transformRequestBase,
           transformResponse = transformResponseBase,
           shouldThrow = shouldThrowBase,
@@ -90,11 +92,11 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           },
         };
 
-        if (path && Object.keys(path).length) {
-          for (const key in path) {
+        if (isFullObject(params)) {
+          for (const key in params) {
             endpoint = endpoint.replace(
               `{${key}}`,
-              path[key].toString()
+              params[key].toString()
             ) as TEndpoint;
           }
         }
@@ -117,11 +119,10 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           requestInit = transformRequest(requestInit);
         }
 
-        if (params) {
+        if (query) {
           // FIXME: ts-expect-error this assertion is not the best, but nevermind for now
-          // url += buildUrlQueryString(params as unknown as Koine.Api.RequestParams);
           url += buildUrlQueryString(
-            params as unknown as Koine.Api.RequestParams
+            query as unknown as Koine.Api.RequestQuery
           );
         }
 
@@ -181,9 +182,9 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             result.status
           }: api[${apiName}] ${method.toUpperCase()} ${url}`;
           if (result.ok) {
-            console.log(`[@koine] 🟢 ${msg}`);
+            console.log(`🟢 ${msg}`);
           } else {
-            console.log(`[@koine] 🔴 ${msg}`);
+            console.log(`🔴 ${msg}`);
           }
         }
         return result;

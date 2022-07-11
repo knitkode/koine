@@ -108,7 +108,7 @@ function createUseApi<
             Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>
           ]
         | TEndpoint,
-      // these are the options arriving when calling `trigger({ json, params, etc... })
+      // these are the options arriving when calling `trigger({ json, query, etc... })
       _options: Readonly<{
         arg: Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>;
       }>
