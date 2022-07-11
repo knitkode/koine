@@ -3,7 +3,7 @@
  */
 declare type PageServer<P> = import("next").InferGetServerSidePropsType<P>;
 declare type PageStatic<P> = import("next").InferGetStaticPropsType<P>;
-declare type DataServer<P, T> = import("next").GetServerSideProps<P, T>;
+declare type DataServer<P, Q, T> = import("next").GetServerSideProps<P, Q, T>;
 declare type DataStatic<P, T> = import("next").GetStaticProps<P, T>;
 declare type DataStaticPaths<P> = import("next").GetStaticPaths<P>;
 declare type DataStaticPathsResult<P> = import("next").GetStaticPathsResult<P>;
