@@ -325,6 +325,7 @@ export function withKoine(
         // "@koine/react/?(((\\w*)?/?)*)": {
         //   transform: "@koine/react/{{ matches.[1] }}/{{member}}",
         // },
+        "@koine/api": { transform: "@koine/api/{{member}}" },
         "@koine/next": { transform: "@koine/next/{{member}}" },
         "@koine/utils": { transform: "@koine/utils/{{member}}" },
       },
