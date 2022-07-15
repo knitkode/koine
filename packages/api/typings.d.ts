@@ -54,7 +54,7 @@ declare namespace Koine.Api {
      *
      * @default false
      */
-    shouldThrow?: boolean;
+    exception?: boolean;
     /**
      * Timeout in `ms`, if `falsy` there is no timeout
      *
@@ -62,17 +62,17 @@ declare namespace Koine.Api {
      */
     timeout?: number | false | null;
     /**
-     * Transform request before actual http call
+     * Process request before actual http call
      *
      * @default undefined
      */
-    transformRequest?: RequestTransformer;
+    processReq?: RequestProcessor;
     /**
-     * Transform response just after http response
+     * Process response just after http response
      *
      * @default undefined
      */
-    transformResponse?: ResponseTransformer;
+    processRes?: ResponseProcessor;
   };
 
   type ClientMethod<
@@ -80,7 +80,7 @@ declare namespace Koine.Api {
     TEndpoints extends Endpoints
   > = <
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TOptions extends EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
+    TOptions extends EndpointOptions<TEndpoints, TEndpoint, TMethod>,
     TOk extends ResponseOk = EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
     TFail extends ResponseFail = EndpointResponseFail<
       TEndpoints,
@@ -90,7 +90,7 @@ declare namespace Koine.Api {
   >(
     endpoint: TEndpoint,
     options?: TOptions
-  ) => Promise<EndpointResponse<TEndpoints, TEndpoint, TMethod>>;
+  ) => Promise<EndpointResult<TEndpoints, TEndpoint, TMethod>>;
   // ) => Promise<Result<TOk, TFail>>;
 
   /**
@@ -106,15 +106,16 @@ declare namespace Koine.Api {
   //
   //////////////////////////////////////////////////////////////////////////////
 
-  type EndpointRequestOptions<
+  type EndpointOptions<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod
   > = RequestOptions<
+    TEndpoints,
+    TEndpoint,
     TMethod,
     TEndpoints[TEndpoint][Uppercase<TMethod>]["json"],
-    TEndpoints[TEndpoint][Uppercase<TMethod>]["query"],
-    TEndpoint
+    TEndpoints[TEndpoint][Uppercase<TMethod>]["query"]
   >;
 
   type EndpointResultOk<
@@ -141,7 +142,7 @@ declare namespace Koine.Api {
     TMethod extends RequestMethod
   > = TEndpoints[TEndpoint][Uppercase<TMethod>]["fail"];
 
-  type EndpointResponse<
+  type EndpointResult<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod
@@ -213,9 +214,16 @@ declare namespace Koine.Api {
   //
   //////////////////////////////////////////////////////////////////////////////
 
+  type RequestMethod = "get" | "post" | "put" | "patch" | "delete";
+
   type RequestJson = undefined | null | Record<string | number, unknown>;
 
   type RequestQuery = undefined | null | Record<string | number, unknown>;
+
+  type RequestParams =
+    | undefined
+    | null
+    | Record<string | number, string | number>;
 
   /**
    * Request options
@@ -223,11 +231,13 @@ declare namespace Koine.Api {
    * `ClientOptions` can be overriden here at the single request level.
    */
   type RequestOptions<
+    TEndpoints extends Endpoints,
+    TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod,
     TJson extends RequestJson = RequestJson,
-    TQuery extends RequestQuery = RequestQuery,
-    TEndpoint extends EndpointUrl<TEndpoints> = ""
-  > = ClientOptions & {
+    TQuery extends RequestQuery = RequestQuery
+  > = Omit<ClientOptions, "processReq"> & {
+    processReq?: EndpointRequestProcessor<TEndpoints, TEndpoint, TMethod>;
     /**
      * A dictionary to dynamically interpolate endpoint url params, e.g.:
      *
@@ -241,25 +251,28 @@ declare namespace Koine.Api {
      * Query parameters will be serialized into a string and appended to the URL
      */
     query?: TQuery;
-  } & ([TMethod] extends ["get"]
-      ? {
-          /**
-           * JSON request body
-           *
-           * FIXME: this should be `undefined` here but it breaks
-           */
-          json?: TJson;
-        }
-      : {
-          /**
-           * JSON request body
-           *
-           * @default {}
-           */
-          json?: TJson;
-        });
-
-  type RequestMethod = "get" | "post" | "put" | "patch" | "delete";
+    /**
+     * JSON request body
+     *
+     * FIXME: this should be `undefined` with `get` request mehod
+     */
+    json?: TJson;
+  };
+  // } & ([TMethod] extends ["get"]
+  //     ? {
+  //         /**
+  //          * JSON request body
+  //          */
+  //         json?: TJson;
+  //       }
+  //     : {
+  //         /**
+  //          * JSON request body
+  //          *
+  //          * @default {}
+  //          */
+  //         json?: TJson;
+  //       });
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -298,11 +311,6 @@ declare namespace Koine.Api {
     TResponseOk extends ResponseOk,
     TResponseFail extends ResponseFail
   > =
-    // FIXME: without the type duplication below the following two lines do not
-    // work as they do not narrow the type when checking for the boolean values
-    // truthiness
-    // | ResultOk<TOk>
-    // | ResultFail<TOk>;
     | {
         status: _Response["status"];
         msg: _Response["statusText"];
@@ -318,9 +326,53 @@ declare namespace Koine.Api {
         data: TResponseFail;
       };
 
-  type RequestTransformer = (request: RequestInit) => RequestInit;
+  /**
+   * The request processor at the client level, this is meant to apply global
+   * transformations to all endpoints requests
+   */
+  type RequestProcessor = (
+    method: RequestMethod,
+    url: string,
+    query: any,
+    json: any,
+    params: any,
+    requestInit: RequestInit
+  ) => [
+    string, // url
+    RequestQuery, // query
+    RequestJson, // json
+    RequestParams, // params
+    RequestInit // requestInit
+  ];
 
-  type ResponseTransformer = <
+  /**
+   * The request processor at the request level, this is meant to apply
+   * transformations to a single endpoint request
+   */
+  type EndpointRequestProcessor<
+    TEndpoints extends Endpoints,
+    TEndpoint extends EndpointUrl<TEndpoints>,
+    TMethod extends RequestMethod
+  > = (
+    method: TMethod,
+    url: string,
+    query: EndpointOptions<TEndpoints, TEndpoint, TMethod>["query"],
+    json: EndpointOptions<TEndpoints, TEndpoint, TMethod>["json"],
+    params: EndpointOptions<TEndpoints, TEndpoint, TMethod>["params"],
+    requestInit: RequestInit
+  ) => [
+    string, // url
+    EndpointOptions<TEndpoints, TEndpoint, TMethod>["query"], // query
+    EndpointOptions<TEndpoints, TEndpoint, TMethod>["json"], // json
+    EndpointOptions<TEndpoints, TEndpoint, TMethod>["params"], // params
+    RequestInit // requestInit
+  ];
+
+  /**
+   * The response processor at the request level, this is meant to apply
+   * transformations to a single endpoint response
+   */
+  type ResponseProcessor = <
     TResponseOk extends ResponseOk = ResponseOk,
     TResponseFail extends ResponseFailed = ResponseFailed
   >(

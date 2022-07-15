@@ -7,3 +7,5 @@ export const nextApiResponse = (
   // nextRes.status(result.status).json(result.data || result.msg);
   nextRes.status(result.status).json(result);
 };
+
+export default nextApiResponse;

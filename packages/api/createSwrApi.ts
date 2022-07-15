@@ -7,7 +7,7 @@ import useSWRMutation, {
   type SWRMutationConfiguration,
   type SWRMutationResponse,
 } from "swr/mutation";
-import { createApi } from "../core";
+import { createApi } from "./createApi";
 
 type KoineApiMethodHookSWR<
   THookName extends keyof Koine.Api.HooksMapsByName,
@@ -17,7 +17,7 @@ type KoineApiMethodHookSWR<
   TMethod extends Koine.Api.RequestMethod = Koine.Api.HooksMapsByName[THookName]
 >(
   endpoint: TEndpoint,
-  options?: Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
+  options?: Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
   config?: THookName extends "useGet"
     ? SWRConfiguration<
         Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
@@ -26,7 +26,7 @@ type KoineApiMethodHookSWR<
     : SWRMutationConfiguration<
         Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>,
-        Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
+        Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
         TEndpoint
       >
 ) => THookName extends "useGet"
@@ -37,7 +37,7 @@ type KoineApiMethodHookSWR<
   : SWRMutationResponse<
       Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
       Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>,
-      Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
       TEndpoint
     >;
 
@@ -47,7 +47,7 @@ function createUseApi<
 >(api: Koine.Api.Client<TEndpoints>, method: TMethod) {
   return function useApi<TEndpoint extends Koine.Api.EndpointUrl<TEndpoints>>(
     endpoint: TEndpoint,
-    options?: Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
+    options?: Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
     _config?: unknown
   ) {
     if (method === "get") {
@@ -55,7 +55,7 @@ function createUseApi<
       //   try {
       //     const { ok, data } = await api[method](_endpoint, {
       //         ...(options || {}),
-      //         shouldThrow: true,
+      //         exception: true,
       //       });
       //       if (ok) {
       //         return data;
@@ -70,7 +70,7 @@ function createUseApi<
       const fetcher = async () => {
         const { data } = await api[method](endpoint, {
           ...(options || {}),
-          shouldThrow: true,
+          exception: true,
         });
         return data as Koine.Api.EndpointResponseOk<
           TEndpoints,
@@ -94,7 +94,7 @@ function createUseApi<
     const config = _config as SWRMutationConfiguration<
       Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
       Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
-      Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>,
+      Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
       TEndpoint
     >;
 
@@ -103,14 +103,11 @@ function createUseApi<
       // defined when calling the usePost/Put/etc. hook, these will be overriden
       // by the _options just here below
       _endpoint:
-        | [
-            TEndpoint,
-            Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>
-          ]
+        | [TEndpoint, Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>]
         | TEndpoint,
       // these are the options arriving when calling `trigger({ json, query, etc... })
       _options: Readonly<{
-        arg: Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>;
+        arg: Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>;
       }>
     ) => {
       const endpoint = Array.isArray(_endpoint) ? _endpoint[0] : _endpoint;
@@ -118,7 +115,7 @@ function createUseApi<
       const { ok, data } = await api[method](endpoint, {
         ...options,
         ...(_options.arg || {}),
-        shouldThrow: true,
+        exception: true,
       });
       return ok ? data : data;
     };
@@ -130,7 +127,7 @@ function createUseApi<
       Koine.Api.EndpointResultOk<TEndpoints, TEndpoint, TMethod>,
       Koine.Api.EndpointResultFail<TEndpoints, TEndpoint, TMethod>,
       TEndpoint,
-      Koine.Api.EndpointRequestOptions<TEndpoints, TEndpoint, TMethod>
+      Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>
     >(
       // @ts-expect-error FIXME: I can't get it...
       options ? [endpoint, options] : endpoint,
@@ -167,3 +164,5 @@ export const createSwrApi = <TEndpoints extends Koine.Api.Endpoints>(
 
   return api;
 };
+
+export default createSwrApi;

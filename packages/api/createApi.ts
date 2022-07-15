@@ -1,23 +1,6 @@
 import { buildUrlQueryString, isFullObject } from "@koine/utils";
 
 /**
- * Custom `ApiError` class extending `Error` to throw in failed response.
- *
- * @see https://eslint.org/docs/rules/no-throw-literal
- * @see https://github.com/sindresorhus/ky/blob/main/source/errors/HTTPError.ts
- *
- */
-export class ApiError<
-  TResponseFail extends Koine.Api.ResponseFail = unknown
-> extends Error {
-  constructor(result: Koine.Api.ResultFail<TResponseFail>) {
-    super(`Request failed with ${result.status} ${result.msg}`);
-    this.name = "ApiError";
-    Object.assign(this, result);
-  }
-}
-
-/**
  * Create api client
  *
  * @param apiName Short name to use in debug logs
@@ -37,10 +20,10 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
       // redirect: "follow",
       // cache: "no-cache",
     },
-    shouldThrow: shouldThrowBase,
+    exception: exceptionBase,
     timeout: timeoutBase = 10000,
-    transformRequest: transformRequestBase,
-    transformResponse: transformResponseBase,
+    processReq: processReqBase,
+    processRes: processResBase,
   } = options || {};
 
   return (
@@ -50,13 +33,14 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
       api: Koine.Api.Client<TEndpoints>,
       method: TMethod
     ) => {
+      // @ts-expect-error FIXME: type
       api[method] = async <
         TEndpoint extends Koine.Api.EndpointUrl<TEndpoints>,
-        TOptions extends Koine.Api.EndpointRequestOptions<
+        TOptions extends Koine.Api.EndpointOptions<
           TEndpoints,
           TEndpoint,
           TMethod
-        >,
+        > = Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
         TResponseOk extends Koine.Api.ResponseOk = Koine.Api.EndpointResponseOk<
           TEndpoints,
           TEndpoint,
@@ -72,17 +56,16 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         options?: TOptions
       ) => {
         const {
-          params,
-          json,
-          query,
           request = requestBase,
           headers = headersBase,
           timeout = timeoutBase,
-          transformRequest = transformRequestBase,
-          transformResponse = transformResponseBase,
-          shouldThrow = shouldThrowBase,
+          processReq = processReqBase,
+          processRes = processResBase,
+          exception = exceptionBase,
         } = options || {};
+        let { params, json, query } = options || {};
 
+        let url = `${baseUrl}/${endpoint + "".replace(/^\/*/, "")}`;
         let requestInit: RequestInit = {
           method: method.toUpperCase(),
           ...request,
@@ -91,6 +74,22 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             ...headers,
           },
         };
+
+        if (processReq) {
+          const transformed = processReq(
+            method,
+            url,
+            query,
+            json,
+            params,
+            requestInit
+          );
+          url = transformed[0];
+          query = transformed[1] as typeof query;
+          json = transformed[2] as typeof json;
+          params = transformed[3] as typeof params;
+          requestInit = transformed[4];
+        }
 
         if (isFullObject(params)) {
           for (const key in params) {
@@ -104,7 +103,6 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         const timeoutNumber = Number(timeout);
         let controller: AbortController;
         let timeoutId;
-        let url = `${baseUrl}/${endpoint + "".replace(/^\/*/, "")}`;
 
         if (method !== "get" && json) {
           requestInit.body = JSON.stringify(json);
@@ -113,10 +111,6 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           controller = new AbortController();
           timeoutId = setTimeout(() => controller.abort(), timeoutNumber);
           requestInit.signal = controller.signal;
-        }
-
-        if (transformRequest) {
-          requestInit = transformRequest(requestInit);
         }
 
         if (query) {
@@ -128,7 +122,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
 
         let response: Response;
 
-        if (shouldThrow) {
+        if (exception) {
           try {
             response = await fetch(url, requestInit);
           } catch (e) {
@@ -145,10 +139,10 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
 
         let result: Koine.Api.Result<TResponseOk, TResponseFail>;
 
-        if (shouldThrow) {
+        if (exception) {
           try {
-            if (transformResponse) {
-              result = await transformResponse<TResponseOk, TResponseFail>(
+            if (processRes) {
+              result = await processRes<TResponseOk, TResponseFail>(
                 response,
                 options || {}
               );
@@ -160,8 +154,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             throw { e };
           }
         } else {
-          if (transformResponse) {
-            result = await transformResponse<TResponseOk, TResponseFail>(
+          if (processRes) {
+            result = await processRes<TResponseOk, TResponseFail>(
               response,
               options || {}
             );
@@ -170,7 +164,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           }
         }
 
-        if (shouldThrow && result.fail) {
+        if (exception && result.fail) {
           // throw new ApiError<Failed>(result);
           // I prefer to throw an object literal despite what eslint says
           // eslint-disable-next-line no-throw-literal
@@ -194,3 +188,5 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
     {} as Koine.Api.Client<TEndpoints>
   );
 };
+
+export default createApi;
