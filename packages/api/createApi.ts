@@ -93,10 +93,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
 
         if (isFullObject(params)) {
           for (const key in params) {
-            endpoint = endpoint.replace(
-              `{${key}}`,
-              params[key].toString()
-            ) as TEndpoint;
+            url = url.replace(`{${key}}`, params[key].toString());
           }
         }
 
