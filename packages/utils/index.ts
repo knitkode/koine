@@ -1,38 +1,3 @@
-/**
- * @file 
- * 
- * Libraries to encapsulate and re-export from here, the selection is based on:
- * 
- * [x] full typescript support
- * [x] treeshake-ability
- * [x] docs in source comments
- * 
- * - https://github.com/mesqueeb/merge-anything
- * - https://github.com/mesqueeb/filter-anything
- * - https://github.com/mesqueeb/case-anything
- * - https://github.com/mesqueeb/nestify-anything
- * - https://github.com/mesqueeb/fast-sort (fork)
- * - https://github.com/mesqueeb/compare-anything
- * - https://github.com/mesqueeb/copy-anything
- * - https://github.com/mesqueeb/flatten-anything
-
- * About ts utilities types @see:
- * - https://github.com/sindresorhus/type-fest
- * - https://github.com/millsp/ts-toolbelt
- * - https://github.com/ts-essentials/ts-essentials
- * 
- * About utilities useful examples @see:
- * - https://github.com/chakra-ui/chakra-ui/blob/main/packages/utils/src
- * 
- * TODO:
- * We could also re-exports direct dependencies of packages that we often use
- * anyway like [those of `yup`](https://github.com/jquense/yup/blob/master/package.json#L103):
- * 
- * - [tiny-case](https://github.com/jquense/tiny-case)
- * - [property-expr](https://github.com/jquense/expr/blob/master/index.js)
- * - [toposort](https://github.com/marcelklehr/toposort)
- */
-
 export * from "./accentSets";
 export * from "./addOrReplaceAtIdx";
 export * from "./arrayToLookup";
