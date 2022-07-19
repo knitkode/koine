@@ -347,7 +347,10 @@ declare namespace Koine.Api {
 
   /**
    * The request processor at the request level, this is meant to apply
-   * transformations to a single endpoint request
+   * transformations to a single endpoint request. Request processor applied at
+   * the whole client level is still applied just before this one, hence one
+   * might set some global processing and override it or undo it at the single
+   * request level.
    */
   type EndpointRequestProcessor<
     TEndpoints extends Endpoints,

@@ -59,7 +59,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           request = requestBase,
           headers = headersBase,
           timeout = timeoutBase,
-          processReq = processReqBase,
+          processReq,
           processRes = processResBase,
           exception = exceptionBase,
         } = options || {};
@@ -74,6 +74,22 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             ...headers,
           },
         };
+
+        if (processReqBase) {
+          const transformed = processReqBase(
+            method,
+            url,
+            query,
+            json,
+            params,
+            requestInit
+          );
+          url = transformed[0];
+          query = transformed[1] as typeof query;
+          json = transformed[2] as typeof json;
+          params = transformed[3] as typeof params;
+          requestInit = transformed[4];
+        }
 
         if (processReq) {
           const transformed = processReq(
