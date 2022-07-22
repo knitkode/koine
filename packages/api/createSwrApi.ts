@@ -88,7 +88,11 @@ function createUseApi<
       return useSWR<
         Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
-      >(options ? [endpoint, options] : [endpoint], fetcher, config);
+      >(
+        !endpoint ? null : options ? [endpoint, options] : [endpoint],
+        fetcher,
+        config
+      );
     }
 
     const config = _config as SWRMutationConfiguration<
