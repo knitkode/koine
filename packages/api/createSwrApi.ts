@@ -1,6 +1,8 @@
+import { isFunction } from "@koine/utils";
 import useSWR, {
   type SWRConfiguration,
   type SWRResponse,
+  type BareFetcher,
   // type Fetcher,
 } from "swr";
 import useSWRMutation, {
@@ -8,6 +10,30 @@ import useSWRMutation, {
   type SWRMutationResponse,
 } from "swr/mutation";
 import { createApi } from "./createApi";
+
+type SWRConfigurationExtended<
+  Data = any,
+  Error = any,
+  Fn extends BareFetcher<any> = BareFetcher<any>
+> = SWRConfiguration<Data, Error, Fn> & {
+  /**
+   * Conditional fetching as option
+   *
+   * Moving this to an option allows us to keep the endpoints typed dictionary,
+   * e.g. we can write:
+   *
+   * ```js
+   * const { data, mutate } = myApi.useGet("User/{id}",
+   *  { params: { id: aVariableMaybeContainingAnId || "" }, },
+   *  { when: !!aVariableMaybeContainingAnId }
+   * );
+   *
+   * // we still have typed `data`, `mutate`
+   * ```
+   * @see https://swr.vercel.app/docs/conditional-fetching
+   */
+  when?: boolean | (() => boolean);
+};
 
 type KoineApiMethodHookSWR<
   THookName extends keyof Koine.Api.HooksMapsByName,
@@ -19,7 +45,7 @@ type KoineApiMethodHookSWR<
   endpoint: TEndpoint,
   options?: Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
   config?: THookName extends "useGet"
-    ? SWRConfiguration<
+    ? SWRConfigurationExtended<
         Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >
@@ -78,18 +104,22 @@ function createUseApi<
           TMethod
         >;
       };
-      const config = _config as SWRConfiguration<
+      const config = _config as SWRConfigurationExtended<
         Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >;
 
-      // <Data = any, Error = any>(key: Key, config: SWRConfiguration<Data, Error, Fetcher<Data>> | undefined): SWRResponse<Data, Error>;
+      const shouldNotFetch =
+        config?.when === false ||
+        (isFunction(config?.when) && config?.when() === false);
+
+      // <Data = any, Error = any>(key: Key, config: SWRConfigurationExtended<Data, Error, Fetcher<Data>> | undefined): SWRResponse<Data, Error>;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return useSWR<
         Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
       >(
-        !endpoint ? null : options ? [endpoint, options] : [endpoint],
+        shouldNotFetch ? null : options ? [endpoint, options] : [endpoint],
         fetcher,
         config
       );
