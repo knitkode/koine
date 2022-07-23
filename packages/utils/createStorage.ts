@@ -48,7 +48,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       ls(
         "s",
         keys[key],
-        isString(value) ? encode(value) : JSON.stringify(value)
+        isString(value) ? encode(value) : encode(JSON.stringify(value))
       );
     },
     has<TKey extends keyof T>(key: TKey) {
