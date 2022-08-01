@@ -6,7 +6,7 @@
  */
 export function removeDuplicatesByKey<
   T extends Record<string | number | symbol, any>
->(array: T[] = [] as T[], key: keyof T = "" as keyof T) {
+>(array: T[] = [] as T[], key: keyof T) {
   const keysMap = {} as Record<T[keyof T], boolean>;
   const output: T[] = [];
 

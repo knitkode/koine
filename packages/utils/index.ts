@@ -73,6 +73,7 @@ export * from "./mapListBy";
 export * from "./matchSorter";
 export * from "./mergeObjects";
 export * from "./mergeUrlQueryParams";
+export * from "./moveSortableArrayItemByKey";
 export * from "./navigateToHashParams";
 export * from "./navigateToMergedHashParams";
 export * from "./navigateToMergedParams";
