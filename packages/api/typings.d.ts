@@ -73,13 +73,13 @@ declare namespace Koine.Api {
      *
      * @default undefined
      */
-    processOk?: ResponseProcessorOk;
+    processRes?: ResponseProcessorOk;
     /**
      * Process failed response just after http response
      *
      * @default undefined
      */
-    processFail?: ResponseProcessorFail;
+    processErr?: ResponseProcessorFail;
   };
 
   type ClientMethod<

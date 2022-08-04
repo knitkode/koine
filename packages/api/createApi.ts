@@ -23,8 +23,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
     throwErr: throwErrBase,
     timeout: timeoutBase = 10000,
     processReq: processReqBase,
-    processOk: processOkBase,
-    processFail: processFailBase,
+    processRes: processResBase,
+    processErr: processErrBase,
   } = options || {};
 
   return (
@@ -61,8 +61,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           headers = headersBase,
           timeout = timeoutBase,
           processReq,
-          processOk = processOkBase,
-          processFail = processFailBase,
+          processRes = processResBase,
+          processErr = processErrBase,
           throwErr = throwErrBase,
         } = options || {};
         let { params, json, query } = options || {};
@@ -151,8 +151,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
 
         if (response) {
           try {
-            if (processOk) {
-              result = await processOk<TResponseOk>(response, options || {});
+            if (processRes) {
+              result = await processRes<TResponseOk>(response, options || {});
             } else {
               result = await response.json();
             }
@@ -162,8 +162,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         }
 
         if (result === null) {
-          if (processFail) {
-            result = await processFail<TResponseFail>(msg, options || {});
+          if (processErr) {
+            result = await processErr<TResponseFail>(msg, options || {});
           } else {
             // this error should only happen on network errors or wrong API urls
             // there is no specific HTTP error for this, we can consider these
