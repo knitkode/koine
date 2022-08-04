@@ -16,7 +16,7 @@
  *     "~": typeof import("./locales/en/~.json");
  *     "_": typeof import("./locales/en/_.json");
  *     "$team": typeof import("./locales/en/$team.json");
- *     "home": typeof import("./locales/en/home.json");
+ *     "~home": typeof import("./locales/en/~home.json");
  *     "Header": typeof import("./locales/en/Header.json");
  *   }
  * }
@@ -36,11 +36,13 @@
 
  * Best to follow a convention to name the files which become the namespaces:
  *
- * - `~`: for app wide **urls** translated definitions
- * - `_`: for app wide **common** translations
- * - `${data}`: dollar prefix for static **data** like arrays, objects, .etc
- * - `{route-name}`: lower cased for **route** specific data
- * - `{ComponentName}`: pascal cased for **components** specific data
+ * - `~.json`: for app wide **urls** translated definitions
+ * - `_.json`: for app wide **common** translations
+ * - `$data.json`: dollar prefix for static **data** like arrays, objects, .etc
+ * - `~route-name.json`: lower cased for **route** specific data,  we use `~`
+ * instead of `/` for nested folders pathnames, e.g. `/my/account-settings`
+ * would use a `~my~account-settings.json` file.
+ * - `ComponentName.json`: pascal cased for **components** specific data
  */
 export type TranslationsDictionary = Koine.NextTranslations;
 // export interface TranslationsDictionary {
