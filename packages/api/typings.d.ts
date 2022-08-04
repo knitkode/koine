@@ -69,17 +69,18 @@ declare namespace Koine.Api {
      */
     processReq?: RequestProcessor;
     /**
-     * Process ok response just after http response
+     * Process ok/failed response just after http response
      *
      * @default undefined
      */
-    processRes?: ResponseProcessorOk;
+    processRes?: ResponseProcessorRes;
     /**
-     * Process failed response just after http response
+     * Process maybe-thrown error originated either from `fetch` function
+     * invokation or from its `response.json()` parsing
      *
      * @default undefined
      */
-    processErr?: ResponseProcessorFail;
+    processErr?: ResponseProcessorErr;
   };
 
   type ClientMethod<
@@ -379,19 +380,19 @@ declare namespace Koine.Api {
   ];
 
   /**
-   * The ok response processor at the request level, this is meant to apply
+   * The ok/fail response processor at the request level, this is meant to apply
    * transformations to a single or all endpoint responses
    */
-  type ResponseProcessorOk = <TResponseOk extends ResponseOk = ResponseOk>(
+  type ResponseProcessorRes = <TResponseOk extends ResponseOk = ResponseOk>(
     response: _Response,
     options: TOptions
   ) => Promise<Koine.Api.Result<TResponseOk>>;
 
   /**
-   * The fail response processor at the request level, this is meant to apply
+   * The error response processor at the request level, this is meant to apply
    * transformations to a single or all endpoint responses
    */
-  type ResponseProcessorFail = <
+  type ResponseProcessorErr = <
     TResponseFail extends ResponseFailed = ResponseFailed
   >(
     msg: string,
