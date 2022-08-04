@@ -81,7 +81,7 @@ function createUseApi<
       //   try {
       //     const { ok, data } = await api[method](_endpoint, {
       //         ...(options || {}),
-      //         exception: true,
+      //         throwErr: true,
       //       });
       //       if (ok) {
       //         return data;
@@ -96,7 +96,7 @@ function createUseApi<
       const fetcher = async () => {
         const { data } = await api[method](endpoint, {
           ...(options || {}),
-          exception: true,
+          throwErr: true,
         });
         return data as Koine.Api.EndpointResponseOk<
           TEndpoints,
@@ -149,7 +149,7 @@ function createUseApi<
       const { ok, data } = await api[method](endpoint, {
         ...options,
         ...(_options.arg || {}),
-        exception: true,
+        throwErr: true,
       });
       return ok ? data : data;
     };

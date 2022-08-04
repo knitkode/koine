@@ -50,11 +50,12 @@ declare namespace Koine.Api {
      */
     request?: Omit<RequestInit, "body" | "headers" | "method">;
     /**
-     * Flag to throw error with try/catch
+     * Flag to throw error within the catch block, by default we return a
+     * normalised error result {@link ResultFail}
      *
      * @default false
      */
-    exception?: boolean;
+    throwErr?: boolean;
     /**
      * Timeout in `ms`, if `falsy` there is no timeout
      *
@@ -68,11 +69,17 @@ declare namespace Koine.Api {
      */
     processReq?: RequestProcessor;
     /**
-     * Process response just after http response
+     * Process ok response just after http response
      *
      * @default undefined
      */
-    processRes?: ResponseProcessor;
+    processOk?: ResponseProcessorOk;
+    /**
+     * Process failed response just after http response
+     *
+     * @default undefined
+     */
+    processFail?: ResponseProcessorFail;
   };
 
   type ClientMethod<
@@ -372,16 +379,24 @@ declare namespace Koine.Api {
   ];
 
   /**
-   * The response processor at the request level, this is meant to apply
-   * transformations to a single endpoint response
+   * The ok response processor at the request level, this is meant to apply
+   * transformations to a single or all endpoint responses
    */
-  type ResponseProcessor = <
-    TResponseOk extends ResponseOk = ResponseOk,
-    TResponseFail extends ResponseFailed = ResponseFailed
-  >(
+  type ResponseProcessorOk = <TResponseOk extends ResponseOk = ResponseOk>(
     response: _Response,
     options: TOptions
-  ) => Promise<Koine.Api.Result<TResponseOk, TResponseFail>>;
+  ) => Promise<Koine.Api.Result<TResponseOk>>;
+
+  /**
+   * The fail response processor at the request level, this is meant to apply
+   * transformations to a single or all endpoint responses
+   */
+  type ResponseProcessorFail = <
+    TResponseFail extends ResponseFailed = ResponseFailed
+  >(
+    msg: string,
+    options: TOptions
+  ) => Promise<Koine.Api.Result<TResponseFail>>;
 
   //////////////////////////////////////////////////////////////////////////////
   //

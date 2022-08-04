@@ -20,10 +20,11 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
       // redirect: "follow",
       // cache: "no-cache",
     },
-    exception: exceptionBase,
+    throwErr: throwErrBase,
     timeout: timeoutBase = 10000,
     processReq: processReqBase,
-    processRes: processResBase,
+    processOk: processOkBase,
+    processFail: processFailBase,
   } = options || {};
 
   return (
@@ -60,8 +61,9 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           headers = headersBase,
           timeout = timeoutBase,
           processReq,
-          processRes = processResBase,
-          exception = exceptionBase,
+          processOk = processOkBase,
+          processFail = processFailBase,
+          throwErr = throwErrBase,
         } = options || {};
         let { params, json, query } = options || {};
 
@@ -133,51 +135,52 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           );
         }
 
-        let response: Response;
+        let response: null | Response = null;
+        let result: null | Koine.Api.Result<TResponseOk, TResponseFail> = null;
+        let msg = "";
 
-        if (exception) {
-          try {
-            response = await fetch(url, requestInit);
-          } catch (e) {
-            // eslint-disable-next-line no-throw-literal
-            throw { e };
-          }
-        } else {
+        try {
           response = await fetch(url, requestInit);
+        } catch (e) {
+          msg = e as string;
         }
 
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
 
-        let result: Koine.Api.Result<TResponseOk, TResponseFail>;
-
-        if (exception) {
+        if (response) {
           try {
-            if (processRes) {
-              result = await processRes<TResponseOk, TResponseFail>(
-                response,
-                options || {}
-              );
+            if (processOk) {
+              result = await processOk<TResponseOk>(response, options || {});
             } else {
               result = await response.json();
             }
           } catch (e) {
-            // eslint-disable-next-line no-throw-literal
-            throw { e };
-          }
-        } else {
-          if (processRes) {
-            result = await processRes<TResponseOk, TResponseFail>(
-              response,
-              options || {}
-            );
-          } else {
-            result = await response.json();
+            msg = e as string;
           }
         }
 
-        if (exception && result.fail) {
+        if (result === null) {
+          if (processFail) {
+            result = await processFail<TResponseFail>(msg, options || {});
+          } else {
+            // this error should only happen on network errors or wrong API urls
+            // there is no specific HTTP error for this, we can consider these
+            // two statuses though:
+            // - [100 Continue](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/100)
+            // - [501 Not Implemented](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/501)
+            result = {
+              data: null,
+              msg,
+              status: 100,
+              fail: true,
+              ok: false,
+            } as Koine.Api.ResultFail<TResponseFail>;
+          }
+        }
+
+        if (throwErr && result?.fail) {
           // throw new ApiError<Failed>(result);
           // I prefer to throw an object literal despite what eslint says
           // eslint-disable-next-line no-throw-literal
@@ -185,13 +188,13 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         }
 
         if (process.env["NODE_ENV"] !== "production") {
-          const msg = `${
-            result.status
+          const logMsg = `${
+            result?.status
           }: api[${apiName}] ${method.toUpperCase()} ${url}`;
-          if (result.ok) {
-            console.log(`🟢 ${msg}`);
+          if (result?.ok) {
+            console.log(`🟢 ${logMsg}`);
           } else {
-            console.log(`🔴 ${msg}`);
+            console.log(`🔴 ${logMsg}`);
           }
         }
         return result;
