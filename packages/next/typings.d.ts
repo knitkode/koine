@@ -64,7 +64,7 @@ declare namespace Koine {
    *
    * ```ts
    * declare namespace Koine {
-   *   interface NextTranslations {
+   *   interface Translations {
    *     "~": typeof import("./locales/en/~.json");
    *     "_": typeof import("./locales/en/_.json");
    *     "$team": typeof import("./locales/en/$team.json");
@@ -82,7 +82,7 @@ declare namespace Koine {
    * - `{route-name}`: lower cased for **route** specific data
    * - `{ComponentName}`: pascal cased for **components** specific data
    */
-  interface NextTranslations {
+  interface Translations {
     [key: string]: any;
   }
 }

@@ -12,7 +12,7 @@
  *
  * ```ts
  * declare namespace Koine {
- *   interface NextTranslations {
+ *   interface Translations {
  *     "~": typeof import("./locales/en/~.json");
  *     "_": typeof import("./locales/en/_.json");
  *     "$team": typeof import("./locales/en/$team.json");
@@ -44,7 +44,7 @@
  * would use a `~my~account-settings.json` file.
  * - `ComponentName.json`: pascal cased for **components** specific data
  */
-export type TranslationsDictionary = Koine.NextTranslations;
+export type TranslationsDictionary = Koine.Translations;
 // export interface TranslationsDictionary {
 //   [key: string]: any;
 // }
@@ -200,3 +200,24 @@ export type TranslateLoose = (
  * localised pathname (even with dynamic portions).
  */
 export type TranslatedRoute = TranslationsPaths<TranslationsDictionary["~"]>;
+
+/**
+ * Utility standalone type to extract all (max two level depth) children routes
+ * that starts with the given string.
+ *
+ * This is useful to get the subroutes of an application area, e.g. all subroutes
+ * of a dashboard, using it with:
+ *
+ * ```
+ * type DashboardRoutes = TranslatedRoutesChildrenOf<"dashboard">;
+ * ```
+ */
+export type TranslatedRoutesChildrenOf<
+  TStarts extends string,
+  T extends string = TranslatedRoute
+> = T extends `${TStarts}.${infer First}.${infer Second}`
+  ? First | `${First}.${Second}`
+  : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  T extends `${TStarts}.${infer First}`
+  ? First
+  : never;
