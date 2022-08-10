@@ -1,6 +1,7 @@
 import type { TranslateNamespaced, TranslatedRoute } from "./types-i18n";
 
 type OnlyStatic<T extends string> = T extends
+  | `${string}.[${string}].${string}`
   | `${string}.[${string}]`
   | `[${string}].${string}`
   | `[${string}]`
@@ -8,6 +9,7 @@ type OnlyStatic<T extends string> = T extends
   : T;
 
 type OnlyDynamic<T extends string> = T extends
+  | `${string}.[${string}].${string}`
   | `${string}.[${string}]`
   | `[${string}].${string}`
   | `[${string}]`
