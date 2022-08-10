@@ -82,8 +82,8 @@ type MapPathnameParts = Record<
  *
  * Here we add the wildcard flag maybe found in the pathname to the template
  * name too, this is because we do not want to have the wildcard in the JSON
- * keys as those are also used to construct the links through `useTo` hook and
- * handling asterisks there might become cumbersome.
+ * keys as those are also used to throught the `useT` hook and having asterisks
+ * there is a bit cumbersome.
  *
  * @see https://nextjs.org/docs/messages/invalid-multi-match
  */
@@ -95,15 +95,15 @@ function transformRoute(route: RoutesMapRoute) {
 
   const pathname = pathnameParts
     .map((part) => {
+      const hasWildcard = part.endsWith("*");
+      part = part.replace("*", "");
       const isDynamic = part.startsWith("{{") && part.endsWith("}}");
       const asValue = isDynamic
         ? part.match(/{{(.+)}}/)?.[1].trim() ?? ""
         : part.trim();
-      const hasWildcard = part.includes("*");
-      const asPath =
-        encodeURIComponent(asValue.replace("*", "")) + (hasWildcard ? "*" : "");
+      const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
 
-      mapPartsByIdx[asValue.replace("*", "")] = {
+      mapPartsByIdx[asValue] = {
         isDynamic,
         hasWildcard,
       };
@@ -118,8 +118,7 @@ function transformRoute(route: RoutesMapRoute) {
         ? part.match(/\[(.+)\]/)?.[1].trim() ?? ""
         : part.trim();
       const hasWildcard = mapPartsByIdx[asValue]?.hasWildcard;
-      const asPath =
-        encodeURIComponent(asValue.replace("*", "")) + (hasWildcard ? "*" : "");
+      const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
 
       return isDynamic ? `:${asPath}` : asPath;
     })
@@ -275,7 +274,7 @@ type KoineNextConfig = {
    * {
    *   "category": {
    *     "[slug]": {
-   *       "[id]": "/categories/{{ slug }}/{{ id* }}"
+   *       "[id]": "/categories/{{ slug }}/{{ id }}*"
    *     }
    *   }
    * }

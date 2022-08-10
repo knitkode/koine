@@ -52,7 +52,9 @@ export function to(...args: [ToTranslate, ...ToArgs]) {
 
   if (args.length === 3) {
     if (args[2]) {
-      relative = t(args[1], args[2]);
+      // @ts-expect-error this fails because we do not have any Translaions
+      // dictionary in this environment
+      relative = t(args[1].replace("*", ""), args[2]);
     }
   } else if (args.length === 2) {
     relative = t(args[1]);
