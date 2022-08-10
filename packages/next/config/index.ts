@@ -9,6 +9,14 @@ type Route =
     };
 type Routes = Record<string, Route>;
 
+type RoutesMap = Record<string, RoutesMapRoute>;
+
+type RoutesMapRoute = {
+  template: string;
+  pathname: string;
+  wildcard?: boolean;
+};
+
 /**
  * Normalise pathname
  *
@@ -61,51 +69,70 @@ export function encodePathname(pathname = "") {
     .join("/");
 }
 
+type MapPathnameParts = Record<
+  string,
+  {
+    isDynamic?: boolean;
+    hasWildcard?: boolean;
+  }
+>;
+
 /**
- * It replaces `/{{ slug }}/` with the given replacer.
+ * Transform the route translated defintion into a `pathname` and a `template`.
+ *
+ * Here we add the wildcard flag maybe found in the pathname to the template
+ * name too, this is because we do not want to have the wildcard in the JSON
+ * keys as those are also used to construct the links through `useTo` hook and
+ * handling asterisks there might become cumbersome.
+ *
+ * @see https://nextjs.org/docs/messages/invalid-multi-match
  */
-function transformRoutePathname(rawPathname: string) {
-  const pathNameParts = rawPathname.split("/").filter((part) => !!part);
-  return pathNameParts
-    .map((part, _idx) => {
+function transformRoute(route: RoutesMapRoute) {
+  const { pathname: rawPathname, template: rawTemplate } = route;
+  const pathnameParts = rawPathname.split("/").filter((part) => !!part);
+  const templateParts = rawTemplate.split("/").filter((part) => !!part);
+  const mapPartsByIdx: MapPathnameParts = {};
+
+  const pathname = pathnameParts
+    .map((part) => {
       const isDynamic = part.startsWith("{{") && part.endsWith("}}");
-      const replacer = isDynamic
-        ? `:${part.match(/{{(.+)}}/)?.[1].trim()}`
-        : "";
-      part = isDynamic ? replacer : part;
-      // if (isDynamic && _idx === pathNameParts.length - 1) {
-      //   part += "*";
-      // }
-      return isDynamic ? part : encodeURIComponent(part);
+      const asValue = isDynamic
+        ? part.match(/{{(.+)}}/)?.[1].trim() ?? ""
+        : part.trim();
+      const hasWildcard = part.includes("*");
+      const asPath =
+        encodeURIComponent(asValue.replace("*", "")) + (hasWildcard ? "*" : "");
+
+      mapPartsByIdx[asValue.replace("*", "")] = {
+        isDynamic,
+        hasWildcard,
+      };
+      return isDynamic ? `:${asPath}` : asPath;
     })
     .join("/");
-}
 
-/**
- * It replaces `/[slug]/` with the given replacer.
- */
-function transformRouteTemplate(rawPathname: string) {
-  const pathNameParts = rawPathname.split("/").filter((part) => !!part);
-  return pathNameParts
-    .map((part, _idx) => {
+  const template = templateParts
+    .map((part) => {
       const isDynamic = part.startsWith("[") && part.endsWith("]");
-      const replacer = isDynamic
-        ? `:${part.match(/\[(.+)\]/)?.[1].trim()}`
-        : "";
-      part = isDynamic ? replacer : part;
-      // if (isDynamic && _idx === pathNameParts.length - 1) {
-      //   part += "*";
-      // }
-      return isDynamic ? part : encodeURIComponent(part);
+      const asValue = isDynamic
+        ? part.match(/\[(.+)\]/)?.[1].trim() ?? ""
+        : part.trim();
+      const hasWildcard = mapPartsByIdx[asValue]?.hasWildcard;
+      const asPath =
+        encodeURIComponent(asValue.replace("*", "")) + (hasWildcard ? "*" : "");
+
+      return isDynamic ? `:${asPath}` : asPath;
     })
     .join("/");
+
+  return { pathname, template };
 }
 
 /**
- * Get flat key/value routes map dictionary
+ * Get routes map dictionary
  */
 function getRoutesMap(
-  map: Record<string, string> = {},
+  map: RoutesMap = {},
   routes: Routes,
   pathnameBuffer = "",
   templateBuffer = ""
@@ -114,7 +141,11 @@ function getRoutesMap(
     const pathOrNestedRoutes = routes[key];
     const template = `${templateBuffer}/${key}`;
     if (typeof pathOrNestedRoutes === "string") {
-      map[template] = pathOrNestedRoutes;
+      map[template] = {
+        template,
+        pathname: pathOrNestedRoutes,
+        wildcard: pathOrNestedRoutes.includes("*"),
+      };
     } else {
       getRoutesMap(map, pathOrNestedRoutes, pathnameBuffer, template);
     }
@@ -126,9 +157,8 @@ function getRoutesMap(
 /**
  * Get path rewrite
  */
-export function getPathRewrite(pathname: string, template: string) {
-  pathname = transformRoutePathname(pathname);
-  template = transformRouteTemplate(template);
+export function getPathRewrite(route: RoutesMapRoute) {
+  const { pathname, template } = transformRoute(route);
   const source = `/${normaliseUrlPathname(pathname)}`;
   const destination = `/${normaliseUrlPathname(template)}`;
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
@@ -143,12 +173,10 @@ export function getPathRewrite(pathname: string, template: string) {
  */
 export function getPathRedirect(
   locale = "",
-  pathname: string,
-  template: string,
+  route: RoutesMapRoute,
   permanent?: boolean
 ) {
-  template = transformRouteTemplate(template);
-  pathname = transformRoutePathname(pathname);
+  const { template, pathname } = transformRoute(route);
   const source = `/${normaliseUrlPathname(
     (locale ? `/${locale}/` : "/") + template
   )}`;
@@ -175,13 +203,11 @@ export async function getRedirects(
   const routesMap = getRoutesMap({}, routes);
 
   Object.keys(routesMap).forEach((template) => {
-    const pathname = routesMap[template];
+    const route = routesMap[template];
 
-    if (pathname !== template) {
-      redirects.push(
-        getPathRedirect(defaultLocale, pathname, template, permanent)
-      );
-      redirects.push(getPathRedirect("", pathname, template, permanent));
+    if (route.pathname !== template) {
+      redirects.push(getPathRedirect(defaultLocale, route, permanent));
+      redirects.push(getPathRedirect("", route, permanent));
     }
   });
   if (debug) console.log("redirects", redirects);
@@ -196,9 +222,9 @@ export async function getRewrites(routes: Routes, debug?: boolean) {
   const routesMap = getRoutesMap({}, routes);
 
   Object.keys(routesMap).forEach((template) => {
-    const pathname = routesMap[template];
-    if (pathname !== template) {
-      rewrites.push(getPathRewrite(pathname, template));
+    const route = routesMap[template];
+    if (route.pathname !== template) {
+      rewrites.push(getPathRewrite(route));
     }
   });
   if (debug) console.log("rewrites", rewrites);
@@ -242,12 +268,34 @@ type KoineNextConfig = {
    * }
    * ```
    *
+   * Here we also account for wildcards, those should only be defined in the
+   * pathname part of the JSON file, e.g.:
+   *
+   * ```json
+   * {
+   *   "category": {
+   *     "[slug]": {
+   *       "[id]": "/categories/{{ slug }}/{{ id* }}"
+   *     }
+   *   }
+   * }
+   * ```
+   * This might be desired when we want to have param-based pagination, e.g. when
+   * we have the following folder structure:
+   *
+   * ```yml
+   * |__/category
+   *    |__/[slug]
+   *      |__/[id]
+   *         |__/[[...page]].tsx
+   * ```
+   *
    * NOTE1:
    * You cannot name your dynamic template file "index.tsx" when they have nested
    * segments or the rewrites won't work. So while this is allowed:
    * `/pages/cats/[category]/index.tsx` it is not when you also have e.g.:
    * `/pages/cats/[category]/reviews.tsx`
-   * TODO: This might be fixable?
+   * TODO: This might be fixable? Is this fixed now?
    *
    * NOTE2:
    * When `routes` is used be sure to pass before than the `i18n.defaultLocale`
