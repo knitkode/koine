@@ -1,6 +1,6 @@
 {
   "name": "koine",
-  "version": "1.0.70",
+  "version": "1.0.71",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",

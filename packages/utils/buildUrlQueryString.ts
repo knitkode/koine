@@ -1,6 +1,7 @@
 import { type AnyQueryParams } from "./location";
 import isNull from "./isNull";
 import isUndefined from "./isUndefined";
+import isArray from "./isArray";
 
 /**
  * Get clean query string for URL
@@ -16,7 +17,11 @@ export function buildUrlQueryString(params: AnyQueryParams = {}) {
 
   for (const key in params) {
     const value = params[key];
-    if (!isNull(value) && !isUndefined(value)) {
+    if (isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        output += `${key}=${encodeURIComponent(value[i] + "")}&`;
+      }
+    } else if (!isNull(value) && !isUndefined(value)) {
       output += `${key}=${encodeURIComponent(value + "")}&`;
     }
   }
