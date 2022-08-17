@@ -6,3 +6,7 @@
 
 // eslint-disable-next-line no-var,@typescript-eslint/no-explicit-any
 declare var gtag: (...args: any[]) => any;
+
+// declare type NullableRecord<T> = {
+//   [K in keyof T]: T[K] | null;
+// };

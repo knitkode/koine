@@ -1,12 +1,8 @@
 import { decode } from "./decode";
 import { encode } from "./encode";
 import { isBrowser } from "./isBrowser";
-import { isUndefined } from "./isUndefined";
+import { isNullOrUndefined } from "./isNullOrUndefined";
 import { isString } from "./isString";
-
-type NullableRecord<T> = {
-  [K in keyof T]: T[K] | null;
-};
 
 export type CreateStorageConfig = Record<string, any>;
 
@@ -62,11 +58,17 @@ export const createStorage = <T extends CreateStorageConfig>(
     },
     /**
      * Get all storage values (it uses `localStorage.get()`).
+     *
+     * `undefined` and `null` values are not returned.
      */
-    getAll(): NullableRecord<T> {
-      const all = {} as NullableRecord<T>;
+    getAll(): T {
+      const all = {} as T;
       for (const key in keys) {
-        all[key] = this.get(key);
+        const value = this.get(key);
+
+        if (!isNullOrUndefined(value)) {
+          all[key] = value;
+        }
       }
       return all;
     },
@@ -91,7 +93,7 @@ export const createStorage = <T extends CreateStorageConfig>(
     setMany(newValues: Partial<T>) {
       for (const key in newValues) {
         const value = newValues[key];
-        if (!isUndefined(value)) {
+        if (!isNullOrUndefined(value)) {
           this.set(key, value as T[Extract<keyof T, string>]);
         } else {
           this.remove(key);
