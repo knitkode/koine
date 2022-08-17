@@ -242,8 +242,8 @@ declare namespace Koine.Api {
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod,
-    TJson extends RequestJson = RequestJson,
-    TQuery extends RequestQuery = RequestQuery
+    TJson extends RequestJson,
+    TQuery extends RequestQuery
   > = Omit<ClientOptions, "processReq"> & {
     processReq?: EndpointRequestProcessor<TEndpoints, TEndpoint, TMethod>;
     /**

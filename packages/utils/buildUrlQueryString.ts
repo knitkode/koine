@@ -12,8 +12,10 @@ import isArray from "./isArray";
  *
  * @category location
  */
-export function buildUrlQueryString(params: AnyQueryParams = {}) {
+export function buildUrlQueryString<T extends AnyQueryParams>(params: T) {
   let output = "";
+
+  if (!params) return output;
 
   for (const key in params) {
     const value = params[key];
