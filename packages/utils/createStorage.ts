@@ -1,10 +1,18 @@
 import { decode } from "./decode";
 import { encode } from "./encode";
-import isBrowser from "./isBrowser";
+import { isBrowser } from "./isBrowser";
 import { isString } from "./isString";
+
+type NullableRecord<T> = {
+  [K in keyof T]: T[K] | null;
+};
 
 export type CreateStorageConfig = Record<string, any>;
 
+/**
+ * Utility to create a storage instance to interact with `localStorage` using
+ * encrypted (encoded) key/values.
+ */
 export const createStorage = <T extends CreateStorageConfig>(
   config: Partial<T>
 ) => {
@@ -31,7 +39,14 @@ export const createStorage = <T extends CreateStorageConfig>(
     (map, key) => ({ ...map, [key]: encode(key) }),
     {} as Record<keyof T, string>
   );
+
   return {
+    /**
+     * Get all storage value (it uses `localStorage.get()`).
+     *
+     * Unparseable values with `JSON.parse()` return their value as it is.
+     * If the given `key` argument is not found `null` is returned.
+     */
     get<TKey extends keyof T>(key: TKey): T[TKey] | null {
       let stored = ls("g", keys[key]);
       if (stored) {
@@ -44,6 +59,21 @@ export const createStorage = <T extends CreateStorageConfig>(
       }
       return null;
     },
+    /**
+     * Get all storage values (it uses `localStorage.get()`).
+     */
+    getAll(): NullableRecord<T> {
+      const all = {} as NullableRecord<T>;
+      for (const key in keys) {
+        all[key] = this.get(key);
+      }
+      return all;
+    },
+    /**
+     * Set a storage value (it uses `localStorage.set()`).
+     *
+     * Non-string values are stringified with `JSON.stringify()`
+     */
     set<TKey extends keyof T>(key: TKey, value: T[TKey]) {
       ls(
         "s",
@@ -51,19 +81,41 @@ export const createStorage = <T extends CreateStorageConfig>(
         isString(value) ? encode(value) : encode(JSON.stringify(value))
       );
     },
+    /**
+     * Set all given storage values (it uses `localStorage.set()`).
+     *
+     * Non-string values are stringified with `JSON.stringify()`
+     */
+    setMany(newValues: Partial<T>) {
+      for (const key in newValues) {
+        this.set(key, newValues[key]);
+      }
+    },
+    /**
+     * Check if a storage value is _truthy_ (it uses `localStorage.get()`).
+     */
     has<TKey extends keyof T>(key: TKey) {
       const stored = ls("g", keys[key]);
       return !!stored;
     },
+    /**
+     * Remove a storage value (it uses `localStorage.remove()`).
+     */
     remove<TKey extends keyof T>(key: TKey) {
       ls("r", keys[key]);
     },
+    /**
+     * Clear all storage values (it uses `localStorage.remove()`).
+     */
     clear() {
       for (const key in keys) {
         ls("r", keys[key]);
       }
     },
     /**
+     * Watch a storage value changes, this needs to be executed only in browser
+     * context (it uses `window.addEventListener("storage")`).
+     *
      * Inspiration from [Multi Tab Logout in React — Redux](https://medium.com/front-end-weekly/multi-tab-logout-in-react-redux-4715f071c7fa)
      */
     watch: <TKey extends keyof T>(
@@ -81,6 +133,8 @@ export const createStorage = <T extends CreateStorageConfig>(
           }
         }
       };
+
+      if (!isBrowser) return () => void 0;
 
       window.addEventListener("storage", handler);
       return () => {
