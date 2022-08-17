@@ -92,7 +92,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       for (const key in newValues) {
         const value = newValues[key];
         if (!isUndefined(value)) {
-          this.set(key as Extract<keyof NonNullable<T>, string>, value);
+          this.set(key, value as T[Extract<keyof T, string>]);
         } else {
           this.remove(key);
         }
