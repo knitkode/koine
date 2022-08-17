@@ -1,6 +1,7 @@
 import { decode } from "./decode";
 import { encode } from "./encode";
 import { isBrowser } from "./isBrowser";
+import { isUndefined } from "./isUndefined";
 import { isString } from "./isString";
 
 type NullableRecord<T> = {
@@ -84,11 +85,17 @@ export const createStorage = <T extends CreateStorageConfig>(
     /**
      * Set all given storage values (it uses `localStorage.set()`).
      *
-     * Non-string values are stringified with `JSON.stringify()`
+     * Non-string values are stringified with `JSON.stringify()`, `undefined`
+     * and `null` values are removed from the storage
      */
     setMany(newValues: Partial<T>) {
       for (const key in newValues) {
-        this.set(key, newValues[key]);
+        const value = newValues[key];
+        if (!isUndefined(value)) {
+          this.set(key as Extract<keyof NonNullable<T>, string>, value);
+        } else {
+          this.remove(key);
+        }
       }
     },
     /**
