@@ -1,4 +1,5 @@
 import getParamAsString from "./getParamAsString";
+import isUndefined from "./isUndefined";
 
 /**
  * Get query parameter as `int`eger treating the `ParsedUrlQuery` result of
@@ -8,10 +9,12 @@ import getParamAsString from "./getParamAsString";
  * @category location
  *
  * @param {string} [raw] - The _raw_ query parameter
- * @param {number} [fallback=1] - Fallback value, `1` by default
+ * @param {number} [fallback] - Fallback number, we return `null` if not provided
  */
-export function getParamAsInt(raw?: string | string[], fallback = 1) {
-  return parseInt(getParamAsString(raw) || String(fallback), 10);
+export function getParamAsInt(raw?: string | string[], fallback?: number) {
+  const string = getParamAsString(raw);
+  if (string) parseInt(string, 10);
+  return isUndefined(fallback) ? null : fallback;
 }
 
 export default getParamAsInt;
