@@ -5,7 +5,8 @@
     "types": ["node"],
     "module": "esnext",
     "composite": true,
-    "declaration": true
+    "declaration": true,
+    "esModuleInterop": true
   },
   "files": ["typings.d.ts"],
   "include": ["**/*.ts"],
