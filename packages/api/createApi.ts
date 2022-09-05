@@ -192,9 +192,9 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             result?.status
           }: api[${apiName}] ${method.toUpperCase()} ${url}`;
           if (result?.ok) {
-            console.log(`🟢 ${logMsg}`);
+            console.info(`🟢 ${logMsg}`);
           } else {
-            console.log(`🔴 ${logMsg}`);
+            console.info(`🔴 ${logMsg}`);
           }
         }
         return result;

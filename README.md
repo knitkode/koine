@@ -24,6 +24,10 @@ Deep import paths considered as public and safe always need a folder with an `in
 
 > Most problems solved by this structure emerged in the `@koine/next` package when using the `app` and `document` wrapper. Without this structure [next.js](https://nextjs.org/) was not compiling the files correctly. Same for all components, the best *tree-shaked* output is obtained with the `esm` as in the current folder organization, inspired by [`@mui` packages](https://github.com/mui/material-ui) build output.
 
+### Logging
+
+Use `console.log` only for internal development, all other _public_ logging should use either `console.info`, `console.warn` or `console.error`. Their messages should always follow this syntax `[@koine/{package}:{function}] some details`. Most of the time these logging should be wrapped in an `if` condition to be eliminated in production code (`if (process.env["NODE_ENV"] !== "production") { ... }`).
+
 ### React components structure
 
 - About the react component object dot notation (e.g. `Dialog.Root`) see [@headless-ui technique](https://github.com/tailwindlabs/headlessui/blob/main/packages/%40headlessui-react/src/components/dialog/dialog.tsx#L550)

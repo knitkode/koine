@@ -71,7 +71,6 @@ function tsupExecutor(options, context, dependencies, entrypointsDirs) {
                     project = context.workspace.projects[context.projectName];
                     sourceRoot = project.sourceRoot;
                     packageJson = (0, devkit_1.readJsonFile)((0, path_1.join)(options.root, "./package.json"), {});
-                    console.log("packageJsonpackageJsonpackageJsonpackageJson", packageJson);
                     allTsupOptions = createTsupOptions(options, context, packageJson, sourceRoot, entrypointsDirs);
                     devkit_1.logger.info("Bundling ".concat(context.projectName, "..."));
                     return [4 /*yield*/, __await(Promise.all(allTsupOptions.map(function (tsupOptions) { return __awaiter(_this, void 0, void 0, function () {

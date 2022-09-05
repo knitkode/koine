@@ -22,6 +22,12 @@ export function getZonedDate(dateString = "", timeZone?: string) {
     try {
       timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     } catch (e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(
+          "[@koine/utils:getZonedDate] failed reading timeZone, error",
+          e
+        );
+      }
       // no need to do anything here, it just means `Intl` failed, probably
       // because the browser does not support it
     }

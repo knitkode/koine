@@ -18,7 +18,7 @@ export function readCookie<
 >(name?: N | null): T[N] | T {
   if (typeof document === "undefined") {
     if (process.env["NODE_ENV"] !== "production") {
-      console.warn("[@koine/utils] readCookie: document is undefined");
+      console.warn("[@koine/utils:readCookie] document is undefined");
     }
     return name ? ("" as T[N]) : ({} as T);
   }
@@ -39,7 +39,7 @@ export function readCookie<
       }
     } catch (e) {
       if (process.env["NODE_ENV"] !== "production") {
-        console.warn("[@koine/utils] readCookie: failed to decode", value);
+        console.warn("[@koine/utils:readCookie] failed to decode", value);
       }
     }
   }

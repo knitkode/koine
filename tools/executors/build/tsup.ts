@@ -13,7 +13,7 @@ export async function* tsupExecutor(
   const project = context.workspace.projects[context.projectName];
   const sourceRoot = project.sourceRoot;
   const packageJson = readJsonFile(join(options.root, "./package.json"), {});
-console.log("packageJsonpackageJsonpackageJsonpackageJson",packageJson)
+
   const allTsupOptions = createTsupOptions(
     options,
     context,

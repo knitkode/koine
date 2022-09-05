@@ -26,7 +26,7 @@ export function useForm<T extends FieldValues>(
 
   // if (process.env["NODE_ENV"] !== "production") {
   //   if (debug) {
-  //     console.log(
+  //     console.info(
   //       `Form ${i18nNamespace} data`,
   //       form.watch(),
   //       `errors: `,

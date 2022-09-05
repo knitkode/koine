@@ -1,5 +1,6 @@
 import { defaultAttributesClient, type CookieAttributesClient } from "./cookie";
 import isNumber from "./isNumber";
+import isUndefined from "./isUndefined";
 
 function converterWrite(value: string) {
   return encodeURIComponent(value).replace(
@@ -28,9 +29,9 @@ export function setCookie<T extends string = string>(
     ...restAttrs,
   };
 
-  if (typeof document === "undefined") {
+  if (isUndefined(document)) {
     if (process.env["NODE_ENV"] !== "production") {
-      console.warn("[@koine/utils] cookie setCookie: document is undefined");
+      console.warn("[@koine/utils:setCookie] document is undefined");
     }
     return undefined;
   }

@@ -209,7 +209,7 @@ export async function getRedirects(
       redirects.push(getPathRedirect("", route, permanent));
     }
   });
-  if (debug) console.log("redirects", redirects);
+  if (debug) console.info("[@koine/next/config:getRedirects]", redirects);
 
   return redirects;
 }
@@ -226,7 +226,7 @@ export async function getRewrites(routes: Routes, debug?: boolean) {
       rewrites.push(getPathRewrite(route));
     }
   });
-  if (debug) console.log("rewrites", rewrites);
+  if (debug) console.info("[@koine/next/config:getRewrites]", rewrites);
 
   return rewrites;
 }

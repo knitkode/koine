@@ -14,7 +14,10 @@ export function useTraceUpdate(props: any) {
       return ps;
     }, {});
     if (Object.keys(changedProps).length > 0) {
-      console.log("Changed props:", changedProps);
+      console.info(
+        "[@koine/react:useTraceUpdate] changed props:",
+        changedProps
+      );
     }
     prev.current = props;
   });
