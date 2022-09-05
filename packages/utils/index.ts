@@ -29,6 +29,7 @@ export * from "./getUrlHashParams";
 export * from "./getUrlHashPathname";
 export * from "./getUrlPathnameParts";
 export * from "./getUrlQueryParams";
+export * from "./getZonedDate";
 export * from "./imgEmptyPixel";
 export * from "./isAnyObject";
 export * from "./isArray";

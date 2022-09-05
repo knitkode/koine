@@ -2,8 +2,8 @@ import { type AnyQueryParams } from "./location";
 
 /**
  * It returns the "query params" as an object extracting it from the given `hash`
- *string or, if not provided, failling back reading the `location.hash`
-
+ * string or, if not provided, failling back reading the `location.hash`
+ *
  * @category location
  */
 export function getUrlHashParams<T extends NonNullable<AnyQueryParams>>(
