@@ -12,7 +12,7 @@
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "project": "packages/utils/package.json",
         "main": "packages/utils/index.ts",
-        "buildableProjectDepsInPackageJsonType": "peerDependencies",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/utils/*.md", "packages/utils/*.d.ts"]
       }

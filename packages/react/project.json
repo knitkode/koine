@@ -12,7 +12,7 @@
         "tsConfig": "packages/react/tsconfig.lib.json",
         "project": "packages/react/package.json",
         "main": "packages/react/index.ts",
-        "buildableProjectDepsInPackageJsonType": "peerDependencies",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/react/*.md", "packages/react/*.d.ts"]
       }
