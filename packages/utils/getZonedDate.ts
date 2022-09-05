@@ -1,4 +1,4 @@
-import utcToZonedTime from "date-fns-tz/esm/utcToZonedTime";
+import utcToZonedTime from "date-fns-tz/utcToZonedTime";
 import isBrowser from "./isBrowser";
 
 /**
