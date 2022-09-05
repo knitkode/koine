@@ -7,7 +7,8 @@ name: CI
 on:
   push:
     branches:
-      - main
+      # - main
+      - production
 
 jobs:
   setup:
