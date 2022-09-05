@@ -23,3 +23,5 @@ export const AppTheme = ({ theme, children }: AppThemeProps) => {
     </ThemeProvider>
   );
 };
+
+export default AppTheme;

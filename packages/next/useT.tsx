@@ -54,6 +54,8 @@ export function useT<TNamespace extends TranslateNamespace>(
   return tMemoized;
 }
 
+export default useT;
+
 // Instead of wrapping the `useTranslation` hook from [`next-translate`](https://github.com/vinissimus/next-translate/blob/master/src/useTranslation.tsx)
 // we might just rewrite it with our custom implementation but the `_context`
 // to use is not exposed by the library...

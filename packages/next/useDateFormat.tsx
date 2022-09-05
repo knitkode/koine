@@ -35,3 +35,5 @@ export const useDateFormat = () => {
 
   return formatter;
 };
+
+export default useDateFormat;

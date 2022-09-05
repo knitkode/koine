@@ -42,3 +42,5 @@ export const AppTheme = ({
     </CacheProvider>
   );
 };
+
+export default AppTheme;

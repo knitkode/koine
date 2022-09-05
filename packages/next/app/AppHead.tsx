@@ -10,3 +10,5 @@ export const AppHead = () => {
     </Head>
   );
 };
+
+export default AppHead;

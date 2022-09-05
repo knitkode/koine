@@ -30,3 +30,5 @@ export class Document extends NextDocument {
     );
   }
 }
+
+export default Document;

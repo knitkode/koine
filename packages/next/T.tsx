@@ -24,6 +24,8 @@ export type TProps<
  */
 export const T = (props: TProps) => <Trans {...props} />;
 
+export default T;
+
 // export type TProps = Omit<TransProps, "i18nKey" | "ns"> & {
 //     i18nKey: TranslationsAllPaths;
 // };

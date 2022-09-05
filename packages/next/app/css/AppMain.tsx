@@ -28,3 +28,5 @@ export const AppMain = ({
     </React.Fragment>
   );
 };
+
+export default AppMain;

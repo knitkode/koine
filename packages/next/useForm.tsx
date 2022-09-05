@@ -43,3 +43,5 @@ export function useForm<T extends FieldValues>(
     return { field, ...form };
   }, [t, form]);
 }
+
+export default useForm;

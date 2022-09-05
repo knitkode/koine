@@ -50,3 +50,5 @@ export const AppMain = ({
     </>
   );
 };
+
+export default AppMain;
