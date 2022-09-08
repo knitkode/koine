@@ -16,7 +16,6 @@ export * from "./getOffsetTop";
 export * from "./getOffset";
 export * from "./getScrollbarWidth";
 export * from "./getStyleValue";
-export * from "./index";
 export * from "./injectCss";
 export * from "./isHidden";
 export * from "./isInViewport";
