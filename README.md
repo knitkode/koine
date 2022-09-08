@@ -10,6 +10,10 @@ npm i @koine/next
 npm i @koine/react
 # or
 npm i @koine/utils
+# or
+npm i @koine/api
+# or
+npm i @koine/dom
 ```
 
 ## Dev notes

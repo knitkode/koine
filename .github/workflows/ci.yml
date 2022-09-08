@@ -192,7 +192,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ['api', 'react', 'next', 'utils']
+        package: ['api', 'dom', 'react', 'next', 'utils']
     needs: [setup, execute, release]
     steps:
       - name: Checkout

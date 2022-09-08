@@ -1,0 +1,28 @@
+{
+  "root": "packages/dom",
+  "sourceRoot": "packages/dom",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "./tools/executors/build:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/dom",
+        "tsConfig": "packages/dom/tsconfig.lib.json",
+        "project": "packages/dom/package.json",
+        "main": "packages/dom/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true,
+        "assets": ["packages/dom/*.md", "packages/dom/*.d.ts"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/dom/**/*.ts"]
+      }
+    }
+  }
+}

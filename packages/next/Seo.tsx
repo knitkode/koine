@@ -37,6 +37,20 @@ const _Seo = (props: SeoProps) => {
  * See also:
  * - https://github.com/catnose99/next-head-seo
  * - https://nextjs.org/docs/api-reference/next/head
+ *
+ * NB: on the homepage you usually want to customize the `titleTemplate` to avoid
+ * doubled app name. Assuming your default seo configuration is something like:
+ *
+ * ```js
+ * {
+ *   titleTemplate: "%s | MyApp"
+ * }
+ * ```
+ *
+ * On the homepage you migh want to override it, e.g.:
+ * ```js
+ * <Seo title="MyApp | Some description" titleTemplate="%s" />
+ * ```
  */
 export const Seo = memo(_Seo);
 
