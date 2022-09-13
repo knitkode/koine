@@ -224,14 +224,11 @@ declare namespace Koine.Api {
 
   type RequestMethod = "get" | "post" | "put" | "patch" | "delete";
 
-  type RequestJson = undefined | null | Record<string | number, unknown>;
+  type RequestJson = unknown;
 
-  type RequestQuery = undefined | null | Record<string | number, unknown>;
+  type RequestQuery = unknown;
 
-  type RequestParams =
-    | undefined
-    | null
-    | Record<string | number, string | number>;
+  type RequestParams = unknown;
 
   /**
    * Request options
