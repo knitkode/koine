@@ -1,4 +1,8 @@
-import { buildUrlQueryString, isFullObject } from "@koine/utils";
+import {
+  type AnyQueryParams,
+  buildUrlQueryString,
+  isFullObject,
+} from "@koine/utils";
 
 /**
  * Create api client
@@ -130,9 +134,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
 
         if (query) {
           // FIXME: ts-expect-error this assertion is not the best, but nevermind for now
-          url += buildUrlQueryString(
-            query as unknown as Koine.Api.RequestQuery
-          );
+          url += buildUrlQueryString(query as unknown as AnyQueryParams);
         }
 
         let response: null | Response = null;
