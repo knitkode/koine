@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
+import { type Simplify } from "@koine/utils";
 // import { type MotionProps } from "framer-motion";
 import {
   extendComponent,
   // type OverridableComponents,
   type WithComponents,
-  type Simplify,
 } from "../helpers";
 
 export type OwnProps = React.PropsWithChildren<{

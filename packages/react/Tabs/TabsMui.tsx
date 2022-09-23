@@ -8,11 +8,11 @@ import TabPanelUnstyled, {
   TabPanelUnstyledProps,
 } from "@mui/base/TabPanelUnstyled";
 import { type MotionProps } from "framer-motion";
+import { type Simplify } from "@koine/utils";
 import {
   extendComponent,
   // type OverridableComponents,
   type WithComponents,
-  type Simplify,
 } from "../helpers";
 
 type ReducedTabsUnstyledProps = Omit<

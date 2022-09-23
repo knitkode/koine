@@ -6,13 +6,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { type MotionProps } from "framer-motion";
+// import { type MotionProps } from "framer-motion";
+import { type Simplify } from "@koine/utils";
 import { useWindowSize } from "../hooks/useWindowSize";
 import {
   extendComponent,
   // type OverridableComponents,
   type WithComponents,
-  type Simplify,
 } from "../helpers";
 
 export type OwnProps = React.ComponentPropsWithoutRef<"details"> & {

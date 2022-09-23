@@ -7,6 +7,7 @@ export * from "./useId";
 export * from "./useIsomorphicLayoutEffect";
 export * from "./useMount";
 export * from "./useMountedState";
+export * from "./useMqWidthCreator";
 export * from "./usePrevious";
 export * from "./useScrollPosition";
 // export * from "./useScrollTo";
