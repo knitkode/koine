@@ -10,14 +10,14 @@ type MediaQuery<TBreakpoint extends string> =
   | `only:${TBreakpoint}`;
 
 export function useMqWidthCreator<
-  TDefinedBreakpoints extends Record<string, number>
->(customBreakpoints: TDefinedBreakpoints) {
-  type Breakpoint = Extract<keyof TDefinedBreakpoints, string>;
+  TBreakpointsConfig extends Record<string, number>
+>(customBreakpoints: TBreakpointsConfig) {
+  type Breakpoint = Extract<keyof TBreakpointsConfig, string>;
 
   const breakpoints = {
     xs: 0,
     ...customBreakpoints,
-  } as TDefinedBreakpoints;
+  } as TBreakpointsConfig;
 
   const sortedBreakpointsNames = (
     Object.keys(breakpoints).map((key) => {
@@ -94,11 +94,11 @@ export function useMqWidthCreator<
     only,
   };
 
-  return function useMqWidth(
-    media: MediaQuery<Extract<keyof TDefinedBreakpoints, string>>
-  ) {
+  return function useMqWidth<
+    TBreakpoints extends Extract<keyof TBreakpointsConfig, string>
+  >(media: MediaQuery<TBreakpoints>) {
     const [rule = "min", ruleBreakpoint] = media.split(":") as Split<
-      MediaQuery<Breakpoint>,
+      MediaQuery<TBreakpoints>,
       ":"
     >;
     // with the hook creator approach these breakpoint types cannot be deduced
@@ -106,7 +106,10 @@ export function useMqWidthCreator<
     //   typeof ruleBreakpoint,
     //   "-"
     // >;
-    const [br1, br2] = ruleBreakpoint.split("-") as [Breakpoint, Breakpoint];
+    const [br1, br2] = ruleBreakpoint.split("-") as [
+      TBreakpoints,
+      TBreakpoints
+    ];
 
     const query = queryResolvers[rule](br1, br2);
     const mq = useMemo(
