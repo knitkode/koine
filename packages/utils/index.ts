@@ -21,6 +21,7 @@ export * from "./ensureInt";
 export * from "./findDuplicatedIndexes";
 export * from "./getEmptyArray";
 export * from "./getKeys";
+export * from "./getMediaQueryWidthResolvers";
 export * from "./getNonce";
 export * from "./getParamAmong";
 export * from "./getParamAsInt";
