@@ -60,6 +60,8 @@ export function getMediaQueryWidthResolvers<
    * Media query between the two given breakpoints
    */
   const between = (br1: Breakpoint, br2?: Breakpoint) => {
+    br2 = br2 || getNextBreakpoint(br1);
+
     return br2
       ? `(min-width: ${breakpoints[br1]}px) and (max-width: ${
           breakpoints[br2] - 0.02
