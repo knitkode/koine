@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { createStorage } from "@koine/utils";
+import { createStorage } from "@koine/browser";
 
 const back = createStorage<{ lastUrl: string }>({
   lastUrl: "",

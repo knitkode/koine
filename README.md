@@ -13,6 +13,8 @@ npm i @koine/utils
 # or
 npm i @koine/api
 # or
+npm i @koine/browser
+# or
 npm i @koine/dom
 ```
 

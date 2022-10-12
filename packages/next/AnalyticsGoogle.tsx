@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import { pageview } from "@koine/utils";
+import { gtagPageview } from "@koine/browser";
 
 export type AnalyticsGoogleProps = {
   /** Falls back to `.env` variable `NEXT_PUBLIC_GTM_ID` */
@@ -29,7 +29,7 @@ export const AnalyticsGoogle = ({ id }: AnalyticsGoogleProps) => {
   useEffect(() => {
     if (routed && ready && asPath) {
       // const search = query;
-      pageview(asPath);
+      gtagPageview(asPath);
     }
   }, [asPath, query, routed, ready]);
 

@@ -1,6 +1,6 @@
 {
   "name": "koine",
-  "version": "1.0.87",
+  "version": "1.0.88",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
@@ -15,10 +15,10 @@
     "cz": "git-cz",
     "prepare": "husky install",
     "sync": "node ./tools/sync.js",
-    "link": "cd ./dist/api && npm link && cd ../dom && npm link && cd ../next && npm link && cd ../react && npm link && cd ../utils && npm link",
+    "link": "cd ./dist/api && npm link && cd ../browser && npm link && cd ../dom && npm link && cd ../next && npm link && cd ../react && npm link && cd ../utils && npm link",
     "tools": "npx tsc tools/executors/build/impl --skipLibCheck true",
     "bt": "npm run tools && npm run clean && clear && npm run build",
-    "publish": "cd ./dist/api && npm publish && cd ../dom && npm publish && cd ../next && npm publish && cd ../react && npm publish && cd ../utils && npm publish"
+    "publish": "cd ./dist/api && npm publish && cd ../browser && npm publish && cd ../dom && npm publish && cd ../next && npm publish && cd ../react && npm publish && cd ../utils && npm publish"
   },
   "private": true,
   "dependencies": {

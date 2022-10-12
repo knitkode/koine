@@ -25,6 +25,7 @@
     "baseUrl": ".",
     "paths": {
       "@koine/api": ["packages/api/index.ts"],
+      "@koine/browser": ["packages/browser/index.ts"],
       "@koine/dom": ["packages/dom/index.ts"],
       "@koine/next": ["packages/next/index.ts"],
       "@koine/react": ["packages/react/index.ts"],

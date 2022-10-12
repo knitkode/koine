@@ -1,6 +1,5 @@
 import { debounce } from "@koine/utils";
 import { on } from "./on";
-import { off } from "./off";
 
 /**
  * Listen window resize event debouncing the given handler
@@ -9,16 +8,7 @@ import { off } from "./off";
  */
 export function listenResize(...args: Parameters<typeof debounce>) {
   const handler = debounce(...args);
-
-  on(window, "resize", handler);
-
-  /**
-   * Unbind the previously attached scroll handler
-   */
-  function unbinder() {
-    handler.cancel();
-    off(window, "resize", handler);
-  }
+  const unbinder = on(window, "resize", handler);
 
   return unbinder;
 }

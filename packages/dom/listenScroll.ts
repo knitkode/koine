@@ -1,6 +1,5 @@
 import { debounce } from "@koine/utils";
 import { on } from "./on";
-import { off } from "./off";
 
 /**
  * Listen window scroll event debouncing the given handler
@@ -9,19 +8,10 @@ import { off } from "./off";
  */
 export function listenScroll(...args: Parameters<typeof debounce>) {
   const handler = debounce(...args);
-
-  on(window, "scroll", handler, {
+  const unbinder = on(window, "scroll", handler, {
     capture: true,
     passive: true,
   });
-
-  /**
-   * Unbind the previously attached scroll handler
-   */
-  function unbinder() {
-    handler.cancel();
-    off(window, "scroll", handler);
-  }
 
   return unbinder;
 }

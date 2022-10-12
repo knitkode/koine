@@ -1,10 +1,14 @@
+import { off } from "./off";
+
 /**
  * Shortcut for `addEventListener`
+ *
+ * @returns An automatic unbinding function to run to deregister the listener upon call
  */
-export function on(
+export function on<THandler extends (event: any) => void>(
   el: Window | Document | HTMLElement | Element,
   type: string,
-  handler: EventListener,
+  handler: THandler /* EventListener |  */ /* ((event: Event) => void) */,
   options: AddEventListenerOptions | boolean = false
 ) {
   if (process.env["NODE_ENV"] !== "production") {
@@ -13,7 +17,12 @@ export function on(
       return;
     }
   }
-  if (el) el.addEventListener(type, handler, options);
+  if (el) {
+    el.addEventListener(type, handler, options);
+    return () => off(el, type, handler);
+  }
+
+  return () => void 0;
 }
 
 export default on;
