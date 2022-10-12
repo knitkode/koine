@@ -1,0 +1,28 @@
+{
+  "root": "packages/browser",
+  "sourceRoot": "packages/browser",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "./tools/executors/build:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/browser",
+        "tsConfig": "packages/browser/tsconfig.lib.json",
+        "project": "packages/browser/package.json",
+        "main": "packages/browser/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true,
+        "assets": ["packages/browser/*.md", "packages/browser/*.d.ts"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/browser/**/*.ts"]
+      }
+    }
+  }
+}
