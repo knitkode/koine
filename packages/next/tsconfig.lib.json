@@ -4,7 +4,7 @@
     "outDir": "../../dist/out-tsc",
     "types": ["node"]
   },
-  "files": ["../react/typings.d.ts", "typings.d.ts"],
+  "files": ["../browser/typings.d.ts", "../react/typings.d.ts", "typings.d.ts"],
   "exclude": ["**/*.spec.ts", "**/*.spec.tsx"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

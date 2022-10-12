@@ -4,7 +4,9 @@ import { AppHead } from "../../AppHead";
 import { AppTheme, AppThemeProps } from "../AppTheme";
 import { AppMain, AppMainProps } from "../AppMain";
 
-export type NextAppProps = AppProps & AppThemeProps & AppMainProps;
+export type NextAppProps = AppProps<{ session: any }> &
+  AppThemeProps &
+  AppMainProps;
 
 /**
  * App with authentication provided by `next-auth`

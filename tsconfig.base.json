@@ -21,7 +21,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
-    "composite": true,
     "baseUrl": ".",
     "paths": {
       "@koine/api": ["packages/api/index.ts"],

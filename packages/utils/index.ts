@@ -116,15 +116,18 @@ export * from "./updateUrlQueryParams";
 export * from "./uuid";
 export * from "./wait";
 
+// export * from "type-fest";
 export type {
   Primitive,
   Class,
   Constructor,
   TypedArray,
+  Observer,
   ObservableLike,
   Except,
-  Mutable,
+  Writable,
   Merge,
+  MergeDeep,
   MergeExclusive,
   RequireAtLeastOne,
   RequireExactlyOne,
@@ -146,6 +149,7 @@ export type {
   Stringified,
   IterableElement,
   Entry,
+  Exact,
   Entries,
   SetReturnType,
   Simplify,
@@ -196,4 +200,20 @@ export type {
   DelimiterCasedPropertiesDeep,
   PackageJson,
   TsConfigJson,
+  SetNonNullable,
+  Spread,
+  PartialOnUndefinedDeep,
+  OptionalKeysOf,
+  HasOptionalKeys,
+  RequiredKeysOf,
+  HasRequiredKeys,
+  UnwrapOpaque,
+  EmptyObject,
+  IsEmptyObject,
+  TupleToUnion,
+  OmitIndexSignature,
+  PickIndexSignature,
+  ConditionalPickDeep,
+  // ConditionalSimplify,
+  // ConditionalSimplifyDeep,
 } from "type-fest";

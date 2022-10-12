@@ -4,7 +4,6 @@
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
     "module": "esnext",
-    "composite": true,
     "declaration": true,
     "esModuleInterop": true
   },
