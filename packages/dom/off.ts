@@ -10,7 +10,6 @@ export function off(
   if (process.env["NODE_ENV"] !== "production") {
     if (!el) {
       console.warn("[@koine/dom:off] unexisting DOM element");
-      return;
     }
   }
   if (el) el.removeEventListener(type, handler, options);

@@ -14,7 +14,6 @@ export function on<THandler extends (event: any) => void>(
   if (process.env["NODE_ENV"] !== "production") {
     if (!el) {
       console.warn("[@koine/dom:on] unexisting DOM element");
-      return;
     }
   }
   if (el) {
