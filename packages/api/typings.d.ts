@@ -258,26 +258,9 @@ declare namespace Koine.Api {
     query?: TQuery;
     /**
      * JSON request body
-     *
-     * FIXME: this should be `undefined` with `get` request mehod
      */
     json?: TJson;
   };
-  // } & ([TMethod] extends ["get"]
-  //     ? {
-  //         /**
-  //          * JSON request body
-  //          */
-  //         json?: TJson;
-  //       }
-  //     : {
-  //         /**
-  //          * JSON request body
-  //          *
-  //          * @default {}
-  //          */
-  //         json?: TJson;
-  //       });
 
   //////////////////////////////////////////////////////////////////////////////
   //

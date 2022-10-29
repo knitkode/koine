@@ -123,7 +123,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         let controller: AbortController;
         let timeoutId;
 
-        if (method !== "get" && json) {
+        if (json) {
           requestInit.body = JSON.stringify(json);
         }
         if (timeoutNumber > 0) {
