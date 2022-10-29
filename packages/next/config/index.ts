@@ -82,8 +82,8 @@ type MapPathnameParts = Record<
  *
  * Here we add the wildcard flag maybe found in the pathname to the template
  * name too, this is because we do not want to have the wildcard in the JSON
- * keys as those are also used to throught the `useT` hook and having asterisks
- * there is a bit cumbersome.
+ * keys as those are also used to produce links throught the `useTo` hook and
+ * having asterisks there is a bit cumbersome.
  *
  * @see https://nextjs.org/docs/messages/invalid-multi-match
  */
@@ -163,7 +163,7 @@ export function getPathRewrite(route: RoutesMapRoute) {
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
   return {
     source,
-    destination,
+    destination: destination.replace(/\/index$/, ""),
   };
 }
 
@@ -183,7 +183,7 @@ export function getPathRedirect(
   // console.log(`redirect template "${source}" to pathname "${destination}"`);
 
   return {
-    source,
+    source: source.replace(/\/index$/, ""),
     destination,
     permanent: Boolean(permanent),
     locale: false as const,
