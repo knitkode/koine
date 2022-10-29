@@ -1,5 +1,6 @@
 export * from "./accentSets";
 export * from "./addOrReplaceAtIdx";
+export * from "./arrayOfAll";
 export * from "./arrayToLookup";
 export * from "./buildUrlQueryString";
 export * from "./capitalize";
