@@ -66,7 +66,7 @@ export const createStorage = <T extends CreateStorageConfig>(
      * Non-string values are stringified with `JSON.stringify()`
      */
     set<TKey extends Extract<keyof T, string>>(key: TKey, value: T[TKey]) {
-      client.set(key, value, encode);
+      client.set(keys[key], value, encode);
     },
     /**
      * Set all given storage values (it uses `localStorage.set()`).
@@ -86,9 +86,9 @@ export const createStorage = <T extends CreateStorageConfig>(
         for (const key in newValues) {
           const value = newValues[key];
           if (!isNullOrUndefined(value)) {
-            client.set(key, value);
+            client.set(keys[key], value);
           } else {
-            client.remove(key);
+            client.remove(keys[key]);
           }
         }
       }

@@ -18,7 +18,9 @@ export const storageClient = (useSessionStorage?: boolean) => {
       : () => {
           if (process.env["NODE_ENV"] !== "production") {
             console.warn(
-              `[@koine/utils:storage]:ls localStorage does not exists outside of browser.`
+              `[@koine/utils:storageClient]: ${
+                useSessionStorage ? "sessionStorage" : "localStorage"
+              } does not exists outside of browser.`
             );
           }
         };
