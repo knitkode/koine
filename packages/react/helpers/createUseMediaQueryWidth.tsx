@@ -1,6 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
-  isBrowser,
   isUndefined,
   getMediaQueryWidthResolvers,
   type GetMediaQueryWidthResolversBreakpoints,
@@ -22,6 +21,12 @@ export type MediaQuerWidthDef<TBreakpoint extends string> =
 export type MediaQueryWidth<TBreakpoint extends string> =
   `@${MediaQuerWidthDef<TBreakpoint>}`;
 
+/**
+ * Use `null` instead of `false` as default value, @see https://observablehq.com/@werehamster/avoiding-hydration-mismatch-when-using-react-hooks
+ *
+ * @param customBreakpoints
+ * @returns
+ */
 export function createUseMediaQueryWidth<
   TBreakpointsConfig extends GetMediaQueryWidthResolversBreakpoints
 >(customBreakpoints: TBreakpointsConfig) {
@@ -29,7 +34,7 @@ export function createUseMediaQueryWidth<
 
   return function useMediaQueryWidth<
     TBreakpoints extends Extract<keyof TBreakpointsConfig, string>
-  >(media: MediaQueryWidth<TBreakpoints>) {
+  >(media: MediaQueryWidth<TBreakpoints>, serverValue?: null | boolean) {
     const definition = media.substring(
       1
     ) as _MediaQuerWidthDefExplicit<TBreakpoints>;
@@ -54,11 +59,9 @@ export function createUseMediaQueryWidth<
     ];
 
     const query = queryResolvers[rule](br1, br2);
-    const mq = useMemo(
-      () => (isBrowser ? window.matchMedia(query) : { matches: false }),
-      [query]
+    const [matches, setMatches] = useState<boolean | null>(
+      isUndefined(serverValue) ? null : serverValue
     );
-    const [matches, setMatches] = useState(mq.matches);
 
     useEffect(() => {
       const mq = window.matchMedia(query);

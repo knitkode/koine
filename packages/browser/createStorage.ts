@@ -1,11 +1,6 @@
-import {
-  decode,
-  encode,
-  isBrowser,
-  isNullOrUndefined,
-  isString,
-} from "@koine/utils";
+import { decode, encode, isBrowser, isNullOrUndefined } from "@koine/utils";
 import { on } from "@koine/dom";
+import { storage } from "./storage";
 
 export type CreateStorageConfig = Record<string, any>;
 
@@ -14,26 +9,10 @@ export type CreateStorageConfig = Record<string, any>;
  * encrypted (encoded) key/values.
  */
 export const createStorage = <T extends CreateStorageConfig>(
-  config: Partial<T>
+  config: Partial<T>,
+  useSessionStorage?: boolean
 ) => {
-  const methodsMap = { g: "getItem", s: "setItem", r: "removeItem" };
-  /**
-   * Super minifiable localStorage wrapper with SSR safety
-   */
-  const ls = <T extends "g" | "s" | "r">(
-    method: T,
-    key: string,
-    value?: T extends "s" ? string : undefined
-  ) =>
-    isBrowser
-      ? localStorage[methodsMap[method]](key, value)
-      : () => {
-          if (process.env["NODE_ENV"] !== "production") {
-            console.warn(
-              `[@koine/utils] createStorage: localStorage does not exists in this environment.`
-            );
-          }
-        };
+  const client = useSessionStorage ? storage.s : storage.l;
 
   const keys = Object.keys(config).reduce(
     (map, key) => ({ ...map, [key]: encode(key) }),
@@ -45,32 +24,38 @@ export const createStorage = <T extends CreateStorageConfig>(
      * Get all storage value (it uses `localStorage.get()`).
      *
      * Unparseable values with `JSON.parse()` return their value as it is.
-     * If the given `key` argument is not found `null` is returned.
+     * On ssr or if the given `key` argument is not found `defaultValue` is
+     * returned, otherwise `null`.
      */
-    get<TKey extends keyof T>(key: TKey): T[TKey] | null {
-      let stored = ls("g", keys[key]);
-      if (stored) {
-        stored = decode(stored);
-        try {
-          return JSON.parse(stored);
-        } catch (_e) {
-          return stored as T[TKey];
-        }
-      }
-      return null;
+    get<TKey extends keyof T>(
+      key: TKey,
+      defaultValue?: null | T[TKey]
+    ): T[TKey] | null {
+      return client.get<T[TKey]>(keys[key], decode, defaultValue);
     },
     /**
      * Get all storage values (it uses `localStorage.get()`).
      *
      * `undefined` and `null` values are not returned.
      */
-    getAll(): T {
+    getAll(defaultValues?: Partial<T>): T {
+      if (!isBrowser) {
+        if (process.env["NODE_ENV"] !== "production") {
+          console.log(
+            `[@koine/utils:createStorage] attempt to use 'getAll' outside of browser.`
+          );
+        }
+        return {} as T;
+      }
       const all = {} as T;
       for (const key in keys) {
-        const value = this.get(key);
+        const value = client.get<T[keyof T]>(key);
+        const defaultValue = defaultValues?.[key];
 
         if (!isNullOrUndefined(value)) {
           all[key] = value;
+        } else if (defaultValue) {
+          all[key] = defaultValue;
         }
       }
       return all;
@@ -80,12 +65,8 @@ export const createStorage = <T extends CreateStorageConfig>(
      *
      * Non-string values are stringified with `JSON.stringify()`
      */
-    set<TKey extends keyof T>(key: TKey, value: T[TKey]) {
-      ls(
-        "s",
-        keys[key],
-        isString(value) ? encode(value) : encode(JSON.stringify(value))
-      );
+    set<TKey extends Extract<keyof T, string>>(key: TKey, value: T[TKey]) {
+      client.set(key, value, encode);
     },
     /**
      * Set all given storage values (it uses `localStorage.set()`).
@@ -94,34 +75,52 @@ export const createStorage = <T extends CreateStorageConfig>(
      * and `null` values are removed from the storage
      */
     setMany(newValues: Partial<T>) {
-      for (const key in newValues) {
-        const value = newValues[key];
-        if (!isNullOrUndefined(value)) {
-          this.set(key, value as T[Extract<keyof T, string>]);
-        } else {
-          this.remove(key);
+      if (process.env["NODE_ENV"] !== "production") {
+        if (!isBrowser) {
+          console.log(
+            `[@koine/utils:createStorage] attempt to use 'setMany' outside of browser.`
+          );
+        }
+      }
+      if (isBrowser) {
+        for (const key in newValues) {
+          const value = newValues[key];
+          if (!isNullOrUndefined(value)) {
+            client.set(key, value);
+          } else {
+            client.remove(key);
+          }
         }
       }
     },
     /**
      * Check if a storage value is _truthy_ (it uses `localStorage.get()`).
      */
-    has<TKey extends keyof T>(key: TKey) {
-      const stored = ls("g", keys[key]);
-      return !!stored;
+    has<TKey extends Extract<keyof T, string>>(key: TKey) {
+      return client.has(keys[key]);
     },
     /**
      * Remove a storage value (it uses `localStorage.remove()`).
      */
-    remove<TKey extends keyof T>(key: TKey) {
-      ls("r", keys[key]);
+    remove<TKey extends Extract<keyof T, string>>(key: TKey) {
+      client.remove(keys[key]);
     },
     /**
      * Clear all storage values (it uses `localStorage.remove()`).
      */
     clear() {
-      for (const key in keys) {
-        ls("r", keys[key]);
+      if (process.env["NODE_ENV"] !== "production") {
+        if (!isBrowser) {
+          console.log(
+            `[@koine/utils:createStorage] attempt to use 'clear' outside of browser.`
+          );
+        }
+      }
+
+      if (isBrowser) {
+        for (const key in keys) {
+          client.remove(keys[key]);
+        }
       }
     },
     /**
@@ -135,6 +134,15 @@ export const createStorage = <T extends CreateStorageConfig>(
       onRemoved?: () => void,
       onAdded?: () => void
     ) => {
+      if (!isBrowser) {
+        if (process.env["NODE_ENV"] !== "production") {
+          console.log(
+            `[@koine/utils:createStorage] attempt to use 'watch' outside of browser.`
+          );
+        }
+        return () => void 0;
+      }
+
       const handler = (event: StorageEvent) => {
         const { key, oldValue, newValue } = event;
         if (key === keys[keyToWatch]) {
@@ -145,8 +153,6 @@ export const createStorage = <T extends CreateStorageConfig>(
           }
         }
       };
-
-      if (!isBrowser) return () => void 0;
 
       const listener = on(window, "storage", handler);
       return listener;
