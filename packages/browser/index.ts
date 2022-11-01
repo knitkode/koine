@@ -11,3 +11,5 @@ export * from "./navigateToParams";
 export * from "./navigateToUrl";
 export * from "./navigateWithoutUrlParam";
 export * from "./redirectTo";
+export * from "./storage";
+export * from "./storageClient";
