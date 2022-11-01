@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import {
   injectCss,
   calculateFixedOffset,
@@ -6,6 +6,7 @@ import {
   $each,
 } from "@koine/dom";
 import { debounce } from "@koine/utils";
+import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
 
 let observer: ResizeObserver | undefined;
 
@@ -21,7 +22,7 @@ const inject = (value: number) => {
 export function useFixedOffset() {
   const fixedOffset = useRef<number>(0);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const update = () => {
       const newFixedOffset = calculateFixedOffset();
       fixedOffset.current = newFixedOffset;

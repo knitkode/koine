@@ -1,10 +1,11 @@
-import { useState, useLayoutEffect } from "react";
+import { useState } from "react";
 import {
   isUndefined,
   getMediaQueryWidthResolvers,
   type GetMediaQueryWidthResolversBreakpoints,
   type Split,
 } from "@koine/utils";
+import { useIsomorphicLayoutEffect } from "../hooks/useIsomorphicLayoutEffect";
 
 type _MediaQuerWidthDefExplicit<TBreakpoint extends string> =
   | `min-${TBreakpoint}`
@@ -63,7 +64,7 @@ export function createUseMediaQueryWidth<
       isUndefined(serverValue) ? null : serverValue
     );
 
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       const mq = window.matchMedia(query);
       const handleChange = (event: MediaQueryListEvent) => {
         setMatches(event.matches);
@@ -98,9 +99,10 @@ export default createUseMediaQueryWidth;
 //// without creator it would be:
 //// ---------------------------------------------------------------------------
 
-// import { useState, useLayoutEffect, useMemo } from "react";
+// import { useState, useIsomorphicLayoutEffect, useMemo } from "react";
 // import { isBrowser, type Split } from "@koine/utils";
 // import { breakpoints as themeBreakpoints } from "@/config/theme/breakpoints";
+// import { useIsomorphicLayoutEffect } from "../hooks/useIsomorphicLayoutEffect"
 
 // type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl";
 
@@ -211,7 +213,7 @@ export default createUseMediaQueryWidth;
 //   );
 //   const [matches, setMatches] = useState(mq.matches);
 
-//   useLayoutEffect(() => {
+//   useIsomorphicLayoutEffect(() => {
 //     const mq = window.matchMedia(query);
 //     const handleChange = (event: MediaQueryListEvent) => {
 //       setMatches(event.matches);
