@@ -27,7 +27,7 @@ export const createStorage = <T extends CreateStorageConfig>(
      * On ssr or if the given `key` argument is not found `defaultValue` is
      * returned, otherwise `null`.
      */
-    get<TKey extends keyof T>(
+    get<TKey extends Extract<keyof T, string>>(
       key: TKey,
       defaultValue?: null | T[TKey]
     ): T[TKey] | null {
@@ -49,7 +49,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       }
       const all = {} as T;
       for (const key in keys) {
-        const value = client.get<T[keyof T]>(key);
+        const value = this.get<Extract<keyof T, string>>(key);
         const defaultValue = defaultValues?.[key];
 
         if (!isNullOrUndefined(value)) {
@@ -65,7 +65,7 @@ export const createStorage = <T extends CreateStorageConfig>(
      *
      * Non-string values are stringified with `JSON.stringify()`
      */
-    set<TKey extends Extract<keyof T, string>>(key: TKey, value: T[TKey]) {
+    set<TKey extends Extract<keyof T, string>>(key: TKey, value?: T[TKey]) {
       client.set(keys[key], value, encode);
     },
     /**
@@ -86,9 +86,9 @@ export const createStorage = <T extends CreateStorageConfig>(
         for (const key in newValues) {
           const value = newValues[key];
           if (!isNullOrUndefined(value)) {
-            client.set(keys[key], value);
+            this.set(key, value);
           } else {
-            client.remove(keys[key]);
+            this.remove(key);
           }
         }
       }
