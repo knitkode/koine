@@ -3,6 +3,7 @@ import {
   isBrowser,
   buildUrlQueryString,
 } from "@koine/utils";
+import navigateToUrl from "./navigateToUrl";
 
 /**
  * Change current URL query parameters, it uses `history`.
@@ -19,11 +20,7 @@ export function navigateToParams(
     typeof params === "string" ? params : buildUrlQueryString(params);
 
   if (isBrowser) {
-    history[replace ? "replaceState" : "pushState"](
-      null,
-      "",
-      location.pathname + queryString
-    );
+    navigateToUrl(location.pathname + queryString, replace);
   }
 
   return queryString;

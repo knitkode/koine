@@ -8,5 +8,6 @@ export * from "./navigateToHashParams";
 export * from "./navigateToMergedHashParams";
 export * from "./navigateToMergedParams";
 export * from "./navigateToParams";
+export * from "./navigateToUrl";
 export * from "./navigateWithoutUrlParam";
 export * from "./redirectTo";

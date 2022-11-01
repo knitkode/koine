@@ -1,6 +1,7 @@
 export * from "./accentSets";
 export * from "./addOrReplaceAtIdx";
 export * from "./arrayOfAll";
+export * from "./arraySum";
 export * from "./arrayToLookup";
 export * from "./buildUrlQueryString";
 export * from "./capitalize";
@@ -77,6 +78,7 @@ export * from "./isUndefined";
 export * from "./isWeakMap";
 export * from "./isWeakSet";
 export * from "./location";
+export * from "./lowercase";
 export * from "./mapListBy";
 export * from "./matchSorter";
 export * from "./mergeObjects";
@@ -114,6 +116,7 @@ export * from "./truncate";
 export * from "./uid";
 export * from "./updateLinkParams";
 export * from "./updateUrlQueryParams";
+export * from "./uppercase";
 export * from "./uuid";
 export * from "./wait";
 
