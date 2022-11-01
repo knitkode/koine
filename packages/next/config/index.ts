@@ -373,6 +373,7 @@ export function withKoine(
         //   transform: "@koine/react/{{ matches.[1] }}/{{member}}",
         // },
         "@koine/api": { transform: "@koine/api/{{member}}" },
+        "@koine/browser": { transform: "@koine/browser/{{member}}" },
         "@koine/dom": { transform: "@koine/dom/{{member}}" },
         "@koine/next": { transform: "@koine/next/{{member}}" },
         "@koine/utils": { transform: "@koine/utils/{{member}}" },
