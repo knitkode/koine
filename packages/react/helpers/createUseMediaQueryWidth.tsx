@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import {
   isUndefined,
   getMediaQueryWidthResolvers,
@@ -63,7 +63,7 @@ export function createUseMediaQueryWidth<
       isUndefined(serverValue) ? null : serverValue
     );
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       const mq = window.matchMedia(query);
       const handleChange = (event: MediaQueryListEvent) => {
         setMatches(event.matches);
@@ -98,7 +98,7 @@ export default createUseMediaQueryWidth;
 //// without creator it would be:
 //// ---------------------------------------------------------------------------
 
-// import { useState, useEffect, useMemo } from "react";
+// import { useState, useLayoutEffect, useMemo } from "react";
 // import { isBrowser, type Split } from "@koine/utils";
 // import { breakpoints as themeBreakpoints } from "@/config/theme/breakpoints";
 
@@ -211,7 +211,7 @@ export default createUseMediaQueryWidth;
 //   );
 //   const [matches, setMatches] = useState(mq.matches);
 
-//   useEffect(() => {
+//   useLayoutEffect(() => {
 //     const mq = window.matchMedia(query);
 //     const handleChange = (event: MediaQueryListEvent) => {
 //       setMatches(event.matches);
