@@ -1,4 +1,4 @@
-import { storageClient } from "./storageClient";
+import storageClient from "./storageClient";
 
 /**
  * Storage, for `localStorage` and `sessionStorage`

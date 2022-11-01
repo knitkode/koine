@@ -1,15 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.useTheme = exports.createTheme = exports.breakpoints = void 0;
-var tslib_1 = require("tslib");
-var styled_components_1 = require("styled-components");
+import { __assign } from "tslib";
+import { useTheme as _useTheme } from "styled-components";
 var DEFAULT_BREAKPOINTS = {
-    xs: 0,
-    sm: 440,
-    md: 768,
-    lg: 1024,
-    xl: 1368,
-    xxl: 1690,
+  xs: 0,
+  sm: 440,
+  md: 768,
+  lg: 1024,
+  xl: 1368,
+  xxl: 1690,
 };
 /**
  * You can override the default breakpoints through the .env variable
@@ -22,24 +19,25 @@ var DEFAULT_BREAKPOINTS = {
  * BREAKPOINTS=xs:0,sm:440,md:768,lg:1024,xl:1368,xxl:1690
  * ```
  */
-exports.breakpoints = process.env["BREAKPOINTS"]
-    ? process.env["BREAKPOINTS"].split(",").reduce(function (map, pair) {
-        var _a = pair.split(":"), key = _a[0], value = _a[1];
-        map[key] = parseFloat(value);
-        return map;
+export var breakpoints = process.env["BREAKPOINTS"]
+  ? process.env["BREAKPOINTS"].split(",").reduce(function (map, pair) {
+      var _a = pair.split(":"),
+        key = _a[0],
+        value = _a[1];
+      map[key] = parseFloat(value);
+      return map;
     }, {})
-    : DEFAULT_BREAKPOINTS;
+  : DEFAULT_BREAKPOINTS;
 var themeDefault = {
-    maxWidth: exports.breakpoints.xxl,
-    breakpoints: exports.breakpoints,
-    devices: {
-        mobile: "sm",
-        tablet: "md",
-        desktop: "lg",
-    },
+  maxWidth: breakpoints.xxl,
+  breakpoints: breakpoints,
+  devices: {
+    mobile: "sm",
+    tablet: "md",
+    desktop: "lg",
+  },
 };
-var createTheme = function (options) {
-    return (tslib_1.__assign(tslib_1.__assign({}, themeDefault), options));
+export var createTheme = function (options) {
+  return __assign(__assign({}, themeDefault), options);
 };
-exports.createTheme = createTheme;
-exports.useTheme = styled_components_1.useTheme;
+export var useTheme = _useTheme;

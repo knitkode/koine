@@ -1,6 +1,6 @@
 import { decode, encode, isBrowser, isNullOrUndefined } from "@koine/utils";
 import { on } from "@koine/dom";
-import { storage } from "./storage";
+import storage from "./storage";
 
 export type CreateStorageConfig = Record<string, any>;
 
