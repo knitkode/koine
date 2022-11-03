@@ -9,7 +9,10 @@ import navigateToUrl from "./navigateToUrl";
 export function navigateToHash(hash = "") {
   const { pathname, search } = location;
 
-  navigateToUrl(pathname + (search ? "?" + search : "") + "#" + hash, true);
+  navigateToUrl(
+    pathname + (search ? "?" + search : "") + (hash ? "#" + hash : ""),
+    true
+  );
 }
 
 export default navigateToHash;
