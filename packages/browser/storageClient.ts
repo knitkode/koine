@@ -53,11 +53,11 @@ export const storageClient = (useSessionStorage?: boolean) => {
         } catch (_e) {
           value = stored;
 
-          if (process.env["NODE_ENV"] !== "production") {
-            console.warn(
-              `[@koine/utils:storage]: 'get' failed to parse stored value as JSON. Plain '${stored}' value is returned.`
-            );
-          }
+          // if (process.env["NODE_ENV"] !== "production") {
+          //   console.warn(
+          //     `[@koine/utils:storage]: 'get' failed to parse stored value as JSON. Plain '${stored}' value is returned.`
+          //   );
+          // }
         }
       }
     }
