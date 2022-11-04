@@ -18,8 +18,8 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   const {
     headers: headersBase = {},
     request: requestBase = {
-      credentials: "include",
       referrerPolicy: "no-referrer",
+      // credentials: "include",
       // mode: "cors",
       // redirect: "follow",
       // cache: "no-cache",
