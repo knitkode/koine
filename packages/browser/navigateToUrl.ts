@@ -5,7 +5,7 @@
  */
 export function navigateToUrl(url = "", replace?: boolean) {
   if (url) {
-    history[replace ? "replaceState" : "pushState"](null, "", url);
+    history[replace ? "replaceState" : "pushState"](history.state, "", url);
   }
 }
 
