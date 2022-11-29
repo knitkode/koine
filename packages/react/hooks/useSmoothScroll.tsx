@@ -7,7 +7,13 @@ export function useSmoothScroll() {
   const fixedOffset = useFixedOffset();
 
   const scroll = useCallback(
-    (to?: number | string, offset = 0, callback?: () => void) => {
+    (
+      to?: number | string,
+      offset = 0,
+      callback?: () => void,
+      fallbackTimeout?: number,
+      behavior?: ScrollBehavior
+    ) => {
       let top: number | undefined = undefined;
 
       if (isNumber(to)) {
@@ -22,7 +28,7 @@ export function useSmoothScroll() {
       if (isNumber(top)) {
         top = top + window.scrollY - (fixedOffset.current + offset);
 
-        scrollTo(top, callback);
+        scrollTo(top, callback, fallbackTimeout, behavior);
       }
     },
     [fixedOffset]
