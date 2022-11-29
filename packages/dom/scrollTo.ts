@@ -8,25 +8,43 @@ import { off } from "./off";
  *
  * @param offset - offset to scroll to
  * @param callback - callback function
+ * @param [fallbackTimeout] - this appears to be needed in some hard to reproduce scenario on safari, where the callback seem to be never called
+ * @param [behavior="smooth"]
  */
-export function scrollTo(offset: number, callback?: () => void) {
-  const fixedOffset = offset.toFixed();
-
+export function scrollTo(
+  destination: number,
+  callback?: () => void,
+  fallbackTimeout?: number,
+  behavior?: ScrollBehavior
+) {
+  const fixedDestination = destination.toFixed();
   if (callback) {
+    let callbackFired = false;
+
     const onScroll = function () {
-      if (window.pageYOffset.toFixed() === fixedOffset) {
+      if (window.pageYOffset.toFixed() === fixedDestination) {
         off(window, "scroll", onScroll);
+        callbackFired = true;
         callback();
       }
     };
 
     on(window, "scroll", onScroll);
     onScroll();
+
+    if (fallbackTimeout) {
+      setTimeout(() => {
+        if (!callbackFired) {
+          off(window, "scroll", onScroll);
+          callback();
+        }
+      }, fallbackTimeout);
+    }
   }
 
   window.scrollTo({
-    top: offset,
-    behavior: "smooth",
+    top: destination,
+    behavior: behavior || "smooth",
   });
 }
 export default scrollTo;

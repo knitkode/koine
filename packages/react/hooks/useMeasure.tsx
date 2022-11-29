@@ -29,24 +29,6 @@ type State = [
   RectReadOnly
 ];
 
-// Adds native resize listener to window
-function useOnWindowResize(onWindowResize: (event: Event) => void) {
-  useEffect(() => {
-    const listener = listenResize(onWindowResize);
-    return listener;
-  }, [onWindowResize]);
-}
-
-function useOnWindowScroll(onScroll: () => void, enabled: boolean) {
-  useEffect(() => {
-    if (enabled) {
-      const listener = listenScroll(onScroll);
-      return listener;
-    }
-    return () => 0;
-  }, [onScroll, enabled]);
-}
-
 // Returns a list of scroll offsets
 function findScrollContainers(
   element: HTMLOrSVGElement | null
@@ -196,8 +178,26 @@ export function useMeasure(options?: UseMeasureOptions): UseMeasureReturn {
   };
 
   // add general event listeners
-  useOnWindowScroll(forceRefresh, Boolean(scroll));
-  useOnWindowResize(forceRefresh);
+  // useOnWindowScroll(forceRefresh, Boolean(scroll));
+  // useOnWindowResize(() => {
+  //   debugger;
+  //   forceRefresh();
+  // });
+
+  useEffect(() => {
+    if (scroll) {
+      const listener = listenScroll(forceRefresh, 100);
+      return listener;
+    }
+    return () => 0;
+  }, [scroll, forceRefresh]);
+
+  useEffect(() => {
+    // const listener = listenResize(onWindowResize);
+    // return listener;
+    const listener = listenResize(forceRefresh, 100);
+    return listener;
+  }, [forceRefresh]);
 
   // respond to changes that are relevant for the listeners
   useEffect(() => {

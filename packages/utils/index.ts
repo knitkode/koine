@@ -113,6 +113,7 @@ export * from "./toNumber";
 export * from "./toRgba";
 export * from "./transformToUrlPathname";
 export * from "./truncate";
+export * from "./tryUntil";
 export * from "./uid";
 export * from "./updateLinkParams";
 export * from "./updateUrlQueryParams";
