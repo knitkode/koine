@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -94,39 +94,16 @@ var devkit_1 = require("@nrwl/devkit");
 var assets_1 = require("@nrwl/workspace/src/utilities/assets");
 var check_dependencies_1 = require("@nrwl/js/src/utils/check-dependencies");
 var compiler_helper_dependency_1 = require("@nrwl/js/src/utils/compiler-helper-dependency");
-var copy_assets_handler_1 = require("@nrwl/js/src/utils/copy-assets-handler");
+var copy_assets_handler_1 = require("@nrwl/js/src/utils/assets/copy-assets-handler");
+var inline_1 = require("@nrwl/js/src/utils/inline");
 var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
-var update_package_json_1 = require("@nrwl/js/src/utils/update-package-json");
+var update_package_json_1 = require("@nrwl/js/src/utils/package-json/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
-// import { rollupExecutor } from "./rollup";
-// import { tsupExecutor } from "./tsup";
-// import { convertNxExecutor }  '@nrwl/devkit';
+var tsc_impl_1 = require("@nrwl/js/src/executors/tsc/tsc.impl");
 // we follow the same structure as in @mui packages builds
-var TMP_FOLDER_CJS = "node";
 var TMP_FOLDER_MODERN = ".modern";
-var DEST_FOLDER_CJS = "node";
 var DEST_FOLDER_MODERN = "";
-/**
- *
- * @see https://github.com/nrwl/nx/blob/master/packages/nx/src/command-line/workspace-generators.ts#L171-L188
- */
-function createTmpTsConfig(tsconfigPath, updateConfig) {
-    var tmpTsConfigPath = (0, path_1.join)((0, path_1.dirname)(tsconfigPath), ".tsconfig.".concat(performance.now(), ".json"));
-    var originalTSConfig = (0, devkit_1.readJsonFile)(tsconfigPath);
-    var generatedTSConfig = __assign(__assign({}, originalTSConfig), updateConfig);
-    process.on("exit", function () { return cleanupTmpTsConfigFile(tmpTsConfigPath); });
-    (0, devkit_1.writeJsonFile)(tmpTsConfigPath, generatedTSConfig);
-    return tmpTsConfigPath;
-}
-/**
- *
- * @see https://github.com/nrwl/nx/blob/master/packages/nx/src/command-line/workspace-generators.ts#L190-L194
- */
-function cleanupTmpTsConfigFile(tmpTsConfigPath) {
-    if (tmpTsConfigPath) {
-        (0, fs_extra_1.removeSync)(tmpTsConfigPath);
-    }
-}
+var DEST_FOLDER_CJS = "node";
 function treatModernOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
         var outputPath, tmpOutputPath, destOutputPath, entrypointsDirs;
@@ -136,7 +113,7 @@ function treatModernOutput(options) {
             destOutputPath = (0, path_1.join)(outputPath, DEST_FOLDER_MODERN);
             entrypointsDirs = [];
             return [2 /*return*/, new Promise(function (resolve) {
-                    (0, glob_1.glob)("**/*.{ts,js}", { cwd: tmpOutputPath }, function (er, relativePaths) {
+                    (0, glob_1.glob)("**/*.{js,json,ts}", { cwd: tmpOutputPath }, function (er, relativePaths) {
                         return __awaiter(this, void 0, void 0, function () {
                             var _this = this;
                             return __generator(this, function (_a) {
@@ -157,7 +134,8 @@ function treatModernOutput(options) {
                                                         _a.sent();
                                                         _a.label = 2;
                                                     case 2:
-                                                        // only write package.json file deeper than the root and when we have an `index` entry file
+                                                        // only write package.json file deeper than the root and when whave
+                                                        // an `index` entry file
                                                         if (fileName === "index" && dir && dir !== ".") {
                                                             destDir = (0, path_1.join)(destOutputPath, dir);
                                                             destModernDir = destDir;
@@ -175,6 +153,7 @@ function treatModernOutput(options) {
                                         return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
                                     case 2:
                                         _a.sent();
+                                        console.log("treatModernOutput: entrypointsDirs", entrypointsDirs);
                                         resolve(entrypointsDirs);
                                         return [2 /*return*/];
                                 }
@@ -185,59 +164,8 @@ function treatModernOutput(options) {
         });
     });
 }
-function treatCjsOutput(options) {
-    return __awaiter(this, void 0, void 0, function () {
-        var outputPath, tmpOutputPath, destOutputPath;
-        return __generator(this, function (_a) {
-            outputPath = options.outputPath;
-            tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_CJS);
-            destOutputPath = (0, path_1.join)(outputPath, DEST_FOLDER_CJS);
-            return [2 /*return*/, new Promise(function (resolve) {
-                    if (tmpOutputPath === destOutputPath) {
-                        resolve(true);
-                        return;
-                    }
-                    (0, glob_1.glob)("**/*.js", { cwd: tmpOutputPath }, function (er, relativePaths) {
-                        return __awaiter(this, void 0, void 0, function () {
-                            var _this = this;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, (0, fs_extra_1.ensureDir)(destOutputPath)];
-                                    case 1:
-                                        _a.sent();
-                                        return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
-                                                var srcFile, destFile;
-                                                return __generator(this, function (_a) {
-                                                    switch (_a.label) {
-                                                        case 0:
-                                                            srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
-                                                            destFile = (0, path_1.join)(destOutputPath, relativePath);
-                                                            if (!(srcFile !== destFile)) return [3 /*break*/, 2];
-                                                            return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile, { overwrite: true })];
-                                                        case 1:
-                                                            _a.sent();
-                                                            _a.label = 2;
-                                                        case 2: return [2 /*return*/];
-                                                    }
-                                                });
-                                            }); }))];
-                                    case 2:
-                                        _a.sent();
-                                        return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
-                                    case 3:
-                                        _a.sent();
-                                        resolve(true);
-                                        return [2 /*return*/];
-                                }
-                            });
-                        });
-                    });
-                })];
-        });
-    });
-}
 /**
- * We treat these seprataly as they carry the `dependencies` of the actual
+ * We treat these separetely as they carry the `dependencies` of the actual
  * packages
  */
 function treatRootEntrypoints(options) {
@@ -248,6 +176,7 @@ function treatRootEntrypoints(options) {
             packagePath = (0, path_1.join)(outputPath, "./package.json");
             packageJson = (0, devkit_1.readJsonFile)(packagePath);
             rootPackageJson = (0, devkit_1.readJsonFile)((0, path_1.join)(options.root, "./package.json"));
+            // console.log("rootPackageJson", rootPackageJson)
             return [2 /*return*/, new Promise(function (resolve) {
                     (0, devkit_1.writeJsonFile)(packagePath, Object.assign(packageJson, {
                         version: rootPackageJson.version
@@ -294,21 +223,25 @@ function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
 }
 function executor(_options, context) {
     return __asyncGenerator(this, arguments, function executor_1() {
-        var _a, sourceRoot, root, options, entrypointsDirs, _b, projectRoot, tmpTsConfig, target, dependencies, tsLibDependency, assetHandler, disposeWatchAssetChanges_1, disposePackageJsonChanged_1, initialTsConfig, tsConfig, tmpOptions;
+        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, tsLibDependency, tsCompilationOptions, inlineProjectGraph, assetHandler, initialTsConfig, tsConfig, tmpOptions, typescriptCompilation, disposeWatchAssetChanges_1, disposePackageJsonChanged_1;
         var _this = this;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
                     _a = context.workspace.projects[context.projectName], sourceRoot = _a.sourceRoot, root = _a.root;
                     options = normalizeOptions(_options, context.root, sourceRoot, root);
-                    entrypointsDirs = [];
                     _b = (0, check_dependencies_1.checkDependencies)(context, _options.tsConfig), projectRoot = _b.projectRoot, tmpTsConfig = _b.tmpTsConfig, target = _b.target, dependencies = _b.dependencies;
                     if (tmpTsConfig) {
                         options.tsConfig = tmpTsConfig;
                     }
-                    tsLibDependency = (0, compiler_helper_dependency_1.getHelperDependency)(compiler_helper_dependency_1.HelperDependency.tsc, options.tsConfig, dependencies);
+                    tsLibDependency = (0, compiler_helper_dependency_1.getHelperDependency)(compiler_helper_dependency_1.HelperDependency.tsc, options.tsConfig, dependencies, context.projectGraph);
                     if (tsLibDependency) {
                         dependencies.push(tsLibDependency);
+                    }
+                    tsCompilationOptions = (0, tsc_impl_1.createTypeScriptCompilationOptions)(options, context);
+                    inlineProjectGraph = (0, inline_1.handleInliningBuild)(context, options, tsCompilationOptions.tsConfig);
+                    if (!(0, inline_1.isInlineGraphEmpty)(inlineProjectGraph)) {
+                        tsCompilationOptions.rootDir = ".";
                     }
                     assetHandler = new copy_assets_handler_1.CopyAssetsHandler({
                         projectDir: projectRoot,
@@ -316,6 +249,45 @@ function executor(_options, context) {
                         outputDir: _options.outputPath,
                         assets: _options.assets
                     });
+                    initialTsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
+                    tsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
+                    tmpOptions = Object.assign({}, options);
+                    // restore initial tsConfig
+                    process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
+                            return [2 /*return*/];
+                        });
+                    }); });
+                    process.on("SIGTERM", function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
+                            return [2 /*return*/];
+                        });
+                    }); });
+                    // generate CommonJS:
+                    // ---------------------------------------------------------------------------
+                    tsConfig.compilerOptions.module = "commonjs";
+                    tsConfig.compilerOptions.composite = false;
+                    tsConfig.compilerOptions.declaration = false;
+                    tsConfig.skipLibCheck = true;
+                    (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfig);
+                    tsCompilationOptions.outputPath = tmpOptions.outputPath = (0, path_1.join)(options.outputPath, DEST_FOLDER_CJS);
+                    typescriptCompilation = (0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, tsCompilationOptions, function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, treatModernOutput(options)];
+                                case 1:
+                                    _a.sent();
+                                    return [4 /*yield*/, treatRootEntrypoints(options)];
+                                case 2:
+                                    _a.sent();
+                                    // restore initial tsConfig
+                                    (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
                     if (!options.watch) return [3 /*break*/, 3];
                     return [4 /*yield*/, __await(assetHandler.watchAndProcessOnAssetChange())];
                 case 1:
@@ -350,84 +322,12 @@ function executor(_options, context) {
                         });
                     }); });
                     _c.label = 3;
-                case 3:
-                    initialTsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
-                    tsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
-                    tmpOptions = Object.assign({}, options);
-                    // restore initial tsConfig
-                    process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
-                            return [2 /*return*/];
-                        });
-                    }); });
-                    process.on("SIGTERM", function () { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
-                            return [2 /*return*/];
-                        });
-                    }); });
-                    // immediately output a package.json file
-                    (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies);
-                    // generate Modern:
-                    // ---------------------------------------------------------------------------
-                    tsConfig.compilerOptions.module = "esnext";
-                    tsConfig.compilerOptions.composite = true;
-                    tsConfig.compilerOptions.declaration = true;
-                    (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfig);
-                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, TMP_FOLDER_MODERN);
-                    // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
-                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, assetHandler.processAllAssetsOnce()];
-                                    case 1:
-                                        _a.sent();
-                                        return [4 /*yield*/, treatModernOutput(options)];
-                                    case 2:
-                                        // console.log("options", options);
-                                        entrypointsDirs = _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); }))))];
-                case 4: 
-                // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
-                return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 5:
-                    // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
-                    _c.sent();
-                    // generate CommonJS:
-                    // ---------------------------------------------------------------------------
-                    tsConfig.compilerOptions.module = "commonjs";
-                    tsConfig.compilerOptions.composite = false;
-                    tsConfig.compilerOptions.declaration = false;
-                    tsConfig.skipLibCheck = true;
-                    (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfig);
-                    tmpOptions.outputPath = (0, path_1.join)(options.outputPath, TMP_FOLDER_CJS);
-                    return [5 /*yield**/, __values(__asyncDelegator(__asyncValues((0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, context, function () { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, treatCjsOutput(options)];
-                                    case 1:
-                                        _a.sent();
-                                        return [4 /*yield*/, treatRootEntrypoints(options)];
-                                    case 2:
-                                        _a.sent();
-                                        // restore initial tsConfig
-                                        (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); }))))];
-                case 6: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 7: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 8: return [2 /*return*/, _c.sent()];
+                case 3: return [5 /*yield**/, __values(__asyncDelegator(__asyncValues(typescriptCompilation.iterator)))];
+                case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 5: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 6: return [2 /*return*/, _c.sent()];
             }
         });
     });
 }
 exports["default"] = executor;
-// @see https://github.com/nrwl/nx/blob/master/packages/js/src/executors/tsc/compat.ts
-// not sure if that is needed, locally it works only without it, no time to investigate now
-// export default convertNxExecutor(executor);

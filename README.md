@@ -45,3 +45,4 @@ Use `console.log` only for internal development, all other _public_ logging shou
 ### Optimization
 
 - TODO: check wether deep default imports from `react-use` affect tree shaking
+- TODO: look whether adding functions from [ts-is-present](https://github.com/robertmassaioli/ts-is-present) lib to `@koine/utils`

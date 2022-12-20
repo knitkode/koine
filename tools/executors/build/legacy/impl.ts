@@ -16,18 +16,31 @@ import {
   getHelperDependency,
   HelperDependency,
 } from "@nrwl/js/src/utils/compiler-helper-dependency";
-import { CopyAssetsHandler } from "@nrwl/js/src/utils/copy-assets-handler";
+import { CopyAssetsHandler } from "@nrwl/js/src/utils/assets/copy-assets-handler";
+import {
+  handleInliningBuild,
+  isInlineGraphEmpty,
+  postProcessInlinedDependencies,
+} from "@nrwl/js/src/utils/inline";
 import {
   ExecutorOptions,
   NormalizedExecutorOptions,
 } from "@nrwl/js/src/utils/schema";
+import {
+  compileTypeScript,
+} from '@nrwl/workspace/src/utilities/typescript/compilation';
 import { compileTypeScriptFiles } from "@nrwl/js/src/utils/typescript/compile-typescript-files";
-import { updatePackageJson } from "@nrwl/js/src/utils/update-package-json";
+import {
+  getUpdatedPackageJsonContent,
+  updatePackageJson,
+} from "@nrwl/js/src/utils/package-json/update-package-json";
 import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-file-changes";
 import type { CompilerOptions } from "typescript";
 // import { rollupExecutor } from "./rollup";
 // import { tsupExecutor } from "./tsup";
 // import { convertNxExecutor }  '@nrwl/devkit';
+
+import { createTypeScriptCompilationOptions } from "@nrwl/js/src/executors/tsc/tsc.impl";
 
 // we follow the same structure as in @mui packages builds
 const TMP_FOLDER_CJS = "node";
@@ -163,14 +176,14 @@ async function treatCjsOutput(options: NormalizedExecutorOptions) {
 }
 
 /**
- * We treat these seprataly as they carry the `dependencies` of the actual
+ * We treat these separetely as they carry the `dependencies` of the actual
  * packages
  */
 async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
   const { outputPath } = options;
   const packagePath = join(outputPath, "./package.json");
   const packageJson = readJsonFile(packagePath);
-  const rootPackageJson = readJsonFile(join(options.root, "./package.json"));
+  const rootPackageJson = readJsonFile(join(options.root!, "./package.json"));
 
   return new Promise((resolve) => {
     writeJsonFile(
@@ -178,13 +191,13 @@ async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
       Object.assign(
         packageJson,
         {
-          version: rootPackageJson.version
+          version: rootPackageJson.version,
         },
         getPackageJsonData(
           outputPath,
           join(outputPath, DEST_FOLDER_MODERN),
           join(outputPath, DEST_FOLDER_CJS)
-        ) 
+        )
       )
     );
     resolve(true);
@@ -221,8 +234,8 @@ function getPackageJsonData(pkgPath, modernPath, cjsPath) {
 function normalizeOptions(
   options: ExecutorOptions,
   contextRoot: string,
-  sourceRoot?: string,
-  projectRoot?: string
+  sourceRoot: string,
+  projectRoot: string
 ): NormalizedExecutorOptions {
   const outputPath = join(contextRoot, options.outputPath);
 
@@ -252,8 +265,8 @@ function normalizeOptions(
 }
 
 async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
-  const { sourceRoot, root } = context.workspace.projects[context.projectName];
-  const options = normalizeOptions(_options, context.root, sourceRoot, root);
+  const { sourceRoot, root } = context.workspace.projects[context.projectName!];
+  const options = normalizeOptions(_options, context.root, sourceRoot!, root);
   // console.log("executor", options);
   let entrypointsDirs: string[] = [];
   const { projectRoot, tmpTsConfig, target, dependencies } = checkDependencies(
@@ -268,11 +281,27 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   const tsLibDependency = getHelperDependency(
     HelperDependency.tsc,
     options.tsConfig,
-    dependencies
+    dependencies,
+    context.projectGraph!
   );
 
   if (tsLibDependency) {
     dependencies.push(tsLibDependency);
+  }
+
+  const tsCompilationOptions = createTypeScriptCompilationOptions(
+    options,
+    context
+  );
+
+  const inlineProjectGraph = handleInliningBuild(
+    context,
+    options,
+    tsCompilationOptions.tsConfig
+  );
+
+  if (!isInlineGraphEmpty(inlineProjectGraph)) {
+    tsCompilationOptions.rootDir = ".";
   }
 
   const assetHandler = new CopyAssetsHandler({
@@ -301,6 +330,7 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   }
 
   // store initial tsConfig
+  // console.log("options.tsConfig", options.tsConfig);
   const initialTsConfig = readJsonFile(options.tsConfig);
   const tsConfig = readJsonFile(options.tsConfig);
   const tmpOptions = Object.assign({}, options);
@@ -314,7 +344,10 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   });
 
   // immediately output a package.json file
-  updatePackageJson(options, context, target, dependencies);
+  const packageJsonData = readJsonFile(join(options.projectRoot, "./package.json"));
+  packageJsonData.dependencies = dependencies;
+  writeJsonFile(join(options.outputPath, "./package.json"), packageJsonData);
+  // updatePackageJson(options, context, target, dependencies);
 
   // generate Modern:
   // ---------------------------------------------------------------------------
@@ -324,30 +357,56 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   writeJsonFile(options.tsConfig, tsConfig);
 
   tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_MODERN);
-  // console.log("compileTypeScriptFiles", tmpOptions.outputPath);
-  yield* compileTypeScriptFiles(tmpOptions, context, async () => {
+
+  const typescriptCompilation = compileTypeScriptFiles(tmpOptions, tsCompilationOptions, async () => {
     await assetHandler.processAllAssetsOnce();
+    updatePackageJson(options, context, target, dependencies);
+    postProcessInlinedDependencies(
+      tsCompilationOptions.outputPath,
+      tsCompilationOptions.projectRoot,
+      inlineProjectGraph
+    );
     // console.log("options", options);
     entrypointsDirs = await treatModernOutput(options);
-  });
-
-  // generate CommonJS:
-  // ---------------------------------------------------------------------------
-  tsConfig.compilerOptions.module = "commonjs";
-  tsConfig.compilerOptions.composite = false;
-  tsConfig.compilerOptions.declaration = false;
-  tsConfig.skipLibCheck = true;
-  writeJsonFile(options.tsConfig, tsConfig);
-
-  tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_CJS);
-
-  return yield* compileTypeScriptFiles(tmpOptions, context, async () => {
-    await treatCjsOutput(options);
-    await treatRootEntrypoints(options);
     
+    // generate CommonJS:
+    // ---------------------------------------------------------------------------
+    // tsConfig.compilerOptions.module = "commonjs";
+    // tsConfig.compilerOptions.composite = false;
+    // tsConfig.compilerOptions.declaration = false;
+    // tsConfig.skipLibCheck = true;
+    // writeJsonFile(options.tsConfig, tsConfig);
+  
+    // tmpOptions.outputPath = join(options.outputPath, TMP_FOLDER_CJS);
+  
+    // const { success } = compileTypeScript(tsCompilationOptions);
+
+    // if (success) {
+    //   await treatCjsOutput(options);
+    //   await treatRootEntrypoints(options);
+    // }
+
     // restore initial tsConfig
-    writeJsonFile(options.tsConfig, initialTsConfig);
+    // writeJsonFile(options.tsConfig, initialTsConfig);
   });
+
+  return yield* typescriptCompilation.iterator;
+  
+  // await compileModern();
+  // await compileCommonJs();
+
+  // const modernIterators = await compileModern();
+  // const commonjsIterators = await compileCommonJs();
+
+  // return yield* modernIterators;
+  // return yield* [modernIterators, commonjsIterators];
+
+  // yield* modernIterators;
+  // yield* commonjsIterators;
+
+  // await compileModern();
+  // await compileCommonJs();
+  // return { success: true };
 
   // generate UMD dev bundle:
   // ---------------------------------------------------------------------------

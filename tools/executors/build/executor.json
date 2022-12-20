@@ -1,7 +1,12 @@
 {
   "executors": {
-    "build": {
-      "implementation": "./impl",
+    "build-es6": {
+      "implementation": "./build-es6",
+      "schema": "./schema.json",
+      "description": "Runs `build`"
+    },
+    "build-cjs": {
+      "implementation": "./build-cjs",
       "schema": "./schema.json",
       "description": "Runs `build`"
     }

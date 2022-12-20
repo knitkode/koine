@@ -4,8 +4,8 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "./tools/executors/build:build",
+    "build-es6": {
+      "executor": "./tools/executors/build:build-es6",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/browser",
@@ -15,6 +15,57 @@
         "buildableProjectDepsInPackageJsonType": "dependencies",
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/browser/*.md", "packages/browser/*.d.ts"]
+      }
+    },
+    "build-cjs": {
+      "executor": "./tools/executors/build:build-cjs",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/browser",
+        "tsConfig": "packages/browser/tsconfig.lib.json",
+        "project": "packages/browser/package.json",
+        "main": "packages/browser/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true,
+        "assets": ["packages/browser/*.md", "packages/browser/*.d.ts"]
+      }
+    },
+    "build-umd": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "project": "packages/browser/package.json",
+        "outputPath": "dist/browser",
+        "entryFile": "packages/browser/index.ts",
+        "tsConfig": "packages/browser/tsconfig.lib.json",
+        "compiler": "babel",
+        "umdName": "koine_browser",
+        "external": ["tslib"],
+        "extractCss": true,
+        "rollupConfig": "tools/rollup.config.js",
+        "format": ["cjs", "esm", "umd"],
+        "assets": ["packages/browser/README.md"]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run browser:build-es6",
+          "npx nx run browser:build-cjs"
+        ],
+        "parallel": false
+      }
+    },
+    "_build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run browser:build-umd",
+          "npx nx run browser:build-es6",
+          "npx nx run browser:build-cjs"
+        ],
+        "parallel": false
       }
     },
     "lint": {

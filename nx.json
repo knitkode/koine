@@ -14,15 +14,18 @@
     ".eslintrc.json": "*"
   },
   "targetDefaults": {
-    "build": {
-      "dependsOn": ["^build"]
+    "build-es6": {
+      "dependsOn": ["^build-es6"]
+    },
+    "build-cjs": {
+      "dependsOn": ["^build-es6"]
     }
   },
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": ["build-es6", "build-cj6", "build-umd", "build", "lint", "test", "e2e"]
       }
     }
   },

@@ -4,13 +4,52 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
+    "build-es6": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/.stories",
         "tsConfig": "packages/stories/tsconfig.lib.json",
         "main": "packages/stories/index.ts"
+      }
+    },
+    "build-cjs": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/.stories",
+        "tsConfig": "packages/stories/tsconfig.lib.json",
+        "main": "packages/stories/index.ts"
+      }
+    },
+    "build-umd": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/.stories",
+        "tsConfig": "packages/stories/tsconfig.lib.json",
+        "main": "packages/stories/index.ts"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run stories:build-es6",
+          "npx nx run stories:build-cjs"
+        ],
+        "parallel": false
+      }
+    },
+    "_build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run stories:build-umd",
+          "npx nx run stories:build-es6",
+          "npx nx run stories:build-cjs"
+        ],
+        "parallel": false
       }
     },
     "lint": {

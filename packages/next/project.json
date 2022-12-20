@@ -4,8 +4,8 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "./tools/executors/build:build",
+    "build-es6": {
+      "executor": "./tools/executors/build:build-es6",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/next",
@@ -15,6 +15,57 @@
         "buildableProjectDepsInPackageJsonType": "dependencies",
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/next/*.md", "packages/next/*.d.ts"]
+      }
+    },
+    "build-cjs": {
+      "executor": "./tools/executors/build:build-cjs",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/next",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "project": "packages/next/package.json",
+        "main": "packages/next/index.ts",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true,
+        "assets": ["packages/next/*.md", "packages/next/*.d.ts"]
+      }
+    },
+    "build-umd": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "project": "packages/next/package.json",
+        "outputPath": "dist/next",
+        "entryFile": "packages/next/index.ts",
+        "tsConfig": "packages/next/tsconfig.lib.json",
+        "compiler": "babel",
+        "umdName": "koine_next",
+        "external": ["tslib"],
+        "extractCss": true,
+        "rollupConfig": "tools/rollup.config.js",
+        "format": ["cjs", "esm", "umd"],
+        "assets": ["packages/next/README.md"]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run next:build-es6",
+          "npx nx run next:build-cjs"
+        ],
+        "parallel": false
+      }
+    },
+    "_build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run next:build-umd",
+          "npx nx run next:build-es6",
+          "npx nx run next:build-cjs"
+        ],
+        "parallel": false
       }
     },
     "lint": {
