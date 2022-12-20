@@ -94,17 +94,16 @@ var devkit_1 = require("@nrwl/devkit");
 var assets_1 = require("@nrwl/workspace/src/utilities/assets");
 var check_dependencies_1 = require("@nrwl/js/src/utils/check-dependencies");
 var compiler_helper_dependency_1 = require("@nrwl/js/src/utils/compiler-helper-dependency");
-var copy_assets_handler_1 = require("@nrwl/js/src/utils/assets/copy-assets-handler");
 var inline_1 = require("@nrwl/js/src/utils/inline");
 var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
 var update_package_json_1 = require("@nrwl/js/src/utils/package-json/update-package-json");
 var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
 var tsc_impl_1 = require("@nrwl/js/src/executors/tsc/tsc.impl");
 // we follow the same structure as in @mui packages builds
-var TMP_FOLDER_MODERN = ".modern";
-var DEST_FOLDER_MODERN = "";
-var DEST_FOLDER_CJS = "node";
-function treatModernOutput(options) {
+var TMP_FOLDER_MODERN = "../.modern";
+var DEST_FOLDER_MODERN = "../";
+var DEST_FOLDER_CJS = "../node";
+function treatEsmOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
         var outputPath, tmpOutputPath, destOutputPath, entrypointsDirs;
         return __generator(this, function (_a) {
@@ -153,7 +152,7 @@ function treatModernOutput(options) {
                                         return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
                                     case 2:
                                         _a.sent();
-                                        console.log("treatModernOutput: entrypointsDirs", entrypointsDirs);
+                                        // console.log("treatEsmOutput: entrypointsDirs", entrypointsDirs);
                                         resolve(entrypointsDirs);
                                         return [2 /*return*/];
                                 }
@@ -168,19 +167,19 @@ function treatModernOutput(options) {
  * We treat these separetely as they carry the `dependencies` of the actual
  * packages
  */
-function treatRootEntrypoints(options) {
+function treatRootEntrypoint(options) {
     return __awaiter(this, void 0, void 0, function () {
         var outputPath, packagePath, packageJson, rootPackageJson;
         return __generator(this, function (_a) {
             outputPath = options.outputPath;
-            packagePath = (0, path_1.join)(outputPath, "./package.json");
+            packagePath = (0, path_1.join)(outputPath, "../package.json");
             packageJson = (0, devkit_1.readJsonFile)(packagePath);
             rootPackageJson = (0, devkit_1.readJsonFile)((0, path_1.join)(options.root, "./package.json"));
             // console.log("rootPackageJson", rootPackageJson)
             return [2 /*return*/, new Promise(function (resolve) {
                     (0, devkit_1.writeJsonFile)(packagePath, Object.assign(packageJson, {
                         version: rootPackageJson.version
-                    }, getPackageJsonData(outputPath, (0, path_1.join)(outputPath, DEST_FOLDER_MODERN), (0, path_1.join)(outputPath, DEST_FOLDER_CJS))));
+                    }, getPackageJsonData((0, path_1.join)(outputPath, "../"), (0, path_1.join)(outputPath, DEST_FOLDER_MODERN), (0, path_1.join)(outputPath, DEST_FOLDER_CJS))));
                     resolve(true);
                 })];
         });
@@ -223,7 +222,7 @@ function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
 }
 function executor(_options, context) {
     return __asyncGenerator(this, arguments, function executor_1() {
-        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, tsLibDependency, tsCompilationOptions, inlineProjectGraph, assetHandler, initialTsConfig, tsConfig, tmpOptions, typescriptCompilation, disposeWatchAssetChanges_1, disposePackageJsonChanged_1;
+        var _a, sourceRoot, root, options, _b, projectRoot, tmpTsConfig, target, dependencies, tsLibDependency, tsCompilationOptions, inlineProjectGraph, initialTsConfig, tsConfig, tmpOptions, typescriptCompilation, disposePackageJsonChanged_1;
         var _this = this;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -243,12 +242,6 @@ function executor(_options, context) {
                     if (!(0, inline_1.isInlineGraphEmpty)(inlineProjectGraph)) {
                         tsCompilationOptions.rootDir = ".";
                     }
-                    assetHandler = new copy_assets_handler_1.CopyAssetsHandler({
-                        projectDir: projectRoot,
-                        rootDir: context.root,
-                        outputDir: _options.outputPath,
-                        assets: _options.assets
-                    });
                     initialTsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
                     tsConfig = (0, devkit_1.readJsonFile)(options.tsConfig);
                     tmpOptions = Object.assign({}, options);
@@ -272,15 +265,16 @@ function executor(_options, context) {
                     tsConfig.compilerOptions.declaration = false;
                     tsConfig.skipLibCheck = true;
                     (0, devkit_1.writeJsonFile)(options.tsConfig, tsConfig);
-                    tsCompilationOptions.outputPath = tmpOptions.outputPath = (0, path_1.join)(options.outputPath, DEST_FOLDER_CJS);
                     typescriptCompilation = (0, compile_typescript_files_1.compileTypeScriptFiles)(tmpOptions, tsCompilationOptions, function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, treatModernOutput(options)];
+                                case 0: return [4 /*yield*/, treatEsmOutput(options)];
                                 case 1:
                                     _a.sent();
-                                    return [4 /*yield*/, treatRootEntrypoints(options)];
+                                    // await treatCjsOutput(options);
+                                    return [4 /*yield*/, treatRootEntrypoint(options)];
                                 case 2:
+                                    // await treatCjsOutput(options);
                                     _a.sent();
                                     // restore initial tsConfig
                                     (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
@@ -288,21 +282,15 @@ function executor(_options, context) {
                             }
                         });
                     }); });
-                    if (!options.watch) return [3 /*break*/, 3];
-                    return [4 /*yield*/, __await(assetHandler.watchAndProcessOnAssetChange())];
-                case 1:
-                    disposeWatchAssetChanges_1 = _c.sent();
+                    if (!options.watch) return [3 /*break*/, 2];
                     return [4 /*yield*/, __await((0, watch_for_single_file_changes_1.watchForSingleFileChanges)((0, path_1.join)(context.root, projectRoot), "package.json", function () { return (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies); }))];
-                case 2:
+                case 1:
                     disposePackageJsonChanged_1 = _c.sent();
                     process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, disposeWatchAssetChanges_1()];
+                                case 0: return [4 /*yield*/, disposePackageJsonChanged_1()];
                                 case 1:
-                                    _a.sent();
-                                    return [4 /*yield*/, disposePackageJsonChanged_1()];
-                                case 2:
                                     _a.sent();
                                     return [2 /*return*/];
                             }
@@ -311,21 +299,18 @@ function executor(_options, context) {
                     process.on("SIGTERM", function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, disposeWatchAssetChanges_1()];
+                                case 0: return [4 /*yield*/, disposePackageJsonChanged_1()];
                                 case 1:
-                                    _a.sent();
-                                    return [4 /*yield*/, disposePackageJsonChanged_1()];
-                                case 2:
                                     _a.sent();
                                     return [2 /*return*/];
                             }
                         });
                     }); });
-                    _c.label = 3;
-                case 3: return [5 /*yield**/, __values(__asyncDelegator(__asyncValues(typescriptCompilation.iterator)))];
+                    _c.label = 2;
+                case 2: return [5 /*yield**/, __values(__asyncDelegator(__asyncValues(typescriptCompilation.iterator)))];
+                case 3: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
                 case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 5: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 6: return [2 /*return*/, _c.sent()];
+                case 5: return [2 /*return*/, _c.sent()];
             }
         });
     });

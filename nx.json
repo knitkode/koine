@@ -18,7 +18,10 @@
       "dependsOn": ["^build-es6"]
     },
     "build-cjs": {
-      "dependsOn": ["^build-es6"]
+      "dependsOn": ["build-es6", "^build-cjs"]
+    },
+    "build": {
+      "dependsOn": ["^build"]
     }
   },
   "tasksRunnerOptions": {

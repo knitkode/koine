@@ -19,7 +19,8 @@
       "options": {
         "outputPath": "dist/.stories",
         "tsConfig": "packages/stories/tsconfig.lib.json",
-        "main": "packages/stories/index.ts"
+        "main": "packages/stories/index.ts",
+        "assets": []
       }
     },
     "build-umd": {
@@ -38,7 +39,7 @@
           "npx nx run stories:build-es6",
           "npx nx run stories:build-cjs"
         ],
-        "parallel": false
+        "parallel": true
       }
     },
     "_build": {

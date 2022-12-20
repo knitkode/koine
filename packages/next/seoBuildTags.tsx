@@ -38,28 +38,26 @@ const defaults = {
  *
  * @returns
  */
-export const seoBuildTags = (
-  {
-    seo,
-    hidden,
-    keywords,
-    title = "",
-    titleTemplate,
-    defaultTitle,
-    noindex,
-    nofollow,
-    description,
-    languageAlternates = [],
-    twitter,
-    facebook,
-    openGraph,
-    og: ogAlias,
-    canonical,
-    metaTags,
-    linkTags,
-  }: BuildTagsParams = {},
-  id: string
-) => {
+export const seoBuildTags = ({
+  seo,
+  hidden,
+  keywords,
+  title = "",
+  titleTemplate,
+  defaultTitle,
+  noindex,
+  nofollow,
+  description,
+  languageAlternates = [],
+  twitter,
+  facebook,
+  openGraph,
+  og: ogAlias,
+  canonical,
+  metaTags,
+  linkTags,
+}: BuildTagsParams = {}) => {
+  const id = "seo-";
   const render: React.ReactNode[] = [];
   const $names: MetaNames = {};
   const $properties: MetaProperties = {};
@@ -79,7 +77,7 @@ export const seoBuildTags = (
   }
 
   if (title) {
-    render.push(<title>{title}</title>);
+    render.push(<title key={id + "title"}>{title}</title>);
     $properties["og:title"] = title; // overridden later...
   }
 
@@ -102,8 +100,8 @@ export const seoBuildTags = (
     languageAlternates.forEach(({ href, hrefLang }) => {
       render.push(
         <link
+          key={id + "languageAlternate-" + hrefLang}
           rel="alternate"
-          key={id + `languageAlternate-${hrefLang}`}
           hrefLang={hrefLang}
           href={href}
         />
@@ -113,7 +111,7 @@ export const seoBuildTags = (
 
   if (canonical) {
     render.push(
-      <link rel="canonical" href={canonical} key={id + "canonical"} />
+      <link key={id + "canonical"} rel="canonical" href={canonical} />
     );
     $properties["og:url"] = canonical;
   }
@@ -137,12 +135,18 @@ export const seoBuildTags = (
   if (ogimage) $properties["og:image"] = ogimage;
 
   Object.keys($names).forEach((key) => {
-    render.push(<meta key={id + key} name={key} content={$names[key]} />);
+    render.push(
+      <meta key={id + "name-" + key} name={key} content={$names[key]} />
+    );
   });
 
   Object.keys($properties).forEach((key) => {
     render.push(
-      <meta key={id + key} property={key} content={$properties[key]} />
+      <meta
+        key={id + "prop-" + +key}
+        property={key}
+        content={$properties[key]}
+      />
     );
   });
 
@@ -150,7 +154,7 @@ export const seoBuildTags = (
     metaTags.forEach((tag) => {
       render.push(
         <meta
-          key={id + "meta-" + tag.name || tag.property || tag.httpEquiv}
+          key={id + "meta-" + (tag.name || tag.property || tag.httpEquiv)}
           {...tag}
         />
       );
@@ -159,7 +163,7 @@ export const seoBuildTags = (
 
   if (linkTags?.length) {
     linkTags.forEach((tag) => {
-      render.push(<link key={id + "link-" + tag.href || tag.rel} {...tag} />);
+      render.push(<link key={id + "link-" + (tag.href || tag.rel)} {...tag} />);
     });
   }
 

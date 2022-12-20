@@ -1,4 +1,4 @@
-import { memo, useId } from "react";
+// import { memo } from "react";
 import Head from "next/head";
 import type { NextSeoProps } from "next-seo/lib/types";
 import type { SeoData } from "./types-seo";
@@ -27,11 +27,6 @@ export type SeoProps = Omit<
   og?: SeoPropsOpenGraph;
 };
 
-const _Seo = (props: SeoProps) => {
-  const id = useId();
-  return <Head>{seoBuildTags(props, "seo-" + id + "-")}</Head>;
-};
-
 /**
  * Adapted from [garmeeh/next-seo](https://github.com/garmeeh/next-seo)
  *
@@ -53,6 +48,8 @@ const _Seo = (props: SeoProps) => {
  * <Seo title="MyApp | Some description" titleTemplate="%s" />
  * ```
  */
-export const Seo = memo(_Seo);
+export const Seo = (props: SeoProps) => {
+  return <Head>{seoBuildTags(props)}</Head>;
+};
 
 export default Seo;

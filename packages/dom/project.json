@@ -21,13 +21,11 @@
       "executor": "./tools/executors/build:build-cjs",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/dom",
+        "outputPath": "dist/dom/node",
         "tsConfig": "packages/dom/tsconfig.lib.json",
         "project": "packages/dom/package.json",
         "main": "packages/dom/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "updateBuildableProjectDepsInPackageJson": true,
-        "assets": ["packages/dom/*.md", "packages/dom/*.d.ts"]
+        "assets": []
       }
     },
     "build-umd": {
@@ -50,10 +48,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "npx nx run dom:build-es6",
-          "npx nx run dom:build-cjs"
-        ],
+        "commands": ["npx nx run dom:build-es6", "npx nx run dom:build-cjs"],
         "parallel": false
       }
     },

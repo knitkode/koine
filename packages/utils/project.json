@@ -21,13 +21,11 @@
       "executor": "./tools/executors/build:build-cjs",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/utils",
+        "outputPath": "dist/utils/node",
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "project": "packages/utils/package.json",
         "main": "packages/utils/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
-        "updateBuildableProjectDepsInPackageJson": true,
-        "assets": ["packages/utils/*.md", "packages/utils/*.d.ts"]
+        "assets": []
       }
     },
     "build-umd": {

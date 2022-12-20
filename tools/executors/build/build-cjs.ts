@@ -32,11 +32,11 @@ import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-f
 import { createTypeScriptCompilationOptions } from "@nrwl/js/src/executors/tsc/tsc.impl";
 
 // we follow the same structure as in @mui packages builds
-const TMP_FOLDER_MODERN = ".modern";
-const DEST_FOLDER_MODERN = "";
-const DEST_FOLDER_CJS = "node";
+const TMP_FOLDER_MODERN = "../.modern";
+const DEST_FOLDER_MODERN = "../";
+const DEST_FOLDER_CJS = "../node";
 
-async function treatModernOutput(options: NormalizedExecutorOptions) {
+async function treatEsmOutput(options: NormalizedExecutorOptions) {
   const { outputPath } = options;
   const tmpOutputPath = join(outputPath, TMP_FOLDER_MODERN);
   const destOutputPath = join(outputPath, DEST_FOLDER_MODERN);
@@ -79,7 +79,7 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
         
         await remove(tmpOutputPath);
 
-        console.log("treatModernOutput: entrypointsDirs", entrypointsDirs);
+        // console.log("treatEsmOutput: entrypointsDirs", entrypointsDirs);
         resolve(entrypointsDirs);
       }
     );
@@ -90,9 +90,9 @@ async function treatModernOutput(options: NormalizedExecutorOptions) {
  * We treat these separetely as they carry the `dependencies` of the actual
  * packages
  */
-async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
+async function treatRootEntrypoint(options: NormalizedExecutorOptions) {
   const { outputPath } = options;
-  const packagePath = join(outputPath, "./package.json");
+  const packagePath = join(outputPath, "../package.json");
   const packageJson = readJsonFile(packagePath);
   const rootPackageJson = readJsonFile(join(options.root!, "./package.json"));
   // console.log("rootPackageJson", rootPackageJson)
@@ -112,7 +112,7 @@ async function treatRootEntrypoints(options: NormalizedExecutorOptions) {
           // }
         },
         getPackageJsonData(
-          outputPath,
+          join(outputPath, "../"),
           join(outputPath, DEST_FOLDER_MODERN),
           join(outputPath, DEST_FOLDER_CJS)
         )
@@ -220,13 +220,6 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
     tsCompilationOptions.rootDir = ".";
   }
 
-  const assetHandler = new CopyAssetsHandler({
-    projectDir: projectRoot,
-    rootDir: context.root,
-    outputDir: _options.outputPath,
-    assets: _options.assets,
-  });
-
   // store initial tsConfig
   // console.log("options.tsConfig", options.tsConfig);
   const initialTsConfig = readJsonFile(options.tsConfig);
@@ -249,36 +242,34 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   tsConfig.skipLibCheck = true;
   writeJsonFile(options.tsConfig, tsConfig);
 
-  tsCompilationOptions.outputPath = tmpOptions.outputPath = join(
-    options.outputPath,
-    DEST_FOLDER_CJS
-  );
+  // moved dest innerr folder to outputPath option in project.json
+  // tsCompilationOptions.outputPath = tmpOptions.outputPath = join(
+  //   options.outputPath,
+  //   DEST_FOLDER_CJS
+  // );
 
   const typescriptCompilation = compileTypeScriptFiles(
     tmpOptions,
     tsCompilationOptions,
     async () => {
-      await treatModernOutput(options);
-      await treatRootEntrypoints(options);
+      await treatEsmOutput(options);
+      // await treatCjsOutput(options);
+      await treatRootEntrypoint(options);
       // restore initial tsConfig
       writeJsonFile(options.tsConfig, initialTsConfig);
     }
   );
 
   if (options.watch) {
-    const disposeWatchAssetChanges =
-      await assetHandler.watchAndProcessOnAssetChange();
     const disposePackageJsonChanged = await watchForSingleFileChanges(
       join(context.root, projectRoot),
       "package.json",
       () => updatePackageJson(options, context, target, dependencies)
     );
     process.on("exit", async () => {
-      await disposeWatchAssetChanges();
       await disposePackageJsonChanged();
     });
     process.on("SIGTERM", async () => {
-      await disposeWatchAssetChanges();
       await disposePackageJsonChanged();
     });
   }

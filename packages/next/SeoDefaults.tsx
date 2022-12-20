@@ -1,4 +1,4 @@
-import { memo } from "react";
+// import { memo } from "react";
 import Head from "next/head";
 import type { DefaultSeoProps } from "next-seo/lib/types";
 // import { useRouter } from "next/router";
@@ -25,12 +25,10 @@ export type SeoDefaultsProps = Omit<
   linkTags?: ReadonlyArray<LinkTag>;
 };
 
-const _SeoDefaults = (props: SeoDefaultsProps) => {
+export const SeoDefaults = (props: SeoDefaultsProps) => {
   // const router = useRouter();
   // props.openGraph.url = getSiteUrl(router.asPath);
-  return <Head>{seoBuildTags(props, "seo-defaults-")}</Head>;
+  return <Head>{seoBuildTags(props)}</Head>;
 };
-
-export const SeoDefaults = memo(_SeoDefaults);
 
 export default SeoDefaults;

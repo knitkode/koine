@@ -1,11 +1,11 @@
 {
   "name": "koine",
-  "version": "1.0.107",
+  "version": "1.1.0",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
     "b": "nx affected --target=build",
-    "build": "nx run-many --target=build --all=true",
+    "build": "nx run-many --target=build-cjs --all=true",
     "test": "nx test",
     "format": "nx format:write",
     "story": "npx nx storybook react",
