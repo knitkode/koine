@@ -164,7 +164,7 @@ const DialogWithRef = forwardRef<HTMLDivElement, KoineDialogProps>(
 
     return (
       <Root
-        components={{ Backdrop }}
+        slots={{ backdrop: Backdrop }}
         onClick={handleBackdropClick}
         onClose={onClose}
         ref={ref}

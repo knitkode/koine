@@ -17,7 +17,7 @@ import {
 
 type ReducedTabsUnstyledProps = Omit<
   TabsUnstyledProps,
-  "component" | "components" | "componentsProps"
+  "component" | "slots" | "slotProps"
 >;
 
 export type OwnProps = React.PropsWithChildren<
@@ -77,8 +77,8 @@ export const Tab = forwardRef(function Tab(
   {
     children,
     component,
-    componentsProps,
-    components,
+    slotProps,
+    slots,
     Indicator,
     ...props
   }: Components["Tab"]["props"],

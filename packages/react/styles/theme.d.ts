@@ -1,5 +1,5 @@
-export declare type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
-export declare type Breakpoints = Record<Breakpoint, number>;
+export type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+export type Breakpoints = Record<Breakpoint, number>;
 /**
  * You can override the default breakpoints through the .env variable
  *
@@ -14,7 +14,7 @@ export declare type Breakpoints = Record<Breakpoint, number>;
 export declare const breakpoints: Breakpoints;
 export declare const createTheme: (options: ThemeOptions) => Theme;
 export declare const useTheme: () => Theme;
-export declare type Theme = {
+export type Theme = {
     maxWidth: number;
     gutter: {
         quarter: number;
@@ -73,7 +73,7 @@ export declare type Theme = {
         logoWidthSticky: [number, number];
     };
 };
-export declare type ThemeOptions = {
+export type ThemeOptions = {
     maxWidth?: number;
     gutter: NonNullable<Theme["gutter"]>;
     devices?: Theme["devices"];
