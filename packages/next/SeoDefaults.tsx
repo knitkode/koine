@@ -3,7 +3,7 @@ import Head from "next/head";
 import type { DefaultSeoProps } from "next-seo/lib/types";
 // import { useRouter } from "next/router";
 // import { getSiteUrl } from "../utils";
-import { seoBuildTags } from "./seoBuildTags";
+import { seoBuildTags, type MetaTag, type LinkTag } from "./seoBuildTags";
 
 /**
  * @see https://github.com/garmeeh/next-seo/blob/master/src/types.ts#L413
@@ -21,14 +21,14 @@ export type SeoDefaultsProps = Omit<
   | "mobileAlternate"
   | "robotsProps"
 > & {
-  metaTags?: DefaultSeoProps["additionalMetaTags"];
-  linkTags?: DefaultSeoProps["additionalLinkTags"];
+  metaTags?: ReadonlyArray<MetaTag>;
+  linkTags?: ReadonlyArray<LinkTag>;
 };
 
 const _SeoDefaults = (props: SeoDefaultsProps) => {
   // const router = useRouter();
   // props.openGraph.url = getSiteUrl(router.asPath);
-  return <Head>{seoBuildTags(props)}</Head>;
+  return <Head>{seoBuildTags(props, "seo-defaults-")}</Head>;
 };
 
 export const SeoDefaults = memo(_SeoDefaults);

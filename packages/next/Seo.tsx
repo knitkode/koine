@@ -1,8 +1,8 @@
-import { memo } from "react";
+import { memo, useId } from "react";
 import Head from "next/head";
 import type { NextSeoProps } from "next-seo/lib/types";
 import type { SeoData } from "./types-seo";
-import { seoBuildTags } from "./seoBuildTags";
+import { seoBuildTags, type MetaTag, type LinkTag } from "./seoBuildTags";
 
 type SeoPropsOpenGraph = NextSeoProps["openGraph"] & {
   image?: string;
@@ -18,8 +18,8 @@ export type SeoProps = Omit<
   | "mobileAlternate"
   | "robotsProps"
 > & {
-  metaTags?: NextSeoProps["additionalMetaTags"];
-  linkTags?: NextSeoProps["additionalLinkTags"];
+  metaTags?: ReadonlyArray<MetaTag>;
+  linkTags?: ReadonlyArray<LinkTag>;
   seo?: SeoData;
   hidden?: SeoData["hidden"];
   keywords?: SeoData["keywords"];
@@ -28,7 +28,8 @@ export type SeoProps = Omit<
 };
 
 const _Seo = (props: SeoProps) => {
-  return <Head>{seoBuildTags(props)}</Head>;
+  const id = useId();
+  return <Head>{seoBuildTags(props, "seo-" + id + "-")}</Head>;
 };
 
 /**

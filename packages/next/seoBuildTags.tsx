@@ -1,7 +1,15 @@
 import React from "react";
 import { isArray } from "@koine/utils";
+import type { MetaTag as BaseMetaTag, NextSeoProps } from "next-seo/lib/types";
 import type { SeoProps } from "./Seo";
 import type { SeoDefaultsProps } from "./SeoDefaults";
+
+export type MetaTag = Omit<BaseMetaTag, "keyOverride">;
+
+export type LinkTag = Omit<
+  NonNullable<NextSeoProps["additionalLinkTags"]>[number],
+  "keyOverride"
+>;
 
 type BuildTagsParams = SeoProps & SeoDefaultsProps;
 
@@ -30,25 +38,28 @@ const defaults = {
  *
  * @returns
  */
-export const seoBuildTags = ({
-  seo,
-  hidden,
-  keywords,
-  title = "",
-  titleTemplate,
-  defaultTitle,
-  noindex,
-  nofollow,
-  description,
-  languageAlternates = [],
-  twitter,
-  facebook,
-  openGraph,
-  og: ogAlias,
-  canonical,
-  metaTags,
-  linkTags,
-}: BuildTagsParams = {}) => {
+export const seoBuildTags = (
+  {
+    seo,
+    hidden,
+    keywords,
+    title = "",
+    titleTemplate,
+    defaultTitle,
+    noindex,
+    nofollow,
+    description,
+    languageAlternates = [],
+    twitter,
+    facebook,
+    openGraph,
+    og: ogAlias,
+    canonical,
+    metaTags,
+    linkTags,
+  }: BuildTagsParams = {},
+  id: string
+) => {
   const render: React.ReactNode[] = [];
   const $names: MetaNames = {};
   const $properties: MetaProperties = {};
@@ -68,7 +79,7 @@ export const seoBuildTags = ({
   }
 
   if (title) {
-    render.push(<title key="title">{title}</title>);
+    render.push(<title>{title}</title>);
     $properties["og:title"] = title; // overridden later...
   }
 
@@ -88,20 +99,22 @@ export const seoBuildTags = ({
   }
 
   if (languageAlternates?.length > 0) {
-    languageAlternates.forEach((languageAlternate) => {
+    languageAlternates.forEach(({ href, hrefLang }) => {
       render.push(
         <link
           rel="alternate"
-          key={`languageAlternate-${languageAlternate.hrefLang}`}
-          hrefLang={languageAlternate.hrefLang}
-          href={languageAlternate.href}
+          key={id + `languageAlternate-${hrefLang}`}
+          hrefLang={hrefLang}
+          href={href}
         />
       );
     });
   }
 
   if (canonical) {
-    render.push(<link rel="canonical" href={canonical} key="canonical" />);
+    render.push(
+      <link rel="canonical" href={canonical} key={id + "canonical"} />
+    );
     $properties["og:url"] = canonical;
   }
 
@@ -118,26 +131,26 @@ export const seoBuildTags = ({
   if (og?.url) $properties["og:url"] = og.url;
   if (og?.type) $properties["og:type"] = og.type.toLowerCase();
   if (og?.locale) $properties["og:locale"] = og.locale;
-  if (og?.site_name) $properties["og:site_name"] = og.site_name;
+  if (og?.siteName) $properties["og:siteName"] = og.siteName;
 
   const ogimage = og?.image || seo?.ogimage;
   if (ogimage) $properties["og:image"] = ogimage;
 
   Object.keys($names).forEach((key) => {
-    render.push(<meta key={key} name={key} content={$names[key]} />);
+    render.push(<meta key={id + key} name={key} content={$names[key]} />);
   });
 
   Object.keys($properties).forEach((key) => {
-    render.push(<meta key={key} property={key} content={$properties[key]} />);
+    render.push(
+      <meta key={id + key} property={key} content={$properties[key]} />
+    );
   });
 
   if (metaTags && metaTags.length > 0) {
     metaTags.forEach((tag) => {
       render.push(
         <meta
-          key={`meta:${
-            tag.keyOverride ?? tag.name ?? tag.property ?? tag.httpEquiv
-          }`}
+          key={id + "meta-" + tag.name || tag.property || tag.httpEquiv}
           {...tag}
         />
       );
@@ -146,9 +159,7 @@ export const seoBuildTags = ({
 
   if (linkTags?.length) {
     linkTags.forEach((tag) => {
-      render.push(
-        <link key={`link${tag.keyOverride ?? tag.href}${tag.rel}`} {...tag} />
-      );
+      render.push(<link key={id + "link-" + tag.href || tag.rel} {...tag} />);
     });
   }
 

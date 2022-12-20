@@ -34,6 +34,8 @@ anyway like [those of `yup`](https://github.com/jquense/yup/blob/master/package.
 - [property-expr](https://github.com/jquense/expr/blob/master/index.js)
 - [toposort](https://github.com/marcelklehr/toposort)
 
+TODO: check typescript utilities in [TypeScript core](https://github.com/microsoft/TypeScript/blob/main/src/compiler/core.ts)
+
 ## Code
 
 - Transformative functions like `truncate` or `titleCase` should allow for nullable inputs as much as possible, acceptin both `undefined` and `null`.
