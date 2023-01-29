@@ -2,6 +2,9 @@
   "name": "@koine/next",
   "sideEffects": false,
   "peerDependenciesMeta": {
+    "@mui/base": {
+      "optional": true
+    },
     "@mui/material": {
       "optional": true
     },
@@ -18,6 +21,9 @@
       "optional": true
     },
     "next-auth": {
+      "optional": true
+    },
+    "react-hook-form": {
       "optional": true
     },
     "react-is": {
