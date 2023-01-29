@@ -7,7 +7,8 @@ import NextDocument, {
   Main,
   NextScript,
 } from "next/document";
-import { Meta, NoJs } from "@koine/react";
+import Meta from "@koine/react/Meta";
+import NoJs from "@koine/react/NoJs";
 import { getInitialThemeFromRequest, ThemeVanillaValue } from "@koine/react/sc"; // FIXME: this should be imported from another entrypoint
 
 /**

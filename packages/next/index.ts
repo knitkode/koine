@@ -8,8 +8,6 @@ export * from "./getT";
 export * from "./Head";
 export * from "./Link";
 export * from "./load";
-export * from "./NextImg";
-export * from "./NextImgSmart";
 export * from "./NextProgress";
 export * from "./revalidate";
 export * from "./Seo";

@@ -1,4 +1,4 @@
-import type { Option } from "@koine/react";
+import type { Option } from "@koine/react/types";
 import type { TranslateLoose } from "./types-i18n";
 
 export function translationAsOptions(

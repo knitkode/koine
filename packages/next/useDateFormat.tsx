@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import format from "date-fns/format";
-import { useDateLocale } from "@koine/react";
+import useDateLocale from "@koine/react/hooks/useDateLocale";
 
 type FormatType = typeof format;
 

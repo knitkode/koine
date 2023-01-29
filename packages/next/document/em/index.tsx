@@ -1,6 +1,7 @@
 import React from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import { Meta, NoJs } from "@koine/react";
+import Meta from "@koine/react/Meta";
+import NoJs from "@koine/react/NoJs";
 import createEmotionServer from "@emotion/server/create-instance";
 import { createEmotionCache } from "../../createEmotionCache";
 

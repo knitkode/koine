@@ -39,3 +39,5 @@ export type MotionProviderProps = LazyProps & React.PropsWithChildren<{}>;
 export const MotionProvider = ({ features, children }: MotionProviderProps) => {
   return <LazyMotion features={features}>{children}</LazyMotion>;
 };
+
+export default MotionProvider;

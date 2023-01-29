@@ -22,3 +22,5 @@ export const Meta = ({ zoom }: MetaProps) => {
     />
   );
 };
+
+export default Meta;

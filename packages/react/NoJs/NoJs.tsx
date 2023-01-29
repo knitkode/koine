@@ -10,3 +10,5 @@ export const NoJs = (_props: NoJsProps) => {
     ></script>
   );
 };
+
+export default NoJs;

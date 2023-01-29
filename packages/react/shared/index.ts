@@ -1,6 +1,6 @@
 export * from "../Calendar";
 export * from "../Dialog";
-export * from "../Favicon";
+export * from "../FaviconTags";
 export * from "../helpers";
 export * from "../hooks";
 export * from "../Meta";
