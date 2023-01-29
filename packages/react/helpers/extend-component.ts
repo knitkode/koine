@@ -71,3 +71,5 @@ type HtmlAttributesCollidingWithMotionProps =
   | "onDragEnd"
   | "onAnimationStart"
   | "onAnimationEnd";
+
+export default extendComponent;

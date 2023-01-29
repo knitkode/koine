@@ -10,6 +10,21 @@
     },
     "@emotion/server": {
       "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    },
+    "framer-motion": {
+      "optional": true
+    },
+    "next-auth": {
+      "optional": true
+    },
+    "react-is": {
+      "optional": true
+    },
+    "styled-components": {
+      "optional": true
     }
   }
 }

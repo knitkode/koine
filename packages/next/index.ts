@@ -20,6 +20,7 @@ export * from "./ThemeContext";
 export * from "./ThemeProvider";
 export * from "./to";
 export * from "./translationAsOptions";
+export * from "./TransText";
 export * from "./types-i18n";
 export * from "./types-seo";
 export * from "./useBackUrl";

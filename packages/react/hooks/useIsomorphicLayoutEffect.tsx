@@ -8,3 +8,5 @@ import { isBrowser } from "@koine/utils";
 export const useIsomorphicLayoutEffect = isBrowser
   ? useLayoutEffect
   : useEffect;
+
+export default useIsomorphicLayoutEffect;

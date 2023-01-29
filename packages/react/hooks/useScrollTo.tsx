@@ -21,3 +21,5 @@ export function useScrollTo(id = "", offset = 0) {
 
   window.scroll(0, top);
 }
+
+export default useScrollTo;

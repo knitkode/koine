@@ -22,3 +22,5 @@ export function useTraceUpdate(props: any) {
     prev.current = props;
   });
 }
+
+export default useTraceUpdate;

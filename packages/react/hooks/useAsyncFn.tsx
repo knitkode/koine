@@ -72,3 +72,5 @@ export function useAsyncFn<T extends FunctionReturningPromise>(
 
   return [state, callback as unknown as T];
 }
+
+export default useAsyncFn;

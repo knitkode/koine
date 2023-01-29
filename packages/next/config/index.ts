@@ -355,6 +355,19 @@ export function withKoine(
     },
     poweredByHeader: false,
     swcMinify: true,
+    modularizeImports: {
+      "@koine/api": { transform: "@koine/api/{{member}}" },
+      "@koine/browser": { transform: "@koine/browser/{{member}}" },
+      "@koine/dom": { transform: "@koine/dom/{{member}}" },
+      "@koine/next/?(((\\w*)?/?)*)": {
+        transform: "@koine/next/{{ matches.[1] }}/{{member}}",
+      },
+      "@koine/react/?(((\\w*)?/?)*)": {
+        transform: "@koine/react/{{ matches.[1] }}/{{member}}",
+      },
+      "@koine/utils": { transform: "@koine/utils/{{member}}" },
+      ...(custom["modularizeImports"] || {}),
+    },
     experimental: {
       // @see https://github.com/vercel/vercel/discussions/5973#discussioncomment-472618
       // @see critters error https://github.com/vercel/next.js/issues/20742
@@ -365,22 +378,9 @@ export function withKoine(
       // serverComponents: true,
       // reactRoot: true,
       ...(custom["experimental"] || {}),
-      // @see https://nextjs.org/docs/advanced-features/compiler#modularize-imports
-      modularizeImports: {
-        ...(custom?.["experimental"]?.modularizeImports || {}),
-        // FIXME: make these work with the right file/folder structure?
-        // "@koine/react/?(((\\w*)?/?)*)": {
-        //   transform: "@koine/react/{{ matches.[1] }}/{{member}}",
-        // },
-        "@koine/api": { transform: "@koine/api/{{member}}" },
-        "@koine/browser": { transform: "@koine/browser/{{member}}" },
-        "@koine/dom": { transform: "@koine/dom/{{member}}" },
-        "@koine/next": { transform: "@koine/next/{{member}}" },
-        "@koine/utils": { transform: "@koine/utils/{{member}}" },
-      },
     },
     // @see https://github.com/vercel/next.js/issues/7322#issuecomment-887330111
-    reactStrictMode: true,
+    // reactStrictMode: true,
     ...custom,
   };
 

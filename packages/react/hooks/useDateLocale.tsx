@@ -33,3 +33,5 @@ export function useDateLocale(locale?: string, defaultLocale = "en") {
 
   return data;
 }
+
+export default useDateLocale;

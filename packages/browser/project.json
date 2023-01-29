@@ -12,7 +12,7 @@
         "tsConfig": "packages/browser/tsconfig.lib.json",
         "project": "packages/browser/package.json",
         "main": "packages/browser/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "buildableProjectDepsInPackageJsonType": "peerDependencies",
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/browser/*.md", "packages/browser/*.d.ts"]
       }

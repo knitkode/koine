@@ -1,4 +1,36 @@
 {
   "name": "@koine/react",
-  "sideEffects": false
+  "sideEffects": false,
+  "peerDependenciesMeta": {
+    "@mui/base": {
+      "optional": true
+    },
+    "@tiptap/react": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "framer-motion": {
+      "optional": true
+    },
+    "react-hook-form": {
+      "optional": true
+    },
+    "react-icons": {
+      "optional": true
+    },
+    "react-is": {
+      "optional": true
+    },
+    "react-popper": {
+      "optional": true
+    },
+    "react-swipeable": {
+      "optional": true
+    },
+    "styled-components": {
+      "optional": true
+    }
+  }
 }

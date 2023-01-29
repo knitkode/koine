@@ -1,3 +1,4 @@
+// import { noop } from "@koine/utils"; FIXME: build breaks with this import
 import { off } from "./off";
 
 /**
@@ -21,6 +22,7 @@ export function on<THandler extends (event: any) => void>(
     return () => off(el, type, handler);
   }
 
+  // return noop;
   return () => void 0;
 }
 

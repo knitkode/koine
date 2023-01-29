@@ -17,3 +17,5 @@ export function useMountedState(): () => boolean {
 
   return get;
 }
+
+export default useMountedState;

@@ -106,3 +106,5 @@ export function classed<Props, Component extends React.ElementType = any>(
     return WrappedComponent; // as unknown as React.ReactElement<typeof props>;
   };
 }
+
+export default classed;

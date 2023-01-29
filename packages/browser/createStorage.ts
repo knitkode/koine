@@ -1,4 +1,10 @@
-import { decode, encode, isBrowser, isNullOrUndefined } from "@koine/utils";
+import {
+  decode,
+  encode,
+  isBrowser,
+  isNullOrUndefined,
+  noop,
+} from "@koine/utils";
 import { on } from "@koine/dom";
 import storage from "./storage";
 
@@ -31,7 +37,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       key: TKey,
       defaultValue?: null | T[TKey]
     ): T[TKey] | null {
-      return client.get<T[TKey]>(keys[key], decode, defaultValue);
+      return client.get<T[TKey]>(keys[key] as T[TKey], decode, defaultValue);
     },
     /**
      * Get all storage values (it uses `localStorage.get()`).
@@ -140,7 +146,7 @@ export const createStorage = <T extends CreateStorageConfig>(
             `[@koine/utils:createStorage] attempt to use 'watch' outside of browser.`
           );
         }
-        return () => void 0;
+        return noop;
       }
 
       const handler = (event: StorageEvent) => {

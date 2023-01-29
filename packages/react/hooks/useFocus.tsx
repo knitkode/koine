@@ -13,3 +13,5 @@ export const useFocus = () => {
 
   return [element, setFocus];
 };
+
+export default useFocus;

@@ -14,3 +14,5 @@ export function useFirstMountState() {
 
   return isFirst.current;
 }
+
+export default useFirstMountState;

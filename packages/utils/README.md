@@ -6,6 +6,7 @@ Libraries to encapsulate and re-export from here, the selection is based on:
 - [x] treeshake-ability
 - [x] docs in source comments
 
+- [dhmk-utils](https://github.com/dhmk083/dhmk-utils)
 - [mesqueeb/merge-anything](https://github.com/mesqueeb/merge-anything)
 - [mesqueeb/filter-anything](https://github.com/mesqueeb/filter-anything)
 - [mesqueeb/case-anything](https://github.com/mesqueeb/case-anything)

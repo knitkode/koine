@@ -1,11 +1,17 @@
 import { isBrowser, isString } from "@koine/utils";
 
+export type StorageClientConfig = Record<string, any>;
+
 const methodsMap = { g: "getItem", s: "setItem", r: "removeItem" };
 
 /**
  * Super minifiable `local/session Storage` client creator with SSR safety
  */
-export const storageClient = (useSessionStorage?: boolean) => {
+export const storageClient = <
+  TConfig extends StorageClientConfig = StorageClientConfig
+>(
+  useSessionStorage?: boolean
+) => {
   const nativeMethod = <T extends "g" | "s" | "r">(
     method: T,
     key: string,
@@ -25,8 +31,11 @@ export const storageClient = (useSessionStorage?: boolean) => {
           }
         };
 
-  const get = <TValue>(
-    key: string,
+  const get = <
+    TKey extends Extract<keyof TConfig, string>,
+    TValue = TConfig[TKey]
+  >(
+    key: TKey,
     transform?: (value: string) => TValue,
     defaultValue?: null | TValue
   ) => {
@@ -64,8 +73,11 @@ export const storageClient = (useSessionStorage?: boolean) => {
     return value;
   };
 
-  const set = <TValue>(
-    key: string,
+  const set = <
+    TKey extends Extract<keyof TConfig, string>,
+    TValue = TConfig[TKey]
+  >(
+    key: TKey,
     value?: TValue,
     transform: (value: any) => string = (value) => value
   ) => {
@@ -92,7 +104,7 @@ export const storageClient = (useSessionStorage?: boolean) => {
     }
   };
 
-  const remove = (key: string) => {
+  const remove = <TKey extends Extract<keyof TConfig, string>>(key: TKey) => {
     if (process.env["NODE_ENV"] !== "production") {
       if (!isBrowser) {
         console.log(
@@ -112,7 +124,13 @@ export const storageClient = (useSessionStorage?: boolean) => {
     }
   };
 
-  const has = (key: string, defaultValue?: boolean) => {
+  const has = <
+    TKey extends Extract<keyof TConfig, string>,
+    TValue = TConfig[TKey]
+  >(
+    key: TKey,
+    defaultValue?: TValue
+  ) => {
     let value = defaultValue ?? false;
 
     if (process.env["NODE_ENV"] !== "production") {

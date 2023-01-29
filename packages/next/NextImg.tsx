@@ -1,5 +1,5 @@
 import React from "react";
-import NextImage, { type ImageProps, type StaticImageData } from "next/image";
+import { type ImageProps, type StaticImageData } from "next/image";
 
 // we need to recreate the StaticImport type to allow typescript to correctly
 // compile as next does not export `StaticImport` but just `declare`s it
@@ -14,8 +14,6 @@ export type NextImgProps = Omit<React.ComponentPropsWithoutRef<"img">, "src"> &
   Omit<ImageProps, "src"> & {
     src: string | StaticImport;
   };
-
-export const NextImg = NextImage;
 
 export function getNextImgProps<T>({
   src,
@@ -47,4 +45,4 @@ export function getNextImgProps<T>({
   };
 }
 
-export default NextImg;
+export default getNextImgProps;

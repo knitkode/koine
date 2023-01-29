@@ -14,3 +14,5 @@ export const useUpdateEffect: typeof useEffect = (effect, deps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };
+
+export default useUpdateEffect;

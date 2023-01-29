@@ -1,14 +1,16 @@
 import React from "react";
 import { isArray } from "@koine/utils";
-import type { MetaTag as BaseMetaTag, NextSeoProps } from "next-seo/lib/types";
 import type { SeoProps } from "./Seo";
 import type { SeoDefaultsProps } from "./SeoDefaults";
 
-export type MetaTag = Omit<BaseMetaTag, "keyOverride">;
+export type MetaTag = React.DetailedHTMLProps<
+  React.MetaHTMLAttributes<HTMLMetaElement>,
+  HTMLMetaElement
+>;
 
-export type LinkTag = Omit<
-  NonNullable<NextSeoProps["additionalLinkTags"]>[number],
-  "keyOverride"
+export type LinkTag = React.DetailedHTMLProps<
+  React.LinkHTMLAttributes<HTMLLinkElement>,
+  HTMLLinkElement
 >;
 
 type BuildTagsParams = SeoProps & SeoDefaultsProps;

@@ -8,3 +8,5 @@ export const useMount = (fn: () => void) => {
     fn();
   });
 };
+
+export default useMount;

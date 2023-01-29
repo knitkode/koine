@@ -1,5 +1,6 @@
 export * from "./accentSets";
 export * from "./addOrReplaceAtIdx";
+export * from "./areEqual";
 export * from "./arrayOfAll";
 export * from "./arraySum";
 export * from "./arrayToLookup";
@@ -22,6 +23,7 @@ export * from "./encode";
 export * from "./ensureInt";
 // export * from "./env"
 export * from "./findDuplicatedIndexes";
+export * from "./forin";
 export * from "./gbToBytes";
 export * from "./getEmptyArray";
 export * from "./getKeys";
@@ -87,12 +89,14 @@ export * from "./mbToBytes";
 export * from "./mergeObjects";
 export * from "./mergeUrlQueryParams";
 export * from "./moveSortableArrayItemByKey";
+export * from "./noop";
 export * from "./normaliseUrlPathname";
 export * from "./normaliseUrl";
 export * from "./objectPick";
 export * from "./objectOmit";
 export * from "./parseCookie";
 export * from "./parseURL";
+export * from "./quaranteneProps";
 export * from "./randomInt";
 export * from "./randomKey";
 export * from "./readCookie";
@@ -122,6 +126,7 @@ export * from "./updateLinkParams";
 export * from "./updateUrlQueryParams";
 export * from "./uppercase";
 export * from "./uuid";
+export * from "./uuidNumeric";
 export * from "./wait";
 
 // export * from "type-fest";

@@ -12,7 +12,7 @@
         "tsConfig": "packages/next/tsconfig.lib.json",
         "project": "packages/next/package.json",
         "main": "packages/next/index.ts",
-        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "buildableProjectDepsInPackageJsonType": "peerDependencies",
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/next/*.md", "packages/next/*.d.ts"]
       }
