@@ -2,6 +2,12 @@
   "name": "@koine/react",
   "sideEffects": false,
   "peerDependenciesMeta": {
+    "@hookform/resolvers": {
+      "optional": true
+    },
+    "@kuus/yup": {
+      "optional": true
+    },
     "@mui/base": {
       "optional": true
     },
@@ -9,6 +15,9 @@
       "optional": true
     },
     "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "date-fns": {
       "optional": true
     },
     "framer-motion": {

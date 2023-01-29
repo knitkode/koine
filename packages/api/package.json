@@ -1,4 +1,9 @@
 {
   "name": "@koine/api",
-  "sideEffects": false
+  "sideEffects": false,
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
+  }
 }
