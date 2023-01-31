@@ -14,6 +14,7 @@ export * from "./useNavigateAway";
 export * from "./usePrevious";
 export * from "./usePreviousRef";
 export * from "./useScrollPosition";
+export * from "./useScrollThreshold";
 // export * from "./useScrollTo";
 export * from "./useSmoothScroll";
 export * from "./useTraceUpdate";
