@@ -3,7 +3,7 @@ import { isNumber } from "@koine/utils";
 import { scrollTo } from "@koine/dom";
 import { useFixedOffset } from "./useFixedOffset";
 
-export function useSmoothScroll() {
+export function useSmoothScroll(disregardFixedOffset?: boolean) {
   const fixedOffset = useFixedOffset();
 
   const scroll = useCallback(
@@ -26,12 +26,12 @@ export function useSmoothScroll() {
       }
 
       if (isNumber(top)) {
-        top = top + window.scrollY - (fixedOffset.current + offset);
+        top = top + offset + (disregardFixedOffset ? 0 : fixedOffset.current);
 
         scrollTo(top, callback, fallbackTimeout, behavior);
       }
     },
-    [fixedOffset]
+    [disregardFixedOffset, fixedOffset]
   );
 
   return scroll;
