@@ -1,3 +1,4 @@
+import { AnyDOMEventTargetLoose } from "./types";
 import on from "./on";
 import off from "./off";
 
@@ -6,7 +7,7 @@ import off from "./off";
  * with `removeEventListener`
  */
 export function once(
-  el: Window | Document | HTMLElement,
+  el: AnyDOMEventTargetLoose,
   type: string,
   handler: EventListener,
   options: EventListenerOptions | boolean = false
@@ -16,7 +17,7 @@ export function once(
     off(el, type, handlerWrapper);
   };
 
-  on(el, type, handlerWrapper, options);
+  return on(el, type, handlerWrapper, options);
 }
 
 export default once;

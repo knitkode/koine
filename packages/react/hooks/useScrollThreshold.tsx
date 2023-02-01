@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { noop } from "@koine/utils";
-import { /* listenScroll, */ on } from "@koine/dom";
+import { listenScroll } from "@koine/dom";
 
 export const useScrollThreshold = (
   threshold?: number,
@@ -23,8 +23,8 @@ export const useScrollThreshold = (
 
   useEffect(() => {
     if (threshold) {
-      // const listener = listenScroll(handler, 50);
-      const listener = on(window, "scroll", handler, { passive: true });
+      // const listener = listenScrollThrottled(0, handler, 50);
+      const listener = listenScroll(handler);
 
       handler();
 

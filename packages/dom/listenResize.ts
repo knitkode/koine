@@ -1,16 +1,14 @@
-import { debounce } from "@koine/utils";
+import type { AnyDOMEventTargetLoose } from "./types";
 import { on } from "./on";
 
 /**
- * Listen window resize event debouncing the given handler
+ * Listen element's (`window` by default) _scroll_ event
  *
  * @returns An automatic unbinding function to run to deregister the listener upon call
  */
-export function listenResize(...args: Parameters<typeof debounce>) {
-  const handler = debounce(...args);
-  const unbinder = on(window, "resize", handler);
-
-  return unbinder;
-}
+export const listenResize = (
+  handler: () => void,
+  el?: AnyDOMEventTargetLoose
+) => on(el || window, "resize", handler);
 
 export default listenResize;

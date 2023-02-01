@@ -1,4 +1,5 @@
 // import { noop } from "@koine/utils"; FIXME: build breaks with this import
+import type { AnyDOMEventTargetLoose } from "./types";
 import { off } from "./off";
 
 /**
@@ -7,7 +8,7 @@ import { off } from "./off";
  * @returns An automatic unbinding function to run to deregister the listener upon call
  */
 export function on<THandler extends (event: any) => void>(
-  el: Window | Document | HTMLElement | Element,
+  el: AnyDOMEventTargetLoose,
   type: string,
   handler: THandler /* EventListener |  */ /* ((event: Event) => void) */,
   options: AddEventListenerOptions | boolean = false

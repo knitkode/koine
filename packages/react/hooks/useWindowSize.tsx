@@ -1,17 +1,36 @@
 import { useEffect, useState } from "react";
-import { on } from "@koine/dom";
+import { listenResize, listenResizeDebounced } from "@koine/dom";
+import { debounce } from "@koine/utils";
 
-export function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
+/**
+ * # Use `window` size
+ *
+ * @param args Optionally pass {@link debounce} arguments (`wait` and `immediate`)
+ *
+ * @returns An array with:
+ * 1) _width_: using `window.innerWidth`
+ * 2) _height_: using `window.innerHeight`
+ */
+export function useWindowSize(
+  wait?: Parameters<typeof debounce>[1],
+  immediate?: Parameters<typeof debounce>[2]
+) {
+  const [width, widthSet] = useState(0);
+  const [height, heightSet] = useState(0);
+
   useEffect(() => {
     function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
+      widthSet(window.innerWidth);
+      heightSet(window.innerHeight);
     }
-    const listener = on(window, "resize", updateSize);
+    const listener = wait
+      ? listenResizeDebounced(0, updateSize, wait, immediate)
+      : listenResize(updateSize);
     updateSize();
     return listener;
-  }, []);
-  return size;
+  }, [wait, immediate]);
+
+  return [width, height] as const;
 }
 
 export default useWindowSize;

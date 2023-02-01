@@ -1,19 +1,18 @@
-import { debounce } from "@koine/utils";
+import type { AnyDOMEventTargetLoose } from "./types";
 import { on } from "./on";
 
 /**
- * Listen window scroll event debouncing the given handler
+ * Listen element's (`window` by default) _scroll_ event
  *
  * @returns An automatic unbinding function to run to deregister the listener upon call
  */
-export function listenScroll(...args: Parameters<typeof debounce>) {
-  const handler = debounce(...args);
-  const unbinder = on(window, "scroll", handler, {
+export const listenScroll = (
+  handler: () => void,
+  el?: AnyDOMEventTargetLoose
+) =>
+  on(el || window, "scroll", handler, {
     capture: true,
     passive: true,
   });
-
-  return unbinder;
-}
 
 export default listenScroll;

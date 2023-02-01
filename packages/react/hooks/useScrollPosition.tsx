@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { isBrowser } from "@koine/utils";
+import { isBrowser, noop } from "@koine/utils";
 import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
+import { listenScroll } from "@koine/dom";
 
 type Position = {
   x: number;
@@ -16,19 +17,18 @@ const getClientRect = (element?: HTMLElement) =>
 
 const getScrollPosition = (
   element?: null | ElementRef,
-  useWindow?: boolean,
   boundingElement?: ElementRef
 ) => {
   if (!isBrowser) {
     return zeroPosition;
   }
 
-  if (useWindow) {
+  if (!boundingElement) {
     return { x: window.scrollX, y: window.scrollY };
   }
 
   const targetPosition = getClientRect(element?.current || document.body);
-  const containerPosition = getClientRect(boundingElement?.current);
+  const containerPosition = getClientRect(boundingElement.current);
 
   if (!targetPosition) {
     return zeroPosition;
@@ -53,16 +53,15 @@ export const useScrollPosition = (
   effect: (currentPosition: Position, prevPosition: Position) => void,
   deps: React.DependencyList = [],
   element?: ElementRef,
-  useWindow?: boolean,
-  wait?: number,
-  boundingElement?: ElementRef
+  boundingElement?: ElementRef,
+  wait?: number
 ): void => {
-  const position = useRef(getScrollPosition(null, useWindow, boundingElement));
+  const position = useRef(getScrollPosition(null, boundingElement));
 
   let throttleTimeout: number | null = null;
 
   const callBack = () => {
-    const current = getScrollPosition(element, useWindow, boundingElement);
+    const current = getScrollPosition(element, boundingElement);
     effect(current, position.current);
     position.current = current;
     throttleTimeout = null;
@@ -83,20 +82,10 @@ export const useScrollPosition = (
       }
     };
 
-    if (boundingElement) {
-      boundingElement.current?.addEventListener("scroll", handleScroll, {
-        passive: true,
-      });
-    } else {
-      window.addEventListener("scroll", handleScroll, { passive: true });
-    }
+    const listener = listenScroll(handleScroll, boundingElement?.current);
 
     return () => {
-      if (boundingElement) {
-        boundingElement.current?.removeEventListener("scroll", handleScroll);
-      } else {
-        window.removeEventListener("scroll", handleScroll);
-      }
+      listener();
 
       if (throttleTimeout) {
         clearTimeout(throttleTimeout);

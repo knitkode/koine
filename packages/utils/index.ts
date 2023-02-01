@@ -129,6 +129,8 @@ export * from "./uuid";
 export * from "./uuidNumeric";
 export * from "./wait";
 
+export * from "./types";
+
 // export * from "type-fest";
 export type {
   Primitive,

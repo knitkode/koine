@@ -1,6 +1,11 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import { debounce } from "@koine/utils";
-import { listenResize, listenScroll, on, off } from "@koine/dom";
+import { debounce, noop } from "@koine/utils";
+import {
+  listenResizeDebounced,
+  listenScrollDebounced,
+  on,
+  off,
+} from "@koine/dom";
 
 let observer: ResizeObserver | undefined;
 
@@ -186,16 +191,16 @@ export function useMeasure(options?: UseMeasureOptions): UseMeasureReturn {
 
   useEffect(() => {
     if (scroll) {
-      const listener = listenScroll(forceRefresh, 100);
+      const listener = listenScrollDebounced(0, forceRefresh, 100);
       return listener;
     }
-    return () => 0;
+    return noop;
   }, [scroll, forceRefresh]);
 
   useEffect(() => {
-    // const listener = listenResize(onWindowResize);
+    // const listener = listenResizeDebounced(onWindowResize);
     // return listener;
-    const listener = listenResize(forceRefresh, 100);
+    const listener = listenResizeDebounced(0, forceRefresh, 100);
     return listener;
   }, [forceRefresh]);
 

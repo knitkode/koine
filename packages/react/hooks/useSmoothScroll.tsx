@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { isNumber } from "@koine/utils";
-import { scrollTo } from "@koine/dom";
+import { getOffsetTopSlim, scrollTo } from "@koine/dom";
 import { useFixedOffset } from "./useFixedOffset";
 
 export function useSmoothScroll(disregardFixedOffset?: boolean) {
@@ -21,7 +21,7 @@ export function useSmoothScroll(disregardFixedOffset?: boolean) {
       } else if (to) {
         const el = document.getElementById(to);
         if (el) {
-          top = el.getBoundingClientRect().top;
+          top = getOffsetTopSlim(el);
         }
       }
 

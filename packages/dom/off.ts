@@ -1,8 +1,10 @@
+import type { AnyDOMEventTargetLoose } from "./types";
+
 /**
  * Shortcut for `removeEventListener`
  */
 export function off(
-  el: Window | Document | HTMLElement | Element,
+  el: AnyDOMEventTargetLoose,
   type: string,
   handler: EventListener,
   options: EventListenerOptions | boolean = false

@@ -2,24 +2,26 @@ import { useRef } from "react";
 import {
   injectCss,
   calculateFixedOffset,
-  listenResize,
+  listenResizeDebounced,
   $each,
 } from "@koine/dom";
 import { debounce } from "@koine/utils";
 import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
-
-let observer: ResizeObserver | undefined;
 
 const inject = (value: number) => {
   injectCss("useFixedOffset", `html{scroll-padding-top: ${value}px}`);
 };
 
 /**
+ * # Use fixed offset
+ *
  * Maybe use [ResizeObserver polyfill](https://github.com/juggle/resize-observer)
  *
  * @see https://web.dev/resize-observer/
+ *
+ * @param selector By default `[data-fixed]`: anyhting with the data attribute `data-fixed`
  */
-export function useFixedOffset() {
+export function useFixedOffset(selector?: string) {
   const fixedOffset = useRef<number>(0);
 
   useIsomorphicLayoutEffect(() => {
@@ -33,21 +35,25 @@ export function useFixedOffset() {
 
     update();
 
-    if (!observer && ResizeObserver) {
+    if (ResizeObserver) {
       // const elements = $$("[data-fixed]");
 
-      observer = new ResizeObserver((entries) => {
+      const observer = new ResizeObserver((entries) => {
         let newFixedOffset = 0;
 
         entries.forEach((entry) => {
           newFixedOffset += entry.contentRect.height;
         });
         fixedOffset.current = newFixedOffset;
-        const updateOnResize = debounce(() => inject(newFixedOffset), 400);
+        const updateOnResize = debounce(
+          () => inject(newFixedOffset),
+          400,
+          true
+        );
         updateOnResize();
       });
 
-      $each("[data-fixed]", ($el) => {
+      $each(selector || "[data-fixed]", ($el) => {
         if (observer) observer.observe($el);
       });
 
@@ -55,10 +61,10 @@ export function useFixedOffset() {
         observer?.disconnect();
       };
     } else {
-      const listener = listenResize(update);
+      const listener = listenResizeDebounced(0, update);
       return listener;
     }
-  }, []);
+  }, [selector]);
 
   return fixedOffset;
 }
