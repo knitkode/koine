@@ -3,6 +3,12 @@ import { isNumber } from "@koine/utils";
 import { getOffsetTopSlim, scrollTo } from "@koine/dom";
 import { useFixedOffset } from "./useFixedOffset";
 
+/**
+ *
+ * @param disregardAutomaticFixedOffset When the `to` scroll argument is a DOM
+ * selector we will keep into account the _fixedOffset_ despite this option.
+ * @returns
+ */
 export function useSmoothScroll(disregardAutomaticFixedOffset?: boolean) {
   const fixedOffset = useFixedOffset();
 
@@ -15,13 +21,15 @@ export function useSmoothScroll(disregardAutomaticFixedOffset?: boolean) {
       behavior?: ScrollBehavior
     ) => {
       let top: number | undefined = undefined;
+      let toIsElement = false;
 
       if (isNumber(to)) {
         top = to;
       } else if (to) {
         const el = document.getElementById(to);
         if (el) {
-          top = getOffsetTopSlim(el);
+          top = getOffsetTopSlim(el) - fixedOffset.current;
+          toIsElement = true;
         }
       }
 
@@ -29,7 +37,9 @@ export function useSmoothScroll(disregardAutomaticFixedOffset?: boolean) {
         top =
           top +
           (customOffset || 0) +
-          (disregardAutomaticFixedOffset ? 0 : fixedOffset.current);
+          (disregardAutomaticFixedOffset || toIsElement
+            ? 0
+            : fixedOffset.current);
 
         scrollTo(top, callback, fallbackTimeout, behavior);
       }
