@@ -4,7 +4,7 @@ import {
   eventHandler,
 } from "./_listen-delegation";
 import { on } from "./on";
-import { off } from "./off";
+// import { off } from "./off";
 
 /**
  * Listen an event
