@@ -3,13 +3,13 @@ import { isNumber } from "@koine/utils";
 import { getOffsetTopSlim, scrollTo } from "@koine/dom";
 import { useFixedOffset } from "./useFixedOffset";
 
-export function useSmoothScroll(disregardFixedOffset?: boolean) {
+export function useSmoothScroll(disregardAutomaticFixedOffset?: boolean) {
   const fixedOffset = useFixedOffset();
 
   const scroll = useCallback(
     (
       to?: number | string,
-      offset = 0,
+      customOffset?: number,
       callback?: () => void,
       fallbackTimeout?: number,
       behavior?: ScrollBehavior
@@ -26,12 +26,15 @@ export function useSmoothScroll(disregardFixedOffset?: boolean) {
       }
 
       if (isNumber(top)) {
-        top = top + offset + (disregardFixedOffset ? 0 : fixedOffset.current);
+        top =
+          top +
+          (customOffset || 0) +
+          (disregardAutomaticFixedOffset ? 0 : fixedOffset.current);
 
         scrollTo(top, callback, fallbackTimeout, behavior);
       }
     },
-    [disregardFixedOffset, fixedOffset]
+    [disregardAutomaticFixedOffset, fixedOffset]
   );
 
   return scroll;
