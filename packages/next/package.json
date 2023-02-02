@@ -38,6 +38,12 @@
     "next-auth": {
       "optional": true
     },
+    "next-seo": {
+      "optional": true
+    },
+    "next-translate": {
+      "optional": true
+    },
     "react-hook-form": {
       "optional": true
     },
@@ -54,6 +60,9 @@
       "optional": true
     },
     "styled-components": {
+      "optional": true
+    },
+    "tailwindcss": {
       "optional": true
     }
   }

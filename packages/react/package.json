@@ -40,6 +40,9 @@
     },
     "styled-components": {
       "optional": true
+    },
+    "tailwindcss": {
+      "optional": true
     }
   }
 }

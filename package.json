@@ -1,6 +1,6 @@
 {
   "name": "koine",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
@@ -38,7 +38,7 @@
     "next": "^13.1.6",
     "next-auth": "^4.19.0",
     "next-seo": "^5.15.0",
-    "next-translate": "^1.6.0 || ^2",
+    "next-translate": "^1.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.0",

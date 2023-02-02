@@ -28,8 +28,7 @@ type ClassedFinalProps<Props, Component> = Component extends React.ReactHTML
  * This utility allows to extend a component a là `styled-components` but for
  * a className based styling solution like Tailwind,
  *
- * It also plays nicely with tailwind intellisense @see:
- *
+ * It also plays nicely with tailwind intellisense:
  * - https://github.com/tailwindlabs/tailwindcss-intellisense#tailwindcssclassattributes
  *
  * For references about tagged functions:
@@ -37,6 +36,12 @@ type ClassedFinalProps<Props, Component> = Component extends React.ReactHTML
  * - https://makersden.io/blog/reverse-engineering-styled-components
  * - https://typesafe.blog/article/the-logic-behind-javascript-tag-functions
  * - https://flaming.codes/posts/typescript-and-javascript-tagged-template-strings
+ *
+ * Similar projects:
+ * - https://reactjsexample.com/style-radix-ui-components-with-tailwindcss/
+ *
+ * Discussions and Q/A:
+ * - https://stackoverflow.com/q/73055695/1938970
  */
 export function classed<Props, Component extends React.ElementType = any>(
   component: Component
