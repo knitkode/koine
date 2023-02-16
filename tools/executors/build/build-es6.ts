@@ -66,7 +66,9 @@ function normalizeOptions(
 }
 
 async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
-  const { sourceRoot, root } = context.workspace.projects[context.projectName!];
+  if (!context.workspace || !context.projectName) return;
+
+  const { sourceRoot, root } = context.workspace.projects[context.projectName];
   const options = normalizeOptions(_options, context.root, sourceRoot!, root);
   const { projectRoot, tmpTsConfig, target, dependencies } = checkDependencies(
     context,
@@ -153,6 +155,7 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
     const disposeWatchAssetChanges =
       await assetHandler.watchAndProcessOnAssetChange();
     const disposePackageJsonChanged = await watchForSingleFileChanges(
+      context.projectName,
       join(context.root, projectRoot),
       "package.json",
       () => updatePackageJson(options, context, target, dependencies)

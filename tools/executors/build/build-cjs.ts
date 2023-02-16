@@ -34,35 +34,36 @@ import { createTypeScriptCompilationOptions } from "@nrwl/js/src/executors/tsc/t
 // we follow the same structure as in @mui packages builds
 const TMP_FOLDER_MODERN = "../.modern";
 const DEST_FOLDER_MODERN = "../";
+const TMP_FOLDER_CJS = "./node";
 const DEST_FOLDER_CJS = "../node";
 
 async function treatEsmOutput(options: NormalizedExecutorOptions) {
   const { outputPath } = options;
-  const tmpOutputPath = join(outputPath, TMP_FOLDER_MODERN);
-  const destOutputPath = join(outputPath, DEST_FOLDER_MODERN);
+  const tmpModernPath = join(outputPath, TMP_FOLDER_MODERN);
+  const destModernPath = join(outputPath, DEST_FOLDER_MODERN);
   const entrypointsDirs: string[] = [];
 
   return new Promise<typeof entrypointsDirs>((resolve) => {
     glob(
       "**/*.{js,json,ts}",
-      { cwd: tmpOutputPath },
+      { cwd: tmpModernPath },
       async function (er, relativePaths) {
         await Promise.all(
           relativePaths.map(async (relativePath) => {
             const dir = dirname(relativePath);
             const ext = extname(relativePath);
             const fileName = basename(relativePath, ext);
-            const srcFile = join(tmpOutputPath, relativePath);
-            const destFile = join(destOutputPath, relativePath);
+            const srcFile = join(tmpModernPath, relativePath);
+            const destFile = join(destModernPath, relativePath);
 
             if (srcFile !== destFile) {
-              await move(srcFile, destFile, { overwrite: true });
+              await move(srcFile, destFile.replace(".js", ".mjs"), { overwrite: true });
             }
 
             // only write package.json file deeper than the root and when whave
             // an `index` entry file
             if (fileName === "index" && dir && dir !== ".") {
-              const destDir = join(destOutputPath, dir);
+              const destDir = join(destModernPath, dir);
               const destModernDir = destDir;
               const destCjsDir = join(outputPath, DEST_FOLDER_CJS, dir);
 
@@ -73,11 +74,61 @@ async function treatEsmOutput(options: NormalizedExecutorOptions) {
                 join(destDir, "./package.json"),
                 getPackageJsonData(destDir, destModernDir, destCjsDir)
               );
+
+              // writeJsonFile(join(destCjsDir, "./package.json"), {
+              //   sideEffects: false,
+              //   type: "commonjs",
+              // });
             }
           })
         );
-        
-        await remove(tmpOutputPath);
+
+        await remove(tmpModernPath);
+
+        // console.log("treatEsmOutput: entrypointsDirs", entrypointsDirs);
+        resolve(entrypointsDirs);
+      }
+    );
+  });
+}
+
+async function treatCjsOutput(options: NormalizedExecutorOptions) {
+  const { outputPath } = options;
+  const tmpCjsPath = join(outputPath);
+  const destCjsPath = join(outputPath, "../");
+  const entrypointsDirs: string[] = [];
+
+  return new Promise<typeof entrypointsDirs>((resolve) => {
+    glob(
+      "**/*.{js,json,ts}",
+      { cwd: tmpCjsPath },
+      async function (er, relativePaths) {
+        await Promise.all(
+          relativePaths.map(async (relativePath) => {
+            const dir = dirname(relativePath);
+            const ext = extname(relativePath);
+            const fileName = basename(relativePath, ext);
+            const srcFile = join(tmpCjsPath, relativePath);
+            const destFile = join(destCjsPath, relativePath);
+
+            if (srcFile !== destFile) {
+              // await move(srcFile, destFile.replace(".js", ".cjs"), { overwrite: true });
+              await move(srcFile, destFile, { overwrite: true });
+            }
+
+            // only write package.json file deeper than the root and when whave
+            // an `index` entry file
+            // if (fileName === "index" && dir && dir !== ".") {
+            //   const destDir = join(destCjsPath, dir);
+            //   const destCjsDir = destDir;
+
+            //   // populate the entrypointsDirs array
+            //   entrypointsDirs.push(dir);
+            // }
+          })
+        );
+
+        await remove(tmpCjsPath);
 
         // console.log("treatEsmOutput: entrypointsDirs", entrypointsDirs);
         resolve(entrypointsDirs);
@@ -104,6 +155,7 @@ async function treatRootEntrypoint(options: NormalizedExecutorOptions) {
         packageJson,
         {
           version: rootPackageJson.version,
+          // type: "module",
           // @see https://nodejs.org/api/packages.html#approach-1-use-an-es-module-wrapper
           // we disable rollup bundles for now
           // exports: {
@@ -118,6 +170,15 @@ async function treatRootEntrypoint(options: NormalizedExecutorOptions) {
         )
       )
     );
+
+    // writeJsonFile(
+    //   join(outputPath, "package.json"),
+    //   {
+    //     sideEffects: false,
+    //     type: "commonjs",
+    //   }
+    // );
+
     resolve(true);
   });
 }
@@ -133,8 +194,9 @@ function getPackageJsonData(pkgPath, modernPath, cjsPath) {
 
   return {
     sideEffects: false,
-    module: modernFile,
-    main: cjsFile,
+    module: modernFile.replace(".js", ".mjs"),
+    // main: modernFile.replace(".js", ".cjs"),
+    main: modernFile,
     // @see https://webpack.js.org/guides/package-exports/
     // exports: {
     //   // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
@@ -183,7 +245,9 @@ function normalizeOptions(
 }
 
 async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
-  const { sourceRoot, root } = context.workspace.projects[context.projectName!];
+  if (!context.workspace || !context.projectName) return;
+
+  const { sourceRoot, root } = context.workspace.projects[context.projectName];
   const options = normalizeOptions(_options, context.root, sourceRoot!, root);
   const { projectRoot, tmpTsConfig, target, dependencies } = checkDependencies(
     context,
@@ -242,7 +306,7 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
   tsConfig.skipLibCheck = true;
   writeJsonFile(options.tsConfig, tsConfig);
 
-  // moved dest innerr folder to outputPath option in project.json
+  // moved dest inner folder to outputPath option in project.json
   // tsCompilationOptions.outputPath = tmpOptions.outputPath = join(
   //   options.outputPath,
   //   DEST_FOLDER_CJS
@@ -253,7 +317,7 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
     tsCompilationOptions,
     async () => {
       await treatEsmOutput(options);
-      // await treatCjsOutput(options);
+      await treatCjsOutput(options);
       await treatRootEntrypoint(options);
       // restore initial tsConfig
       writeJsonFile(options.tsConfig, initialTsConfig);
@@ -262,6 +326,7 @@ async function* executor(_options: ExecutorOptions, context: ExecutorContext) {
 
   if (options.watch) {
     const disposePackageJsonChanged = await watchForSingleFileChanges(
+      context.projectName,
       join(context.root, projectRoot),
       "package.json",
       () => updatePackageJson(options, context, target, dependencies)

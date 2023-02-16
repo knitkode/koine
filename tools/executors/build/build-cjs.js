@@ -102,17 +102,18 @@ var tsc_impl_1 = require("@nrwl/js/src/executors/tsc/tsc.impl");
 // we follow the same structure as in @mui packages builds
 var TMP_FOLDER_MODERN = "../.modern";
 var DEST_FOLDER_MODERN = "../";
+var TMP_FOLDER_CJS = "./node";
 var DEST_FOLDER_CJS = "../node";
 function treatEsmOutput(options) {
     return __awaiter(this, void 0, void 0, function () {
-        var outputPath, tmpOutputPath, destOutputPath, entrypointsDirs;
+        var outputPath, tmpModernPath, destModernPath, entrypointsDirs;
         return __generator(this, function (_a) {
             outputPath = options.outputPath;
-            tmpOutputPath = (0, path_1.join)(outputPath, TMP_FOLDER_MODERN);
-            destOutputPath = (0, path_1.join)(outputPath, DEST_FOLDER_MODERN);
+            tmpModernPath = (0, path_1.join)(outputPath, TMP_FOLDER_MODERN);
+            destModernPath = (0, path_1.join)(outputPath, DEST_FOLDER_MODERN);
             entrypointsDirs = [];
             return [2 /*return*/, new Promise(function (resolve) {
-                    (0, glob_1.glob)("**/*.{js,json,ts}", { cwd: tmpOutputPath }, function (er, relativePaths) {
+                    (0, glob_1.glob)("**/*.{js,json,ts}", { cwd: tmpModernPath }, function (er, relativePaths) {
                         return __awaiter(this, void 0, void 0, function () {
                             var _this = this;
                             return __generator(this, function (_a) {
@@ -125,10 +126,10 @@ function treatEsmOutput(options) {
                                                         dir = (0, path_1.dirname)(relativePath);
                                                         ext = (0, path_1.extname)(relativePath);
                                                         fileName = (0, path_1.basename)(relativePath, ext);
-                                                        srcFile = (0, path_1.join)(tmpOutputPath, relativePath);
-                                                        destFile = (0, path_1.join)(destOutputPath, relativePath);
+                                                        srcFile = (0, path_1.join)(tmpModernPath, relativePath);
+                                                        destFile = (0, path_1.join)(destModernPath, relativePath);
                                                         if (!(srcFile !== destFile)) return [3 /*break*/, 2];
-                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile, { overwrite: true })];
+                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile.replace(".js", ".mjs"), { overwrite: true })];
                                                     case 1:
                                                         _a.sent();
                                                         _a.label = 2;
@@ -136,12 +137,16 @@ function treatEsmOutput(options) {
                                                         // only write package.json file deeper than the root and when whave
                                                         // an `index` entry file
                                                         if (fileName === "index" && dir && dir !== ".") {
-                                                            destDir = (0, path_1.join)(destOutputPath, dir);
+                                                            destDir = (0, path_1.join)(destModernPath, dir);
                                                             destModernDir = destDir;
                                                             destCjsDir = (0, path_1.join)(outputPath, DEST_FOLDER_CJS, dir);
                                                             // populate the entrypointsDirs array
                                                             entrypointsDirs.push(dir);
                                                             (0, devkit_1.writeJsonFile)((0, path_1.join)(destDir, "./package.json"), getPackageJsonData(destDir, destModernDir, destCjsDir));
+                                                            // writeJsonFile(join(destCjsDir, "./package.json"), {
+                                                            //   sideEffects: false,
+                                                            //   type: "commonjs",
+                                                            // });
                                                         }
                                                         return [2 /*return*/];
                                                 }
@@ -149,7 +154,58 @@ function treatEsmOutput(options) {
                                         }); }))];
                                     case 1:
                                         _a.sent();
-                                        return [4 /*yield*/, (0, fs_extra_1.remove)(tmpOutputPath)];
+                                        return [4 /*yield*/, (0, fs_extra_1.remove)(tmpModernPath)];
+                                    case 2:
+                                        _a.sent();
+                                        // console.log("treatEsmOutput: entrypointsDirs", entrypointsDirs);
+                                        resolve(entrypointsDirs);
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    });
+                })];
+        });
+    });
+}
+function treatCjsOutput(options) {
+    return __awaiter(this, void 0, void 0, function () {
+        var outputPath, tmpCjsPath, destCjsPath, entrypointsDirs;
+        return __generator(this, function (_a) {
+            outputPath = options.outputPath;
+            tmpCjsPath = (0, path_1.join)(outputPath);
+            destCjsPath = (0, path_1.join)(outputPath, "../");
+            entrypointsDirs = [];
+            return [2 /*return*/, new Promise(function (resolve) {
+                    (0, glob_1.glob)("**/*.{js,json,ts}", { cwd: tmpCjsPath }, function (er, relativePaths) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var _this = this;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, Promise.all(relativePaths.map(function (relativePath) { return __awaiter(_this, void 0, void 0, function () {
+                                            var dir, ext, fileName, srcFile, destFile;
+                                            return __generator(this, function (_a) {
+                                                switch (_a.label) {
+                                                    case 0:
+                                                        dir = (0, path_1.dirname)(relativePath);
+                                                        ext = (0, path_1.extname)(relativePath);
+                                                        fileName = (0, path_1.basename)(relativePath, ext);
+                                                        srcFile = (0, path_1.join)(tmpCjsPath, relativePath);
+                                                        destFile = (0, path_1.join)(destCjsPath, relativePath);
+                                                        if (!(srcFile !== destFile)) return [3 /*break*/, 2];
+                                                        // await move(srcFile, destFile.replace(".js", ".cjs"), { overwrite: true });
+                                                        return [4 /*yield*/, (0, fs_extra_1.move)(srcFile, destFile, { overwrite: true })];
+                                                    case 1:
+                                                        // await move(srcFile, destFile.replace(".js", ".cjs"), { overwrite: true });
+                                                        _a.sent();
+                                                        _a.label = 2;
+                                                    case 2: return [2 /*return*/];
+                                                }
+                                            });
+                                        }); }))];
+                                    case 1:
+                                        _a.sent();
+                                        return [4 /*yield*/, (0, fs_extra_1.remove)(tmpCjsPath)];
                                     case 2:
                                         _a.sent();
                                         // console.log("treatEsmOutput: entrypointsDirs", entrypointsDirs);
@@ -180,6 +236,13 @@ function treatRootEntrypoint(options) {
                     (0, devkit_1.writeJsonFile)(packagePath, Object.assign(packageJson, {
                         version: rootPackageJson.version
                     }, getPackageJsonData((0, path_1.join)(outputPath, "../"), (0, path_1.join)(outputPath, DEST_FOLDER_MODERN), (0, path_1.join)(outputPath, DEST_FOLDER_CJS))));
+                    // writeJsonFile(
+                    //   join(outputPath, "package.json"),
+                    //   {
+                    //     sideEffects: false,
+                    //     type: "commonjs",
+                    //   }
+                    // );
                     resolve(true);
                 })];
         });
@@ -197,8 +260,9 @@ function getPackageJsonData(pkgPath, modernPath, cjsPath) {
         umdFile = "./".concat(umdFile);
     return {
         sideEffects: false,
-        module: modernFile,
-        main: cjsFile,
+        module: modernFile.replace(".js", ".mjs"),
+        // main: modernFile.replace(".js", ".cjs"),
+        main: modernFile,
         // @see https://webpack.js.org/guides/package-exports/
         // exports: {
         //   // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
@@ -227,6 +291,10 @@ function executor(_options, context) {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
+                    if (!(!context.workspace || !context.projectName)) return [3 /*break*/, 2];
+                    return [4 /*yield*/, __await(void 0)];
+                case 1: return [2 /*return*/, _c.sent()];
+                case 2:
                     _a = context.workspace.projects[context.projectName], sourceRoot = _a.sourceRoot, root = _a.root;
                     options = normalizeOptions(_options, context.root, sourceRoot, root);
                     _b = (0, check_dependencies_1.checkDependencies)(context, _options.tsConfig), projectRoot = _b.projectRoot, tmpTsConfig = _b.tmpTsConfig, target = _b.target, dependencies = _b.dependencies;
@@ -271,10 +339,11 @@ function executor(_options, context) {
                                 case 0: return [4 /*yield*/, treatEsmOutput(options)];
                                 case 1:
                                     _a.sent();
-                                    // await treatCjsOutput(options);
-                                    return [4 /*yield*/, treatRootEntrypoint(options)];
+                                    return [4 /*yield*/, treatCjsOutput(options)];
                                 case 2:
-                                    // await treatCjsOutput(options);
+                                    _a.sent();
+                                    return [4 /*yield*/, treatRootEntrypoint(options)];
+                                case 3:
                                     _a.sent();
                                     // restore initial tsConfig
                                     (0, devkit_1.writeJsonFile)(options.tsConfig, initialTsConfig);
@@ -282,9 +351,9 @@ function executor(_options, context) {
                             }
                         });
                     }); });
-                    if (!options.watch) return [3 /*break*/, 2];
-                    return [4 /*yield*/, __await((0, watch_for_single_file_changes_1.watchForSingleFileChanges)((0, path_1.join)(context.root, projectRoot), "package.json", function () { return (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies); }))];
-                case 1:
+                    if (!options.watch) return [3 /*break*/, 4];
+                    return [4 /*yield*/, __await((0, watch_for_single_file_changes_1.watchForSingleFileChanges)(context.projectName, (0, path_1.join)(context.root, projectRoot), "package.json", function () { return (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies); }))];
+                case 3:
                     disposePackageJsonChanged_1 = _c.sent();
                     process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
@@ -306,11 +375,11 @@ function executor(_options, context) {
                             }
                         });
                     }); });
-                    _c.label = 2;
-                case 2: return [5 /*yield**/, __values(__asyncDelegator(__asyncValues(typescriptCompilation.iterator)))];
-                case 3: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 5: return [2 /*return*/, _c.sent()];
+                    _c.label = 4;
+                case 4: return [5 /*yield**/, __values(__asyncDelegator(__asyncValues(typescriptCompilation.iterator)))];
+                case 5: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 6: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 7: return [2 /*return*/, _c.sent()];
             }
         });
     });

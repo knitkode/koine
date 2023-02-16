@@ -115,6 +115,10 @@ function executor(_options, context) {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
+                    if (!(!context.workspace || !context.projectName)) return [3 /*break*/, 2];
+                    return [4 /*yield*/, __await(void 0)];
+                case 1: return [2 /*return*/, _c.sent()];
+                case 2:
                     _a = context.workspace.projects[context.projectName], sourceRoot = _a.sourceRoot, root = _a.root;
                     options = normalizeOptions(_options, context.root, sourceRoot, root);
                     _b = (0, check_dependencies_1.checkDependencies)(context, _options.tsConfig), projectRoot = _b.projectRoot, tmpTsConfig = _b.tmpTsConfig, target = _b.target, dependencies = _b.dependencies;
@@ -171,12 +175,12 @@ function executor(_options, context) {
                             }
                         });
                     }); });
-                    if (!options.watch) return [3 /*break*/, 3];
+                    if (!options.watch) return [3 /*break*/, 5];
                     return [4 /*yield*/, __await(assetHandler.watchAndProcessOnAssetChange())];
-                case 1:
+                case 3:
                     disposeWatchAssetChanges_1 = _c.sent();
-                    return [4 /*yield*/, __await((0, watch_for_single_file_changes_1.watchForSingleFileChanges)((0, path_1.join)(context.root, projectRoot), "package.json", function () { return (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies); }))];
-                case 2:
+                    return [4 /*yield*/, __await((0, watch_for_single_file_changes_1.watchForSingleFileChanges)(context.projectName, (0, path_1.join)(context.root, projectRoot), "package.json", function () { return (0, update_package_json_1.updatePackageJson)(options, context, target, dependencies); }))];
+                case 4:
                     disposePackageJsonChanged_1 = _c.sent();
                     process.on("exit", function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
@@ -204,11 +208,11 @@ function executor(_options, context) {
                             }
                         });
                     }); });
-                    _c.label = 3;
-                case 3: return [5 /*yield**/, __values(__asyncDelegator(__asyncValues(typescriptCompilation.iterator)))];
-                case 4: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 5: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
-                case 6: return [2 /*return*/, _c.sent()];
+                    _c.label = 5;
+                case 5: return [5 /*yield**/, __values(__asyncDelegator(__asyncValues(typescriptCompilation.iterator)))];
+                case 6: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 7: return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
+                case 8: return [2 /*return*/, _c.sent()];
             }
         });
     });

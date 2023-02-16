@@ -3,9 +3,13 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "composite": false,
+    "declaration": false
   },
   "files": ["typings.d.ts"],
   "include": ["**/*.ts"],
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.spec.ts"],
+  "skipLibCheck": true
 }
