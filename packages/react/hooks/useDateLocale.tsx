@@ -16,13 +16,14 @@ export function useDateLocale(locale?: string, defaultLocale = "en") {
   useEffect(() => {
     const importLocaleFile = async () => {
       // This webpack option stops all of the date-fns files being imported and chunked.
-      const localeToSet = await import(
-        // FIXME: this makes unnecessary numerous webpack chunks in applications
-        // / that do not even use this hook
-        /* webpackMode: "lazy", webpackChunkName: "df-[index]", webpackExclude: /_lib/ */
-        // `date-fns/locale/${locale}/index.js`,
-        `date-fns/locale/en-US/index.js`
-      );
+      // NB: this makes unnecessary numerous webpack chunks in applications
+      // that do not even use this hook, so we comment out the webpack dynamic
+      // import and its magic comment
+      // const localeToSet = await import(
+      //   /FIXME: * webpackMode: "lazy", webpackChunkName: "df-[index]", webpackExclude: /_lib/ */
+      //   `date-fns/locale/${locale}/index.js`,
+      // );
+      const localeToSet = await import(`date-fns/locale/en-US/index.js`);
       setCurrent(locale || current);
       setData(localeToSet.default);
       // setReady(true);
