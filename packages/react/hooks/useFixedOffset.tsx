@@ -1,12 +1,10 @@
 import { useRef } from "react";
-import {
-  injectCss,
-  calculateFixedOffset,
-  listenResizeDebounced,
-  $each,
-} from "@koine/dom";
-import { debounce } from "@koine/utils";
-import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
+import injectCss from "@koine/dom/injectCss";
+import calculateFixedOffset from "@koine/dom/calculateFixedOffset";
+import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
+import $each from "@koine/dom/$each";
+import debounce from "@koine/utils/debounce";
+import useIsomorphicLayoutEffect from "./useIsomorphicLayoutEffect";
 
 const inject = (value: number) => {
   injectCss("useFixedOffset", `html{scroll-padding-top: ${value}px}`);

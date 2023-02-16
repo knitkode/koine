@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import { gtagPageview } from "@koine/browser";
+import gtagPageview from "@koine/browser/gtagPageview";
 
 export type AnalyticsGoogleProps = {
   /** Falls back to `.env` variable `NEXT_PUBLIC_GTM_ID` */

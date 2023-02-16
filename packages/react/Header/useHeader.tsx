@@ -64,3 +64,5 @@ export const useHeader = () => {
     logoWidth,
   ] as unknown as UseHeaderState;
 };
+
+export default useHeader;

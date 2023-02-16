@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useFormState } from "react-hook-form";
-import { decode } from "@koine/utils";
+import decode from "@koine/utils/decode";
 import type { Translate } from "../../types";
 import type { FormControl } from "../helpers";
 import { Field, type FieldError } from "./Field";

@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import { debounce, noop } from "@koine/utils";
-import {
-  listenResizeDebounced,
-  listenScrollDebounced,
-  on,
-  off,
-} from "@koine/dom";
+import debounce from "@koine/utils/debounce";
+import noop from "@koine/utils/noop";
+import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
+import listenScrollDebounced from "@koine/dom/listenScrollDebounced";
+import on from "@koine/dom/on";
+import off from "@koine/dom/off";
 
 let observer: ResizeObserver | undefined;
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { listenResize, listenResizeDebounced } from "@koine/dom";
-import { debounce } from "@koine/utils";
+import debounce from "@koine/utils/debounce";
+import listenResize from "@koine/dom/listenResize";
+import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
 
 /**
  * # Use `window` size

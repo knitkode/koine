@@ -11,7 +11,7 @@ export const Autocomplete = null;
 //   CSSProperties,
 // } from "react";
 // import { useCombobox } from "downshift";
-// import { SetRequired } from "@koine/utils";
+// import type { SetRequired } from "@koine/utils";
 // // import debounce from "lodash.debounce";
 // import {
 //   AutocompleteRoot,

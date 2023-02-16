@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { useMenuItem } from "@mui/base/MenuItemUnstyled";
 // import { useMenuItem } from "./useMenuItem";
-import { clsx } from "@koine/utils/clsx";
+import clsx from "@koine/utils/clsx";
 import { type MenuItemsProps } from "../Menu/MenuMui";
 import { Polymorphic } from "../typings";
 

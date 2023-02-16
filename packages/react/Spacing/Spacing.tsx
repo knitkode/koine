@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { isUndefined } from "@koine/utils";
+import isUndefined from "@koine/utils/isUndefined";
 import {
   spacingTop,
   spacingBottom,

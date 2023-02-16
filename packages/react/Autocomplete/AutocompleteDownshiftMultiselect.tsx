@@ -12,7 +12,7 @@ export const Autocomplete = null;
 //   ComponentPropsWithRef,
 //   CSSProperties,
 // } from "react";
-// import { SetRequired } from "@koine/utils";
+// import type { SetRequired } from "@koine/utils";
 // import {
 //   useCombobox,
 //   useMultipleSelection,

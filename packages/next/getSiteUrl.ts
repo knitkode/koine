@@ -1,4 +1,4 @@
-import { normaliseUrl } from "@koine/utils";
+import normaliseUrl from "@koine/utils/normaliseUrl";
 
 /**
  * Get site absolute url with the given path

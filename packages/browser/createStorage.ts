@@ -1,11 +1,9 @@
-import {
-  decode,
-  encode,
-  isBrowser,
-  isNullOrUndefined,
-  noop,
-} from "@koine/utils";
-import { on } from "@koine/dom";
+import decode from "@koine/utils/decode";
+import encode from "@koine/utils/encode";
+import isBrowser from "@koine/utils/isBrowser";
+import isNullOrUndefined from "@koine/utils/isNullOrUndefined";
+import noop from "@koine/utils/noop";
+import on from "@koine/dom/on";
 import storage from "./storage";
 
 export type CreateStorageConfig = Record<string, any>;

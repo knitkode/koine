@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, memo } from "react";
 import NextScript from "next/script";
-import { isServer } from "@koine/utils";
+import isServer from "@koine/utils/isServer";
 import { ThemeContext } from "./ThemeContext";
 
 type ValueObject = {
@@ -62,7 +62,7 @@ export const ThemeProvider = ({
   const attrs = !value ? themes : Object.values(value);
 
   const applyTheme = useCallback(
-    (theme?: typeof themes[number]) => {
+    (theme?: (typeof themes)[number]) => {
       let resolved = theme;
       if (isServer || !resolved) return;
 
@@ -110,7 +110,7 @@ export const ThemeProvider = ({
     ]
   );
 
-  const setTheme = useCallback((theme: typeof themes[number]) => {
+  const setTheme = useCallback((theme: (typeof themes)[number]) => {
     setThemeState(theme);
 
     // Save to storage

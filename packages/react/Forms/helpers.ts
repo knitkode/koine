@@ -3,7 +3,8 @@ import type {
   UseFormRegister,
   UseFormSetValue,
 } from "react-hook-form";
-import { isString, matchSorter } from "@koine/utils";
+import isString from "@koine/utils/isString";
+import matchSorter from "@koine/utils/matchSorter";
 import type { Option } from "../types";
 
 type FormControlNativeType = "input" | "select" | "textarea";

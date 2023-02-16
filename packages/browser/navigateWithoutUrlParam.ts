@@ -1,5 +1,6 @@
-import { type AnyQueryParams, getUrlQueryParams } from "@koine/utils";
-import { navigateToParams } from "./navigateToParams";
+import type { AnyQueryParams } from "@koine/utils/location";
+import getUrlQueryParams from "@koine/utils/getUrlQueryParams";
+import navigateToParams from "./navigateToParams";
 
 /**
  * Remove URL query parameter, it uses `history`

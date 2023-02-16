@@ -26,7 +26,7 @@ export const Autocomplete = null;
 // } from "./components";
 // import type { Option } from "../types";
 
-// import { SetRequired } from "@koine/utils";
+// import type { SetRequired } from "@koine/utils";
 
 // export type AutocompleteOption =
 //   | null

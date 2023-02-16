@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { isBrowser, noop } from "@koine/utils";
-import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect";
-import { listenScroll } from "@koine/dom";
+import isBrowser from "@koine/utils/isBrowser";
+import listenScroll from "@koine/dom/listenScroll";
+import useIsomorphicLayoutEffect from "./useIsomorphicLayoutEffect";
 
 type Position = {
   x: number;

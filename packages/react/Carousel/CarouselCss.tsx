@@ -1,6 +1,6 @@
 import { Children, useId } from "react";
 import styled from "styled-components";
-import { SetRequired } from "@koine/utils";
+import type { SetRequired } from "@koine/utils";
 import {
   Row,
   RowProps,

@@ -3,7 +3,7 @@ import {
   CgArrowRightR as IconArrowRight,
   CgArrowLeftR as IconArrowLeft,
 } from "react-icons/cg";
-import { ensureInt } from "@koine/utils";
+import ensureInt from "@koine/utils/ensureInt";
 import { KoineComponentProps, KoineComponent } from "../types";
 
 const Root = styled.nav`

@@ -1,4 +1,5 @@
-import { isBrowser, isString } from "@koine/utils";
+import isBrowser from "@koine/utils/isBrowser";
+import isString from "@koine/utils/isString";
 
 export type StorageClientConfig = Record<string, any>;
 

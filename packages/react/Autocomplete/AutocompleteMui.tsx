@@ -5,7 +5,7 @@ import React, {
   useState,
 } from "react";
 import { useAutocomplete } from "@mui/base/AutocompleteUnstyled";
-import { isString } from "@koine/utils";
+import isString from "@koine/utils/isString";
 import type { Option } from "../types";
 import {
   FormControl,

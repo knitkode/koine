@@ -1,8 +1,6 @@
-import {
-  type AnyQueryParams,
-  mergeUrlQueryParams,
-  getUrlHashParams,
-} from "@koine/utils";
+import type { AnyQueryParams } from "@koine/utils/location";
+import mergeUrlQueryParams from "@koine/utils/mergeUrlQueryParams";
+import getUrlHashParams from "@koine/utils/getUrlHashParams";
 import { navigateToHashParams } from "./navigateToHashParams";
 
 /**

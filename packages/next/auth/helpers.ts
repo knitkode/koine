@@ -1,4 +1,4 @@
-import { isString } from "@koine/utils";
+import isString from "@koine/utils/isString";
 import type { TranslateLoose } from "../types-i18n";
 
 /**

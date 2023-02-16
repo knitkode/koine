@@ -1,4 +1,4 @@
-import { LazyMotion, LazyProps } from "framer-motion";
+import { LazyMotion, type LazyProps } from "framer-motion";
 
 export type MotionProviderFeatures = LazyProps["features"];
 

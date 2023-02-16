@@ -1,11 +1,10 @@
 import { useState } from "react";
-import {
-  isUndefined,
-  getMediaQueryWidthResolvers,
+import isUndefined from "@koine/utils/isUndefined";
+import getMediaQueryWidthResolvers, {
   type GetMediaQueryWidthResolversBreakpoints,
-  type Split,
-} from "@koine/utils";
-import { useIsomorphicLayoutEffect } from "../hooks/useIsomorphicLayoutEffect";
+} from "@koine/utils/getMediaQueryWidthResolvers";
+import type { Split } from "@koine/utils";
+import useIsomorphicLayoutEffect from "../hooks/useIsomorphicLayoutEffect";
 
 type _MediaQuerWidthDefExplicit<TBreakpoint extends string> =
   | `min-${TBreakpoint}`
@@ -100,7 +99,8 @@ export default createUseMediaQueryWidth;
 //// ---------------------------------------------------------------------------
 
 // import { useState, useIsomorphicLayoutEffect, useMemo } from "react";
-// import { isBrowser, type Split } from "@koine/utils";
+// import type { Split } from "@koine/utils";
+// import isBrowser from "@koine/utils/isBrowser";
 // import { breakpoints as themeBreakpoints } from "@/config/theme/breakpoints";
 // import { useIsomorphicLayoutEffect } from "../hooks/useIsomorphicLayoutEffect"
 

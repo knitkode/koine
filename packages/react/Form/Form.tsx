@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { type Simplify } from "@koine/utils";
-// import { type MotionProps } from "framer-motion";
+import type { Simplify } from "@koine/utils";
+// import type { MotionProps } from "framer-motion";
 import {
   extendComponent,
   // type OverridableComponents,

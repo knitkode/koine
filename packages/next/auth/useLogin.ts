@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import { SubmitHandler } from "react-hook-form";
-import { parseURL } from "@koine/utils";
+import type { SubmitHandler } from "react-hook-form";
+import parseURL from "@koine/utils/parseURL";
 import { useT } from "../useT";
 import { getAuthRoutes, getCallbackUrl } from "./helpers";
 

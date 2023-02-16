@@ -1,7 +1,8 @@
 import { useCallback } from "react";
-import { isNumber } from "@koine/utils";
-import { getOffsetTopSlim, scrollTo } from "@koine/dom";
-import { useFixedOffset } from "./useFixedOffset";
+import isNumber from "@koine/utils/isNumber";
+import getOffsetTopSlim from "@koine/dom/getOffsetTopSlim";
+import scrollTo from "@koine/dom/scrollTo";
+import useFixedOffset from "./useFixedOffset";
 
 /**
  *

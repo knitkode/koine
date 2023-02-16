@@ -1,8 +1,6 @@
-import {
-  type AnyQueryParams,
-  buildUrlQueryString,
-  isFullObject,
-} from "@koine/utils";
+import type { AnyQueryParams } from "@koine/utils/location";
+import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
+import isFullObject from "@koine/utils/isFullObject";
 
 /**
  * Create api client

@@ -7,8 +7,8 @@
  *
  * @fileoverview
  */
-import { isString } from "@koine/utils";
-import { escapeSelector } from "./escapeSelector";
+import isString from "@koine/utils/isString";
+import escapeSelector from "./escapeSelector";
 
 /**
  * @internal

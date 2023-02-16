@@ -1,4 +1,4 @@
-import { isFunction } from "@koine/utils";
+import isFunction from "@koine/utils/isFunction";
 import useSWR, {
   type SWRConfiguration,
   type SWRResponse,
@@ -9,7 +9,7 @@ import useSWRMutation, {
   type SWRMutationConfiguration,
   type SWRMutationResponse,
 } from "swr/mutation";
-import { createApi } from "./createApi";
+import createApi from "./createApi";
 
 type SWRConfigurationExtended<
   Data = any,

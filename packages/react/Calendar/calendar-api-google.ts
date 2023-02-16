@@ -1,4 +1,6 @@
-import { arrayToLookup, isString, isUndefined } from "@koine/utils";
+import arrayToLookup from "@koine/utils/arrayToLookup";
+import isString from "@koine/utils/isString";
+import isUndefined from "@koine/utils/isUndefined";
 import differenceInDays from "date-fns/differenceInDays";
 import subDays from "date-fns/subDays";
 import type {

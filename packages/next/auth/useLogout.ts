@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
-import { parseURL } from "@koine/utils";
+import parseURL from "@koine/utils/parseURL";
 import { useT } from "../useT";
 import { getAuthRoutes, getCallbackUrl } from "./helpers";
 

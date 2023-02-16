@@ -1,6 +1,6 @@
-// import { noop } from "@koine/utils"; FIXME: build breaks with this import
+// import noop from "@koine/utils/noop"; FIXME: build breaks with this import
 import type { AnyDOMEventTargetLoose } from "./types";
-import { off } from "./off";
+import off from "./off";
 
 /**
  * Shortcut for `addEventListener`

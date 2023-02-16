@@ -1,4 +1,4 @@
-import { isUndefined } from "@koine/utils";
+import isUndefined from "@koine/utils/isUndefined";
 
 export type GtmPageviewArgs = [
   page_path?: string,

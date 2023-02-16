@@ -1,5 +1,5 @@
-import { debounce } from "@koine/utils";
-import { listenResize } from "./listenResize";
+import debounce from "@koine/utils/debounce";
+import listenResize from "./listenResize";
 
 /**
  * Listen element's (`window` by default) _resize_ event debouncing the callback
@@ -14,8 +14,9 @@ export const listenResizeDebounced = (
 export default listenResizeDebounced;
 
 // EXP: with too complex overload signature...
-// import { debounce, isUndefined } from "@koine/utils";
-// import { listenResize } from "./listenResize";
+// import debounce from "@koine/utils/debounce";
+// import isUndefined from "@koine/utils/isUndefined";
+// import listenResize from "./listenResize";
 
 // /**
 //  * Listen element's (`window` by default) _resize_ event debouncing the callback

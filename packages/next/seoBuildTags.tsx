@@ -1,5 +1,5 @@
 import React from "react";
-import { isArray } from "@koine/utils";
+import isArray from "@koine/utils/isArray";
 import type { SeoProps } from "./Seo";
 import type { SeoDefaultsProps } from "./SeoDefaults";
 

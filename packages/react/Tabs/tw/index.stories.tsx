@@ -8,7 +8,7 @@ import {
 import { KoineTabsProps } from "../TabsMui";
 import { KoineTabs as bareComp } from "./bare";
 import { KoineTabs as materialComp } from "./material";
-import { classed } from "../../helpers";
+// import { classed } from "../../helpers";
 
 export default {
   title: "Base/Tabs/Tailwind",
