@@ -1,5 +1,6 @@
 {
-  "root": "packages/dom",
+  "name": "dom",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/dom",
   "projectType": "library",
   "tags": [],

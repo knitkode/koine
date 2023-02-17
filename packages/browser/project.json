@@ -1,5 +1,6 @@
 {
-  "root": "packages/browser",
+  "name": "browser",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/browser",
   "projectType": "library",
   "tags": [],

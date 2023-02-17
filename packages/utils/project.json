@@ -1,5 +1,6 @@
 {
-  "root": "packages/utils",
+  "name": "utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/utils",
   "projectType": "library",
   "tags": [],

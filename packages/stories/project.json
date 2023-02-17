@@ -1,5 +1,6 @@
 {
-  "root": "packages/stories",
+  "name": "stories",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/stories/src",
   "projectType": "library",
   "tags": [],
