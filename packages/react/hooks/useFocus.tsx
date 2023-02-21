@@ -4,14 +4,14 @@ import { useRef } from "react";
  * @see https://stackoverflow.com/a/54159564/1938970
  */
 export const useFocus = () => {
-  const element = useRef<
+  const elementRef = useRef<
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   >(null);
   const setFocus = () => {
-    element.current && element.current.focus();
+    elementRef.current && elementRef.current.focus();
   };
 
-  return [element, setFocus];
+  return [elementRef, setFocus];
 };
 
 export default useFocus;

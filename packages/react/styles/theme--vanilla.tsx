@@ -1,23 +1,22 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import isBrowser from "@koine/utils/isBrowser";
-import setCookie from "@koine/utils/setCookie";
-import parseCookie from "@koine/utils/parseCookie";
-import useMount from "../hooks/useMount";
+// import setCookie from "@koine/utils/setCookie";
+// import parseCookie from "@koine/utils/parseCookie";
 import useUpdateEffect from "../hooks/useUpdateEffect";
 
 export const THEME_KEY = "theme";
 
 export const THEME_DEFAULT: ThemeVanillaValue = "light";
 
-export const getInitialThemeFromRequest = (
-  cookie?: string
-): ThemeVanillaValue => {
-  if (cookie) {
-    const parsed = parseCookie<ThemeCookie>(cookie);
-    return parsed?.theme;
-  }
-  return THEME_DEFAULT;
-};
+// export const getInitialThemeFromRequest = (
+//   cookie?: string
+// ): ThemeVanillaValue => {
+//   if (cookie) {
+//     const parsed = parseCookie<ThemeCookie>(cookie);
+//     return parsed?.theme;
+//   }
+//   return THEME_DEFAULT;
+// };
 
 export const getInitialThemeFromClient = (): ThemeVanillaValue => {
   if (typeof window !== "undefined" && window.localStorage) {
@@ -72,14 +71,14 @@ export const ThemeVanillaProvider = ({
     root.classList.add(rawTheme);
 
     localStorage.setItem(THEME_KEY, rawTheme);
-    setCookie(THEME_KEY, rawTheme);
+    // setCookie(THEME_KEY, rawTheme);
   };
 
-  useMount(() => {
+  useEffect(() => {
     const theme = getInitialThemeFromClient();
     setTheme(theme);
     rawSetTheme(theme);
-  });
+  }, []);
 
   useUpdateEffect(() => {
     rawSetTheme(theme);

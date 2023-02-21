@@ -1,7 +1,7 @@
 import React from "react";
 import NextDocument, {
-  DocumentContext,
-  DocumentInitialProps,
+  // DocumentContext,
+  // DocumentInitialProps,
   Html,
   Head,
   Main,
@@ -9,7 +9,7 @@ import NextDocument, {
 } from "next/document";
 import Meta from "@koine/react/Meta";
 import NoJs from "@koine/react/NoJs";
-import { getInitialThemeFromRequest, ThemeVanillaValue } from "@koine/react/sc"; // FIXME: this should be imported from another entrypoint
+// import { getInitialThemeFromRequest, ThemeVanillaValue } from "@koine/react/sc"; // FIXME: this should be imported from another entrypoint
 
 /**
  * Next Document wrapper for `css/tailwind` based projects
@@ -24,17 +24,17 @@ import { getInitialThemeFromRequest, ThemeVanillaValue } from "@koine/react/sc";
  * ```
  */
 export class Document extends NextDocument {
-  static override async getInitialProps(
-    ctx: DocumentContext
-  ): Promise<DocumentInitialProps & { theme: ThemeVanillaValue }> {
-    const initialProps = await NextDocument.getInitialProps(ctx);
-    return {
-      ...initialProps,
-      theme: getInitialThemeFromRequest(
-        ctx.req?.headers.cookie /*  || document?.cookie */ || ""
-      ),
-    };
-  }
+  // static override async getInitialProps(
+  //   ctx: DocumentContext
+  // ): Promise<DocumentInitialProps & { theme: ThemeVanillaValue }> {
+  //   const initialProps = await NextDocument.getInitialProps(ctx);
+  //   return {
+  //     ...initialProps,
+  //     theme: getInitialThemeFromRequest(
+  //       ctx.req?.headers.cookie /*  || document?.cookie */ || ""
+  //     ),
+  //   };
+  // }
 
   override render() {
     const { locale, defaultLocale } = this.props.__NEXT_DATA__;
