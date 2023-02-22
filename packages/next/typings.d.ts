@@ -81,9 +81,13 @@ declare namespace Koine {
    * - `${data}`: dollar prefix for static **data** like arrays, objects, .etc
    * - `{route-name}`: lower cased for **route** specific data
    * - `{ComponentName}`: pascal cased for **components** specific data
+   *
+   * This works through using [type augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)
+   * and [merging interfaces](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces).
    */
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface Translations {
-    [key: string]: any;
+    "~": any;
   }
 }
 

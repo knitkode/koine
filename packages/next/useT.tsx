@@ -34,12 +34,12 @@ export function useT<TNamespace extends TranslateNamespace>(
   const tMemoized = useMemo(
     () =>
       function <TReturn = string>(
-        s: TranslationsPaths<TranslationsDictionary[TNamespace], true>,
+        s: TranslationsPaths<TranslationsDictionary[TNamespace]>,
         q?: TranslationQuery,
         o?: TranslationOptions
       ): TReturn {
         return t(
-          namespace ? `${namespace}:${s}` : s,
+          namespace ? `${namespace}:${s}` : `${s}`,
           q === "obj" || q === "" ? null : q,
           q === "obj" || o === "obj"
             ? { returnObjects: true }

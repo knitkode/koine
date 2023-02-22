@@ -22,7 +22,14 @@ export type TProps<
  * [`resolveJsonModule`](https://www.typescriptlang.org/tsconfig#resolveJsonModule)
  * in your `tsconfig.json` file.
  */
-export const T = (props: TProps) => <Trans {...props} />;
+export const T = <
+  TNamespace extends TranslateNamespace | undefined = undefined
+>(
+  props: TProps<TNamespace>
+) =>
+  (<Trans {...(props as TransProps)} />) as React.ReactElement<
+    TProps<TNamespace>
+  >;
 
 export default T;
 
