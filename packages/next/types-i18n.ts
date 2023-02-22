@@ -56,8 +56,8 @@ export type TranslationsPaths<
       | `${K}` // this is to be able to use the "obj" shortcut
       | Join<K, TranslationsPaths<T[K]>>
     // allow primitives or array of primitives
-    : T[K] extends string | number | boolean | Array<string | number | boolean> ? `${K}`
-    // TODO: support array of objects?
+    // TODO: support array of objects recusrively? For now we just stop at the array name
+    : T[K] extends string | number | boolean | Array<string | number | boolean | object> ? `${K}`
     // exclude anything else
     : never;
 }[Extract<keyof T, string>] extends infer O ? O : never;
@@ -77,8 +77,8 @@ export type TranslationsAllPaths = {
           | `${N}:${K}` // this is to be able to use the "obj" shortcut
           | Join<K extends string ? `${N}:${K}` : `${N}:`, TranslationsPaths<TranslationsDictionary[N][K]>>
       // allow primitives or array of primitives
-      : TranslationsDictionary[N][K] extends string | number | boolean | Array<string | number | boolean> ? `${N}:${K}`
-      // TODO: support array of objects?
+      // TODO: support array of objects recusrively? For now we just stop at the array name
+      : TranslationsDictionary[N][K] extends string | number | boolean | Array<string | number | boolean | object> ? `${N}:${K}`
       // exclude anything else
       : never
   }[Extract<keyof TranslationsDictionary[N], string>];
