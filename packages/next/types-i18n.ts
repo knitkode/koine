@@ -11,6 +11,7 @@
  * I might take a better look at how things were done in [i18next](https://github.com/i18next/i18next/blob/master/index.d.ts)
  */
 
+
 type Join<S1, S2> = S1 extends string
   ? S2 extends string
     ? `${S1}.${S2}`
@@ -33,26 +34,22 @@ export type TranslateNamespace = Extract<keyof TranslationsDictionary, string>;
  * It uses the `infer` "trick" to store the object in memory and prevent
  * [infinite instantiation errors](https://stackoverflow.com/q/75531366/1938970)
  */
-export type TranslationsPaths<T> = {
-  [K in Extract<
-    keyof T,
-    string
-  >]: // exclude empty objects, empty arrays, empty strings
-  T[K] extends Record<string, never> | never[] | ""
-    ? never
-    : // recursively manage objects
-    T[K] extends Record<string, unknown>
-    ?
-        | `${K}` // this is to be able to use the "obj" shortcut
-        | Join<K, TranslationsPaths<T[K]>>
-    : // allow primitives or array of primitives
-    T[K] extends string | number | boolean | Array<string | number | boolean>
-    ? `${K}`
-    : // exclude anything else
-      never;
-}[Extract<keyof T, string>] extends infer O
-  ? O
-  : never;
+export type TranslationsPaths<
+  T
+> = {
+  [K in Extract<keyof T, string>]:
+    // exclude empty objects, empty arrays, empty strings
+    T[K] extends Record<string, never> | never[] | "" ? never
+    // recursively manage objects
+    : T[K] extends Record<string, unknown> ? 
+      | `${K}` // this is to be able to use the "obj" shortcut
+      | Join<K, TranslationsPaths<T[K]>>
+    // allow primitives or array of primitives
+    : T[K] extends string | number | boolean | Array<string | number | boolean> ? `${K}`
+    // TODO: support array of objects?
+    // exclude anything else
+    : never;
+}[Extract<keyof T, string>] extends infer O ? O : never;
 
 /**
  * Recursive mapped type of all usable string paths from the whole translations
@@ -61,33 +58,20 @@ export type TranslationsPaths<T> = {
  */
 export type TranslationsAllPaths = {
   [N in Extract<keyof TranslationsDictionary, string>]: {
-    [K in Extract<
-      keyof TranslationsDictionary[N],
-      string
-    >]: // exclude empty objects, empty arrays, empty strings
-    TranslationsDictionary[N][K] extends Record<string, never> | never[] | ""
-      ? never
-      : // recursively manage objects
-      TranslationsDictionary[N][K] extends Record<string, unknown>
-      ?
+    [K in Extract<keyof TranslationsDictionary[N],string>]:
+      // exclude empty objects, empty arrays, empty strings
+      TranslationsDictionary[N][K] extends Record<string, never> | never[] | "" ? never
+      // recursively manage objects
+      : TranslationsDictionary[N][K] extends Record<string, unknown> ?
           | `${N}:${K}` // this is to be able to use the "obj" shortcut
-          | Join<
-              K extends string ? `${N}:${K}` : `${N}:`,
-              TranslationsPaths<TranslationsDictionary[N][K]>
-            >
-      : // allow primitives or array of primitives
-      TranslationsDictionary[N][K] extends
-          | string
-          | number
-          | boolean
-          | Array<string | number | boolean>
-      ? `${N}:${K}`
-      : // exclude anything else
-        never;
+          | Join<K extends string ? `${N}:${K}` : `${N}:`, TranslationsPaths<TranslationsDictionary[N][K]>>
+      // allow primitives or array of primitives
+      : TranslationsDictionary[N][K] extends string | number | boolean | Array<string | number | boolean> ? `${N}:${K}`
+      // TODO: support array of objects?
+      // exclude anything else
+      : never
   }[Extract<keyof TranslationsDictionary[N], string>];
-}[Extract<keyof TranslationsDictionary, string>] extends infer O
-  ? O
-  : never;
+}[Extract<keyof TranslationsDictionary, string>] extends infer O ? O : never;
 
 /**
  * Unlike in `next-translate` we add passing some predefined arguments as
