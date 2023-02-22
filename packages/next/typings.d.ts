@@ -86,9 +86,7 @@ declare namespace Koine {
    * and [merging interfaces](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#merging-interfaces).
    */
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface Translations {
-    "~": any;
-  }
+  interface Translations {}
 }
 
 /**

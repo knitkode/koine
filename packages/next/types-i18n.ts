@@ -11,6 +11,7 @@
  * I might take a better look at how things were done in [i18next](https://github.com/i18next/i18next/blob/master/index.d.ts)
  */
 
+type Merge<T, K> = Omit<T, keyof K> & K;
 
 type Join<S1, S2> = S1 extends string
   ? S2 extends string
@@ -19,9 +20,19 @@ type Join<S1, S2> = S1 extends string
   : never;
 
 /**
- * Dictionary of all the translations
+ * 
  */
-export type TranslationsDictionary = Koine.Translations;
+export type TranslationsDictionaryDefault = {
+  "~": any;
+}
+
+/**
+ * Dictionary of all the translations
+ * 
+ * It must uses `~` as namespace for routes defintions to make the `to` and `useTo`
+ * working
+ */
+export type TranslationsDictionary = Merge<TranslationsDictionaryDefault, Koine.Translations>;
 
 /**
  * Namespaces should match the filenames were translations are defined
