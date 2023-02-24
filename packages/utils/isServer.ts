@@ -6,6 +6,5 @@ import isBrowser from "./isBrowser";
  */
 export const isServer = !isBrowser;
 // export const isServer = typeof window === "undefined";
-// export const isServer = () => typeof window === "undefined";
 
 export default isServer;
