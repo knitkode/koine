@@ -1,6 +1,10 @@
 import type { AnyQueryParams } from "@koine/utils/location";
 import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
 import isFullObject from "@koine/utils/isFullObject";
+import { isString } from "@koine/utils";
+
+const errorToString = (e: unknown) =>
+  e instanceof Error ? e.message : isString(e) ? e : "";
 
 /**
  * Create api client
@@ -142,7 +146,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         try {
           response = await fetch(url, requestInit);
         } catch (e) {
-          msg = e as string;
+          msg = errorToString(e);
         }
 
         if (timeoutId) {
@@ -157,7 +161,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
               result = await response.json();
             }
           } catch (e) {
-            msg = e as string;
+            msg = errorToString(e);
           }
         }
 

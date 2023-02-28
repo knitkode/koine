@@ -289,7 +289,7 @@ declare namespace Koine.Api {
 
   type ResultFail<TResponse extends ResponseFail = ResponseFail> = {
     status: _Response["status"];
-    msg: _Response["statusText"];
+    msg: Error["message"] | _Response["statusText"];
     ok?: false;
     fail: true;
     data: TResponse;
@@ -308,7 +308,7 @@ declare namespace Koine.Api {
       }
     | {
         status: _Response["status"];
-        msg: _Response["statusText"];
+        msg: Error["message"] | _Response["statusText"];
         ok?: false;
         fail: true;
         data: TResponseFail;
