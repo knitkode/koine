@@ -154,6 +154,13 @@ function getRoutesMap(
 }
 
 /**
+ * Removes `/index` from a template/url path
+ */
+function getWithoutIndex(template: string) {
+  return template.replace(/\/index$/, "");
+}
+
+/**
  * Get path rewrite
  */
 export function getPathRewrite(route: RoutesMapRoute) {
@@ -163,7 +170,7 @@ export function getPathRewrite(route: RoutesMapRoute) {
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
   return {
     source,
-    destination: destination.replace(/\/index$/, ""),
+    destination: getWithoutIndex(destination),
   };
 }
 
@@ -183,7 +190,7 @@ export function getPathRedirect(
   // console.log(`redirect template "${source}" to pathname "${destination}"`);
 
   return {
-    source: source.replace(/\/index$/, ""),
+    source: getWithoutIndex(source),
     destination,
     permanent: Boolean(permanent),
     locale: false as const,
@@ -204,8 +211,11 @@ export async function getRedirects(
   Object.keys(routesMap).forEach((template) => {
     const route = routesMap[template];
 
-    if (route.pathname !== template) {
-      redirects.push(getPathRedirect(defaultLocale, route, permanent));
+    // TODO: add option hideDefaultLocaleInUrl
+    // if (hideDefaultLocaleInUrl) {
+    redirects.push(getPathRedirect(defaultLocale, route, permanent));
+    // }
+    if (route.pathname !== getWithoutIndex(template)) {
       redirects.push(getPathRedirect("", route, permanent));
     }
   });
@@ -222,7 +232,7 @@ export async function getRewrites(routes: Routes, debug?: boolean) {
 
   Object.keys(routesMap).forEach((template) => {
     const route = routesMap[template];
-    if (route.pathname !== template) {
+    if (route.pathname !== getWithoutIndex(template)) {
       rewrites.push(getPathRewrite(route));
     }
   });
