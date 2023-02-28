@@ -211,9 +211,15 @@ export async function getRedirects(
   Object.keys(routesMap).forEach((template) => {
     const route = routesMap[template];
 
-    // TODO: add option hideDefaultLocaleInUrl
+    // TODO: add option hideDefaultLocaleInUrl?
+    // this is meant to redirect the URL with the default locale to the same
+    // url without locale prefix, e.g.: /en/about -> /about (assuming en is the
+    // defualt locale).
+    // Actually this redirect seem not to be necessary, probably the i18n routing
+    // mechanism of next 12 already does this, enabling causes infinite redirects
+
     // if (hideDefaultLocaleInUrl) {
-    redirects.push(getPathRedirect(defaultLocale, route, permanent));
+    // redirects.push(getPathRedirect(defaultLocale, route, permanent));
     // }
     if (route.pathname !== getWithoutIndex(template)) {
       redirects.push(getPathRedirect("", route, permanent));
