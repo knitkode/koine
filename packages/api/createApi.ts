@@ -1,10 +1,7 @@
 import type { AnyQueryParams } from "@koine/utils/location";
 import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
 import isFullObject from "@koine/utils/isFullObject";
-import { isString } from "@koine/utils";
-
-const errorToString = (e: unknown) =>
-  e instanceof Error ? e.message : isString(e) ? e : "";
+import errorToString from "@koine/utils/errorToString";
 
 /**
  * Create api client

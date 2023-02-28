@@ -22,6 +22,7 @@ export * from "./Emitter";
 export * from "./encode";
 export * from "./ensureInt";
 // export * from "./env"
+export * from "./errorToString";
 export * from "./findDuplicatedIndexes";
 export * from "./forin";
 export * from "./gbToBytes";
