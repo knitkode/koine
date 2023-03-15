@@ -1,5 +1,5 @@
 /**
- * Ensure an array contains all deisred values
+ * Ensure an array contains all desired values
  *
  * @category array
  * @borrows [SO comment by `CertainPerformance`](https://stackoverflow.com/a/60132060/1938970)

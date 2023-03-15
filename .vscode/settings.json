@@ -33,5 +33,10 @@
   "workbench.colorCustomizations": {
     "activityBar.background": "#000",
     "activityBar.foreground": "#fff"
-  }
+  },
+  "tailwindCSS.experimental.classRegex": [
+    "classed\\([\\s\\S]*?'([^']*)'\\s?\\)",
+    "twix\\([\\s\\S]*?\"([^\"]*)\"\\s?\\)",
+    "twix\\([\\s\\S]*?`([^`]*)`\\s?\\)"
+  ]
 }

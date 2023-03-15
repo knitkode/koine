@@ -11,7 +11,7 @@ export const getFragment = async (url: string, id: string) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
   const node = doc.getElementById(id);
-  debugger;
+
   if (node) {
     return node.innerHTML;
   }

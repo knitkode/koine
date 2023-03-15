@@ -1,3 +1,5 @@
+"use client";
+
 import isFunction from "@koine/utils/isFunction";
 import useSWR, {
   type SWRConfiguration,
