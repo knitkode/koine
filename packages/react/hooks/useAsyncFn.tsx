@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import type { FunctionReturningPromise, PromiseType } from "./types";
 import { useMountedState } from "./useMountedState";
 
-export type AsyncState<T> =
+export type UseAsyncState<T> =
   | {
       loading: boolean;
       error?: undefined;
@@ -25,9 +25,9 @@ export type AsyncState<T> =
     };
 
 type StateFromFunctionReturningPromise<T extends FunctionReturningPromise> =
-  AsyncState<PromiseType<ReturnType<T>>>;
+  UseAsyncState<PromiseType<ReturnType<T>>>;
 
-export type AsyncFnReturn<
+export type UseAsyncFnReturn<
   T extends FunctionReturningPromise = FunctionReturningPromise
 > = [StateFromFunctionReturningPromise<T>, T];
 
@@ -38,7 +38,7 @@ export function useAsyncFn<T extends FunctionReturningPromise>(
   fn: T,
   deps: React.DependencyList = [],
   initialState: StateFromFunctionReturningPromise<T> = { loading: false }
-): AsyncFnReturn<T> {
+): UseAsyncFnReturn<T> {
   const lastCallId = useRef(0);
   const isMounted = useMountedState();
   const [state, set] =
