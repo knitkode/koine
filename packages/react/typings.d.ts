@@ -56,12 +56,12 @@ declare namespace Polymorphic {
     >;
 
   type InferProps<TComponent extends ComponentTypes> =
-    TComponent extends React.ComponentClass<infer IProps>
-      ? IProps
-      : TComponent extends React.FunctionComponent<infer IProps>
-      ? IProps
-      : TComponent extends React.ForwardRefExoticComponent<infer IProps>
-      ? IProps
+    TComponent extends React.ComponentClass<infer Props>
+      ? Props
+      : TComponent extends React.FunctionComponent<infer Props>
+      ? Props
+      : TComponent extends React.ForwardRefExoticComponent<infer Props>
+      ? Props
       : TComponent extends keyof JSX.IntrinsicElements
       ? React.ComponentPropsWithoutRef<TComponent>
       : never;
