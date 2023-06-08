@@ -42,7 +42,14 @@ export { getNonce } from "./getNonce";
 export { getParamAmong } from "./getParamAmong";
 export { getParamAsInt } from "./getParamAsInt";
 export { getParamAsString } from "./getParamAsString";
-export { getType } from "./getType";
+export {
+  type AnyClass,
+  type AnyAsyncFunction,
+  type AnyFunction,
+  type PlainObject,
+  type TypeGuard,
+  getType,
+} from "./getType";
 export { getUrlHashParams } from "./getUrlHashParams";
 export { getUrlHashPathname } from "./getUrlHashPathname";
 export { getUrlPathnameParts } from "./getUrlPathnameParts";
@@ -140,7 +147,13 @@ export { uuid } from "./uuid";
 export { uuidNumeric } from "./uuidNumeric";
 export { wait } from "./wait";
 
-export type { AnythingFalsy } from "./types";
+export type {
+  AnythingFalsy,
+  KeysStartsWith,
+  KeysTailsStartsWith,
+  PickStartsWith,
+  PickStartsWithTails,
+} from "./types";
 
 export type {
   Primitive,

@@ -17,6 +17,7 @@ export { getOffsetTop } from "./getOffsetTop";
 export { getOffsetTopSlim } from "./getOffsetTopSlim";
 export { getScrollbarWidth } from "./getScrollbarWidth";
 export { getStyleValue } from "./getStyleValue";
+export { getVisualBackgroundColor } from "./getVisualBackgroundColor";
 export { injectCss } from "./injectCss";
 export { isHidden } from "./isHidden";
 export { isInViewport } from "./isInViewport";
