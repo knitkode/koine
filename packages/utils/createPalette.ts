@@ -1,3 +1,15 @@
+type PaletteShade = readonly [number, string];
+
+type PaletteShades = readonly PaletteShade[];
+
+type PaletteMapPair<T extends PaletteShade> = {
+  [Pair in T as `${Pair[0]}`]: Pair[1];
+};
+
+type PaletteMap<T extends PaletteShades> = {
+  [PS in T[number] as keyof PaletteMapPair<PS>]: PaletteMapPair<PS>[keyof PaletteMapPair<PS>];
+};
+
 /**
  * Create palette, this is primarily thought to improve the reuse of a palette
  * definition between TailwindCSS and straight ES imports
@@ -10,23 +22,24 @@
  */
 export const createPalette = <
   TName extends string,
-  TShades extends readonly (readonly [number, string])[],
-  TShade extends number = TShades[number][0]
+  TShades extends PaletteShades,
+  TColor = TShades[number][1],
+  TMap = PaletteMap<TShades>
 >(
   name: TName,
   shades: TShades
 ) => {
   const map = shades.reduce((map, def) => {
-    map[def[0] as TShade] = def[1];
+    map[def[0]] = def[1] as TColor;
     return map;
-  }, {} as Record<TShade, string>);
+  }, {} as { [s: string]: TColor });
 
   const tailwindPalette = shades.reduce((map, def) => {
     map[`${name}-${def[0]}`] = def[1];
     return map;
   }, {} as Record<`${TName}-${TShades[number][0]}`, string>);
 
-  return [map, tailwindPalette, Object.values(map)] as const;
+  return [map as TMap, tailwindPalette, Object.values<TColor>(map)] as const;
 };
 
 export default createPalette;
