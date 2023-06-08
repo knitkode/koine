@@ -57,7 +57,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 var __asyncDelegator = (this && this.__asyncDelegator) || function (o) {
     var i, p;
     return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: false } : f ? f(v) : v; } : f; }
 };
 var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
@@ -81,23 +81,23 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @file
  *
  * Inspired by https://github.com/nrwl/nx/blob/master/packages/js/src/executors/tsc/tsc.impl.ts
  */
 var path_1 = require("path");
-var devkit_1 = require("@nrwl/devkit");
-var assets_1 = require("@nrwl/workspace/src/utilities/assets");
-var check_dependencies_1 = require("@nrwl/js/src/utils/check-dependencies");
-var compiler_helper_dependency_1 = require("@nrwl/js/src/utils/compiler-helper-dependency");
-var copy_assets_handler_1 = require("@nrwl/js/src/utils/assets/copy-assets-handler");
-var inline_1 = require("@nrwl/js/src/utils/inline");
-var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
-var update_package_json_1 = require("@nrwl/js/src/utils/package-json/update-package-json");
-var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
-var tsc_impl_1 = require("@nrwl/js/src/executors/tsc/tsc.impl");
+var devkit_1 = require("@nx/devkit");
+var assets_1 = require("@nx/js/src/utils/assets/assets");
+var check_dependencies_1 = require("@nx/js/src/utils/check-dependencies");
+var compiler_helper_dependency_1 = require("@nx/js/src/utils/compiler-helper-dependency");
+var copy_assets_handler_1 = require("@nx/js/src/utils/assets/copy-assets-handler");
+var inline_1 = require("@nx/js/src/utils/inline");
+var compile_typescript_files_1 = require("@nx/js/src/utils/typescript/compile-typescript-files");
+var update_package_json_1 = require("@nx/js/src/utils/package-json/update-package-json");
+var watch_for_single_file_changes_1 = require("@nx/js/src/utils/watch-for-single-file-changes");
+var tsc_impl_1 = require("@nx/js/src/executors/tsc/tsc.impl");
 // we follow the same structure as in @mui packages builds
 var TMP_FOLDER_MODERN = ".modern";
 function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
@@ -133,7 +133,7 @@ function executor(_options, context) {
                         projectDir: projectRoot,
                         rootDir: context.root,
                         outputDir: _options.outputPath,
-                        assets: _options.assets
+                        assets: _options.assets,
                     });
                     tsCompilationOptions = (0, tsc_impl_1.createTypeScriptCompilationOptions)(options, context);
                     inlineProjectGraph = (0, inline_1.handleInliningBuild)(context, options, tsCompilationOptions.tsConfig);
@@ -217,4 +217,4 @@ function executor(_options, context) {
         });
     });
 }
-exports["default"] = executor;
+exports.default = executor;

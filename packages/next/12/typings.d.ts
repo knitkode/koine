@@ -30,7 +30,7 @@ declare namespace Koine {
   /**
    * Default SEO data structure expected by the `<Seo>` component's prop `seo`
    */
-  type NextSeo = import("./legacy/types-seo").SeoData;
+  type NextSeo = import("./types-seo").SeoData;
 
   /**
    * Next auth routes configurable map

@@ -17,25 +17,22 @@ type RenderFunction = (data: object) => string;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type RenderTemplate = (template: string) => RenderFunction;
 
-const define = /<%##\s*([\w.$]+)\s*(:|=)([\s\S]+?)#%>/g;
-const defineParams = /^\s*([\w$]+):([\s\S]+)/;
+const varname = "data";
 const evaluate = /<%([\s\S]+?(\}?)+)%>/g;
 const interpolate = /<%=([\s\S]+?)%>/g;
+const conditional = /<%\?(\?)?\s*([\s\S]*?)\s*%>/g;
+const iterate =
+  /<%~\s*(?:%>|([\s\S]+?)\s*:\s*([\w$]+)\s*(?::\s*([\w$]+))?\s*%>)/g;
 // const encode = /<%!([\s\S]+?)%>/g;
 const use = /<%#([\s\S]+?)%>/g;
 const useParams =
   /(^|[^\w$])def(?:\.|\[['"])([\w$.]+)(?:['"]\])?\s*:\s*([\w$.]+|"[^"]+"|'[^']+'|\{[^}]+\})/g;
-const conditional = /<%\?(\?)?\s*([\s\S]*?)\s*%>/g;
-const iterate =
-  /<%~\s*(?:%>|([\s\S]+?)\s*:\s*([\w$]+)\s*(?::\s*([\w$]+))?\s*%>)/g;
-const varname = "data";
-// const strip = true;
+const define = /<%##\s*([\w.$]+)\s*(:|=)([\s\S]+?)#%>/g;
+const defineParams = /^\s*([\w$]+):([\s\S]+)/;
 
-enum StartendAppend {
-  start = "'+(",
-  end = ")+'",
-  startencode = "'+encodeHTML(",
-}
+const start = "'+(";
+const end = ")+'";
+// const startencode = "'+encodeHTML(";
 
 const skip = /$^/;
 
@@ -91,19 +88,19 @@ const unescape = (code: string) =>
 /**
  * Render template (adapted from doT.js)
  *
- * The data made avialable to the template is always on the `data` key, e.g.:
+ * The data made available to the template is always on the `data` key, e.g.:
  * `renderer({ myVal: "xx" })`
  * ... will be accessible on
  * `<%= data.myVal %>`
  *
- * The default delimiters are customised to work withX conflicts with Twig:
+ * The default delimiters are customised to work without conflicts with Blade and Twig:
  * ```
  * <% %>	for evaluation
  * <%= %>	for interpolation
- * <%# %>	for compile-time evaluation/includes and partials
- * <%## #%>	for compile-time defines
  * <%? %>	for conditionals
  * <%~ %>	for array iteration
+ * <%# %>	for compile-time evaluation/includes and partials
+ * <%## #%>	for compile-time defines
  *
  * Unsupported:
  * <%! %>	for interpolation with encoding
@@ -125,7 +122,6 @@ const unescape = (code: string) =>
  * @see https://olado.github.io/doT/index.html
  */
 export const render = (tmpl: string, def?: Definitions): RenderFunction => {
-  const cse = StartendAppend;
   let sid = 0;
   let indv;
   let str =
@@ -133,21 +129,11 @@ export const render = (tmpl: string, def?: Definitions): RenderFunction => {
 
   str = (
     "var X='" +
-    // (strip ?
     str
-      // .trim()
-      // .replace(/[\t ]+(\r|\n)/g, "\n") // remove trailing spaces
-      // .replace(/(\r|\n)[\t ]+/g, " ") // leading spaces reduced to " "
-      // .replace(/\r|\n|\t|\/\*[\s\S]*?\*\//g, "") // remove breaks, tabs and JS comments
       .replace(/(^|\r|\n)\t* +| +\t*(\r|\n|$)/g, " ")
       .replace(/\r|\n|\t|\/\*[\s\S]*?\*\//g, "")
-      // : str
-      // )
       .replace(/'|\\/g, "\\$&")
-      .replace(
-        interpolate || skip,
-        (_, code) => cse.start + unescape(code) + cse.end
-      )
+      .replace(interpolate || skip, (_, code) => start + unescape(code) + end)
       // .replace(
       //   encode || skip,
       //   (_, code) => cse.startencode + unescape(code) + cse.end
@@ -161,7 +147,7 @@ export const render = (tmpl: string, def?: Definitions): RenderFunction => {
           ? "';if(" + unescape(code) + "){X+='"
           : "';}X+='"
       )
-      .replace(iterate || skip, (m, arr, vName, iName) => {
+      .replace(iterate || skip, (_, arr, vName, iName) => {
         if (!arr) return "';} } X+='";
         sid++;
         indv = iName || "i" + sid;

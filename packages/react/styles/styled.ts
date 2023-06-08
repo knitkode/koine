@@ -1,9 +1,9 @@
 import React from "react";
 
-export function colStretch(
+export const colStretch = (
   direction: "left" | "right",
   bg: React.CSSProperties["background"]
-) {
+) => {
   return `
     background: ${bg};
     position: relative;
@@ -19,7 +19,7 @@ export function colStretch(
       background: ${bg};
     }
   `;
-}
+};
 
 /** @see https://caniuse.com/?search=inset */
 export const inset0 = `top:0;left:0;right:0;bottom:0;`;

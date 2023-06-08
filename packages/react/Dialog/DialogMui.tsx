@@ -1,7 +1,7 @@
 import React, { forwardRef, useRef } from "react";
 import ModalUnstyled, {
-  type ModalUnstyledProps,
-} from "@mui/base/ModalUnstyled";
+  type ModalProps as ModalUnstyledProps,
+} from "@mui/base/Modal";
 import type { MotionProps } from "framer-motion";
 import { MdClear as IconClose } from "react-icons/md";
 import type { Simplify } from "@koine/utils";

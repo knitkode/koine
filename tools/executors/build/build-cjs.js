@@ -57,7 +57,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 var __asyncDelegator = (this && this.__asyncDelegator) || function (o) {
     var i, p;
     return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
-    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: false } : f ? f(v) : v; } : f; }
 };
 var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
@@ -81,7 +81,7 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @file
  *
@@ -90,15 +90,15 @@ exports.__esModule = true;
 var path_1 = require("path");
 var fs_extra_1 = require("fs-extra");
 var glob_1 = require("glob");
-var devkit_1 = require("@nrwl/devkit");
-var assets_1 = require("@nrwl/workspace/src/utilities/assets");
-var check_dependencies_1 = require("@nrwl/js/src/utils/check-dependencies");
-var compiler_helper_dependency_1 = require("@nrwl/js/src/utils/compiler-helper-dependency");
-var inline_1 = require("@nrwl/js/src/utils/inline");
-var compile_typescript_files_1 = require("@nrwl/js/src/utils/typescript/compile-typescript-files");
-var update_package_json_1 = require("@nrwl/js/src/utils/package-json/update-package-json");
-var watch_for_single_file_changes_1 = require("@nrwl/js/src/utils/watch-for-single-file-changes");
-var tsc_impl_1 = require("@nrwl/js/src/executors/tsc/tsc.impl");
+var devkit_1 = require("@nx/devkit");
+var assets_1 = require("@nx/js/src/utils/assets/assets");
+var check_dependencies_1 = require("@nx/js/src/utils/check-dependencies");
+var compiler_helper_dependency_1 = require("@nx/js/src/utils/compiler-helper-dependency");
+var inline_1 = require("@nx/js/src/utils/inline");
+var compile_typescript_files_1 = require("@nx/js/src/utils/typescript/compile-typescript-files");
+var update_package_json_1 = require("@nx/js/src/utils/package-json/update-package-json");
+var watch_for_single_file_changes_1 = require("@nx/js/src/utils/watch-for-single-file-changes");
+var tsc_impl_1 = require("@nx/js/src/executors/tsc/tsc.impl");
 // we follow the same structure as in @mui packages builds
 var TMP_FOLDER_MODERN = "../.modern";
 var DEST_FOLDER_MODERN = "../";
@@ -234,7 +234,14 @@ function treatRootEntrypoint(options) {
             // console.log("rootPackageJson", rootPackageJson)
             return [2 /*return*/, new Promise(function (resolve) {
                     (0, devkit_1.writeJsonFile)(packagePath, Object.assign(packageJson, {
-                        version: rootPackageJson.version
+                        version: rootPackageJson.version,
+                        // type: "module",
+                        // @see https://nodejs.org/api/packages.html#approach-1-use-an-es-module-wrapper
+                        // we disable rollup bundles for now
+                        // exports: {
+                        //   import: "./index.esm.js",
+                        //   require: "./index.cjs.js"
+                        // }
                     }, getPackageJsonData((0, path_1.join)(outputPath, "../"), (0, path_1.join)(outputPath, DEST_FOLDER_MODERN), (0, path_1.join)(outputPath, DEST_FOLDER_CJS))));
                     // writeJsonFile(
                     //   join(outputPath, "package.json"),
@@ -273,7 +280,7 @@ function getPackageJsonData(pkgPath, modernPath, cjsPath) {
         //   // have `main` key in the package.json
         //   // node: cjsFile,
         // },
-        types: modernFile.replace(".js", ".d.ts")
+        types: modernFile.replace(".js", ".d.ts"),
     };
 }
 function normalizeOptions(options, contextRoot, sourceRoot, projectRoot) {
@@ -384,4 +391,4 @@ function executor(_options, context) {
         });
     });
 }
-exports["default"] = executor;
+exports.default = executor;

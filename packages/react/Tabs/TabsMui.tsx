@@ -1,12 +1,15 @@
 import { forwardRef } from "react";
-import TabsUnstyled, { type TabsUnstyledProps } from "@mui/base/TabsUnstyled";
+import TabsUnstyled, {
+  type TabsProps as TabsUnstyledProps,
+} from "@mui/base/Tabs";
 import TabsListUnstyled, {
-  TabsListUnstyledProps,
-} from "@mui/base/TabsListUnstyled";
-import TabUnstyled, { TabUnstyledProps, useTab } from "@mui/base/TabUnstyled";
+  type TabsListProps as TabsListUnstyledProps,
+} from "@mui/base/TabsList";
+import TabUnstyled, { type TabProps as TabUnstyledProps } from "@mui/base/Tab";
+import useTab, { type UseTabReturnValue } from "@mui/base/useTab";
 import TabPanelUnstyled, {
-  TabPanelUnstyledProps,
-} from "@mui/base/TabPanelUnstyled";
+  type TabPanelProps as TabPanelUnstyledProps,
+} from "@mui/base/TabPanel";
 import type { MotionProps } from "framer-motion";
 import type { Simplify } from "@koine/utils";
 import {
@@ -47,7 +50,7 @@ export type Components = {
   Indicator: {
     type: "span";
     props: React.PropsWithChildren<
-      Pick<ReturnType<typeof useTab>, "active" | "disabled" | "selected">
+      Pick<UseTabReturnValue, "active" | /* "disabled" | */ "selected">
     >;
     motionable: true;
   };
@@ -76,7 +79,8 @@ export const Panel = TabPanelUnstyled as unknown as Props["Panel"];
 export const Tab = forwardRef(function Tab(
   {
     children,
-    component,
+    // component,
+    slot,
     slotProps,
     slots,
     Indicator,
@@ -84,8 +88,11 @@ export const Tab = forwardRef(function Tab(
   }: Components["Tab"]["props"],
   ref
 ) {
-  const { active, disabled, selected } = useTab({ ...props, ref });
-  const indicatorProps = { active, disabled, selected };
+  const { active, /* disabled, */ selected } = useTab({
+    ...props,
+    rootRef: ref as React.RefObject<Element>,
+  });
+  const indicatorProps = { active, /* disabled, */ selected };
 
   return (
     <TabUnstyled /* ref={ref}  */ {...props}>

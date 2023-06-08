@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "module": "esnext",
+    "composite": true,
+    "declaration": true
   },
   "files": ["typings.d.ts"],
   "include": ["**/*.ts"],

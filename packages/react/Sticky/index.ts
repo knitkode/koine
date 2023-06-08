@@ -1,1 +1,1 @@
-export * from "./StickyCss";
+export { StickyCss, StickyCssProps } from "./StickyCss";

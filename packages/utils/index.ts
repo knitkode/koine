@@ -16,6 +16,7 @@ export {
   type CookieAttributesClient,
   type CookieAttributesServer,
 } from "./cookie";
+export { createPalette } from "./createPalette";
 export { debounce } from "./debounce";
 export { debounceRaf } from "./debounceRaf";
 export {

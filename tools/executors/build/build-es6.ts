@@ -4,30 +4,30 @@
  * Inspired by https://github.com/nrwl/nx/blob/master/packages/js/src/executors/tsc/tsc.impl.ts
  */
 import { join, resolve } from "path";
-import { ExecutorContext, readJsonFile, writeJsonFile } from "@nrwl/devkit";
+import { ExecutorContext, readJsonFile, writeJsonFile } from "@nx/devkit";
 import {
   assetGlobsToFiles,
-  FileInputOutput,
-} from "@nrwl/workspace/src/utilities/assets";
-import { checkDependencies } from "@nrwl/js/src/utils/check-dependencies";
+  type FileInputOutput,
+} from "@nx/js/src/utils/assets/assets";
+import { checkDependencies } from "@nx/js/src/utils/check-dependencies";
 import {
   getHelperDependency,
   HelperDependency,
-} from "@nrwl/js/src/utils/compiler-helper-dependency";
-import { CopyAssetsHandler } from "@nrwl/js/src/utils/assets/copy-assets-handler";
+} from "@nx/js/src/utils/compiler-helper-dependency";
+import { CopyAssetsHandler } from "@nx/js/src/utils/assets/copy-assets-handler";
 import {
   handleInliningBuild,
   isInlineGraphEmpty,
   postProcessInlinedDependencies,
-} from "@nrwl/js/src/utils/inline";
+} from "@nx/js/src/utils/inline";
 import {
   ExecutorOptions,
   NormalizedExecutorOptions,
-} from "@nrwl/js/src/utils/schema";
-import { compileTypeScriptFiles } from "@nrwl/js/src/utils/typescript/compile-typescript-files";
-import { updatePackageJson } from "@nrwl/js/src/utils/package-json/update-package-json";
-import { watchForSingleFileChanges } from "@nrwl/js/src/utils/watch-for-single-file-changes";
-import { createTypeScriptCompilationOptions } from "@nrwl/js/src/executors/tsc/tsc.impl";
+} from "@nx/js/src/utils/schema";
+import { compileTypeScriptFiles } from "@nx/js/src/utils/typescript/compile-typescript-files";
+import { updatePackageJson } from "@nx/js/src/utils/package-json/update-package-json";
+import { watchForSingleFileChanges } from "@nx/js/src/utils/watch-for-single-file-changes";
+import { createTypeScriptCompilationOptions } from "@nx/js/src/executors/tsc/tsc.impl";
 
 // we follow the same structure as in @mui packages builds
 const TMP_FOLDER_MODERN = ".modern";

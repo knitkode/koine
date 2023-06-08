@@ -87,14 +87,14 @@ type PaginationNavProps = KoineComponentProps<
 export const KoinePaginationNav = ({
   total,
   perPage,
-  currentPage,
+  currentPage: _currentPage,
   baseUrl,
   showOffset = 2,
   currentUrl = "/",
   Link = "a",
 }: PaginationNavProps) => {
+  let currentPage = ensureInt(_currentPage);
   total = ensureInt(total);
-  currentPage = ensureInt(currentPage);
   perPage = ensureInt(perPage);
   // page 0 means 1
   currentPage = currentPage || 1;

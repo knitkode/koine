@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useAutocomplete } from "@mui/base/AutocompleteUnstyled";
+import useAutocomplete from "@mui/base/useAutocomplete";
 import isString from "@koine/utils/isString";
 import type { Option } from "../types";
 import {
@@ -65,7 +65,7 @@ export type AutocompleteProps<
   };
 
 /**
- * Autocomplete/autocomplete component based on [`@mui useAutocomplete hook`](https://mui.com/components/autocomplete/#useautocomplete).
+ * Autocomplete/autocomplete component based on [`@mui useAutocomplete hook`](https://mui.com/components/autocomplete/#useautocomplete/useAutocomplete).
  *
  * This component is design to work out of the box with [`react-hook-form`](https://react-hook-form.com/)
  * and [`yup`](https://github.com/jquense/yup) alongside our custom `Field`
@@ -75,7 +75,7 @@ export type AutocompleteProps<
  * the best headless hook, small in size and behaving correctly in all scenarios.
  * `downshift` had in fact problems treating the initial `defaultValue` which
  * here is elegantly managed by the `isOptionEqualToValue` option passed into
- * the `useAutocomplete` hook.
+ * the `useAutocomplete` hoo/useAutocompletek.
  *
  *
  * Validation with `yup` and `react-hook-form` example:

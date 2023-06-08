@@ -1,37 +1,32 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { unstable_useForkRef as useForkRef } from "@mui/utils";
-import { MenuUnstyledContext } from "@mui/base/MenuUnstyled";
-import { UseMenuItemParameters } from "@mui/base/MenuItemUnstyled";
+import useMenu from "@mui/base/useMenu";
+// import useMenuItemUnstyled from "@mui/base/useMenuItem/useMenuItem";
+import { UseMenuItemParameters } from "@mui/base/useMenuItem/useMenuItem.types";
 
 // import { unstable_useIsFocusVisible as useIsFocusVisible } from "@mui/utils";
 
 export function useMenuItem(props: UseMenuItemParameters) {
-  const { disabled = false, ref, label } = props;
+  const { disabled = false, rootRef: ref, label } = props;
 
   const id = useId();
-  const menuContext = useContext(MenuUnstyledContext);
+  const { contextValue, open } = useMenu();
+  // const { getRootProps } = useMenuItemUnstyled(props);
 
   const itemRef = useRef<HTMLElement>(null);
   const handleRef = useForkRef(itemRef, ref);
 
-  if (menuContext === null) {
+  if (contextValue === null) {
     throw new Error("MenuItemUnstyled must be used within a MenuUnstyled");
   }
 
-  const { registerItem, unregisterItem, open } = menuContext;
+  const { registerItem, getItemState } = contextValue;
 
   useEffect(() => {
     registerItem(id, { disabled, id, ref: itemRef, label });
 
-    return () => unregisterItem(id);
-  }, [id, registerItem, unregisterItem, disabled, ref, label]);
+    // return () => unregisterItem(id);
+  }, [id, registerItem, /* unregisterItem,  */ disabled, ref, label]);
 
   // const { getRootProps: getButtonProps, focusVisible } = useButton({
   //   disabled,
@@ -55,7 +50,7 @@ export function useMenuItem(props: UseMenuItemParameters) {
 
   // useDebugValue({ id, disabled, label });
 
-  const itemState = menuContext.getItemState(id ?? "");
+  const itemState = getItemState(id ?? "");
 
   const { highlighted } = itemState ?? { highlighted: false };
 
@@ -65,15 +60,15 @@ export function useMenuItem(props: UseMenuItemParameters) {
 
   return {
     getRootProps: (other?: Record<string, any>) => {
-      const optionProps = menuContext.getItemProps(id, other);
+      // const optionProps = menuContext.getItemProps(id, other);
 
       return {
         ...other,
         // ...getButtonProps(other),
-        // @ts-expect-error type from @mui/base is not specific
-        tabIndex: optionProps.tabIndex,
-        // @ts-expect-error type from @mui/base is not specific
-        id: optionProps.id,
+        // @ ts-expect-error type from @mui/base is not specific
+        // tabIndex: optionProps.tabIndex,
+        // @ ts-expect-error type from @mui/base is not specific
+        // id: optionProps.id,
         role: "menuitem",
       };
     },

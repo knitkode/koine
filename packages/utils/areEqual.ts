@@ -58,7 +58,7 @@ function areEqualObjects(
  *
  * It support nested `object`s and `array`s only.
  *
- * NB: `undefined` and `null` values do not count in the comparison as  they are
+ * NB: `undefined` and `null` values do not count in the comparison as they are
  * usually meant to be ignored in JSON requestBody payloads.
  *
  * According to very rudimentary tests this function takes on average between

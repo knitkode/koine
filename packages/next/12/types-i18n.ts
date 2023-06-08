@@ -49,11 +49,10 @@ export type TranslateNamespace = Extract<keyof TranslationsDictionary, string>;
  * [infinite instantiation errors](https://stackoverflow.com/q/75531366/1938970)
  */
 export type TranslationsPaths<T> = {
-  [K in Extract<
-    keyof T,
-    string
-  >]: // exclude empty objects, empty arrays, empty strings
-  T[K] extends Record<string, never> | never[] | ""
+  [K in Extract<keyof T, string>]: T[K] extends  // exclude empty objects, empty arrays, empty strings
+    | Record<string, never>
+    | never[]
+    | ""
     ? never
     : // recursively manage objects
     T[K] extends Record<string, unknown>
@@ -84,8 +83,10 @@ export type TranslationsAllPaths = {
     [K in Extract<
       keyof TranslationsDictionary[N],
       string
-    >]: // exclude empty objects, empty arrays, empty strings
-    TranslationsDictionary[N][K] extends Record<string, never> | never[] | ""
+    >]: TranslationsDictionary[N][K] extends  // exclude empty objects, empty arrays, empty strings
+      | Record<string, never>
+      | never[]
+      | ""
       ? never
       : // recursively manage objects
       TranslationsDictionary[N][K] extends Record<string, unknown>
@@ -152,10 +153,11 @@ export type TranslationOptions =
 /**
  * Translate function which optionally accept a namespace as first argument
  */
-export type Translate<TNamespace extends TranslateNamespace | undefined> =
-  TNamespace extends TranslateNamespace
-    ? TranslateNamespaced<TNamespace>
-    : TranslateDefault;
+export type Translate<
+  TNamespace extends TranslateNamespace | undefined = TranslateNamespace
+> = TNamespace extends TranslateNamespace
+  ? TranslateNamespaced<TNamespace>
+  : TranslateDefault;
 
 /**
  * Translate function **without** namespace, it allows to select any of the all
