@@ -1,13 +1,13 @@
-import { Story, Meta } from "@storybook/react";
 import {
   StoryTabs,
+  storyTabsArgs, // decoratorFramer,
   storyTabsMeta,
-  storyTabsArgs,
-  // decoratorFramer,
 } from "@koine/stories";
+import { Meta, Story } from "@storybook/react";
 import { KoineTabsProps } from "../TabsMui";
 import { KoineTabs as bareComp } from "./bare";
 import { KoineTabs as materialComp } from "./material";
+
 // import { classed } from "../../helpers";
 
 export default {

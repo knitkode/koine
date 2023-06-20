@@ -51,7 +51,7 @@ export const ToggleLabel = styled.span`
 
 export const ToggleLabelSub = styled.small`
   opacity: 0.7;
-  font-size: 0.7em; ;
+  font-size: 0.7em;
 `;
 
 export const ToggleIndicatorHolder = styled.span`

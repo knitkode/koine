@@ -1,6 +1,6 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 
+/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import getTranslation from "next-translate/getT";
 import type { Translate, TranslateNamespace } from "./types-i18n";
 

@@ -1,9 +1,9 @@
 // import { memo } from "react";
-import Head from "next/head";
 import type { DefaultSeoProps } from "next-seo/lib/types";
+import Head from "next/head";
 // import { useRouter } from "next/router";
 // import { getSiteUrl } from "../utils";
-import { seoBuildTags, type MetaTag, type LinkTag } from "./seoBuildTags";
+import { type LinkTag, type MetaTag, seoBuildTags } from "./seoBuildTags";
 
 /**
  * @see https://github.com/garmeeh/next-seo/blob/master/src/types.ts#L413

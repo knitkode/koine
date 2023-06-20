@@ -1,21 +1,21 @@
-import { forwardRef } from "react";
+import TabUnstyled, { type TabProps as TabUnstyledProps } from "@mui/base/Tab";
+import TabPanelUnstyled, {
+  type TabPanelProps as TabPanelUnstyledProps,
+} from "@mui/base/TabPanel";
 import TabsUnstyled, {
   type TabsProps as TabsUnstyledProps,
 } from "@mui/base/Tabs";
 import TabsListUnstyled, {
   type TabsListProps as TabsListUnstyledProps,
 } from "@mui/base/TabsList";
-import TabUnstyled, { type TabProps as TabUnstyledProps } from "@mui/base/Tab";
 import useTab, { type UseTabReturnValue } from "@mui/base/useTab";
-import TabPanelUnstyled, {
-  type TabPanelProps as TabPanelUnstyledProps,
-} from "@mui/base/TabPanel";
 import type { MotionProps } from "framer-motion";
+import { forwardRef } from "react";
 import type { Simplify } from "@koine/utils";
 import {
-  extendComponent,
   // type OverridableComponents,
   type WithComponents,
+  extendComponent,
 } from "../helpers";
 
 type ReducedTabsUnstyledProps = Omit<

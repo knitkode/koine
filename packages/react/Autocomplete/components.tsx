@@ -1,11 +1,11 @@
 import styled from "styled-components";
+import { btnStyleReset } from "../Buttons";
+import { InputMain, InputWrap } from "../Forms/Input/Input";
 import { Label } from "../Forms/Label/Label";
-import { InputWrap, InputMain } from "../Forms/Input/Input";
-import { SelectArrow } from "../Select/components";
+import { inputReset } from "../Forms/styles";
 import { Menu } from "../Menu/Menu";
 import { MenuItem } from "../MenuItem/MenuItem";
-import { btnStyleReset } from "../Buttons";
-import { inputReset } from "../Forms/styles";
+import { SelectArrow } from "../Select/components";
 import { ellipsis } from "../styles/styled";
 
 const AUTOCOMPLETE_ITEM_GUTTER = 3;

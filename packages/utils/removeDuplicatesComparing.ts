@@ -1,5 +1,5 @@
-import { removeIndexesFromArray } from "./removeIndexesFromArray";
 import { findDuplicatedIndexes } from "./findDuplicatedIndexes";
+import { removeIndexesFromArray } from "./removeIndexesFromArray";
 
 /**
  * @category array

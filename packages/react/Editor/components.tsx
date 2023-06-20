@@ -1,6 +1,6 @@
 import styled, { createGlobalStyle } from "styled-components";
 import { IconButton } from "../Buttons/IconButton";
-import { inputPadding, inputBorder, inputFocus } from "../Forms/styles";
+import { inputBorder, inputFocus, inputPadding } from "../Forms/styles";
 
 export {
   MdFormatBold as EditorIconBold,

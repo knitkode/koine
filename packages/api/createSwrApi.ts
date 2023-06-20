@@ -1,16 +1,15 @@
 "use client";
 
-import isFunction from "@koine/utils/isFunction";
 import useSWR, {
+  type BareFetcher, // type Fetcher,
   type SWRConfiguration,
   type SWRResponse,
-  type BareFetcher,
-  // type Fetcher,
 } from "swr";
 import useSWRMutation, {
   type SWRMutationConfiguration,
   type SWRMutationResponse,
 } from "swr/mutation";
+import isFunction from "@koine/utils/isFunction";
 import createApi from "./createApi";
 
 type SWRConfigurationExtended<

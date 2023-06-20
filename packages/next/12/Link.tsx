@@ -1,5 +1,5 @@
-import React, { forwardRef } from "react";
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import React, { forwardRef } from "react";
 
 export type LinkProps = Omit<React.ComponentPropsWithRef<"a">, "href"> &
   Omit<NextLinkProps, "as" | "passHref" | "children"> & {

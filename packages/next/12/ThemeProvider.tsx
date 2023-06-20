@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState, memo } from "react";
 import NextScript from "next/script";
+import { memo, useCallback, useEffect, useState } from "react";
 import isServer from "@koine/utils/isServer";
 import { ThemeContext } from "./ThemeContext";
 

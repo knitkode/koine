@@ -1,15 +1,15 @@
 import { m } from "framer-motion";
 import { extendComponent } from "../../helpers";
-import { dialogBackdropMotion, dialogPaperMotion } from "../m/basic";
 import { KoineDialog as _ } from "../m/bare";
+import { dialogBackdropMotion, dialogPaperMotion } from "../m/basic";
 import {
-  Root,
   Backdrop,
-  Container,
-  Paper,
-  Close,
-  Header,
   Body,
+  Close,
+  Container,
+  Header,
+  Paper,
+  Root,
 } from "./material";
 
 export const KoineDialog = extendComponent(_, {

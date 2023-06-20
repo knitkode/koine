@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
 import styled from "styled-components";
 import { Label } from "../Label/Label";
-import { inputBase, inputFocus } from "../styles";
 import type { FormControl } from "../helpers";
+import { inputBase, inputFocus } from "../styles";
 
 export const InputWrap = styled.div`
   display: flex;

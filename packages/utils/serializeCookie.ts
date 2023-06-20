@@ -7,7 +7,6 @@
  * - [js-cookie](https://github.com/js-cookie/js-cookie)
  * - [cookie](https://github.com/jshttp/cookie)
  */
-
 import { type CookieAttributesServer } from "./cookie";
 import { isNumber } from "./isNumber";
 

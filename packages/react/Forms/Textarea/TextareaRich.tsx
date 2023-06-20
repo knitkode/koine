@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
 import styled from "styled-components";
+import { Editor } from "../../Editor";
 // import TextareaAutosize from "@mui/base/TextareaAutosize";
 import { Label } from "../Label/Label";
-import { Editor } from "../../Editor";
 import { FormControl, triggerOnChange } from "../helpers";
 
 const Root = styled.div`

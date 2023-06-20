@@ -3,20 +3,19 @@
  *
  * Inspired by https://github.com/nx/nx/blob/master/packages/js/src/executors/tsc/tsc.impl.ts
  */
-import { basename, dirname, extname, join, relative } from "path";
-import { copy, move, readJSON, remove, removeSync } from "fs-extra";
-import { glob } from "glob";
 import { ExecutorContext, readJsonFile, writeJsonFile } from "@nx/devkit";
-import {
-  ExecutorOptions,
-  // NormalizedExecutorOptions,
-  // SwcExecutorOptions,
-} from "@nx/js/src/utils/schema";
 // import { compileSwc } from "@nx/js/src/utils/swc/compile-swc";
 import { swcExecutor } from "@nx/js/src/executors/swc/swc.impl";
 import { tscExecutor } from "@nx/js/src/executors/tsc/tsc.impl";
-import { type TsConfigJson } from "type-fest";
+import {
+  ExecutorOptions, // NormalizedExecutorOptions,
+  // SwcExecutorOptions,
+} from "@nx/js/src/utils/schema";
 import { existsSync } from "fs";
+import { copy, move, readJSON, remove, removeSync } from "fs-extra";
+import { glob } from "glob";
+import { basename, dirname, extname, join, relative } from "path";
+import { type TsConfigJson } from "type-fest";
 
 type BundleType = "es6" | "commonjs";
 

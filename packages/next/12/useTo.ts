@@ -1,7 +1,7 @@
 "use client";
 
+import { type ToArgs, to } from "./to";
 import { useT } from "./useT";
-import { to, type ToArgs } from "./to";
 
 export function useTo() {
   const t = useT("~");

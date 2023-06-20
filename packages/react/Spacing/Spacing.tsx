@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import isUndefined from "@koine/utils/isUndefined";
 import {
-  spacingTop,
-  spacingBottom,
-  SpacingSize,
+  SpacingDevices,
+  SpacingDirectionAxis,
   SpacingFactor,
   SpacingProperty,
-  SpacingDirectionAxis,
-  SpacingDevices,
+  SpacingSize,
+  spacingBottom,
+  spacingTop,
 } from "../styles/spacing";
 
 const Root = styled.div<SpacingPropsStyled>`

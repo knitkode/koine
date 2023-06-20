@@ -1,9 +1,9 @@
 import { forwardRef } from "react";
 import styled from "styled-components";
-import { CheckboxRoot, CheckboxLabel } from "../Checkbox";
-import { toggleBase } from "../Toggle";
-import { useToggle, UseToggleProps } from "../Toggle/useToggle";
 import { stateFocus } from "../../styles/styled";
+import { CheckboxLabel, CheckboxRoot } from "../Checkbox";
+import { toggleBase } from "../Toggle";
+import { UseToggleProps, useToggle } from "../Toggle/useToggle";
 
 const SWITCH_GUTTER = 0.25;
 const SWITCH_HANDLE_SIZE = 1;

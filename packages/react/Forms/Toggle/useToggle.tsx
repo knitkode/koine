@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { useWatch } from "react-hook-form";
 import type { Option } from "../../types";
-import { InputInvisible } from "../styles";
 import { FormControl } from "../helpers";
+import { InputInvisible } from "../styles";
 
 export type UseToggleProps = Omit<FormControl, "value"> & {
   // defaultChecked?: boolean;

@@ -1,5 +1,5 @@
 import styled, { CSSProperties, StyledProps } from "styled-components";
-import type { Theme, Breakpoint } from "../styles/theme";
+import type { Breakpoint, Theme } from "../styles/theme";
 
 export const GRID_COLUMNS = 12;
 

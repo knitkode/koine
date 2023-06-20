@@ -1,5 +1,5 @@
-import type { AnyDOMEventTargetLoose } from "./types";
 import { on } from "./on";
+import type { AnyDOMEventTargetLoose } from "./types";
 
 /**
  * Listen element's (`window` by default) _scroll_ event

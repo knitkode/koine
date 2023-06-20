@@ -1,5 +1,5 @@
+import { AnimatePresence, m } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { m, AnimatePresence } from "framer-motion";
 
 type TextObj = { key: string; data: string };
 

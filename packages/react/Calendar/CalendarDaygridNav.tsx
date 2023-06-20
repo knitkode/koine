@@ -1,6 +1,6 @@
 import format from "date-fns/format";
 import { useDateLocale } from "../hooks/useDateLocale";
-import type { KoineComponentProps, KoineComponent } from "../types";
+import type { KoineComponent, KoineComponentProps } from "../types";
 import type { CalendarRange, CalendarView } from "./types";
 
 export type KoineCalendarDaygridNavProps = {

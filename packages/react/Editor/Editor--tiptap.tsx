@@ -1,14 +1,14 @@
-import { useCallback } from "react";
-import type { Editor as EditorType, EditorOptions } from "@tiptap/react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import type { EditorOptions, Editor as EditorType } from "@tiptap/react";
+import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useCallback } from "react";
 import {
-  EditorGlobalStyles,
-  EditorRoot,
-  EditorBarRoot,
   EditorBarBtn,
+  EditorBarRoot,
+  EditorGlobalStyles,
   EditorIconBold,
   EditorIconItalic,
+  EditorRoot,
 } from "./components";
 
 type EditorBarClickBtnType = "Bold" | "Italic";

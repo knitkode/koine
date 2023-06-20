@@ -11,7 +11,7 @@ Libraries to encapsulate and re-export from here, the selection is based on:
 - [mesqueeb/filter-anything](https://github.com/mesqueeb/filter-anything)
 - [mesqueeb/case-anything](https://github.com/mesqueeb/case-anything)
 - [mesqueeb/nestify-anything](https://github.com/mesqueeb/nestify-anything)
-- [mesqueeb/fast-sort (fork)](https://github.com/mesqueeb/fast-sort (fork))
+- [mesqueeb/fast-sort (fork)](https://github.com/mesqueeb/fast-sort "fork")
 - [mesqueeb/compare-anything](https://github.com/mesqueeb/compare-anything)
 - [mesqueeb/copy-anything](https://github.com/mesqueeb/copy-anything)
 - [mesqueeb/flatten-anything](https://github.com/mesqueeb/flatten-anything)

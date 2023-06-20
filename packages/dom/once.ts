@@ -1,6 +1,6 @@
-import { AnyDOMEventTargetLoose } from "./types";
-import on from "./on";
 import off from "./off";
+import on from "./on";
+import { AnyDOMEventTargetLoose } from "./types";
 
 /**
  * One shot listener, it `addEventListener` and removes it first time is called

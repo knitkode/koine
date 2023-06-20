@@ -1,4 +1,4 @@
-import { on, off } from "./index";
+import { off, on } from "./index";
 
 export function onClickOutside(
   element: HTMLElement,

@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
-import styled from "styled-components";
-import { GrFolderOpen as IconOpen } from "react-icons/gr";
 import { CgCloseR as IconClose } from "react-icons/cg";
-import { max, min } from "../styles/media";
+import { GrFolderOpen as IconOpen } from "react-icons/gr";
+import styled from "styled-components";
 import { IconButtonFab } from "../Buttons";
 import { useHeader } from "../Header";
+import { max, min } from "../styles/media";
 
 const SidebarWrapper = styled.div<{ $open: boolean; $top?: number }>`
   ${(p) =>

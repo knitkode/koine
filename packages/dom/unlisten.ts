@@ -1,8 +1,8 @@
 import {
   type EventCallback,
   activeEvents,
-  getIndex,
   eventHandler,
+  getIndex,
 } from "./_listen-delegation";
 import { off } from "./off";
 import type { AnyDOMEventTarget, AnyDOMEventType } from "./types";

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { KoineComponentProps, KoineComponent } from "../types";
 import { KoineLinkProps } from "../Link";
+import { KoineComponent, KoineComponentProps } from "../types";
 import { KoineButton, KoineButtonUiProps } from "./Button";
 
 const Root = styled(KoineButton)`

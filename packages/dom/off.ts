@@ -1,7 +1,7 @@
 import type {
   AnyDOMEvent,
-  AnyDOMEventType,
   AnyDOMEventTargetLoose,
+  AnyDOMEventType,
 } from "./types";
 
 /**

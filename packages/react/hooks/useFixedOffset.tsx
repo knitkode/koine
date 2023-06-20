@@ -1,9 +1,9 @@
 import { useRef } from "react";
-import injectCss from "@koine/dom/injectCss";
-import calculateFixedOffset from "@koine/dom/calculateFixedOffset";
-import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
-import $each from "@koine/dom/$each";
 import debounce from "@koine/utils/debounce";
+import $each from "@koine/dom/$each";
+import calculateFixedOffset from "@koine/dom/calculateFixedOffset";
+import injectCss from "@koine/dom/injectCss";
+import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
 import useIsomorphicLayoutEffect from "./useIsomorphicLayoutEffect";
 
 const inject = (value: number) => {

@@ -1,12 +1,18 @@
 {
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports"
+  ],
   "importOrder": [
     "^node:/(.*)$",
     "<THIRD_PARTY_MODULES>", 
-    "^@koine/(.*)$",
+    "^@koine/utils(.*)$",
+    "^@koine/dom(.*)$",
+    "^@koine/browser(.*)$",
+    "^@koine/api(.*)$",
+    "^@koine/react(.*)$",
+    "^@koine/next(.*)$",
     "^[./]"
   ],
   "importOrderSeparation": false,
-  "importOrderSortSpecifiers": true,
-  "importOrderMergeDuplicateImports": true,
-  "importOrderBuiltinModulesToTop": true
+  "importOrderSortSpecifiers": true
 }

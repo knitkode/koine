@@ -1,5 +1,5 @@
-import { Story, Meta } from "@storybook/react";
-import { StoryTabs, storyTabsMeta, storyTabsArgs } from "@koine/stories";
+import { StoryTabs, storyTabsArgs, storyTabsMeta } from "@koine/stories";
+import { Meta, Story } from "@storybook/react";
 import { KoineTabs, TabsProps } from "./TabsMui";
 
 export default {

@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import { AppHead } from "../AppHead";
-import { AppTheme, type AppThemeProps } from "./AppTheme";
 import { AppMain, type AppMainProps } from "./AppMain";
+import { AppTheme, type AppThemeProps } from "./AppTheme";
 
 export type NextAppProps = AppProps & AppThemeProps & AppMainProps;
 

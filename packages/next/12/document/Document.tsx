@@ -1,5 +1,5 @@
+import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
-import NextDocument, { Html, Head, Main, NextScript } from "next/document";
 import Meta from "@koine/react/Meta";
 import NoJs from "@koine/react/NoJs";
 

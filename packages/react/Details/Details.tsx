@@ -8,12 +8,12 @@ import {
 } from "react";
 // import { type MotionProps } from "framer-motion";
 import type { Simplify } from "@koine/utils";
-import { useWindowSize } from "../hooks/useWindowSize";
 import {
-  extendComponent,
   // type OverridableComponents,
   type WithComponents,
+  extendComponent,
 } from "../helpers";
+import { useWindowSize } from "../hooks/useWindowSize";
 
 export type OwnProps = React.ComponentPropsWithoutRef<"details"> & {
   open?: boolean;

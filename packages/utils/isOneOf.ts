@@ -1,4 +1,4 @@
-import { type TypeGuard, type AnyFunction } from "./getType";
+import { type AnyFunction, type TypeGuard } from "./getType";
 
 /**
  * @category is

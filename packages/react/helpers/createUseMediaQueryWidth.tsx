@@ -1,9 +1,9 @@
 import { useState } from "react";
-import isUndefined from "@koine/utils/isUndefined";
+import type { Split } from "@koine/utils";
 import getMediaQueryWidthResolvers, {
   type GetMediaQueryWidthResolversBreakpoints,
 } from "@koine/utils/getMediaQueryWidthResolvers";
-import type { Split } from "@koine/utils";
+import isUndefined from "@koine/utils/isUndefined";
 import useIsomorphicLayoutEffect from "../hooks/useIsomorphicLayoutEffect";
 
 type _MediaQuerWidthDefExplicit<TBreakpoint extends string> =

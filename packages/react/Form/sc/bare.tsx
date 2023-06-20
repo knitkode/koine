@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { overlay, centered } from "../../styles/styled";
+import { Alert } from "../../Alert";
 import { Collapsable } from "../../Collapsable";
 import { ProgressCircular } from "../../Progress";
-import { Alert } from "../../Alert";
 import { extendComponent } from "../../helpers";
+import { centered, overlay } from "../../styles/styled";
 import * as _ from "../Form";
 
 export type { KoineFormProps } from "../Form";

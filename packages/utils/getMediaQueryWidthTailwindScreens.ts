@@ -1,6 +1,6 @@
 import {
-  getMediaQueryWidthResolvers,
   type GetMediaQueryWidthResolversBreakpoints,
+  getMediaQueryWidthResolvers,
 } from "./getMediaQueryWidthResolvers";
 
 export function getMediaQueryWidthTailwindScreens(

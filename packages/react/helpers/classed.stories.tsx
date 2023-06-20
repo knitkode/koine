@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck These are just wip experiments, we stick to just `./classed.tsx`
-
-import { Story, Meta } from "@storybook/react";
+import { Meta, Story } from "@storybook/react";
 import React, { createElement } from "react";
 import { classed } from "./classed";
 

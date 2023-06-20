@@ -1,15 +1,15 @@
+import differenceInDays from "date-fns/differenceInDays";
+import subDays from "date-fns/subDays";
 import arrayToLookup from "@koine/utils/arrayToLookup";
 import isString from "@koine/utils/isString";
 import isUndefined from "@koine/utils/isUndefined";
-import differenceInDays from "date-fns/differenceInDays";
-import subDays from "date-fns/subDays";
 import type {
   Calendar,
-  Calendars,
   CalendarEvent,
   CalendarEventsMap,
+  Calendars,
 } from "./types";
-import { getEventTimestamp, addCalendarEvents } from "./utils";
+import { addCalendarEvents, getEventTimestamp } from "./utils";
 
 /**
  * Google event as it comes from Google's API

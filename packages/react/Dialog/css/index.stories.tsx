@@ -1,5 +1,5 @@
-import { Story, Meta } from "@storybook/react";
-import { StoryDialog, storyDialogMeta, storyDialogArgs } from "@koine/stories";
+import { StoryDialog, storyDialogArgs, storyDialogMeta } from "@koine/stories";
+import { Meta, Story } from "@storybook/react";
 import { KoineDialogProps } from "../DialogMui";
 import { KoineDialog as bareComp } from "./bare";
 

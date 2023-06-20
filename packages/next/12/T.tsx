@@ -1,11 +1,11 @@
 "use client";
 
-import Trans from "next-translate/Trans";
 import type { TransProps } from "next-translate";
+import Trans from "next-translate/Trans";
 import type {
   TranslateNamespace,
-  TranslationsPaths,
   TranslationsAllPaths,
+  TranslationsPaths,
 } from "./types-i18n";
 
 export type TProps<

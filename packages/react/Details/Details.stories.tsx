@@ -1,6 +1,6 @@
-import { Story, Meta } from "@storybook/react";
 import { StoryDetails, storyDetailsMeta } from "@koine/stories";
-import { KoineDetails, DetailsProps } from "./Details";
+import { Meta, Story } from "@storybook/react";
+import { DetailsProps, KoineDetails } from "./Details";
 
 export default {
   component: KoineDetails,

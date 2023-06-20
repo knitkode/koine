@@ -1,7 +1,7 @@
 import styled from "styled-components";
+import { IconButton } from "../../Buttons";
 import { extendComponent } from "../../helpers";
 import { inset0 } from "../../styles/styled";
-import { IconButton } from "../../Buttons";
 import type { Components } from "../DialogMui";
 import * as _ from "../DialogMui";
 

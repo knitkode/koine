@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import type {
-  Calendars,
-  CalendarsMap,
-  CalendarRange,
-  CalendarEvent,
-  CalendarEventsMap,
-  CalendarView,
-} from "./types";
-import type { KoineCalendarLegendProps } from "./CalendarLegend";
 import type { KoineCalendarDaygridNavProps } from "./CalendarDaygridNav";
 import type { KoineCalendarDaygridTableProps } from "./CalendarDaygridTable";
+import type { KoineCalendarLegendProps } from "./CalendarLegend";
 import { getCalendarsEventsFromGoogle } from "./calendar-api-google";
+import type {
+  CalendarEvent,
+  CalendarEventsMap,
+  CalendarRange,
+  CalendarView,
+  Calendars,
+  CalendarsMap,
+} from "./types";
 import {
-  getStartDate,
   getEndDate,
-  getPrevDate,
   getNextDate,
+  getPrevDate,
+  getStartDate,
   isTodayInView,
 } from "./utils";
 

@@ -1,7 +1,7 @@
 "use client";
 
+import { type Router, useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, type Router } from "next/router";
 import type { Simplify } from "@koine/utils";
 import type { WithComponents } from "@koine/react/helpers";
 

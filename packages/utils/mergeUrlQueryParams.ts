@@ -1,5 +1,5 @@
-import { type AnyQueryParams } from "./location";
 import isNull from "./isNull";
+import { type AnyQueryParams } from "./location";
 
 /**
  * Merge query parameters objects, it *mutates* the first given object argument

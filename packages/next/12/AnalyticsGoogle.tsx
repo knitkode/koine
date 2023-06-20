@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Script from "next/script";
+import { useEffect, useState } from "react";
 import gtagPageview from "@koine/browser/gtagPageview";
 
 export type AnalyticsGoogleProps = {

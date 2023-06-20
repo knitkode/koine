@@ -1,7 +1,6 @@
 /// TODO:FIXME: this should use code from `useMqWidthCreator`
-
-import { useState, useEffect } from "react";
-import { useTheme, breakpoints, Breakpoint, Breakpoints } from "./theme";
+import { useEffect, useState } from "react";
+import { Breakpoint, Breakpoints, breakpoints, useTheme } from "./theme";
 
 export const { min, max, up, down, between, only } =
   generateMediaQueries(breakpoints);

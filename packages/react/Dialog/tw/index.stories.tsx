@@ -1,16 +1,17 @@
-import { Story, Meta } from "@storybook/react";
 import {
   StoryDialog,
-  storyDialogMeta,
-  storyDialogArgs,
   decoratorFramer,
+  storyDialogArgs,
+  storyDialogMeta,
 } from "@koine/stories";
-import { KoineDialogProps } from "../DialogMui";
+import { Meta, Story } from "@storybook/react";
 import { classed } from "../../helpers";
+import { KoineDialogProps } from "../DialogMui";
 import { KoineDialog as bareComp } from "./bare";
-import { KoineDialog as materialComp } from "./material";
 import { KoineDialog as framerComp } from "./framer";
 import { KoineDialog as framerMaterialComp } from "./framerMaterial";
+import { KoineDialog as materialComp } from "./material";
+
 // import { KoineDialog as elegantComp } from "./elegant";
 
 export default {

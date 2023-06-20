@@ -1,6 +1,6 @@
-import { object, type ObjectShape } from "@kuus/yup";
-import encode from "@koine/utils/encode";
+import { type ObjectShape, object } from "@kuus/yup";
 import decode from "@koine/utils/decode";
+import encode from "@koine/utils/encode";
 import isUndefined from "@koine/utils/isUndefined";
 
 /**

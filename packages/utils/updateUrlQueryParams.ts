@@ -1,6 +1,6 @@
-import { type AnyQueryParams } from "./location";
 import buildUrlQueryString from "./buildUrlQueryString";
 import getUrlQueryParams from "./getUrlQueryParams";
+import { type AnyQueryParams } from "./location";
 import mergeUrlQueryParams from "./mergeUrlQueryParams";
 
 /**

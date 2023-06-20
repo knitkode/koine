@@ -7,7 +7,7 @@ To make typescript work nicely with `useT`, `getT` and `T` make sure to enable [
 ```json
 {
   "compilerOptions": {
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   }
 }
 ```

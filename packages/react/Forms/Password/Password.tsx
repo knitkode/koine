@@ -1,11 +1,11 @@
 import { forwardRef, useState } from "react";
-import styled from "styled-components";
 import {
-  ImEye as IconVisible,
   ImEyeBlocked as IconInvisible,
+  ImEye as IconVisible,
 } from "react-icons/im";
-import { Label } from "../Label/Label";
+import styled from "styled-components";
 import { InputNative } from "../Input/Input";
+import { Label } from "../Label/Label";
 import type { FormControl } from "../helpers";
 
 const ICON_WIDTH = "2em";

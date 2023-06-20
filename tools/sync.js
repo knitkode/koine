@@ -38,7 +38,9 @@ LIBS.forEach((lib) => {
         // targetPath,
       }) {
         if (!eventType.startsWith("init:")) {
-          console.log(`${eventType} ${relativePath}, ${lib} to ${destRelative}`);
+          console.log(
+            `${eventType} ${relativePath}, ${lib} to ${destRelative}`
+          );
         }
       },
     });

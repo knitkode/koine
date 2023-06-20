@@ -1,18 +1,19 @@
+import { AnimatePresence, m } from "framer-motion";
 import { forwardRef, useMemo, useRef } from "react";
 import { MdClear as IconClose } from "react-icons/md";
-import { AnimatePresence, m } from "framer-motion";
 import { extendComponent } from "../../helpers";
 import {
-  Root,
   Backdrop,
-  Container,
-  Paper,
-  Close,
-  Header,
   Body,
+  Close,
+  Container,
+  Header,
   type KoineDialogProps,
+  Paper,
+  Root,
 } from "../DialogMui";
 import { mRootStyle } from "./index";
+
 // import { KoineDialog as _ } from "../DialogMui";
 
 export type { KoineDialogProps } from "../DialogMui";

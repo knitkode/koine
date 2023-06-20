@@ -1,5 +1,5 @@
-import styled, { CSSProperties } from "styled-components";
 import { m } from "framer-motion";
+import styled, { CSSProperties } from "styled-components";
 import type { Theme } from "../styles/theme";
 
 const ProgressLinearBg = styled.span`

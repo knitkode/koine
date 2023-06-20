@@ -1,5 +1,5 @@
-import { on } from "./on";
 import { off } from "./off";
+import { on } from "./on";
 
 /**
  * Native `scrollTo`, `"smooth"` and with callback

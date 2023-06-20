@@ -1,9 +1,9 @@
-import isString from "./isString";
+import isBoolean from "./isBoolean";
 import isNull from "./isNull";
 import isNumber from "./isNumber";
-import isUndefined from "./isUndefined";
-import isBoolean from "./isBoolean";
+import isString from "./isString";
 import isSymbol from "./isSymbol";
+import isUndefined from "./isUndefined";
 
 /**
  * Returns whether the payload is a primitive type (eg. Boolean | Null | Undefined | Number | String | Symbol)

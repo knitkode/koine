@@ -1,5 +1,5 @@
-import React from "react";
 import { type AppProps as NextAppProps } from "next/app";
+import React from "react";
 import { ThemeProvider } from "styled-components";
 import { StylesGlobal, Theme } from "@koine/react/sc";
 

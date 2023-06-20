@@ -1,6 +1,6 @@
-import type { AnyQueryParams } from "@koine/utils/location";
-import isBrowser from "@koine/utils/isBrowser";
 import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
+import isBrowser from "@koine/utils/isBrowser";
+import type { AnyQueryParams } from "@koine/utils/location";
 import navigateToUrl from "./navigateToUrl";
 
 /**

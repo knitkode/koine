@@ -1,8 +1,8 @@
 // import { memo } from "react";
-import Head from "next/head";
 import type { NextSeoProps } from "next-seo/lib/types";
+import Head from "next/head";
+import { type LinkTag, type MetaTag, seoBuildTags } from "./seoBuildTags";
 import type { SeoData } from "./types-seo";
-import { seoBuildTags, type MetaTag, type LinkTag } from "./seoBuildTags";
 
 type SeoPropsOpenGraph = NextSeoProps["openGraph"] & {
   image?: string;

@@ -1,13 +1,13 @@
-import React from "react";
 /* ? eslint-disable @next/next/no-document-import-in-page */
 import NextDocument, {
   DocumentContext,
   type DocumentInitialProps,
-  Html,
   Head,
+  Html,
   Main,
   NextScript,
 } from "next/document";
+import React from "react";
 import { ServerStyleSheet } from "styled-components";
 import Meta from "@koine/react/Meta";
 import NoJs from "@koine/react/NoJs";

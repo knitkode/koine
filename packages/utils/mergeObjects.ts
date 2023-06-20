@@ -1,5 +1,5 @@
-import { isUndefined } from "./isUndefined";
 import { isObject } from "./isObject";
+import { isUndefined } from "./isUndefined";
 
 /**
  * Merge two or more objects together. It mutates the target object.

@@ -1,4 +1,4 @@
-import { defaultAttributesClient, type CookieAttributesClient } from "./cookie";
+import { type CookieAttributesClient, defaultAttributesClient } from "./cookie";
 import isNumber from "./isNumber";
 import isUndefined from "./isUndefined";
 

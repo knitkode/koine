@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
 import styled from "styled-components";
+import { Label } from "../Label/Label";
 // import TextareaAutosize from "@mui/base/TextareaAutosize";
 import { FormControl } from "../helpers";
-import { Label } from "../Label/Label";
 import { inputBase, inputFocus } from "../styles";
 
 export const TextareaNative = styled.textarea`

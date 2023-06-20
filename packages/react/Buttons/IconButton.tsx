@@ -1,9 +1,9 @@
 import styled, { css } from "styled-components";
 import {
-  btnStyleReset,
-  btnStyleOutlined,
-  btnStyleContained,
   KoineButtonUiProps,
+  btnStyleContained,
+  btnStyleOutlined,
+  btnStyleReset,
 } from "./Button";
 
 export const iconBtnStyleReset = css`

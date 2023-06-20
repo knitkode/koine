@@ -1,6 +1,6 @@
-import type { AnyQueryParams } from "@koine/utils/location";
 import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
 import getUrlHashPathname from "@koine/utils/getUrlHashPathname";
+import type { AnyQueryParams } from "@koine/utils/location";
 
 /**
  * It updates the `location.hash` with the given query params, it uses `location.hash`

@@ -1,6 +1,6 @@
-import React, { useState, useRef, useMemo } from "react";
-import styled from "styled-components";
 import { m, useSpring } from "framer-motion";
+import React, { useMemo, useRef, useState } from "react";
+import styled from "styled-components";
 // import { CgArrowsExpandDownRight as IconExpand } from "react-icons/cg";
 import { useIsomorphicLayoutEffect } from "../hooks";
 

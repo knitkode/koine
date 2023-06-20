@@ -1,7 +1,7 @@
 import { memo } from "react";
-import styled from "styled-components";
 import { IconBaseProps, IconType } from "react-icons/lib";
-import { KoineComponentProps, KoineComponent } from "../types";
+import styled from "styled-components";
+import { KoineComponent, KoineComponentProps } from "../types";
 import { KoineButtonProps } from "./Button";
 import { ButtonLinkProps } from "./ButtonLink";
 

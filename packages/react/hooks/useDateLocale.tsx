@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import type { Locale } from "date-fns";
+import { useEffect, useState } from "react";
 
 /**
  * Dynamically import the date-fns correct locale

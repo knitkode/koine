@@ -1,7 +1,7 @@
-import { type AnyQueryParams } from "./location";
+import isArray from "./isArray";
 import isNull from "./isNull";
 import isUndefined from "./isUndefined";
-import isArray from "./isArray";
+import { type AnyQueryParams } from "./location";
 
 /**
  * Get clean query string for URL

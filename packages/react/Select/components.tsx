@@ -1,7 +1,7 @@
-import { forwardRef } from "react";
-import styled from "styled-components";
 import { m } from "framer-motion";
+import { forwardRef } from "react";
 import { BsBoxArrowInDown as IconCollapse } from "react-icons/bs";
+import styled from "styled-components";
 
 export const SelectArrowStyled = styled(m.span)`
   display: inline-flex;

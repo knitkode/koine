@@ -1,11 +1,11 @@
 import {
   motion,
-  useViewportScroll,
-  useTransform,
-  useSpring,
   useReducedMotion,
+  useSpring,
+  useTransform,
+  useViewportScroll,
 } from "framer-motion";
-import { useReveal, UseRevealOptions } from "./useReveal";
+import { UseRevealOptions, useReveal } from "./useReveal";
 
 export type RevealProps = React.PropsWithChildren<UseRevealOptions>;
 

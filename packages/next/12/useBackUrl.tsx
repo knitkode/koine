@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 import createStorage from "@koine/browser/createStorage";
 
 const back = createStorage<{ lastUrl: string }>({

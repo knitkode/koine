@@ -1,9 +1,9 @@
-import styled, { css } from "styled-components";
 import { m } from "framer-motion";
 import { MdKeyboardArrowRight as IconDelimiter } from "react-icons/md";
+import styled, { css } from "styled-components";
 import titleCase from "@koine/utils/titleCase";
-import { KoineComponentProps, KoineComponent } from "../types";
 import { max, min } from "../styles/media";
+import { KoineComponent, KoineComponentProps } from "../types";
 
 const LINK_GUTTER_X = 10;
 

@@ -1,5 +1,5 @@
-import React from "react";
 import Head from "next/head";
+import React from "react";
 import FaviconTags, { type FaviconTagsProps } from "@koine/react/FaviconTags";
 
 export type FaviconProps = FaviconTagsProps;

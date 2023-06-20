@@ -1,11 +1,11 @@
-import React, { forwardRef, useRef } from "react";
 import ModalUnstyled, {
   type ModalProps as ModalUnstyledProps,
 } from "@mui/base/Modal";
 import type { MotionProps } from "framer-motion";
+import React, { forwardRef, useRef } from "react";
 import { MdClear as IconClose } from "react-icons/md";
 import type { Simplify } from "@koine/utils";
-import { extendComponent, type WithComponents } from "../helpers";
+import { type WithComponents, extendComponent } from "../helpers";
 
 type ReducedModalUnstyledProps = Omit<
   ModalUnstyledProps,

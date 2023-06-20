@@ -1,33 +1,27 @@
-import React, {
-  // forwardRef,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
 import useAutocomplete from "@mui/base/useAutocomplete";
+import React, { useCallback, useMemo, useState } from "react";
+// forwardRef,
 import isString from "@koine/utils/isString";
-import type { Option } from "../types";
 import {
-  FormControl,
-  // triggerOnChange,
+  FormControl, // triggerOnChange,
   normaliseOptions,
 } from "../Forms/helpers";
 import { InputProgress } from "../Forms/styles";
-import { normaliseAutocompleteValue } from "./helpers";
+import type { Option } from "../types";
 import {
-  AutocompleteRoot,
-  AutocompleteLabel,
-  AutocompleteWrap,
-  AutocompleteInner,
+  AutocompleteInner, // AutocompleteInputWrap,
+  AutocompleteInput,
+  AutocompleteInputArrow,
   AutocompleteItem,
   AutocompleteItemLabel,
   AutocompleteItemRemove,
-  // AutocompleteInputWrap,
-  AutocompleteInput,
-  AutocompleteInputArrow,
+  AutocompleteLabel,
   AutocompleteMenu,
   AutocompleteMenuItem,
+  AutocompleteRoot,
+  AutocompleteWrap,
 } from "./components";
+import { normaliseAutocompleteValue } from "./helpers";
 
 export type AutocompleteOption = Option | string;
 

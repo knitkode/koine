@@ -2,9 +2,9 @@ import { forwardRef } from "react";
 import styled from "styled-components";
 import type { Option } from "../../types";
 import { label } from "../Label/Label";
-import { Toggle, ToggleLabel, ToggleIndicatorSquared } from "../Toggle";
-import { InputInvisible } from "../styles";
+import { Toggle, ToggleIndicatorSquared, ToggleLabel } from "../Toggle";
 import { FormControl } from "../helpers";
+import { InputInvisible } from "../styles";
 
 const RadioRoot = styled.div``;
 
