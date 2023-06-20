@@ -1,7 +1,7 @@
-const nrwlConfig = require("@nrwl/react/plugins/bundle-rollup");
+const nxConfig = require("@nx/react/plugins/bundle-rollup");
 
 module.exports = (config) => {
-  const nxConfig = nrwlConfig(config);
+  const nxConfig = nxConfig(config);
 
   // nxConfig.output.chunkFileNames = "[name].js";
   nxConfig.output.inlineDynamicImports = false;

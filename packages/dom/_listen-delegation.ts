@@ -9,14 +9,15 @@
  */
 import isString from "@koine/utils/isString";
 import escapeSelector from "./escapeSelector";
+import type { AnyDOMEvent, AnyDOMEventTarget, AnyDOMEventType } from "./types";
 
 /**
  * @internal
  */
-export type EventCallback = (
-  event: Event,
-  desiredTarget: Window | Document | Element
-) => any;
+export type EventCallback<
+  TTarget extends AnyDOMEventTarget = AnyDOMEventTarget,
+  TType extends AnyDOMEventType = AnyDOMEventType
+> = (event: AnyDOMEvent<TType>, desiredTarget: TTarget) => any;
 
 /**
  * @internal
@@ -31,7 +32,7 @@ export type ListenEvent = {
  *
  * @internal
  */
-export const activeEvents: Record<Event["type"], ListenEvent[]> = {};
+export const activeEvents: Partial<Record<AnyDOMEventType, ListenEvent[]>> = {};
 
 /**
  * Get the index for the listener
@@ -105,8 +106,8 @@ export function getRunTarget(
  * @internal
  */
 export function eventHandler(event: Event) {
-  if (!activeEvents[event.type]) return;
-  activeEvents[event.type].forEach(function (listener) {
+  // if (!activeEvents[event.type]) return;
+  activeEvents[event.type]?.forEach(function (listener) {
     const target = getRunTarget(event.target as Element, listener.selector);
     if (!target) {
       return;

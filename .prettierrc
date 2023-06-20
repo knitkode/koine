@@ -1,0 +1,12 @@
+{
+  "importOrder": [
+    "^node:/(.*)$",
+    "<THIRD_PARTY_MODULES>", 
+    "^@koine/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true,
+  "importOrderMergeDuplicateImports": true,
+  "importOrderBuiltinModulesToTop": true
+}

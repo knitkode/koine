@@ -4,6 +4,7 @@ import {
   eventHandler,
 } from "./_listen-delegation";
 import { on } from "./on";
+import type { AnyDOMEventTarget, AnyDOMEventType } from "./types";
 // import { off } from "./off";
 
 /**
@@ -15,18 +16,25 @@ import { on } from "./on";
  * @param selector The selector to run the event on
  * @param callback The function to run when the event fires
  */
-export function listen(
-  types: string,
+export function listen<
+  TTypes extends AnyDOMEventType,
+  TTarget extends AnyDOMEventTarget = AnyDOMEventTarget
+>(
+  types: TTypes,
+  // | `${TTypes},${TTypes}`
+  // | `${TTypes},${TTypes},${TTypes}`
+  // | `${TTypes},${TTypes},${TTypes},${TTypes}`
+  // | `${TTypes},${TTypes},${TTypes},${TTypes},${TTypes}`,
   selector: string,
-  callback: EventCallback
+  callback: EventCallback<TTarget, TTypes>
 ) {
   // Make sure there's a selector and callback
   if (!selector || !callback) return;
 
   // Loop through each event type
-  types.split(",").forEach(function (type) {
+  (types.split(",") as AnyDOMEventType[]).forEach(function (type) {
     // Remove whitespace
-    type = type.trim();
+    type = type.trim() as AnyDOMEventType;
 
     // If no event of this type yet, setup
     if (!activeEvents[type]) {
@@ -35,8 +43,9 @@ export function listen(
     }
 
     // Push to active events
-    activeEvents[type].push({
+    activeEvents[type]?.push({
       selector: selector,
+      // @ts-expect-error FIXME: type...
       callback: callback,
     });
   });

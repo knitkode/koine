@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { unstable_useForkRef as useForkRef } from "@mui/utils";
+import useForkRef from "@mui/utils/useForkRef";
 import useMenu from "@mui/base/useMenu";
 // import useMenuItemUnstyled from "@mui/base/useMenuItem/useMenuItem";
 import { UseMenuItemParameters } from "@mui/base/useMenuItem/useMenuItem.types";

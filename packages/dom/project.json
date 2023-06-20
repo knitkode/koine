@@ -5,67 +5,21 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-es6": {
-      "executor": "./tools/executors/build:build-es6",
+    "build": {
+      "executor": "./tools/executors/build:build",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/dom",
         "tsConfig": "packages/dom/tsconfig.lib.json",
-        "project": "packages/dom/package.json",
         "main": "packages/dom/index.ts",
         "buildableProjectDepsInPackageJsonType": "peerDependencies",
+        "format": ["cjs", "esm"],
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/dom/*.md", "packages/dom/*.d.ts"]
       }
     },
-    "build-cjs": {
-      "executor": "./tools/executors/build:build-cjs",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/dom/node",
-        "tsConfig": "packages/dom/tsconfig.lib.json",
-        "project": "packages/dom/package.json",
-        "main": "packages/dom/index.ts",
-        "assets": []
-      }
-    },
-    "build-umd": {
-      "executor": "@nrwl/web:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "project": "packages/dom/package.json",
-        "outputPath": "dist/dom",
-        "entryFile": "packages/dom/index.ts",
-        "tsConfig": "packages/dom/tsconfig.lib.json",
-        "compiler": "babel",
-        "umdName": "koine_dom",
-        "external": ["tslib"],
-        "extractCss": true,
-        "rollupConfig": "tools/rollup.config.js",
-        "format": ["cjs", "esm", "umd"],
-        "assets": ["packages/dom/README.md"]
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["npx nx run dom:build-es6", "npx nx run dom:build-cjs"],
-        "parallel": false
-      }
-    },
-    "_build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "npx nx run dom:build-umd",
-          "npx nx run dom:build-es6",
-          "npx nx run dom:build-cjs"
-        ],
-        "parallel": false
-      }
-    },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/dom/**/*.ts"]

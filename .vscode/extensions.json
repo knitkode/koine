@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "nrwl.angular-console",
+    "nx.angular-console",
     "esbenp.prettier-vscode",
     "firsttris.vscode-jest-runner",
     "dbaeumer.vscode-eslint"

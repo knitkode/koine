@@ -1,5 +1,5 @@
 import React, { useCallback, useId, useMemo } from "react";
-import { unstable_useControlled as useControlled } from "@mui/utils";
+import useControlled from "@mui/utils/useControlled";
 
 export interface UseTabsProps {
   /**

@@ -8,7 +8,7 @@
  */
 export function $$<T extends Element = HTMLElement>(
   selector: string,
-  parent?: HTMLElement | Document,
+  parent?: Element | HTMLElement | Document | null,
   avoidEscape?: boolean
 ) {
   return (parent ? parent : document).querySelectorAll(

@@ -5,77 +5,28 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-es6": {
-      "executor": "./tools/executors/build:build-es6",
+    "build": {
+      "executor": "./tools/executors/build:build",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "format": ["cjs", "esm"],
         "outputPath": "dist/utils",
         "tsConfig": "packages/utils/tsconfig.lib.json",
-        "project": "packages/utils/package.json",
         "main": "packages/utils/index.ts",
         "buildableProjectDepsInPackageJsonType": "peerDependencies",
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/utils/*.md", "packages/utils/*.d.ts"]
       }
     },
-    "build-cjs": {
-      "executor": "./tools/executors/build:build-cjs",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/utils/node",
-        "tsConfig": "packages/utils/tsconfig.lib.json",
-        "project": "packages/utils/package.json",
-        "main": "packages/utils/index.ts",
-        "assets": []
-      }
-    },
-    "build-umd": {
-      "executor": "@nrwl/web:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "project": "packages/utils/package.json",
-        "outputPath": "dist/utils",
-        "entryFile": "packages/utils/index.ts",
-        "tsConfig": "packages/utils/tsconfig.lib.json",
-        "compiler": "babel",
-        "umdName": "koine_utils",
-        "external": ["tslib"],
-        "extractCss": true,
-        "rollupConfig": "tools/rollup.config.js",
-        "format": ["cjs", "esm", "umd"],
-        "assets": ["packages/utils/README.md"]
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "npx nx run utils:build-es6",
-          "npx nx run utils:build-cjs"
-        ],
-        "parallel": false
-      }
-    },
-    "_build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "npx nx run utils:build-umd",
-          "npx nx run utils:build-es6",
-          "npx nx run utils:build-cjs"
-        ],
-        "parallel": false
-      }
-    },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/utils/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["coverage/packages/utils"],
       "options": {
         "jestConfig": "packages/utils/jest.config.js",

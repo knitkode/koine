@@ -1,10 +1,10 @@
 // FIXME: this is a workaround adapted from
-// https://github.com/nrwl/nx/issues/2212#issuecomment-894064983
+// https://github.com/nx/nx/issues/2212#issuecomment-894064983
 const { join } = require("path");
-const nrwlConfig = require("@nrwl/react/plugins/bundle-rollup");
+const nxConfig = require("@nx/react/plugins/bundle-rollup");
 
 module.exports = (config) => {
-  const nxConfig = nrwlConfig(config);
+  const nxConfig = nxConfig(config);
 
   if (nxConfig.output.format === "cjs") {
     nxConfig.input = {

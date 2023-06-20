@@ -24,12 +24,19 @@
     "baseUrl": ".",
     "paths": {
       "@koine/api": ["packages/api/index.ts"],
+      "@koine/api/*": ["packages/api/*"],
       "@koine/browser": ["packages/browser/index.ts"],
+      "@koine/browser/*": ["packages/browser/*"],
       "@koine/dom": ["packages/dom/index.ts"],
+      "@koine/dom/*": ["packages/dom/*"],
       "@koine/next": ["packages/next/index.ts"],
+      "@koine/next/*": ["packages/next/*"],
       "@koine/react": ["packages/react/index.ts"],
+      "@koine/react/*": ["packages/react/*"],
       "@koine/stories": ["packages/stories/src/index.ts"],
-      "@koine/utils": ["packages/utils/index.ts"]
+      "@koine/stories/*": ["packages/stories/src/*"],
+      "@koine/utils": ["packages/utils/index.ts"],
+      "@koine/utils/*": ["packages/utils/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

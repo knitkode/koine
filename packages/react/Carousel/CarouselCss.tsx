@@ -1,3 +1,5 @@
+/// <reference types="csstype" />
+
 import { Children, useId } from "react";
 import styled from "styled-components";
 import type { SetRequired } from "@koine/utils";

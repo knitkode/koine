@@ -1,5 +1,5 @@
 {
-  "npmScope": "@koine",
+  "npmScope": "koine",
   "affected": {
     "defaultBase": "main"
   },
@@ -14,12 +14,6 @@
     ".eslintrc.json": "*"
   },
   "targetDefaults": {
-    "build-es6": {
-      "dependsOn": ["^build-es6"]
-    },
-    "build-cjs": {
-      "dependsOn": ["build-es6", "^build-cjs"]
-    },
     "build": {
       "dependsOn": ["^build"]
     }
@@ -28,15 +22,15 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build-es6", "build-cj6", "build-umd", "build", "lint", "test", "e2e"]
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
     }
   },
   "cli": {
-    "defaultCollection": "@nrwl/react"
+    "defaultCollection": "@nx/react"
   },
   "generators": {
-    "@nrwl/react": {
+    "@nx/react": {
       "application": {
         "babel": true
       }

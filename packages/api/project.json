@@ -5,67 +5,21 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build-es6": {
-      "executor": "./tools/executors/build:build-es6",
+    "build": {
+      "executor": "./tools/executors/build:build",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/api",
         "tsConfig": "packages/api/tsconfig.lib.json",
-        "project": "packages/api/package.json",
         "main": "packages/api/index.ts",
         "buildableProjectDepsInPackageJsonType": "peerDependencies",
+        "format": ["cjs", "esm"],
         "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/api/*.md", "packages/api/*.d.ts"]
       }
     },
-    "build-cjs": {
-      "executor": "./tools/executors/build:build-cjs",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/api/node",
-        "tsConfig": "packages/api/tsconfig.lib.json",
-        "project": "packages/api/package.json",
-        "main": "packages/api/index.ts",
-        "assets": []
-      }
-    },
-    "build-umd": {
-      "executor": "@nrwl/web:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "project": "packages/api/package.json",
-        "outputPath": "dist/api",
-        "entryFile": "packages/api/index.ts",
-        "tsConfig": "packages/api/tsconfig.lib.json",
-        "compiler": "babel",
-        "umdName": "koine_api",
-        "external": ["tslib"],
-        "extractCss": true,
-        "rollupConfig": "tools/rollup.config.js",
-        "format": ["cjs", "esm", "umd"],
-        "assets": ["packages/api/README.md"]
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["npx nx run api:build-es6", "npx nx run api:build-cjs"],
-        "parallel": false
-      }
-    },
-    "_build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "npx nx run api:build-umd",
-          "npx nx run api:build-es6",
-          "npx nx run api:build-cjs"
-        ],
-        "parallel": false
-      }
-    },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/api/**/*.ts"]

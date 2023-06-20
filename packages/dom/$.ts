@@ -11,7 +11,7 @@
  */
 export function $<T extends Element = HTMLElement>(
   selector: string,
-  parent?: HTMLElement | Document,
+  parent?: HTMLElement | Document | null,
   avoidEscape?: boolean
 ) {
   return (parent ? parent : document).querySelector(

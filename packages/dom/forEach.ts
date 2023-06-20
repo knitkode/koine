@@ -5,8 +5,8 @@
  * @param callback
  * @param scope
  */
-export function forEach<T extends Element = HTMLElement, TScope = object>(
-  nodes: NodeList,
+export function forEach<T extends Element, TScope = object>(
+  nodes: NodeListOf<T>,
   callback: (this: TScope, $element: T, index: number) => any,
   scope?: TScope
 ) {

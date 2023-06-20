@@ -1,5 +1,9 @@
 // import noop from "@koine/utils/noop"; FIXME: build breaks with this import
-import type { AnyDOMEventTargetLoose } from "./types";
+import type {
+  AnyDOMEventType,
+  AnyDOMEvent,
+  AnyDOMEventTargetLoose,
+} from "./types";
 import off from "./off";
 
 /**
@@ -7,10 +11,11 @@ import off from "./off";
  *
  * @returns An automatic unbinding function to run to deregister the listener upon call
  */
-export function on<THandler extends (event: any) => void>(
+export function on<TType extends AnyDOMEventType>(
   el: AnyDOMEventTargetLoose,
-  type: string,
-  handler: THandler /* EventListener |  */ /* ((event: Event) => void) */,
+  type: TType,
+  handler: (event: AnyDOMEvent<TType>) => void,
+  // handler: THandler /* EventListener |  */ /* ((event: Event) => void) */,
   options: AddEventListenerOptions | boolean = false
 ) {
   if (process.env["NODE_ENV"] !== "production") {
@@ -19,7 +24,7 @@ export function on<THandler extends (event: any) => void>(
     }
   }
   if (el) {
-    el.addEventListener(type, handler, options);
+    el.addEventListener(type, handler as EventListener, options);
     return () => off(el, type, handler);
   }
 

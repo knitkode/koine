@@ -1,3 +1,4 @@
+import { isUndefined } from "./isUndefined";
 import { isObject } from "./isObject";
 
 /**
@@ -8,7 +9,7 @@ import { isObject } from "./isObject";
  */
 export const mergeObjects = <T extends object = object>(
   target: T,
-  ...sources: T[]
+  ...sources: Partial<T>[]
 ): T => {
   if (!sources.length) {
     return target;
@@ -23,12 +24,15 @@ export const mergeObjects = <T extends object = object>(
       const key = _key as keyof T;
       if (isObject(source[key])) {
         if (!target[key]) {
-          // @ts-expect-error FIXME: ...
-          target[key] = {} as Record<string, unknown>;
+          target[key] = {} as T[keyof T];
         }
         mergeObjects(target[key] as unknown as T, source[key] as unknown as T);
       } else {
-        target[key] = source[key];
+        if (!isUndefined(source[key])) {
+          // FIXME: assertion here should not be needed but isUndefined does not
+          // seem to narrow the type correctly for some reason
+          target[key] = source[key] as T[keyof T];
+        }
       }
     });
   }
