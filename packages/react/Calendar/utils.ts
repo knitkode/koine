@@ -1,3 +1,4 @@
+import addDays from "date-fns/addDays";
 import isWithinInterval from "date-fns/isWithinInterval";
 import endOfMonth from "date-fns/endOfMonth";
 import startOfWeek from "date-fns/startOfWeek";
@@ -14,7 +15,6 @@ import type {
   CalendarViewWeek,
   CalendarViewDay,
 } from "./types";
-import addDays from "date-fns/addDays";
 import { CalendarEventsByTimestamp } from ".";
 
 export function getEventTimestamp(dateLike: number | Date | string): number {

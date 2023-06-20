@@ -1,6 +1,6 @@
 import { classed, extendComponent } from "../../helpers";
-import { KoineTabs as _ } from "./bare";
 import type { ComponentsProps } from "../TabsMui";
+import { KoineTabs as _ } from "./bare";
 
 export type { KoineTabsProps } from "./bare";
 

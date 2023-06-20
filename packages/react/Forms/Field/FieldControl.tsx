@@ -3,9 +3,9 @@ import { useFormState } from "react-hook-form";
 import decode from "@koine/utils/decode";
 import type { Translate } from "../../types";
 import type { FormControl } from "../helpers";
+import { InputHoneypot } from "../styles";
 import { Field, type FieldError } from "./Field";
 import { FieldHint } from "./FieldHint";
-import { InputHoneypot } from "../styles";
 
 type FieldControlRenderProps = React.PropsWithChildren<
   Pick<

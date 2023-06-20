@@ -6,12 +6,12 @@ import {
   decoratorFramer,
 } from "@koine/stories";
 import { KoineDialogProps } from "../DialogMui";
+import { classed } from "../../helpers";
 import { KoineDialog as bareComp } from "./bare";
 import { KoineDialog as materialComp } from "./material";
 import { KoineDialog as framerComp } from "./framer";
 import { KoineDialog as framerMaterialComp } from "./framerMaterial";
 // import { KoineDialog as elegantComp } from "./elegant";
-import { classed } from "../..//helpers";
 
 export default {
   title: "Base/Dialog/Tailwind",

@@ -12,6 +12,7 @@ import {
   // triggerOnChange,
   normaliseOptions,
 } from "../Forms/helpers";
+import { InputProgress } from "../Forms/styles";
 import { normaliseAutocompleteValue } from "./helpers";
 import {
   AutocompleteRoot,
@@ -27,7 +28,6 @@ import {
   AutocompleteMenu,
   AutocompleteMenuItem,
 } from "./components";
-import { InputProgress } from "../Forms/styles";
 
 export type AutocompleteOption = Option | string;
 

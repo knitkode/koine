@@ -104,11 +104,11 @@ const DetailsWithRef = forwardRef<HTMLDetailsElement, KoineDetailsProps>(
   ) {
     const isControlled = typeof propOpen !== "undefined";
     const [stateOpen, setStateOpen] = useState(propOpen);
-    const [height, setHeight] = useState(0);
+    const [, /* height */ setHeight] = useState(0);
     const hash = id ? `#${id}` : "";
     const winSize = useWindowSize();
     const open = isControlled ? propOpen : stateOpen;
-    const [overflow, setOverflow] = useState(open ? "unset" : "hidden");
+    const [overflow /* setOverflow */] = useState(open ? "unset" : "hidden");
     const content = useRef<HTMLDivElement>(null);
     const defaultId = useId();
     id = id || defaultId;

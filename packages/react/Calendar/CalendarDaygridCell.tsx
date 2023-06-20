@@ -1,5 +1,7 @@
 import { Fragment, useState } from "react";
-import { MdAdd as IconExpand, MdRemove as IconCollapse } from "react-icons/md";
+import {
+  MdAdd as IconExpand /* , MdRemove as IconCollapse */,
+} from "react-icons/md";
 import type { KoineComponentProps, KoineComponent } from "../types";
 import type {
   CalendarsMap,

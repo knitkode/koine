@@ -33,6 +33,41 @@
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
       "rules": {}
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      // https://github.com/import-js/eslint-plugin-import/blob/main/README.md
+      "rules": {
+        "import/no-duplicates": ["error"],
+        "import/no-extraneous-dependencies": [
+          "error",
+          { "packageDir": ["./"] }
+        ],
+        // "import/internal-regex": "^@olmokit/",
+        // "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+        "import/order": [
+          "error",
+          {
+            "pathGroups": [
+              {
+                "pattern": "@koine/**",
+                "group": "internal"
+              }
+            ],
+            "groups": [
+              "builtin",
+              "external",
+              "internal",
+              "parent",
+              "sibling",
+              "index"
+              // "internal",
+              // "object",
+              // "type"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

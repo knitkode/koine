@@ -2,8 +2,6 @@ import { forwardRef, useMemo, useRef } from "react";
 import { MdClear as IconClose } from "react-icons/md";
 import { AnimatePresence, m } from "framer-motion";
 import { extendComponent } from "../../helpers";
-import type { KoineDialogProps } from "../DialogMui";
-import { mRootStyle } from "./index";
 import {
   Root,
   Backdrop,
@@ -12,7 +10,9 @@ import {
   Close,
   Header,
   Body,
+  type KoineDialogProps,
 } from "../DialogMui";
+import { mRootStyle } from "./index";
 // import { KoineDialog as _ } from "../DialogMui";
 
 export type { KoineDialogProps } from "../DialogMui";

@@ -1,6 +1,6 @@
-import type { Option } from "../types";
 import isString from "@koine/utils/isString";
 import isArray from "@koine/utils/isArray";
+import type { Option } from "../types";
 
 export type AutocompleteValue =
   | null

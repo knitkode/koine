@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import styled from "styled-components";
 import { m } from "framer-motion";
+import { useHeader } from "../Header";
 import { ProgressCircular } from "./ProgressCircular";
 import { ProgressLinear } from "./ProgressLinear";
-import { useHeader } from "../Header";
 
 const ProgressOverlayWrap = styled(m.div)`
   z-index: 10000;
