@@ -1,6 +1,9 @@
-# Add files here to ignore them from prettier formatting
-
+CHANGELOG.md
+pnpm-lock.yaml
+pnpm-workspaces.yaml
+package-lock.json
 /dist
 /tmp
-/coverage
+vendor
+
 /packages/next/12/types-i18n.ts

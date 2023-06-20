@@ -3,7 +3,7 @@
     "@trivago/prettier-plugin-sort-imports"
   ],
   "importOrder": [
-    "^node:/(.*)$",
+    "^node:(.*)$",
     "<THIRD_PARTY_MODULES>", 
     "^@koine/utils(.*)$",
     "^@koine/dom(.*)$",
