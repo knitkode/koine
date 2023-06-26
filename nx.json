@@ -6,13 +6,6 @@
   "workspaceLayout": {
     "libsDir": "packages"
   },
-  "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
-    ".eslintrc.json": "*"
-  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"]

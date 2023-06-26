@@ -16,6 +16,10 @@ Libraries to encapsulate and re-export from here, the selection is based on:
 - [mesqueeb/copy-anything](https://github.com/mesqueeb/copy-anything)
 - [mesqueeb/flatten-anything](https://github.com/mesqueeb/flatten-anything)
 
+To considerç
+- [dlv](https://www.npmjs.com/package/dlv)
+- [dset](https://github.com/lukeed/dset)
+
 About ts utilities types @see:
 
 - [sindresorhus/type-fest](https://github.com/sindresorhus/type-fest)

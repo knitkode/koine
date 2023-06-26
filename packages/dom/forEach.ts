@@ -1,12 +1,20 @@
 /**
- * For each, iterate through a NodeList of HTMLElements
+ * For each, iterate through a `NodeList` or an `array` of `HTMLElement`s
  *
- * @param nodes DOM nodes collection
- * @param callback
- * @param scope
+ * @param scope The optional `this` of the callback function
  */
+export function forEach<TScope = object>(
+  nodes: HTMLElement[],
+  callback: (this: TScope, $element: HTMLElement, index: number) => any,
+  scope?: TScope
+): void;
+export function forEach<TScope = object>(
+  nodes: NodeListOf<HTMLElement> | HTMLElement[],
+  callback: (this: TScope, $element: HTMLElement, index: number) => any,
+  scope?: TScope
+): void;
 export function forEach<T extends Element, TScope = object>(
-  nodes: NodeListOf<T>,
+  nodes: NodeListOf<T> | HTMLElement[],
   callback: (this: TScope, $element: T, index: number) => any,
   scope?: TScope
 ) {
