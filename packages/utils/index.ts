@@ -10,7 +10,7 @@ export { changeUrlPath } from "./changeUrlPath";
 export { chunkByChunks } from "./chunkByChunks";
 export { chunkBySize } from "./chunkBySize";
 export { clamp } from "./clamp";
-export { clsx } from "./clsx";
+export { clsx, type ClsxClassValue } from "./clsx";
 export { convertRange } from "./convertRange";
 export {
   type CookieAttributesClient,

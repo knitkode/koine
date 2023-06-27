@@ -9,12 +9,10 @@
       "executor": "./tools/executors/build:build",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/react",
+        "outputPath": "dist/packages/react",
         "tsConfig": "packages/react/tsconfig.lib.json",
         "main": "packages/react/index.ts",
-        "buildableProjectDepsInPackageJsonType": "peerDependencies",
         "format": ["cjs", "esm"],
-        "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/react/*.md", "packages/react/*.d.ts"]
       }
     },

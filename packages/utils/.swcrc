@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
     "target": "esnext",
     "parser": {
@@ -15,9 +16,9 @@
     "loose": true
   },
   "module": {
-    "type": "es6",
+    "type": "commonjs",
     "strict": true,
-    "noInterop": true
+    "noInterop": false
   },
   "sourceMaps": false,
   "exclude": [
@@ -25,6 +26,8 @@
     ".*\\.spec.tsx?$",
     ".*\\.test.tsx?$",
     "./**/jest-setup.ts$",
-    ".*.js$"
-  ]
+    ".*.js$",
+    "./*\\.d.ts"
+  ],
+  "minify": false
 }

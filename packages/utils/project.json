@@ -10,11 +10,9 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "format": ["cjs", "esm"],
-        "outputPath": "dist/utils",
+        "outputPath": "dist/packages/utils",
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "main": "packages/utils/index.ts",
-        "buildableProjectDepsInPackageJsonType": "peerDependencies",
-        "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/utils/*.md", "packages/utils/*.d.ts"]
       }
     },

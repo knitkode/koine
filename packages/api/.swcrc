@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
     "target": "esnext",
     "parser": {
@@ -25,6 +26,8 @@
     ".*\\.spec.tsx?$",
     ".*\\.test.tsx?$",
     "./**/jest-setup.ts$",
-    ".*.js$"
-  ]
+    ".*.js$",
+    "./*\\.d.ts"
+  ],
+  "minify": false
 }

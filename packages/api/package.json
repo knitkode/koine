@@ -4,6 +4,12 @@
   "peerDependenciesMeta": {
     "next": {
       "optional": true
+    },
+    "swr": {
+      "optional": true
     }
+  },
+  "dependencies": {
+    "@koine/utils": "*"
   }
 }

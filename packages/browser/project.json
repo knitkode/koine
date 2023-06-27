@@ -9,12 +9,10 @@
       "executor": "./tools/executors/build:build",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/browser",
+        "outputPath": "dist/packages/browser",
         "tsConfig": "packages/browser/tsconfig.lib.json",
         "main": "packages/browser/index.ts",
-        "buildableProjectDepsInPackageJsonType": "peerDependencies",
         "format": ["cjs", "esm"],
-        "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/browser/*.md", "packages/browser/*.d.ts"]
       }
     },

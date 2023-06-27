@@ -24,6 +24,7 @@ export const EditorBar = ({ editor }: EditorBarProps) => {
       type: EditorBarClickBtnType
     ) => {
       e.preventDefault();
+      // @ts-expect-error FIXME: cannot build this
       editor?.chain().focus()[`toggle${type}`]().run();
     },
     [editor]

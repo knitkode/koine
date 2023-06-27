@@ -1,4 +1,16 @@
-import type { ClassValue } from "clsx";
+// import type { ClassValue } from "clsx";
+type ClassValue =
+  | ClassArray
+  | ClassDictionary
+  | string
+  | number
+  | null
+  | boolean
+  | undefined;
+type ClassDictionary = Record<string, any>;
+type ClassArray = ClassValue[];
+
+export type ClsxClassValue = ClassValue;
 
 // import _clsx from "clsx";
 

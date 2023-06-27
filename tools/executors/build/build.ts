@@ -1,21 +1,33 @@
 /**
  * @file
  *
- * Inspired by https://github.com/nx/nx/blob/master/packages/js/src/executors/tsc/tsc.impl.ts
+ * Inspired by https://github.com/nrwl/nx/blob/master/packages/js/src/executors/swc/swc.impl.ts
  */
 import { ExecutorContext, readJsonFile, writeJsonFile } from "@nx/devkit";
-// import { compileSwc } from "@nx/js/src/utils/swc/compile-swc";
-import { swcExecutor } from "@nx/js/src/executors/swc/swc.impl";
-import { tscExecutor } from "@nx/js/src/executors/tsc/tsc.impl";
+import { normalizeOptions } from "@nx/js/src/executors/swc/swc.impl";
+import { copyAssets } from "@nx/js/src/utils/assets";
+import { checkDependencies } from "@nx/js/src/utils/check-dependencies";
 import {
-  ExecutorOptions, // NormalizedExecutorOptions,
-  // SwcExecutorOptions,
+  HelperDependency,
+  getHelperDependency,
+} from "@nx/js/src/utils/compiler-helper-dependency";
+import {
+  handleInliningBuild,
+  isInlineGraphEmpty,
+  postProcessInlinedDependencies,
+} from "@nx/js/src/utils/inline";
+import { copyPackageJson } from "@nx/js/src/utils/package-json";
+import {
+  NormalizedSwcExecutorOptions,
+  SwcExecutorOptions,
 } from "@nx/js/src/utils/schema";
+import { compileSwc, compileSwcWatch } from "@nx/js/src/utils/swc/compile-swc";
+import { generateTmpSwcrc } from "@nx/js/src/utils/swc/inline";
+import { Options as SWCOptions } from "@swc/core";
 import { existsSync } from "fs";
-import { copy, move, readJSON, remove, removeSync } from "fs-extra";
+import { move, removeSync } from "fs-extra";
 import { glob } from "glob";
 import { basename, dirname, extname, join, relative } from "path";
-import { type TsConfigJson } from "type-fest";
 
 type BundleType = "es6" | "commonjs";
 
@@ -25,14 +37,14 @@ const DEFAULT_BUNDLE_TYPE = BUNDLE_TYPE_ESM;
 
 const bundleTypes: BundleType[] = [BUNDLE_TYPE_ESM, BUNDLE_TYPE_COMMONJS];
 
-async function treatEsmOutput(options: ExecutorOptions) {
-  const { outputPath } = options;
-  const tmpPath = getOutputPath(options, BUNDLE_TYPE_ESM);
+async function treatEsmOutput(options: NormalizedSwcExecutorOptions) {
+  const dest = options.outputPath;
+  const tmp = getTweakedSwcDestPath(options.outputPath, BUNDLE_TYPE_ESM);
   const entrypointsDirs: string[] = [];
 
   const relativePaths = await glob("**/*.{js,json,ts}", {
-    cwd: tmpPath,
-    ignore: `${BUNDLE_TYPE_COMMONJS}/**/*`,
+    cwd: tmp,
+    ignore: options.outputPath + `/${BUNDLE_TYPE_COMMONJS}/**/*`,
   });
 
   await Promise.all(
@@ -40,8 +52,8 @@ async function treatEsmOutput(options: ExecutorOptions) {
       const dir = dirname(relativePath);
       const ext = extname(relativePath);
       const fileName = basename(relativePath, ext);
-      const srcFile = join(tmpPath, relativePath);
-      let destFile = join(outputPath, relativePath);
+      const srcFile = join(tmp, relativePath);
+      let destFile = join(dest, relativePath);
 
       if (ext === ".js") destFile = destFile.replace(".js", ".mjs");
 
@@ -53,34 +65,35 @@ async function treatEsmOutput(options: ExecutorOptions) {
 
       // only write package.json file deeper than the root and when whave
       // an `index` entry file
-      if (fileName === "index" && dir && dir !== ".") {
-        const destDir = join(outputPath, dir);
-        const destEsmDir = destDir;
-        const destCjsDir = join(outputPath, `/${BUNDLE_TYPE_COMMONJS}/`, dir);
+      // NOTE: disabled in favour of `dev libs` cli command
+      // if (fileName === "index" && dir && dir !== ".") {
+      //   const destDir = join(dest, dir);
+      //   const destEsmDir = destDir;
+      //   const destCjsDir = join(dest, `/${BUNDLE_TYPE_COMMONJS}/`, dir);
 
-        entrypointsDirs.push(dir);
+      //   entrypointsDirs.push(dir);
 
-        writeJsonFile(
-          join(destDir, "./package.json"),
-          getPackageJsonData(destDir, destEsmDir, destCjsDir)
-        );
-      }
+      //   writeJsonFile(
+      //     join(destDir, "./package.json"),
+      //     getPackageJsonData(destDir, destEsmDir, destCjsDir)
+      //   );
+      // }
     })
   );
 
   return entrypointsDirs;
 }
 
-async function treatCjsOutput(options: ExecutorOptions) {
-  const { outputPath } = options;
-  const tmpPath = getOutputPath(options, BUNDLE_TYPE_COMMONJS);
+async function treatCjsOutput(options: NormalizedSwcExecutorOptions) {
+  const dest = options.outputPath;
+  const tmp = getTweakedSwcDestPath(options.outputPath, BUNDLE_TYPE_COMMONJS);
   const entrypointsDirs: string[] = [];
-  const relativePaths = await glob("**/*.{js,json,ts}", { cwd: tmpPath });
+  const relativePaths = await glob("**/*.{js,json,ts}", { cwd: tmp });
 
   await Promise.all(
     relativePaths.map(async (relativePath) => {
-      const srcFile = join(tmpPath, relativePath);
-      const destFile = join(outputPath, relativePath);
+      const srcFile = join(tmp, relativePath);
+      const destFile = join(dest, relativePath);
 
       if (srcFile !== destFile) {
         await move(srcFile, destFile, { overwrite: true });
@@ -95,7 +108,7 @@ async function treatCjsOutput(options: ExecutorOptions) {
  * We treat these separetely as they carry the `dependencies` of the actual
  * packages
  */
-async function treatRootEntrypoint(options: ExecutorOptions) {
+async function treatRootEntrypoint(options: NormalizedSwcExecutorOptions) {
   const { outputPath } = options;
   const packagePath = join(outputPath, "./package.json");
   if (!existsSync(packagePath)) {
@@ -141,179 +154,196 @@ function getPackageJsonData(pkgPath: string, esmPath: string, cjsPath: string) {
     module: esmFile,
     main: cjsFile,
     // @see https://webpack.js.org/guides/package-exports/
-    // exports: {
-    //   // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
-    //   development: umdFile,
-    //   default: es6File,
-    //   // FIXME: this should not point to parent folders according to the linting
-    //   // on the package.json, it is probably not needed anyway as we already
-    //   // have `main` key in the package.json
-    //   // node: cjsFile,
-    // },
     types: cjsFile.replace(".js", ".d.ts"),
   };
 }
 
-function manageTsConfig(
-  options: ExecutorOptions,
+function tweakSwcrc(
+  options: NormalizedSwcExecutorOptions,
   context: ExecutorContext,
   bundleType: BundleType
 ) {
-  const { src, dest, destRelative } = getConfigFilePathTsc(
-    options,
-    context,
-    bundleType
-  );
-  const data = readJsonFile(src) as TsConfigJson;
-
-  data.compilerOptions =
-    data.compilerOptions ||
-    ({} as NonNullable<TsConfigJson["compilerOptions"]>);
-  // data.compilerOptions.module = bundleType;
-  data.compilerOptions.module = bundleType === "es6" ? "esnext" : "commonjs";
-  // TODO: .d.ts files were created earlier by swc already
-  // data.compilerOptions.declaration = false;
-  // data.compilerOptions.composite = false;
-
-  writeJsonFile(dest, data);
-  return destRelative;
-}
-
-function manageSwcrc(
-  options: ExecutorOptions,
-  context: ExecutorContext,
-  bundleType: BundleType
-) {
-  const { src, dest, destRelative } = getConfigFilePathSwc(
-    options,
-    context,
-    bundleType
-  );
+  const src = options.swcCliOptions.swcrcPath;
+  const dest = src;
 
   if (existsSync(src)) {
-    // TODO: type SWC options
-    const data = readJsonFile(src) as any;
+    const data = readJsonFile(src) as SWCOptions;
 
     data.module.type = bundleType;
-    // TODO: this is unrelated to this bundler probably, it should an option I
-    // or just removed from here, too opinionated
-    data.minify = true;
+    // @ts-expect-error FIX in SWC types?
+    data.module.noInterop = bundleType === "es6";
 
     writeJsonFile(dest, data);
-    return destRelative;
   }
 
   return;
 }
 
-function getOutputPath(options: ExecutorOptions, bundleType: BundleType) {
-  let { outputPath } = options;
-
+function getTweakedSwcDestPath(standardPath: string, bundleType: BundleType) {
   if (bundleType === DEFAULT_BUNDLE_TYPE) {
-    return outputPath;
+    return standardPath;
   }
 
-  return outputPath + "/" + bundleType;
+  return join(standardPath, bundleType);
 }
 
-function manageOptions(
-  options: ExecutorOptions,
+function tweakOptions(
+  options: NormalizedSwcExecutorOptions,
   context: ExecutorContext,
   bundleType: BundleType
-): Pick<ExecutorOptions, "tsConfig" | "swcrc" | "outputPath"> {
-  const tsConfig = manageTsConfig(options, context, bundleType);
-  const swcrc = manageSwcrc(options, context, bundleType);
-  const outputPath = getOutputPath(options, bundleType);
+): NormalizedSwcExecutorOptions {
+  // alter the .swcrc file
+  tweakSwcrc(options, context, bundleType);
+  const originalSwcCliOptions = options.swcCliOptions;
 
   return {
-    tsConfig,
-    swcrc,
-    outputPath,
+    ...options,
+    swcCliOptions: {
+      ...originalSwcCliOptions,
+      destPath: getTweakedSwcDestPath(
+        options.swcCliOptions.destPath,
+        bundleType
+      ),
+    },
   };
 }
 
-function getConfigFilePathTsc(
-  options: ExecutorOptions,
-  context: ExecutorContext,
-  bundleType: BundleType
+async function* executor(
+  _options: SwcExecutorOptions,
+  context: ExecutorContext
 ) {
-  const srcRelative = options.tsConfig;
-  const destRelative = srcRelative.replace(
-    "tsconfig",
-    "tsconfig-" + bundleType
-  );
-  const src = join(context.root, srcRelative);
-  const dest = join(context.root, destRelative);
-
-  return { src, dest, destRelative };
-}
-
-function getConfigFilePathSwc(
-  options: ExecutorOptions,
-  context: ExecutorContext,
-  bundleType: BundleType
-) {
-  const srcRelative =
-    options.swcrc || options.tsConfig.replace("tsconfig.lib.json", ".swcrc");
-  const destRelative = srcRelative.replace("swcrc", "swcrc-" + bundleType);
-  const src = join(context.root, srcRelative);
-  const dest = join(context.root, destRelative);
-  return { src, dest, destRelative };
-}
-
-async function* executor(options: ExecutorOptions, context: ExecutorContext) {
   if (!context.workspace || !context.projectName) return;
+  const { sourceRoot, root } =
+    context.projectsConfigurations.projects[context.projectName];
+  const options = normalizeOptions(_options, context.root, sourceRoot, root);
 
-  let custom = manageOptions(options, context, "es6");
+  // koine tweak
+  const swcrcOriginalContent = readJsonFile(
+    options.swcCliOptions.swcrcPath
+  ) as SWCOptions;
 
-  const handleTermination = () => {
-    for (let i = 0; i < bundleTypes.length; i++) {
-      const bundleType = bundleTypes[i];
-      const { dest: destTsconfig } = getConfigFilePathTsc(
-        options,
-        context,
-        bundleType
-      );
-      const { dest: destSwcrc } = getConfigFilePathSwc(
-        options,
-        context,
-        bundleType
-      );
+  const { tmpTsConfig, dependencies } = checkDependencies(
+    context,
+    options.tsConfig
+  );
 
-      removeSync(destTsconfig);
-      if (custom.swcrc) removeSync(destSwcrc);
+  // console.log("dependencies", dependencies);
 
-      if (bundleType !== DEFAULT_BUNDLE_TYPE) {
-        removeSync(getOutputPath(options, bundleType));
-      }
-    }
-  };
-
-  process.on("exit", handleTermination);
-  process.on("SIGINT", handleTermination);
-  process.on("SIGTERM", handleTermination);
-
-  if (custom.swcrc) {
-    yield* swcExecutor({ ...options, ...custom }, context);
-  } else {
-    yield* tscExecutor({ ...options, ...custom }, context);
+  if (tmpTsConfig) {
+    options.tsConfig = tmpTsConfig;
   }
 
-  // removeSync(custom.tsConfig);
-  // if (custom.swcrc) removeSync(custom.swcrc);
+  const swcHelperDependency = getHelperDependency(
+    HelperDependency.swc,
+    options.swcCliOptions.swcrcPath,
+    dependencies,
+    context.projectGraph
+  );
 
-  custom = manageOptions(options, context, "commonjs");
+  if (swcHelperDependency) {
+    dependencies.push(swcHelperDependency);
+  }
 
-  const res = yield* tscExecutor({ ...options, ...custom }, context);
+  const inlineProjectGraph = handleInliningBuild(
+    context,
+    options,
+    options.tsConfig
+  );
 
-  // removeSync(custom.tsConfig);
-  // if (custom.swcrc) removeSync(custom.swcrc);
+  if (!isInlineGraphEmpty(inlineProjectGraph)) {
+    options.projectRoot = "."; // set to root of workspace to include other libs for type check
 
-  await treatEsmOutput(options);
-  await treatCjsOutput(options);
-  await treatRootEntrypoint(options);
+    // remap paths for SWC compilation
+    options.swcCliOptions.srcPath = options.swcCliOptions.swcCwd;
+    options.swcCliOptions.swcCwd = ".";
+    options.swcCliOptions.destPath = options.swcCliOptions.destPath
+      .split("../")
+      .at(-1)
+      .concat("/", options.swcCliOptions.srcPath);
 
-  return res;
+    // tmp swcrc with dependencies to exclude
+    // - buildable libraries
+    // - other libraries that are not dependent on the current project
+    options.swcCliOptions.swcrcPath = generateTmpSwcrc(
+      inlineProjectGraph,
+      options.swcCliOptions.swcrcPath
+    );
+  }
+
+  if (options.watch) {
+    let disposeFn: () => void;
+    process.on("SIGINT", () => disposeFn());
+    process.on("SIGTERM", () => disposeFn());
+
+    return yield* compileSwcWatch(context, options, async () => {
+      const assetResult = await copyAssets(options, context);
+      const packageJsonResult = await copyPackageJson(
+        {
+          ...options,
+          skipTypings: !options.skipTypeCheck,
+        },
+        context
+      );
+      removeTmpSwcrc(options.swcCliOptions.swcrcPath);
+      disposeFn = () => {
+        assetResult?.stop();
+        packageJsonResult?.stop();
+      };
+    });
+  } else {
+    // koine tweaks
+    const handleTermination = () => {
+      for (let i = 0; i < bundleTypes.length; i++) {
+        const bundleType = bundleTypes[i];
+
+        if (bundleType !== DEFAULT_BUNDLE_TYPE) {
+          removeSync(getTweakedSwcDestPath(options.outputPath, bundleType));
+        }
+      }
+    };
+
+    let tweakedOptions = tweakOptions(options, context, "es6");
+    console.log("ESM bundle");
+    return yield compileSwc(context, tweakedOptions, async () => {
+      // koine tweaks
+      tweakedOptions = tweakOptions(options, context, "commonjs");
+      console.log("CommonJS bundle");
+      await compileSwc(context, tweakedOptions, async () => {
+        await copyAssets(options, context);
+        await copyPackageJson(
+          {
+            ...options,
+            // koine tweak
+            // generateExportsField: true,
+            generateExportsField: false,
+            skipTypings: !options.skipTypeCheck,
+            extraDependencies: swcHelperDependency ? [swcHelperDependency] : [],
+          },
+          context
+        );
+
+        // koine tweaks
+        await treatEsmOutput(options);
+        await treatCjsOutput(options);
+        await treatRootEntrypoint(options);
+        writeJsonFile(options.swcCliOptions.swcrcPath, swcrcOriginalContent);
+
+        removeTmpSwcrc(options.swcCliOptions.swcrcPath);
+        postProcessInlinedDependencies(
+          options.outputPath,
+          options.originalProjectRoot,
+          inlineProjectGraph
+        );
+        handleTermination();
+      });
+    });
+  }
+}
+
+function removeTmpSwcrc(swcrcPath: string) {
+  if (swcrcPath.includes("tmp/") && swcrcPath.includes(".generated.swcrc")) {
+    removeSync(dirname(swcrcPath));
+  }
 }
 
 export default executor;

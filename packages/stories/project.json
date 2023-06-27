@@ -10,7 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "format": ["cjs", "esm"],
-        "outputPath": "dist/stories",
+        "outputPath": "dist/packages/stories",
         "tsConfig": "packages/stories/tsconfig.lib.json",
         "main": "packages/stories/index.ts",
         "assets": []

@@ -9,12 +9,10 @@
       "executor": "./tools/executors/build:build",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/api",
+        "outputPath": "dist/packages/api",
         "tsConfig": "packages/api/tsconfig.lib.json",
         "main": "packages/api/index.ts",
-        "buildableProjectDepsInPackageJsonType": "peerDependencies",
         "format": ["cjs", "esm"],
-        "updateBuildableProjectDepsInPackageJson": true,
         "assets": ["packages/api/*.md", "packages/api/*.d.ts"]
       }
     },

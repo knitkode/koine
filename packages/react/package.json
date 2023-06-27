@@ -1,6 +1,10 @@
 {
   "name": "@koine/react",
   "sideEffects": false,
+  "dependencies": {
+    "@koine/dom": "*",
+    "@koine/utils": "*"
+  },
   "peerDependenciesMeta": {
     "@hookform/resolvers": {
       "optional": true

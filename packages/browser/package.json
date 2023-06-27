@@ -1,4 +1,8 @@
 {
   "name": "@koine/browser",
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@koine/dom": "*",
+    "@koine/utils": "*"
+  }
 }

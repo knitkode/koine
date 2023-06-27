@@ -1,6 +1,11 @@
 {
   "name": "@koine/next",
   "sideEffects": false,
+  "dependencies": {
+    "@koine/browser": "*",
+    "@koine/react": "*",
+    "@koine/utils": "*"
+  },
   "peerDependenciesMeta": {
     "@hookform/resolvers": {
       "optional": true

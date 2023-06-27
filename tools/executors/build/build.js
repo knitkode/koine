@@ -284,35 +284,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @file
  *
- * Inspired by https://github.com/nx/nx/blob/master/packages/js/src/executors/tsc/tsc.impl.ts
+ * Inspired by https://github.com/nrwl/nx/blob/master/packages/js/src/executors/swc/swc.impl.ts
  */
-var path_1 = require("path");
+var devkit_1 = require("@nx/devkit");
+var swc_impl_1 = require("@nx/js/src/executors/swc/swc.impl");
+var assets_1 = require("@nx/js/src/utils/assets");
+var check_dependencies_1 = require("@nx/js/src/utils/check-dependencies");
+var compiler_helper_dependency_1 = require("@nx/js/src/utils/compiler-helper-dependency");
+var inline_1 = require("@nx/js/src/utils/inline");
+var package_json_1 = require("@nx/js/src/utils/package-json");
+var compile_swc_1 = require("@nx/js/src/utils/swc/compile-swc");
+var inline_2 = require("@nx/js/src/utils/swc/inline");
+var fs_1 = require("fs");
 var fs_extra_1 = require("fs-extra");
 var glob_1 = require("glob");
-var devkit_1 = require("@nx/devkit");
-// import { compileSwc } from "@nx/js/src/utils/swc/compile-swc";
-var swc_impl_1 = require("@nx/js/src/executors/swc/swc.impl");
-var tsc_impl_1 = require("@nx/js/src/executors/tsc/tsc.impl");
-var fs_1 = require("fs");
+var path_1 = require("path");
 var BUNDLE_TYPE_ESM = "es6";
 var BUNDLE_TYPE_COMMONJS = "commonjs";
 var DEFAULT_BUNDLE_TYPE = BUNDLE_TYPE_ESM;
 var bundleTypes = [BUNDLE_TYPE_ESM, BUNDLE_TYPE_COMMONJS];
 function treatEsmOutput(options) {
   return __awaiter(this, void 0, void 0, function () {
-    var outputPath, tmpPath, entrypointsDirs, relativePaths;
+    var dest, tmp, entrypointsDirs, relativePaths;
     var _this = this;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          outputPath = options.outputPath;
-          tmpPath = getOutputPath(options, BUNDLE_TYPE_ESM);
+          dest = options.outputPath;
+          tmp = getTweakedSwcDestPath(options.outputPath, BUNDLE_TYPE_ESM);
           entrypointsDirs = [];
           return [
             4 /*yield*/,
             (0, glob_1.glob)("**/*.{js,json,ts}", {
-              cwd: tmpPath,
-              ignore: "".concat(BUNDLE_TYPE_COMMONJS, "/**/*"),
+              cwd: tmp,
+              ignore:
+                options.outputPath + "/".concat(BUNDLE_TYPE_COMMONJS, "/**/*"),
             }),
           ];
         case 1:
@@ -322,22 +328,15 @@ function treatEsmOutput(options) {
             Promise.all(
               relativePaths.map(function (relativePath) {
                 return __awaiter(_this, void 0, void 0, function () {
-                  var dir,
-                    ext,
-                    fileName,
-                    srcFile,
-                    destFile,
-                    destDir,
-                    destEsmDir,
-                    destCjsDir;
+                  var dir, ext, fileName, srcFile, destFile;
                   return __generator(this, function (_a) {
                     switch (_a.label) {
                       case 0:
                         dir = (0, path_1.dirname)(relativePath);
                         ext = (0, path_1.extname)(relativePath);
                         fileName = (0, path_1.basename)(relativePath, ext);
-                        srcFile = (0, path_1.join)(tmpPath, relativePath);
-                        destFile = (0, path_1.join)(outputPath, relativePath);
+                        srcFile = (0, path_1.join)(tmp, relativePath);
+                        destFile = (0, path_1.join)(dest, relativePath);
                         if (ext === ".js")
                           destFile = destFile.replace(".js", ".mjs");
                         if (!(srcFile !== destFile)) return [3 /*break*/, 2];
@@ -351,22 +350,6 @@ function treatEsmOutput(options) {
                         _a.sent();
                         _a.label = 2;
                       case 2:
-                        // only write package.json file deeper than the root and when whave
-                        // an `index` entry file
-                        if (fileName === "index" && dir && dir !== ".") {
-                          destDir = (0, path_1.join)(outputPath, dir);
-                          destEsmDir = destDir;
-                          destCjsDir = (0, path_1.join)(
-                            outputPath,
-                            "/".concat(BUNDLE_TYPE_COMMONJS, "/"),
-                            dir
-                          );
-                          entrypointsDirs.push(dir);
-                          (0, devkit_1.writeJsonFile)(
-                            (0, path_1.join)(destDir, "./package.json"),
-                            getPackageJsonData(destDir, destEsmDir, destCjsDir)
-                          );
-                        }
                         return [2 /*return*/];
                     }
                   });
@@ -383,17 +366,17 @@ function treatEsmOutput(options) {
 }
 function treatCjsOutput(options) {
   return __awaiter(this, void 0, void 0, function () {
-    var outputPath, tmpPath, entrypointsDirs, relativePaths;
+    var dest, tmp, entrypointsDirs, relativePaths;
     var _this = this;
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          outputPath = options.outputPath;
-          tmpPath = getOutputPath(options, BUNDLE_TYPE_COMMONJS);
+          dest = options.outputPath;
+          tmp = getTweakedSwcDestPath(options.outputPath, BUNDLE_TYPE_COMMONJS);
           entrypointsDirs = [];
           return [
             4 /*yield*/,
-            (0, glob_1.glob)("**/*.{js,json,ts}", { cwd: tmpPath }),
+            (0, glob_1.glob)("**/*.{js,json,ts}", { cwd: tmp }),
           ];
         case 1:
           relativePaths = _a.sent();
@@ -406,8 +389,8 @@ function treatCjsOutput(options) {
                   return __generator(this, function (_a) {
                     switch (_a.label) {
                       case 0:
-                        srcFile = (0, path_1.join)(tmpPath, relativePath);
-                        destFile = (0, path_1.join)(outputPath, relativePath);
+                        srcFile = (0, path_1.join)(tmp, relativePath);
+                        destFile = (0, path_1.join)(dest, relativePath);
                         if (!(srcFile !== destFile)) return [3 /*break*/, 2];
                         return [
                           4 /*yield*/,
@@ -498,195 +481,316 @@ function getPackageJsonData(pkgPath, esmPath, cjsPath) {
     module: esmFile,
     main: cjsFile,
     // @see https://webpack.js.org/guides/package-exports/
-    // exports: {
-    //   // we use tsup `cjs`, @see https://tsup.egoist.sh/#bundle-formats
-    //   development: umdFile,
-    //   default: es6File,
-    //   // FIXME: this should not point to parent folders according to the linting
-    //   // on the package.json, it is probably not needed anyway as we already
-    //   // have `main` key in the package.json
-    //   // node: cjsFile,
-    // },
     types: cjsFile.replace(".js", ".d.ts"),
   };
 }
-function manageTsConfig(options, context, bundleType) {
-  var _a = getConfigFilePathTsc(options, context, bundleType),
-    src = _a.src,
-    dest = _a.dest,
-    destRelative = _a.destRelative;
-  var data = (0, devkit_1.readJsonFile)(src);
-  data.compilerOptions = data.compilerOptions || {};
-  // data.compilerOptions.module = bundleType;
-  data.compilerOptions.module = bundleType === "es6" ? "esnext" : "commonjs";
-  // TODO: .d.ts files were created earlier by swc already
-  // data.compilerOptions.declaration = false;
-  // data.compilerOptions.composite = false;
-  (0, devkit_1.writeJsonFile)(dest, data);
-  return destRelative;
-}
-function manageSwcrc(options, context, bundleType) {
-  var _a = getConfigFilePathSwc(options, context, bundleType),
-    src = _a.src,
-    dest = _a.dest,
-    destRelative = _a.destRelative;
+function tweakSwcrc(options, context, bundleType) {
+  var src = options.swcCliOptions.swcrcPath;
+  var dest = src;
   if ((0, fs_1.existsSync)(src)) {
-    // TODO: type SWC options
     var data = (0, devkit_1.readJsonFile)(src);
     data.module.type = bundleType;
-    // TODO: this is unrelated to this bundler probably, it should an option I
-    // or just removed from here, too opinionated
-    data.minify = true;
+    // @ts-expect-error FIX in SWC types?
+    data.module.noInterop = bundleType === "es6";
     (0, devkit_1.writeJsonFile)(dest, data);
-    return destRelative;
   }
   return;
 }
-function getOutputPath(options, bundleType) {
-  var outputPath = options.outputPath;
+function getTweakedSwcDestPath(standardPath, bundleType) {
   if (bundleType === DEFAULT_BUNDLE_TYPE) {
-    return outputPath;
+    return standardPath;
   }
-  return outputPath + "/" + bundleType;
+  return (0, path_1.join)(standardPath, bundleType);
 }
-function manageOptions(options, context, bundleType) {
-  var tsConfig = manageTsConfig(options, context, bundleType);
-  var swcrc = manageSwcrc(options, context, bundleType);
-  var outputPath = getOutputPath(options, bundleType);
-  return {
-    tsConfig: tsConfig,
-    swcrc: swcrc,
-    outputPath: outputPath,
-  };
+function tweakOptions(options, context, bundleType) {
+  // alter the .swcrc file
+  tweakSwcrc(options, context, bundleType);
+  var originalSwcCliOptions = options.swcCliOptions;
+  return __assign(__assign({}, options), {
+    swcCliOptions: __assign(__assign({}, originalSwcCliOptions), {
+      destPath: getTweakedSwcDestPath(
+        options.swcCliOptions.destPath,
+        bundleType
+      ),
+    }),
+  });
 }
-function getConfigFilePathTsc(options, context, bundleType) {
-  var srcRelative = options.tsConfig;
-  var destRelative = srcRelative.replace("tsconfig", "tsconfig-" + bundleType);
-  var src = (0, path_1.join)(context.root, srcRelative);
-  var dest = (0, path_1.join)(context.root, destRelative);
-  return { src: src, dest: dest, destRelative: destRelative };
-}
-function getConfigFilePathSwc(options, context, bundleType) {
-  var srcRelative =
-    options.swcrc || options.tsConfig.replace("tsconfig.lib.json", ".swcrc");
-  var destRelative = srcRelative.replace("swcrc", "swcrc-" + bundleType);
-  var src = (0, path_1.join)(context.root, srcRelative);
-  var dest = (0, path_1.join)(context.root, destRelative);
-  return { src: src, dest: dest, destRelative: destRelative };
-}
-function executor(options, context) {
+function executor(_options, context) {
   return __asyncGenerator(this, arguments, function executor_1() {
-    var custom, handleTermination, res;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
+    var _a,
+      sourceRoot,
+      root,
+      options,
+      swcrcOriginalContent,
+      _b,
+      tmpTsConfig,
+      dependencies,
+      swcHelperDependency,
+      inlineProjectGraph,
+      disposeFn_1,
+      handleTermination_1,
+      tweakedOptions_1;
+    var _this = this;
+    return __generator(this, function (_c) {
+      switch (_c.label) {
         case 0:
           if (!(!context.workspace || !context.projectName))
             return [3 /*break*/, 2];
           return [4 /*yield*/, __await(void 0)];
         case 1:
-          return [2 /*return*/, _a.sent()];
+          return [2 /*return*/, _c.sent()];
         case 2:
-          custom = manageOptions(options, context, "es6");
-          handleTermination = function () {
-            for (var i = 0; i < bundleTypes.length; i++) {
-              var bundleType = bundleTypes[i];
-              var destTsconfig = getConfigFilePathTsc(
-                options,
-                context,
-                bundleType
-              ).dest;
-              var destSwcrc = getConfigFilePathSwc(
-                options,
-                context,
-                bundleType
-              ).dest;
-              (0, fs_extra_1.removeSync)(destTsconfig);
-              if (custom.swcrc) (0, fs_extra_1.removeSync)(destSwcrc);
-              if (bundleType !== DEFAULT_BUNDLE_TYPE) {
-                (0, fs_extra_1.removeSync)(getOutputPath(options, bundleType));
-              }
-            }
-          };
-          process.on("exit", handleTermination);
-          process.on("SIGINT", handleTermination);
-          process.on("SIGTERM", handleTermination);
-          if (!custom.swcrc) return [3 /*break*/, 5];
+          (_a = context.projectsConfigurations.projects[context.projectName]),
+            (sourceRoot = _a.sourceRoot),
+            (root = _a.root);
+          options = (0, swc_impl_1.normalizeOptions)(
+            _options,
+            context.root,
+            sourceRoot,
+            root
+          );
+          swcrcOriginalContent = (0, devkit_1.readJsonFile)(
+            options.swcCliOptions.swcrcPath
+          );
+          (_b = (0, check_dependencies_1.checkDependencies)(
+            context,
+            options.tsConfig
+          )),
+            (tmpTsConfig = _b.tmpTsConfig),
+            (dependencies = _b.dependencies);
+          console.log("dependencies", dependencies);
+          if (tmpTsConfig) {
+            options.tsConfig = tmpTsConfig;
+          }
+          swcHelperDependency = (0,
+          compiler_helper_dependency_1.getHelperDependency)(
+            compiler_helper_dependency_1.HelperDependency.swc,
+            options.swcCliOptions.swcrcPath,
+            dependencies,
+            context.projectGraph
+          );
+          if (swcHelperDependency) {
+            dependencies.push(swcHelperDependency);
+          }
+          inlineProjectGraph = (0, inline_1.handleInliningBuild)(
+            context,
+            options,
+            options.tsConfig
+          );
+          if (!(0, inline_1.isInlineGraphEmpty)(inlineProjectGraph)) {
+            options.projectRoot = "."; // set to root of workspace to include other libs for type check
+            // remap paths for SWC compilation
+            options.swcCliOptions.srcPath = options.swcCliOptions.swcCwd;
+            options.swcCliOptions.swcCwd = ".";
+            options.swcCliOptions.destPath = options.swcCliOptions.destPath
+              .split("../")
+              .at(-1)
+              .concat("/", options.swcCliOptions.srcPath);
+            // tmp swcrc with dependencies to exclude
+            // - buildable libraries
+            // - other libraries that are not dependent on the current project
+            options.swcCliOptions.swcrcPath = (0, inline_2.generateTmpSwcrc)(
+              inlineProjectGraph,
+              options.swcCliOptions.swcrcPath
+            );
+          }
+          if (!options.watch) return [3 /*break*/, 6];
+          process.on("SIGINT", function () {
+            return disposeFn_1();
+          });
+          process.on("SIGTERM", function () {
+            return disposeFn_1();
+          });
           return [
             5 /*yield**/,
             __values(
               __asyncDelegator(
                 __asyncValues(
-                  (0, swc_impl_1.swcExecutor)(
-                    __assign(__assign({}, options), custom),
-                    context
+                  (0, compile_swc_1.compileSwcWatch)(
+                    context,
+                    options,
+                    function () {
+                      return __awaiter(_this, void 0, void 0, function () {
+                        var assetResult, packageJsonResult;
+                        return __generator(this, function (_a) {
+                          switch (_a.label) {
+                            case 0:
+                              return [
+                                4 /*yield*/,
+                                (0, assets_1.copyAssets)(options, context),
+                              ];
+                            case 1:
+                              assetResult = _a.sent();
+                              return [
+                                4 /*yield*/,
+                                (0, package_json_1.copyPackageJson)(
+                                  __assign(__assign({}, options), {
+                                    skipTypings: !options.skipTypeCheck,
+                                  }),
+                                  context
+                                ),
+                              ];
+                            case 2:
+                              packageJsonResult = _a.sent();
+                              removeTmpSwcrc(options.swcCliOptions.swcrcPath);
+                              disposeFn_1 = function () {
+                                assetResult === null || assetResult === void 0
+                                  ? void 0
+                                  : assetResult.stop();
+                                packageJsonResult === null ||
+                                packageJsonResult === void 0
+                                  ? void 0
+                                  : packageJsonResult.stop();
+                              };
+                              return [2 /*return*/];
+                          }
+                        });
+                      });
+                    }
                   )
                 )
               )
             ),
           ];
         case 3:
-          return [4 /*yield*/, __await.apply(void 0, [_a.sent()])];
+          return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
         case 4:
-          _a.sent();
-          return [3 /*break*/, 8];
+          return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
         case 5:
-          return [
-            5 /*yield**/,
-            __values(
-              __asyncDelegator(
-                __asyncValues(
-                  (0, tsc_impl_1.tscExecutor)(
-                    __assign(__assign({}, options), custom),
-                    context
-                  )
-                )
-              )
-            ),
-          ];
+          return [2 /*return*/, _c.sent()];
         case 6:
-          return [4 /*yield*/, __await.apply(void 0, [_a.sent()])];
-        case 7:
-          _a.sent();
-          _a.label = 8;
-        case 8:
-          // removeSync(custom.tsConfig);
-          // if (custom.swcrc) removeSync(custom.swcrc);
-          custom = manageOptions(options, context, "commonjs");
+          handleTermination_1 = function () {
+            for (var i = 0; i < bundleTypes.length; i++) {
+              var bundleType = bundleTypes[i];
+              if (bundleType !== DEFAULT_BUNDLE_TYPE) {
+                (0, fs_extra_1.removeSync)(
+                  getTweakedSwcDestPath(options.outputPath, bundleType)
+                );
+              }
+            }
+          };
+          tweakedOptions_1 = tweakOptions(options, context, "es6");
+          console.log("ESM bundle");
           return [
-            5 /*yield**/,
-            __values(
-              __asyncDelegator(
-                __asyncValues(
-                  (0, tsc_impl_1.tscExecutor)(
-                    __assign(__assign({}, options), custom),
-                    context
-                  )
-                )
+            4 /*yield*/,
+            __await(
+              (0, compile_swc_1.compileSwc)(
+                context,
+                tweakedOptions_1,
+                function () {
+                  return __awaiter(_this, void 0, void 0, function () {
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                      switch (_a.label) {
+                        case 0:
+                          // koine tweaks
+                          tweakedOptions_1 = tweakOptions(
+                            options,
+                            context,
+                            "commonjs"
+                          );
+                          console.log("CommonJS bundle");
+                          return [
+                            4 /*yield*/,
+                            (0, compile_swc_1.compileSwc)(
+                              context,
+                              tweakedOptions_1,
+                              function () {
+                                return __awaiter(
+                                  _this,
+                                  void 0,
+                                  void 0,
+                                  function () {
+                                    return __generator(this, function (_a) {
+                                      switch (_a.label) {
+                                        case 0:
+                                          return [
+                                            4 /*yield*/,
+                                            (0, assets_1.copyAssets)(
+                                              options,
+                                              context
+                                            ),
+                                          ];
+                                        case 1:
+                                          _a.sent();
+                                          return [
+                                            4 /*yield*/,
+                                            (0, package_json_1.copyPackageJson)(
+                                              __assign(__assign({}, options), {
+                                                // koine tweak
+                                                // generateExportsField: true,
+                                                generateExportsField: false,
+                                                skipTypings:
+                                                  !options.skipTypeCheck,
+                                                extraDependencies:
+                                                  swcHelperDependency
+                                                    ? [swcHelperDependency]
+                                                    : [],
+                                              }),
+                                              context
+                                            ),
+                                          ];
+                                        case 2:
+                                          _a.sent();
+                                          // koine tweaks
+                                          return [
+                                            4 /*yield*/,
+                                            treatEsmOutput(options),
+                                          ];
+                                        case 3:
+                                          // koine tweaks
+                                          _a.sent();
+                                          return [
+                                            4 /*yield*/,
+                                            treatCjsOutput(options),
+                                          ];
+                                        case 4:
+                                          _a.sent();
+                                          return [
+                                            4 /*yield*/,
+                                            treatRootEntrypoint(options),
+                                          ];
+                                        case 5:
+                                          _a.sent();
+                                          (0,
+                                          devkit_1.writeJsonFile)(options.swcCliOptions.swcrcPath, swcrcOriginalContent);
+                                          removeTmpSwcrc(
+                                            options.swcCliOptions.swcrcPath
+                                          );
+                                          (0,
+                                          inline_1.postProcessInlinedDependencies)(options.outputPath, options.originalProjectRoot, inlineProjectGraph);
+                                          handleTermination_1();
+                                          return [2 /*return*/];
+                                      }
+                                    });
+                                  }
+                                );
+                              }
+                            ),
+                          ];
+                        case 1:
+                          _a.sent();
+                          return [2 /*return*/];
+                      }
+                    });
+                  });
+                }
               )
             ),
           ];
+        case 7:
+          return [4 /*yield*/, _c.sent()];
+        case 8:
+          return [4 /*yield*/, __await.apply(void 0, [_c.sent()])];
         case 9:
-          return [4 /*yield*/, __await.apply(void 0, [_a.sent()])];
-        case 10:
-          res = _a.sent();
-          // removeSync(custom.tsConfig);
-          // if (custom.swcrc) removeSync(custom.swcrc);
-          return [4 /*yield*/, __await(treatEsmOutput(options))];
-        case 11:
-          // removeSync(custom.tsConfig);
-          // if (custom.swcrc) removeSync(custom.swcrc);
-          _a.sent();
-          return [4 /*yield*/, __await(treatCjsOutput(options))];
-        case 12:
-          _a.sent();
-          return [4 /*yield*/, __await(treatRootEntrypoint(options))];
-        case 13:
-          _a.sent();
-          return [4 /*yield*/, __await(res)];
-        case 14:
-          return [2 /*return*/, _a.sent()];
+          return [2 /*return*/, _c.sent()];
       }
     });
   });
+}
+function removeTmpSwcrc(swcrcPath) {
+  if (swcrcPath.includes("tmp/") && swcrcPath.includes(".generated.swcrc")) {
+    (0, fs_extra_1.removeSync)((0, path_1.dirname)(swcrcPath));
+  }
 }
 exports.default = executor;

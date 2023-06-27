@@ -20,7 +20,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "declaration": true,
+    "preserveSymlinks": true, // this appears to be needed after having switched to pnpm
     "baseUrl": ".",
     "paths": {
       "@koine/api": ["packages/api/index.ts"],

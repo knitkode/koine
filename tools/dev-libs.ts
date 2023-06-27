@@ -4,8 +4,7 @@
  * This script automatically adds all the required `exports` to libs `package.json`s
  * in order to make deep imports work within node resolution.
  */
-import { readFile, writeFile } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { relative } from "node:path";
 import type {
   AmdConfig,
   CommonJsConfig,
@@ -16,17 +15,19 @@ import type {
 } from "@swc/core";
 import chalk from "chalk";
 import { Command } from "commander";
-import json from "comment-json";
 import { glob } from "glob";
 import ora from "ora";
 import { PackageJson, TsConfigJson } from "type-fest";
 import { oraOpts } from "./dev.js";
-import { type Lib as LibBase, self } from "./helpers.js";
+import { type Lib as LibBase, editJSONfile, self } from "./helpers.js";
 
 const libsConfig: LibConfig[] = [
-  { name: "browser", type: "module", exports: ["esm", "cjs"], minify: true },
-  { name: "dom", type: "module", exports: ["esm", "cjs"], minify: true },
-  { name: "utils", type: "module", exports: ["esm", "cjs"], minify: true },
+  { name: "api", type: "none", exports: "none", minify: false },
+  { name: "browser", type: "none", exports: "none", minify: false },
+  { name: "dom", type: "none", exports: "none", minify: false },
+  { name: "react", type: "none", exports: "none", minify: false },
+  { name: "next", type: "none", exports: "none", minify: false },
+  { name: "utils", type: "none", exports: "none", minify: false },
 ];
 
 // FIXME: to fix in swc? just exclude `SystemjsConfig` because it does not extends `BaseModuleConfig`
@@ -68,8 +69,14 @@ export const libs = () =>
 
 type LibConfig = {
   name: string;
-  type: "module" | "commonjs";
-  exports: false | ("esm" | "cjs")[];
+  /**
+   * Set to explicit `"none"` to delete the key/value if found
+   */
+  type?: "none" | "module" | "commonjs";
+  /**
+   * Set to explicit `"none"` to delete the key/value if found
+   */
+  exports?: "none" | ("esm" | "cjs")[];
   minify?: boolean;
 };
 
@@ -78,7 +85,9 @@ type Lib = LibBase & LibConfig;
 function getLibExport(lib: Lib, name?: string, path?: string) {
   name = name ? `./${name}` : ".";
   const exportPath = path ? path : "./index.js";
-  const obj: { import?: string; require?: string } = {};
+  const obj: { import?: string; require?: string /* ; types: string; */ } = {
+    // types: exportPath.replace(/\.js$/, ".d.ts")
+  };
 
   if (lib.exports) {
     if (lib.exports.includes("cjs")) {
@@ -86,7 +95,9 @@ function getLibExport(lib: Lib, name?: string, path?: string) {
     }
 
     if (lib.exports.includes("esm")) {
-      obj.import = exportPath;
+      obj.import = lib.exports.includes("cjs")
+        ? exportPath.replace(/\.js$/, ".mjs")
+        : exportPath;
     }
   }
 
@@ -94,8 +105,12 @@ function getLibExport(lib: Lib, name?: string, path?: string) {
 }
 
 async function writeLibExports(lib: Lib) {
-  if (!lib.exports) {
-    await editJSONfile(lib, "package.json", (data) => {
+  if (typeof lib.exports === "undefined") {
+    return;
+  }
+
+  if (lib.exports === "none") {
+    await editJSONfile([lib.dist, lib.src], "package.json", (data) => {
       delete data.exports;
     });
 
@@ -103,18 +118,23 @@ async function writeLibExports(lib: Lib) {
   }
 
   // FIXME: once we have fully migrated to ts we can remove "js"
-  const paths = await glob(lib.src + "/**/*.{js,ts,scss}", {
+  const paths = await glob(lib.src + "/**/*.{js,ts,tsx,scss}", {
     ignore: [
       // ignore executables
       lib.src + "/bin/*.ts",
       // root index is already exported by `exports: { ".": { import: "./index.js" } }`
       lib.src + "/index.ts",
       // avoid to export configuration files!
-      lib.src + "/jest.config.ts",
+      // lib.src + "/jest.config.{js,ts}",
+      // lib.src + "/postcss.config.{js.ts}",
+      // lib.src + "/tailwind.config.{js.ts}",
+      lib.src + "/*.config.{js,ts}",
       // ignore typings
       lib.src + "/*.d.ts",
       // ignore "private" files prefixed with `_` (local convention)
       lib.src + "/_*.ts",
+      // ignore tests
+      lib.src + "/*.{spec,test}.{js,ts,tsx}",
     ],
   });
 
@@ -134,10 +154,18 @@ async function writeLibExports(lib: Lib) {
       // FIXME: once we have fully migrated to ts we can remove "|\.js" in regex
       const name = isScssFile
         ? path
-        : path.replace(/\.ts|\.js$/, "").replace(/\/index$/, "");
-      const jsFilePath = `./${path.replace(/.ts$/, ".js")}`;
+        : path.replace(/\.tsx|\.ts|\.js$/, "").replace(/\/index$/, "");
+      const jsFilePath = `./${path.replace(/\.tsx|\.ts$/, ".js")}`;
       const exp = getLibExport(lib, name, jsFilePath);
       map[exp.name] = exp.obj;
+
+      // EXP: trying to export both names with and without .js extension
+      // probably not needed? doing it while fighting with nextjs build
+      // if (!isScssFile && name) {
+      //   const expWithJs = getLibExport(lib, name + ".js", jsFilePath);
+      //   map[expWithJs.name] = exp.obj;
+      // }
+
       return map;
     },
     {
@@ -145,12 +173,12 @@ async function writeLibExports(lib: Lib) {
     } as Record<string, object>
   );
 
-  await editJSONfile(lib, "package.json", (data) => {
+  await editJSONfile([lib.dist, lib.src], "package.json", (data) => {
     data.exports = exports;
   });
 }
 
-function overrideByLibType<T, L extends LibConfig["type"]>(
+function overrideByLibType<T, L extends NonNullable<LibConfig["type"]>>(
   option: T,
   libType: L,
   override: Record<L, NonNullable<T>>
@@ -159,24 +187,26 @@ function overrideByLibType<T, L extends LibConfig["type"]>(
 }
 
 async function setLibOptions(lib: Lib) {
-  await editJSONfile(lib, ".swcrc", (data: SWCConfig) => {
-    data.module = data.module || {} as SWCConfig["module"];
+  await editJSONfile(lib.src, ".swcrc", (data: SWCConfig) => {
+    data.module = data.module || ({} as SWCConfig["module"]);
 
-    overrideByLibType(data.module.type, lib.type, {
-      module: "es6",
-      commonjs: "commonjs",
-    });
-    overrideByLibType(data.module.noInterop, lib.type, {
-      module: true,
-      commonjs: false,
-    });
+    if (lib.type !== "none") {
+      overrideByLibType(data.module.type, lib.type, {
+        module: "es6",
+        commonjs: "commonjs",
+      });
+      overrideByLibType(data.module.noInterop, lib.type, {
+        module: true,
+        commonjs: false,
+      });
 
-    // FIXME: this is not yet supported officially?
-    // overrideByLibType(data.module.importInterop, lib.type, {
-    //   module: "none",
-    //   commonjs: "node"
-    // });
-    delete data.module.importInterop;
+      // FIXME: this is not yet supported officially?
+      // overrideByLibType(data.module.importInterop, lib.type, {
+      //   module: "none",
+      //   commonjs: "node"
+      // });
+      delete data.module.importInterop;
+    }
 
     data.minify = !!lib.minify;
 
@@ -190,46 +220,29 @@ async function setLibOptions(lib: Lib) {
     data.exclude = Array.from(new Set([...exclude, "./*\\.d.ts"]));
   });
 
-  await editJSONfile(lib, "tsconfig.json", (data: TsConfigJson) => {
-    data.compilerOptions = data.compilerOptions || {};
-    overrideByLibType(data.compilerOptions.module, lib.type, {
-      module: "ESNext",
-      commonjs: "CommonJS",
-    });
-  });
-
-  await editJSONfile(lib, "package.json", (data: PackageJson) => {
-    if (lib.type === "commonjs") {
-      delete data.type;
-    } else {
-      data.type = lib.type;
+  await editJSONfile(lib.src, "tsconfig.json", (data: TsConfigJson) => {
+    if (lib.type && lib.type !== "none") {
+      data.compilerOptions = data.compilerOptions || {};
+      overrideByLibType(data.compilerOptions.module, lib.type, {
+        module: "ESNext",
+        commonjs: "CommonJS",
+      });
     }
   });
-}
 
-async function editJSONfile(
-  lib: Lib,
-  fileName: string,
-  transformer: (data: any) => void
-) {
-  const filePath = join(lib.src, fileName);
-
-  try {
-    const fileContent = await readFile(filePath, { encoding: "utf-8" });
-    // let fileJSON = JSON.parse(fileContent);
-    let fileJSON = json.parse(fileContent);
-    transformer(fileJSON);
-    // const newContent = JSON.stringify(fileJSON, null, 2);
-    const newContent = json.stringify(fileJSON, null, 2);
-
-    if (newContent) {
-      await writeFile(filePath, newContent);
+  await editJSONfile(
+    [lib.src, lib.dist],
+    "package.json",
+    (data: PackageJson) => {
+      if (lib.type === "none") {
+        delete data.type;
+      } else if (lib.type === "commonjs") {
+        delete data.type;
+      } else {
+        data.type = lib.type;
+      }
     }
-  } catch (err) {
-    console.log("🚀 ~ file: libs-exports.ts:157:", filePath);
-    // throw e;
-    return;
-  }
+  );
 }
 
 function mergeLibData(lib: LibConfig): Lib {

@@ -17,6 +17,7 @@ Libraries to encapsulate and re-export from here, the selection is based on:
 - [mesqueeb/flatten-anything](https://github.com/mesqueeb/flatten-anything)
 
 To considerç
+
 - [dlv](https://www.npmjs.com/package/dlv)
 - [dset](https://github.com/lukeed/dset)
 

@@ -1,6 +1,9 @@
 import chalk from "chalk";
-import { program } from "commander";
+import { Option, program } from "commander";
+import { fuse } from "./dev-fuse.js";
 import { libs } from "./dev-libs.js";
+import { link } from "./dev-link.js";
+import { publish } from "./dev-publish.js";
 
 export const oraOpts = {
   prefixText: chalk.dim("dev"),
@@ -8,10 +11,23 @@ export const oraOpts = {
 };
 
 export type Options = {
+  pkgm: "pnpm" | "npm";
+  verbose?: boolean;
+  // watch?: boolean;
 };
 
 program
   .name("dev")
-  .description("Internal cli")
+  .description("Internal dev cli")
+
+  .addOption(
+    new Option("-p, --pkgm <name>", "package manager")
+      .choices(["pnpm", "npm"])
+      .default("pnpm")
+  )
+  .option("-v --verbose")
   .addCommand(libs())
+  .addCommand(link())
+  .addCommand(publish())
+  .addCommand(fuse())
   .parseAsync();
