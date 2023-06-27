@@ -1,23 +1,22 @@
 {
   "name": "@koine/koine",
-  "version": "2.0.0-beta.8",
+  "version": "2.0.0-beta.9",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "dev": "ts-node tools/dev.ts",
     "start": "nx serve",
     "build": "nx run-many --target=build --all=true",
     "test": "nx run-many --target=test --all=true",
-    "lint": "nx run-many --targets=lint --all",
-    "format": "prettier **/*.{js,json,ts,tsx,css,scss,md,yml,yaml,php} --write",
     "story": "nx storybook react",
-    "clean": "killall node && pnpm nx reset && rm -rf ./tmp && rm -rf ./dist && rm -rf ./node_modules/.cache",
     "build:story": "nx build-storybook react",
-    "_lint": "clear && eslint --fix packages/**/*.{ts,tsx}",
+    "lint": "clear && eslint --fix packages/**/*.{ts,tsx}",
+    "format": "prettier **/*.{js,json,ts,tsx,css,scss,md,yml,yaml,php} --write",
+    "clean": "killall node && pnpm nx reset && rm -rf ./tmp && rm -rf ./dist && rm -rf ./node_modules/.cache",
     "prepare": "husky install",
     "tools": "tsc tools/executors/**/**.ts --skipLibCheck true",
     "bt": "pnpm tools && pnpm clean && clear && pnpm build"
   },
-  "private": true,
   "dependencies": {
     "@emotion/react": "11.11.1",
     "@emotion/server": "^11.11.0",
@@ -113,13 +112,6 @@
     "webpack": "^5.88.0"
   },
   "config": {
-    "FIXME: devDependencies causing problems": {
-      "@babel/core": "7.20.12",
-      "@babel/preset-typescript": "7.18.6",
-      "babel-jest": "^29.4.1",
-      "babel-loader": "^9.1.2",
-      "babel-plugin-styled-components": "^2.0.7"
-    },
     "commitizen": {
       "path": "cz-conventional-changelog"
     }

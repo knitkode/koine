@@ -1,4 +1,7 @@
 {
   "name": "@koine/dom",
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@koine/utils": "*"
+  }
 }
