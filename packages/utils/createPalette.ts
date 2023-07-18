@@ -30,9 +30,14 @@ export const createPalette = <
   shades: TShades
 ) => {
   const map = shades.reduce((map, def) => {
-    map[def[0]] = def[1] as TColor;
+    map[def[0]] = def[1] as any;
     return map;
-  }, {} as { [s: string]: TColor });
+  }, {} as any);
+  // NOTE: the following breaks typedoc, with `any` it compiles
+  // const map = shades.reduce((map, def) => {
+  //   map[def[0]] = def[1] as TColor;
+  //   return map;
+  // }, {} as { [s: string]: TColor });
 
   const tailwindPalette = shades.reduce((map, def) => {
     map[`${name}-${def[0]}`] = def[1];

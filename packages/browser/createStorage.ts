@@ -6,11 +6,16 @@ import noop from "@koine/utils/noop";
 import on from "@koine/dom/on";
 import storage from "./storage";
 
+/**
+ * @category storage
+ */
 export type CreateStorageConfig = Record<string, any>;
 
 /**
  * Utility to create a storage instance to interact with `localStorage` using
  * encrypted (encoded) key/values.
+ *
+ * @category storage
  */
 export const createStorage = <T extends CreateStorageConfig>(
   config: Partial<T>,
@@ -59,7 +64,8 @@ export const createStorage = <T extends CreateStorageConfig>(
         if (!isNullOrUndefined(value)) {
           all[key] = value;
         } else if (defaultValue) {
-          all[key] = defaultValue;
+          // NOTE: without the assertion typedoc does not compile
+          all[key] = defaultValue as T[Extract<keyof T, string>];
         }
       }
       return all;

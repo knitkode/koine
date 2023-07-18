@@ -118,3 +118,5 @@ export function debouncePromise<
 
   return debouncedFunction;
 }
+
+export default debouncePromise;

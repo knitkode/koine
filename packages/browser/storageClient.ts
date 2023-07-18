@@ -1,12 +1,17 @@
 import isBrowser from "@koine/utils/isBrowser";
 import isString from "@koine/utils/isString";
 
+/**
+ * @category storage
+ */
 export type StorageClientConfig = Record<string, any>;
 
 const methodsMap = { g: "getItem", s: "setItem", r: "removeItem" };
 
 /**
  * Super minifiable `local/session Storage` client creator with SSR safety
+ *
+ * @category storage
  */
 export const storageClient = <
   TConfig extends StorageClientConfig = StorageClientConfig
