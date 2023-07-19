@@ -1,5 +1,5 @@
 /**
- * @file
+ * @module
  *
  * Slightly adapted from Kent C. Dodd's [match-sorter](https://github.com/kentcdodds/match-sorter)
  * differences are:
@@ -10,7 +10,7 @@
  * TODO: turn objects into arrays for smaller output?
  *
  * @name match-sorter
- * @license MIT license.
+ * @license MIT license
  * @copyright (c) 2020 Kent C. Dodds
  * @author Kent C. Dodds <me@kentcdodds.com> (https://kentcdodds.com)
  */

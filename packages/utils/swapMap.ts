@@ -1,7 +1,7 @@
 /**
  * Swap object map key/value
  *
- * @category objects
+ * @category object
  */
 export function swapMap<
   T extends Record<string, string | number | symbol> = Record<

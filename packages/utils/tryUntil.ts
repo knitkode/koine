@@ -1,5 +1,8 @@
 /**
- * @borrows [https://levelup.gitconnected.com/javascript-wait-until-something-happens-or-timeout-82636839ea93]
+ * @category function
+ * @category async
+ *
+ * @borrows [Javascript: Wait Until Something Happens or Timeout](https://levelup.gitconnected.com/javascript-wait-until-something-happens-or-timeout-82636839ea93)
  *
  * @param timeout in `ms`
  * @param interval in `ms`

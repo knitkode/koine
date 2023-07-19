@@ -3,6 +3,10 @@ import {
   getMediaQueryWidthResolvers,
 } from "./getMediaQueryWidthResolvers";
 
+/**
+ * @category responsive
+ * @category tailwind
+ */
 export function getMediaQueryWidthTailwindScreens(
   breakpoints: GetMediaQueryWidthResolversBreakpoints
 ) {

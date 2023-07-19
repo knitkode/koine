@@ -1,6 +1,6 @@
 /**
  * @category impl
- * @usage
+ * @example
  *
  * ```ts
  * const { _: { onKeyDown }, myOwnProp, ...rest } = quaranteneProps([

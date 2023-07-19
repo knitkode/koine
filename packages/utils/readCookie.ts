@@ -5,6 +5,11 @@ function converterRead(value: string) {
   return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
 }
 
+/**
+ * Read cookie
+ *
+ * @category cookie
+ */
 export function readCookie<
   T extends Record<string, unknown> = Record<string, string>
 >(name?: null): T;

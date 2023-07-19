@@ -8,7 +8,8 @@ import { removeAccents } from "./removeAccents";
  * - replaces the punctuation with dashes
  *
  * @category text
- * @see https://gist.github.com/mathewbyrne/1280286#gistcomment-3498021
+ *
+ * @borrows [mathewbyrne's gist](https://gist.github.com/mathewbyrne/1280286#gistcomment-3498021)
  */
 export function slugify(text: string, separator = "-") {
   return removeAccents(

@@ -2,15 +2,16 @@
  * Creates an array of shuffled values, using a version of the
  * [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher-Yates_shuffle).
  *
- * @see lodash.shuffle
- * @since 0.1.0
- * @category arrays
- * @param {Array} array The array to shuffle.
- * @returns {Array} Returns the new shuffled array.
+ * @category array
+ * @borrows [lodash.shuffle](https://github.com/lodash/lodash/blob/master/shuffle.js)
  * @example
- *
+ * ```ts
  * shuffle([1, 2, 3, 4])
  * // => [4, 1, 3, 2]
+ * ```
+ *
+ * @param array The array to shuffle.
+ * @returns The new shuffled array.
  */
 export function shuffle<T>(array: T[]) {
   const length = array == null ? 0 : array.length;

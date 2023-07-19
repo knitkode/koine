@@ -5,7 +5,7 @@
  * NOTE: most of the time using a normal [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) is enough,
  * use this utility only when it makes sense.
  *
- * @category objects
+ * @category object
  */
 export function objectOmit<T extends object, Keys extends (keyof T)[]>(
   object: T,

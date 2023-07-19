@@ -2,7 +2,7 @@
  * Pick object properties by selecting only the given keys, it returns a
  * new object.
  *
- * @category objects
+ * @category object
  */
 export function objectPick<T extends object, Keys extends (keyof T)[]>(
   object: T,

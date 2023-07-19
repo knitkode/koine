@@ -1,5 +1,5 @@
 /**
- * @file
+ * @module
  *
  * @category cookie
  *
@@ -30,10 +30,6 @@ const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
  *   => "foo=bar; httpOnly"
  *
  * @category cookie
- *
- * All cookie related code is inspired and adapted from:
- * - [js-cookie](https://github.com/js-cookie/js-cookie)
- * - [cookie](https://github.com/jshttp/cookie)
  */
 export function serializeCookie(
   name: string,

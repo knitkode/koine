@@ -1,5 +1,5 @@
 /**
- * @file
+ * @module
  *
  * @category cookie
  *
@@ -8,6 +8,9 @@
  * - [cookie](https://github.com/jshttp/cookie)
  */
 
+/**
+ * @category cookie
+ */
 type CookieAttributes = {
   /**
    * Define when the cookie will be removed. Value can be a Number
@@ -53,6 +56,9 @@ type CookieAttributes = {
   // [property: string]: any;
 };
 
+/**
+ * @category cookie
+ */
 export type CookieAttributesServer = CookieAttributes & {
   maxAge?: number;
   httpOnly?: boolean;
@@ -60,6 +66,12 @@ export type CookieAttributesServer = CookieAttributes & {
   decode?: (input: string) => string;
 };
 
+/**
+ * @category cookie
+ */
 export type CookieAttributesClient = CookieAttributes;
 
+/**
+ * @category cookie
+ */
 export const defaultAttributesClient = { path: "/" };

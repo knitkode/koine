@@ -64,7 +64,7 @@ function areEqualObjects(
  * According to very rudimentary tests this function takes on average between
  * 0.15 ms and 2ms to compare two averaged sizes requet body payloads.
  *
- * @category objects
+ * @category object
  */
 export function areEqual(a: Comparable, b?: Comparable) {
   if (!a && !b) {

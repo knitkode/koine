@@ -14,7 +14,9 @@ type PaletteMap<T extends PaletteShades> = {
  * Create palette, this is primarily thought to improve the reuse of a palette
  * definition between TailwindCSS and straight ES imports
  *
- * @category styling|tailwind|colours
+ * @category colors
+ * @category tailwind
+ * @category responsive
  *
  * @returns An array with: 1) A flat palette map 2) A TailwindCSS ready palette
  * object 3) A flat array of colors (no special sorting, same order as the `shades`

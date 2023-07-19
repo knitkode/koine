@@ -3,7 +3,9 @@
  *
  * e.g. converting number 5 in a scale/range from 0 10 to a scale/range from 50
  * to 100 would return 75
- * ```
+ * @example
+ *
+ * ```ts
  * convertRange(5, [0, 10], [50, 100]);
  * ```
  *

@@ -5,8 +5,7 @@
  * @borrows [SO comment by `CertainPerformance`](https://stackoverflow.com/a/60132060/1938970)
  *
  * @usage
- *
- * ```
+ * ```ts
  * type Fruit = "pear" | "apple" | "orange";
  *
  * const arrayOfAllFruits = arrayOfAll<Fruit>();

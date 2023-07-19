@@ -48,8 +48,9 @@ function toVal(mix: any) {
 /**
  * Class names utility
  *
+ * @category impl
  * @borrows [lukeed/clsx](https://github.com/lukeed/clsx)
- * @license [MIT: Luke Edwards](https://github.com/lukeed/clsx/blob/master/license)
+ * @license MIT Luke Edwards https://github.com/lukeed/clsx/blob/master/license
  */
 export const clsx: (...args: ClassValue[]) => string = function () {
   let i = 0,

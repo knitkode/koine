@@ -5,7 +5,6 @@ import { type AnyQueryParams } from "./location";
  * Merge query parameters objects, it *mutates* the first given object argument
  *
  * @category location
- * @pure
  */
 export function mergeUrlQueryParams<T extends AnyQueryParams>(
   oldParams: NonNullable<AnyQueryParams> = {},

@@ -6,9 +6,11 @@
  *
  * Adapted from https://github.com/developit/mitt
  *
- * Regarding typescript support @see:
+ * Regarding typescript support see:
  * - https://stackoverflow.com/q/53299743/1938970
  * - https://github.com/Microsoft/TypeScript/pull/26349
+ *
+ * @category impl
  */
 export function Emitter<EventMap extends { [key: string]: any }>(
   namespace: string

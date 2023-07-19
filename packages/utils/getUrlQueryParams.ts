@@ -6,10 +6,9 @@ import { type AnyQueryParams } from "./location";
  *
  * @category location
  * @param url A URL which contains a  `?`, e.g. `?myparam=x` or `https://a.com?myparams=x`.
- *                    If not provided it defaults reading the current URL query string with
- *                    `location.search`. Through this argument you can use this
- *                    same function to parse, for instance, the query params of
- *                    the `href` of a `<a href="...">` HTML tag.
+ * If not provided it defaults reading the current URL query string with
+ * `location.search`. Through this argument you can use this same function to
+ * parse, for instance, the query params of the `href` of a `<a href="...">` HTML tag.
  *
  */
 export function getUrlQueryParams<T extends NonNullable<AnyQueryParams>>(

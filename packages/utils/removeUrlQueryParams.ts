@@ -6,7 +6,6 @@ import { type AnyQueryParams } from "./location";
  * Remove the given keys from the given URL query parameters
  *
  * @category location
- * @pure
  */
 export function removeUrlQueryParams(
   url: string,

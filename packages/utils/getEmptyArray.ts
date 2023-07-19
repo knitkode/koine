@@ -1,7 +1,6 @@
 import isNumber from "./isNumber";
 
 /**
- *
  * Returns an array of undefined values of the desired length, useful to build
  * skeleton UIs.
  *

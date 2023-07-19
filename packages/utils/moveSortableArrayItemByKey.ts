@@ -3,7 +3,7 @@
  * the array accrodingly (no swapping of position).
  * This is useful for drag and drop functionalities
  *
- * @category arrays, dnd
+ * @category array
  */
 export function moveSortableArrayItemByKey<T, K extends keyof T>(
   items: T[],

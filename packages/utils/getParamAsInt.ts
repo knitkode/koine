@@ -7,8 +7,8 @@ import getParamAsString from "./getParamAsString";
  *
  * @category location
  *
- * @param {string} [raw] - The _raw_ query parameter
- * @param {number} [fallback] - Fallback number, we return `null` if not provided
+ * @param raw The _raw_ query parameter
+ * @param fallback Fallback number, we return `null` if not provided
  */
 export function getParamAsInt<TFallback extends number | null | undefined>(
   raw?: string | string[],

@@ -1,5 +1,11 @@
+/**
+ * @category responsive
+ */
 export type GetMediaQueryWidthResolversBreakpoints = Record<string, number>;
 
+/**
+ * @category responsive
+ */
 export function getMediaQueryWidthResolvers<
   TBreakpointsConfig extends GetMediaQueryWidthResolversBreakpoints
 >(customBreakpoints: TBreakpointsConfig) {

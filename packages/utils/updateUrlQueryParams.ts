@@ -7,7 +7,6 @@ import mergeUrlQueryParams from "./mergeUrlQueryParams";
  * Update a URL string query parameters merging the given new query parameters
  *
  * @category location
- * @pure
  */
 export function updateUrlQueryParams(
   url: string,

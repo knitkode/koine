@@ -14,15 +14,23 @@
 // export default debouncePromise;
 
 /**
- * @file Copy pasted from https://github.com/chodorowicz/ts-debounce/blob/master/src/index.ts
+ * Copy pasted from [chodorowicz/ts-debounce](https://github.com/chodorowicz/ts-debounce/blob/master/src/index.ts)
+ *
+ * @module
  */
 
+/**
+ * @categroy functionn
+ */
 export type DebounceOptions<Result> = {
   isImmediate?: boolean;
   maxWait?: number;
   callback?: (data: Result) => void;
 };
 
+/**
+ * @categroy functionn
+ */
 export interface DebouncedFunction<
   Args extends any[],
   F extends (...args: Args) => any
@@ -43,7 +51,7 @@ interface DebouncedPromise<FunctionReturn> {
  *
  * @category function
  * @borrows [chodorowicz/ts-debounce](https://github.com/chodorowicz/ts-debounce)
- * @license [MIT: Jakub Chodorowicz](Jakub Chodorowicz)
+ * @license MIT: Jakub Chodorowicz
  */
 export function debouncePromise<
   Args extends any[],

@@ -9,8 +9,9 @@ export type AccentsSet = [string, string];
  * Accent sets
  *
  * @category text
- * @see https://gist.github.com/mathewbyrne/1280286#gistcomment-3498021
- * @see https://gist.github.com/eek/9c4887e80b3ede05c0e39fee4dce3747 for usage
+ * @resources
+ * - https://gist.github.com/mathewbyrne/1280286#gistcomment-3498021
+ * - https://gist.github.com/eek/9c4887e80b3ede05c0e39fee4dce3747 for usage
  * of [normalize](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize)
  */
 export const accentsSets: AccentsSet[] = [

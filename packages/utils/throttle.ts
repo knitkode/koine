@@ -2,7 +2,7 @@
  * Throttle function (e.g. for resize / scroll handlers)
  *
  * @category function
- * @see https://github.com/Mobius1/Rangeable/
+ * @borrows [Mobius1/Rangeable](https://github.com/Mobius1/Rangeable/)
  */
 export function throttle<TFn extends Function, TContext>(
   fn: TFn,

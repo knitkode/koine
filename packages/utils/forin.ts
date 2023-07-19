@@ -1,7 +1,8 @@
 /**
  * To easily get typed native `for in`
  *
- * @category objects
+ * @category native
+ * @category object
  */
 export function forin<T>(
   object: T,

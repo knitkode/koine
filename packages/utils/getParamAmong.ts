@@ -7,8 +7,9 @@ import getParamAsString from "./getParamAsString";
  *
  * @category location
  *
- * @param {string} [raw] - The _raw_ query parameter
- * @param {string[]} [allowedValues=[]] - The list of values (as strings) that the parameter can have, if not one of them `null` is returned
+ * @param raw The _raw_ query parameter
+ * @param allowedValues The list of values (as strings) that the parameter can
+ * have, if not one of them `null` is returned
  */
 export function getParamAmong<T extends string[]>(
   raw?: string | string[],

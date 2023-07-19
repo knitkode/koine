@@ -4,7 +4,7 @@ import { isUndefined } from "./isUndefined";
 /**
  * Merge two or more objects together. It mutates the target object.
  *
- * @category objects
+ * @category object
  * @see https://stackoverflow.com/a/46973278/1938970
  */
 export const mergeObjects = <T extends object = object>(

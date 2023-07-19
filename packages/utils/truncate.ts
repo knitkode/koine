@@ -1,7 +1,7 @@
 /**
  * Truncate string
  *
- * @category typography
+ * @category text
  */
 export const truncate = (
   input: undefined | null | string,

@@ -11,10 +11,6 @@ function converterWrite(value: string) {
 
 /**
  * @category cookie
- *
- * All cookie related code is inspired and adapted from:
- * - [js-cookie](https://github.com/js-cookie/js-cookie)
- * - [cookie](https://github.com/jshttp/cookie)
  */
 export function setCookie<T extends string = string>(
   name: string,

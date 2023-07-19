@@ -1,7 +1,8 @@
 /**
- * @category typography
- * @see https://github.com/blakeembrey/change-case/blob/master/packages/title-case/src/index.ts
- * @author Blake Embrey (hello@blakeembrey.com)
+ * @category text
+ *
+ * @borrows [blakeembrey/change-case](https://github.com/blakeembrey/change-case/blob/master/packages/title-case/src/index.ts)
+ * @license Blake Embrey (hello@blakeembrey.com)
  */
 export const titleCase = (input?: null | string) =>
   input

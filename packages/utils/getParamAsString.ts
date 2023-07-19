@@ -7,7 +7,7 @@ import isArray from "./isArray";
  *
  * @category location
  *
- * @param {string} [raw] - The _raw_ query parameter
+ * @param raw The _raw_ query parameter
  */
 export function getParamAsString(raw?: string | string[]) {
   return (isArray(raw) ? raw[0] : raw) || "";

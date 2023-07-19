@@ -155,6 +155,9 @@ export type {
   PickStartsWithTails,
 } from "./types";
 
+/**
+ * These types should not be documented by using [`excludeExternals` TypeDoc flag](https://typedoc.org/options/input/#excludeexternals)
+ */
 export type {
   Primitive,
   Class,

@@ -106,9 +106,10 @@ const unescape = (code: string) =>
  * <%! %>	for interpolation with encoding
  * ```
  *
+ * @category impl
  * @example
  *
- * ```js
+ * ```ts
  * import { render } from "...";
  *
  * const data = { name: "XYZ" };
