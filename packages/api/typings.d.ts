@@ -428,6 +428,30 @@ declare namespace Koine.Api {
    * @example
    * ```ts
    * // define the type on your `API` types:
+   * type Result = Koine.Api.GenerateResultShortcuts<Endpoints>;
+   *
+   * // consume the type wherever in your app:
+   * type MyResult = API.Result["get"]["my/endpoint"];
+   *
+   * MyResult["ok"];
+   * ^
+   * MyResult["fail"];
+   * ^
+   * ```
+   */
+  type GenerateResultShortcuts<TEndpoints extends Endpoints> = {
+    [TMethod in RequestMethod]: {
+      [TEndpointUrl in keyof TEndpoints]: {
+        ok: TEndpoints[TEndpointUrl][Uppercase<TMethod>]["ok"];
+        fail: TEndpoints[TEndpointUrl][Uppercase<TMethod>]["fail"];
+      };
+    };
+  };
+
+  /**
+   * @example
+   * ```ts
+   * // define the type on your `API` types:
    * type Response = Koine.Api.GenerateResponseShortcuts<Endpoints>;
    *
    * // consume the type wherever in your app:

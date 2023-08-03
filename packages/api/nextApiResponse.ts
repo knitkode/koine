@@ -1,11 +1,14 @@
-import type { NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import createApiResultFail from "./createApiResultFail";
+import createApiResultOk from "./createApiResultOk";
 
-export const nextApiResponse = (
-  nextRes: NextApiResponse,
-  result: Koine.Api.ResultOk | Koine.Api.ResultFail
-) => {
-  // nextRes.status(result.status).json(result.data || result.msg);
-  nextRes.status(result.status).json(result);
+export const nextApiResponse = {
+  ok<T>(data: T, msg?: string) {
+    NextResponse.json(createApiResultOk(data, msg));
+  },
+  fail<T>(data: T, msg?: string, status?: number) {
+    NextResponse.json(createApiResultFail(data, msg, status));
+  },
 };
 
 export default nextApiResponse;
