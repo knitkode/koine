@@ -4,7 +4,10 @@
  * Inspired by https://github.com/nrwl/nx/blob/master/packages/js/src/executors/swc/swc.impl.ts
  */
 import { ExecutorContext, readJsonFile, writeJsonFile } from "@nx/devkit";
-import { normalizeOptions } from "@nx/js/src/executors/swc/swc.impl";
+// NOTE: nx does not exports this anymore...
+// https://github.com/nrwl/nx/blob/master/packages/js/src/executors/swc/swc.impl.ts
+// import { normalizeOptions } from "@nx/js/src/utils/swc/compile-swc";
+import { normalizeOptions } from "./normalizeOptions";
 import { copyAssets } from "@nx/js/src/utils/assets";
 import { checkDependencies } from "@nx/js/src/utils/check-dependencies";
 import {

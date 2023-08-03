@@ -173,7 +173,6 @@ export type {
   RequireAtLeastOne,
   RequireExactlyOne,
   RequireAllOrNone,
-  RemoveIndexSignature,
   PartialDeep,
   ReadonlyDeep,
   LiteralUnion,
