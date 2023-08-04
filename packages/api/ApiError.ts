@@ -1,3 +1,5 @@
+/// <reference types="./typings.d.ts" />
+
 /**
  * Custom `ApiError` class extending `Error` to throw in failed response.
  *
@@ -6,7 +8,7 @@
  *
  */
 export class ApiError<
-  TResponseFail extends Koine.Api.ResponseFail = unknown
+  TResponseFail extends Koine.Api.ResponseFail = unknown,
 > extends Error {
   constructor(result: Koine.Api.ResultFail<TResponseFail>) {
     super(`Request failed with ${result.status} ${result.msg}`);

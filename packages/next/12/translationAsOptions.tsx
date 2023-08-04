@@ -1,9 +1,12 @@
 import type { Option } from "@koine/react/types";
 import type { TranslateLoose } from "./types-i18n";
 
+/**
+ * @deprecated
+ */
 export function translationAsOptions(
   t: TranslateLoose,
-  i18nKey: string
+  i18nKey: string,
 ): Option[] {
   const dictionary = t(i18nKey, undefined, {
     returnObjects: true,
@@ -14,3 +17,5 @@ export function translationAsOptions(
     label: dictionary[key],
   }));
 }
+
+export default translationAsOptions;

@@ -10,12 +10,14 @@ type FormatType = typeof format;
 /**
  * Automatically returns the `date-fns/format` function with the right locale
  * passed as option (grabbed from next router value).
+ *
+ * @deprecated
  */
 export const useDateFormat = () => {
   const [formatter, setFormatter] = useState<FormatType>(
     () =>
       (...args: Parameters<FormatType>) =>
-        format(...args)
+        format(...args),
   );
   const router = useRouter();
   const locale = useDateLocale(router.locale);
@@ -25,12 +27,12 @@ export const useDateFormat = () => {
       const newFormatter = (
         date: Parameters<FormatType>[0],
         _format: Parameters<FormatType>[1],
-        options: Parameters<FormatType>[2]
+        options: Parameters<FormatType>[2],
       ) => format(date, _format, { ...(options || {}), locale });
       setFormatter(
         () =>
           (...args: Parameters<FormatType>) =>
-            newFormatter(...args)
+            newFormatter(...args),
       );
     }
   }, [locale]);

@@ -47,6 +47,8 @@ export type SeoProps = Omit<
  * ```js
  * <Seo title="MyApp | Some description" titleTemplate="%s" />
  * ```
+ *
+ * @deprecated
  */
 export const Seo = (props: SeoProps) => {
   return <Head>{seoBuildTags(props)}</Head>;

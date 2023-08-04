@@ -1,6 +1,8 @@
+/// <reference types="./typings.d.ts" />
+
 export const createApiResultOk = <T>(
   data: T = {} as T,
-  msg?: string
+  msg?: string,
 ): Koine.Api.ResultOk<T> => ({
   ok: true,
   fail: false,

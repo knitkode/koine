@@ -33,6 +33,9 @@ type Props = Simplify<WithComponents<OwnProps, Components>>;
 
 export type NextProgressProps = Props;
 
+/**
+ * @deprecated
+ */
 export const NextProgress = ({
   startAt = 0.3,
   showOnShallow = true,
@@ -51,7 +54,7 @@ export const NextProgress = ({
         setRunning(true);
       }
     },
-    [showOnShallow]
+    [showOnShallow],
   );
 
   const routeChangeEnd = useCallback(
@@ -66,7 +69,7 @@ export const NextProgress = ({
         }, stopDelayMs);
       }
     },
-    [showOnShallow, stopDelayMs, timer]
+    [showOnShallow, stopDelayMs, timer],
   );
 
   useEffect(() => {

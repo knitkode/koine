@@ -8,6 +8,9 @@ const back = createStorage<{ lastUrl: string }>({
   lastUrl: "",
 });
 
+/**
+ * @deprecated
+ */
 export function useBackUrl() {
   const { asPath } = useRouter();
   const calledOnce = useRef(false);
@@ -25,7 +28,7 @@ export function useBackUrl() {
     // first set it to use on a link, set to undefined if the previous URL
     // is the same as the current one
     setBackUrl(
-      asPath === prevLastUrl || !prevLastUrl ? undefined : prevLastUrl
+      asPath === prevLastUrl || !prevLastUrl ? undefined : prevLastUrl,
     );
     // then update the local storage
     back.set("lastUrl", asPath);

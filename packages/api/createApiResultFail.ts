@@ -1,7 +1,9 @@
+/// <reference types="./typings.d.ts" />
+
 export const createApiResultFail = <T>(
   data: T = {} as T,
   msg?: string,
-  status?: number
+  status?: number,
 ): Koine.Api.ResultFail<T> => ({
   fail: true,
   data,

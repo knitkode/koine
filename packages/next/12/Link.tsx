@@ -8,10 +8,11 @@ export type LinkProps = Omit<React.ComponentPropsWithRef<"a">, "href"> &
 
 /**
  * @see https://next.js.org/docs/api-reference/next/link
+ * @deprecated
  */
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   { href, prefetch, replace, scroll, shallow, locale, Link = "span", ...props },
-  ref
+  ref,
 ) {
   return (
     <NextLink

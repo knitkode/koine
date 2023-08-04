@@ -56,10 +56,10 @@ export const ThemeProvider = ({
   nonce,
 }: ThemeProviderProps) => {
   const [theme, setThemeState] = useState(() =>
-    getTheme(THEME_STORAGE_KEY, defaultTheme)
+    getTheme(THEME_STORAGE_KEY, defaultTheme),
   );
   const [resolvedTheme, setResolvedTheme] = useState(() =>
-    getTheme(THEME_STORAGE_KEY)
+    getTheme(THEME_STORAGE_KEY),
   );
   const attrs = !value ? themes : Object.values(value);
 
@@ -109,7 +109,7 @@ export const ThemeProvider = ({
       enableColorScheme,
       enableSystem,
       value,
-    ]
+    ],
   );
 
   const setTheme = useCallback((theme: (typeof themes)[number]) => {
@@ -132,7 +132,7 @@ export const ThemeProvider = ({
         applyTheme("system");
       }
     },
-    [theme, enableSystem, forcedTheme, applyTheme]
+    [theme, enableSystem, forcedTheme, applyTheme],
   );
 
   // Always listen to System preference
@@ -242,7 +242,7 @@ const ThemeScript = memo(
     const updateDOM = (
       name: string,
       literal = false,
-      setColorScheme = true
+      setColorScheme = true,
     ) => {
       const resolvedName = value ? value[name] : name;
       const val = literal ? name + `|| ''` : `'${resolvedName}'`;
@@ -282,7 +282,7 @@ const ThemeScript = memo(
 
       if (enableSystem) {
         return `!function(){try {${optimization}var e=localStorage.getItem('${THEME_STORAGE_KEY}');if("system"===e||(!e&&${defaultSystem})){var t="${MEDIA}",m=window.matchMedia(t);if(m.media!==t||m.matches){${updateDOM(
-          "dark"
+          "dark",
         )}}else{${updateDOM("light")}}}else if(e){${
           value ? `var x=${JSON.stringify(value)};` : ""
         }${updateDOM(value ? `x[e]` : "e", true)}}${
@@ -297,7 +297,7 @@ const ThemeScript = memo(
       }${updateDOM(value ? `x[e]` : "e", true)}}else{${updateDOM(
         defaultTheme,
         false,
-        false
+        false,
       )};}${fallbackColorScheme}}catch(t){}}();`;
     })();
 
@@ -306,7 +306,7 @@ const ThemeScript = memo(
     // But our script cannot be external because it changes at runtime based on React props
     // so we trick next/script by passing `src` as a base64 JS script
     const encodedScript = `data:text/javascript;base64,${encodeBase64(
-      scriptSrc
+      scriptSrc,
     )}`;
     return (
       <NextScript
@@ -318,7 +318,7 @@ const ThemeScript = memo(
     );
   },
   // Never re-render this component
-  () => true
+  () => true,
 );
 
 // Helpers
@@ -338,8 +338,8 @@ const disableAnimation = () => {
   const css = d.createElement("style");
   css.appendChild(
     d.createTextNode(
-      `*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}`
-    )
+      `*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}`,
+    ),
   );
   d.head.appendChild(css);
 

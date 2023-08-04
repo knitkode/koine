@@ -25,6 +25,9 @@ export type SeoDefaultsProps = Omit<
   linkTags?: ReadonlyArray<LinkTag>;
 };
 
+/**
+ * @deprecated
+ */
 export const SeoDefaults = (props: SeoDefaultsProps) => {
   // const router = useRouter();
   // props.openGraph.url = getSiteUrl(router.asPath);

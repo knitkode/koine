@@ -15,7 +15,7 @@ type ExtractEndpointParams<T extends string> = string extends T
   ? { [k in Param]: string | number }
   : never;
 
-declare namespace Koine.Api {
+namespace Koine.Api {
   // @see https://stackoverflow.com/a/60702896/1938970
   // import { Exact } from "type-fest";
 
@@ -28,7 +28,7 @@ declare namespace Koine.Api {
   type ClientCreator<TEndpoints extends Endpoints> = (
     apiName: string,
     baseUrl: string,
-    options?: ClientOptions
+    options?: ClientOptions,
   ) => Client<TEndpoints>;
 
   type ClientOptions = {
@@ -46,7 +46,7 @@ declare namespace Koine.Api {
      *
      * @see RequestInit
      *
-     * @default { credentials: "include", referrerPolicy: "no-referrer" }
+     * @default {}
      */
     request?: Omit<RequestInit, "body" | "headers" | "method">;
     /**
@@ -85,7 +85,7 @@ declare namespace Koine.Api {
 
   type ClientMethod<
     TMethod extends RequestMethod,
-    TEndpoints extends Endpoints
+    TEndpoints extends Endpoints,
   > = <
     TEndpoint extends EndpointUrl<TEndpoints>,
     TOptions extends EndpointOptions<TEndpoints, TEndpoint, TMethod>,
@@ -94,10 +94,10 @@ declare namespace Koine.Api {
       TEndpoints,
       TEndpoint,
       TMethod
-    >
+    >,
   >(
     endpoint: TEndpoint,
-    options?: TOptions
+    options?: TOptions,
   ) => Promise<EndpointResult<TEndpoints, TEndpoint, TMethod>>;
   // ) => Promise<Result<TOk, TFail>>;
 
@@ -117,7 +117,7 @@ declare namespace Koine.Api {
   type EndpointOptions<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TMethod extends RequestMethod
+    TMethod extends RequestMethod,
   > = RequestOptions<
     TEndpoints,
     TEndpoint,
@@ -129,31 +129,31 @@ declare namespace Koine.Api {
   type EndpointResultOk<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TMethod extends RequestMethod
+    TMethod extends RequestMethod,
   > = ResultOk<TEndpoints[TEndpoint][Uppercase<TMethod>]["ok"]>;
 
   type EndpointResultFail<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TMethod extends RequestMethod
+    TMethod extends RequestMethod,
   > = ResultFail<TEndpoints[TEndpoint][Uppercase<TMethod>]["fail"]>;
 
   type EndpointResponseOk<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TMethod extends RequestMethod
+    TMethod extends RequestMethod,
   > = TEndpoints[TEndpoint][Uppercase<TMethod>]["ok"];
 
   type EndpointResponseFail<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TMethod extends RequestMethod
+    TMethod extends RequestMethod,
   > = TEndpoints[TEndpoint][Uppercase<TMethod>]["fail"];
 
   type EndpointResult<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TMethod extends RequestMethod
+    TMethod extends RequestMethod,
   > = Result<
     EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
     EndpointResponseFail<TEndpoints, TEndpoint, TMethod>
@@ -240,7 +240,7 @@ declare namespace Koine.Api {
     TEndpoint extends EndpointUrl<TEndpoints>,
     TMethod extends RequestMethod,
     TJson extends RequestJson,
-    TQuery extends RequestQuery
+    TQuery extends RequestQuery,
   > = Omit<ClientOptions, "processReq"> & {
     processReq?: EndpointRequestProcessor<TEndpoints, TEndpoint, TMethod>;
     /**
@@ -273,7 +273,7 @@ declare namespace Koine.Api {
   type ResponseFail = unknown;
 
   type ResultShared<
-    T extends Record<string, unknown> = Record<string, unknown>
+    T extends Record<string, unknown> = Record<string, unknown>,
   > = T & {
     status: _Response["status"];
     msg: _Response["statusText"];
@@ -297,7 +297,7 @@ declare namespace Koine.Api {
 
   type Result<
     TResponseOk extends ResponseOk,
-    TResponseFail extends ResponseFail
+    TResponseFail extends ResponseFail,
   > =
     | {
         status: _Response["status"];
@@ -324,13 +324,13 @@ declare namespace Koine.Api {
     query: any,
     json: any,
     params: any,
-    requestInit: RequestInit
+    requestInit: RequestInit,
   ) => [
     string, // url
     RequestQuery, // query
     RequestJson, // json
     RequestParams, // params
-    RequestInit // requestInit
+    RequestInit, // requestInit
   ];
 
   /**
@@ -343,20 +343,20 @@ declare namespace Koine.Api {
   type EndpointRequestProcessor<
     TEndpoints extends Endpoints,
     TEndpoint extends EndpointUrl<TEndpoints>,
-    TMethod extends RequestMethod
+    TMethod extends RequestMethod,
   > = (
     method: TMethod,
     url: string,
     query: EndpointOptions<TEndpoints, TEndpoint, TMethod>["query"],
     json: EndpointOptions<TEndpoints, TEndpoint, TMethod>["json"],
     params: EndpointOptions<TEndpoints, TEndpoint, TMethod>["params"],
-    requestInit: RequestInit
+    requestInit: RequestInit,
   ) => [
     string, // url
     EndpointOptions<TEndpoints, TEndpoint, TMethod>["query"], // query
     EndpointOptions<TEndpoints, TEndpoint, TMethod>["json"], // json
     EndpointOptions<TEndpoints, TEndpoint, TMethod>["params"], // params
-    RequestInit // requestInit
+    RequestInit, // requestInit
   ];
 
   /**
@@ -365,7 +365,7 @@ declare namespace Koine.Api {
    */
   type ResponseProcessorRes = <TResponseOk extends ResponseOk = ResponseOk>(
     response: _Response,
-    options: TOptions
+    options: TOptions,
   ) => Promise<Koine.Api.Result<TResponseOk>>;
 
   /**
@@ -373,10 +373,10 @@ declare namespace Koine.Api {
    * transformations to a single or all endpoint responses
    */
   type ResponseProcessorErr = <
-    TResponseFail extends ResponseFailed = ResponseFailed
+    TResponseFail extends ResponseFailed = ResponseFailed,
   >(
     msg: string,
-    options: TOptions
+    options: TOptions,
   ) => Promise<Koine.Api.Result<TResponseFail>>;
 
   //////////////////////////////////////////////////////////////////////////////

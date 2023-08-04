@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { ThemeContext, ThemeContextProps } from "./ThemeContext";
+import { ThemeContext, type ThemeContextProps } from "./ThemeContext";
 
 export type UseThemeProps = ThemeContextProps;
 

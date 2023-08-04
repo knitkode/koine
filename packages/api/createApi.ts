@@ -1,3 +1,4 @@
+/// <reference types="./typings.d.ts" />
 import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
 import errorToString from "@koine/utils/errorToString";
 import isFullObject from "@koine/utils/isFullObject";
@@ -12,17 +13,11 @@ import type { AnyQueryParams } from "@koine/utils/location";
 export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   apiName: string,
   baseUrl: string,
-  options?: Koine.Api.ClientOptions
+  options?: Koine.Api.ClientOptions,
 ) => {
   const {
     headers: headersBase = {},
-    request: requestBase = {
-      referrerPolicy: "no-referrer",
-      // credentials: "include",
-      // mode: "cors",
-      // redirect: "follow",
-      // cache: "no-cache",
-    },
+    request: requestBase = {},
     throwErr: throwErrBase,
     timeout: timeoutBase = 10000,
     processReq: processReqBase,
@@ -35,7 +30,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   ).reduce(
     <TMethod extends Koine.Api.RequestMethod>(
       api: Koine.Api.Client<TEndpoints>,
-      method: TMethod
+      method: TMethod,
     ) => {
       // @ts-expect-error FIXME: type
       api[method] = async <
@@ -50,14 +45,15 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           TEndpoint,
           TMethod
         >,
-        TResponseFail extends Koine.Api.ResponseFail = Koine.Api.EndpointResponseFail<
+        TResponseFail extends
+          Koine.Api.ResponseFail = Koine.Api.EndpointResponseFail<
           TEndpoints,
           TEndpoint,
           TMethod
-        >
+        >,
       >(
         endpoint: TEndpoint,
-        options?: TOptions
+        options?: TOptions,
       ) => {
         const {
           request = requestBase,
@@ -87,7 +83,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             query,
             json,
             params,
-            requestInit
+            requestInit,
           );
           url = transformed[0];
           query = transformed[1] as typeof query;
@@ -103,7 +99,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             query,
             json,
             params,
-            requestInit
+            requestInit,
           );
           url = transformed[0];
           query = transformed[1] as typeof query;
@@ -189,9 +185,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         }
 
         if (process.env["NODE_ENV"] !== "production") {
-          const logMsg = `${
-            result?.status
-          }: api[${apiName}] ${method.toUpperCase()} ${url}`;
+          const logMsg = `${result?.status}: api[${apiName}] ${method.toUpperCase()} ${url}`;
           if (result?.ok) {
             console.info(`🟢 ${logMsg}`);
           } else {
@@ -202,7 +196,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
       };
       return api;
     },
-    {} as Koine.Api.Client<TEndpoints>
+    {} as Koine.Api.Client<TEndpoints>,
   );
 };
 

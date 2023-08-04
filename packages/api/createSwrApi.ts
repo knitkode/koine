@@ -1,3 +1,4 @@
+/// <reference types="./typings.d.ts" />
 "use client";
 
 import useSWR, {
@@ -12,10 +13,12 @@ import useSWRMutation, {
 import isFunction from "@koine/utils/isFunction";
 import createApi from "./createApi";
 
+/// <reference types="./typings.d.ts" />
+
 type SWRConfigurationExtended<
   Data = any,
   Error = any,
-  Fn extends BareFetcher<any> = BareFetcher<any>
+  Fn extends BareFetcher<any> = BareFetcher<any>,
 > = SWRConfiguration<Data, Error, Fn> & {
   /**
    * Conditional fetching as option
@@ -38,10 +41,11 @@ type SWRConfigurationExtended<
 
 type KoineApiMethodHookSWR<
   THookName extends keyof Koine.Api.HooksMapsByName,
-  TEndpoints extends Koine.Api.Endpoints
+  TEndpoints extends Koine.Api.Endpoints,
 > = <
   TEndpoint extends Koine.Api.EndpointUrl<TEndpoints>,
-  TMethod extends Koine.Api.RequestMethod = Koine.Api.HooksMapsByName[THookName]
+  TMethod extends
+    Koine.Api.RequestMethod = Koine.Api.HooksMapsByName[THookName],
 >(
   endpoint: TEndpoint,
   options?: Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
@@ -55,7 +59,7 @@ type KoineApiMethodHookSWR<
         Koine.Api.EndpointResponseFail<TEndpoints, TEndpoint, TMethod>,
         Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
         TEndpoint
-      >
+      >,
 ) => THookName extends "useGet"
   ? SWRResponse<
       Koine.Api.EndpointResponseOk<TEndpoints, TEndpoint, TMethod>,
@@ -70,12 +74,12 @@ type KoineApiMethodHookSWR<
 
 function createUseApi<
   TEndpoints extends Koine.Api.Endpoints,
-  TMethod extends Koine.Api.RequestMethod
+  TMethod extends Koine.Api.RequestMethod,
 >(api: Koine.Api.Client<TEndpoints>, method: TMethod) {
   return function useApi<TEndpoint extends Koine.Api.EndpointUrl<TEndpoints>>(
     endpoint: TEndpoint,
     options?: Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>,
-    _config?: unknown
+    _config?: unknown,
   ) {
     if (method === "get") {
       // const fetcher = async (_endpoint: TEndpoint) => {
@@ -122,7 +126,7 @@ function createUseApi<
       >(
         shouldNotFetch ? null : options ? [endpoint, options] : [endpoint],
         fetcher,
-        config
+        config,
       );
     }
 
@@ -143,7 +147,7 @@ function createUseApi<
       // these are the options arriving when calling `trigger({ json, query, etc... })
       _options: Readonly<{
         arg: Koine.Api.EndpointOptions<TEndpoints, TEndpoint, TMethod>;
-      }>
+      }>,
     ) => {
       const endpoint = Array.isArray(_endpoint) ? _endpoint[0] : _endpoint;
       const options = Array.isArray(_endpoint) ? _endpoint[1] : {};
@@ -167,7 +171,7 @@ function createUseApi<
       // @ts-expect-error FIXME: I can't get it...
       options ? [endpoint, options] : endpoint,
       sender,
-      config
+      config,
     );
   };
 }
@@ -192,9 +196,9 @@ export const createSwrApi = <TEndpoints extends Koine.Api.Endpoints>(
       }` as keyof Koine.Api.HooksMapsByName;
       api[hookName] = createUseApi<TEndpoints, TMethod>(
         api,
-        method
+        method,
       ) as KoineApiMethodHookSWR<typeof hookName, TEndpoints>;
-    }
+    },
   );
 
   return api;

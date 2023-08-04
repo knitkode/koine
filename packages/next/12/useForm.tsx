@@ -7,12 +7,15 @@ import type { FieldValues, UseFormProps } from "react-hook-form";
 import { useForm as _useForm } from "react-hook-form";
 import { type TranslateLoose } from "./types-i18n";
 
+/**
+ * @deprecated
+ */
 export function useForm<T extends FieldValues>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema: ObjectSchema<any>,
   t: TranslateLoose,
   formProps: UseFormProps = {},
-  debug?: boolean
+  debug?: boolean,
 ) {
   // const form = _useForm<InferType<ObjectSchema<T, object>>>({
   const form = _useForm<T>({
