@@ -134,7 +134,7 @@ function getRoutesMap(
   map: RoutesMap = {},
   routes: Routes,
   pathnameBuffer = "",
-  templateBuffer = ""
+  templateBuffer = "",
 ) {
   for (const key in routes) {
     const pathOrNestedRoutes = routes[key];
@@ -180,11 +180,11 @@ export function getPathRewrite(route: RoutesMapRoute) {
 export function getPathRedirect(
   locale = "",
   route: RoutesMapRoute,
-  permanent?: boolean
+  permanent?: boolean,
 ) {
   const { template, pathname } = transformRoute(route);
   const source = `/${normaliseUrlPathname(
-    (locale ? `/${locale}/` : "/") + template
+    (locale ? `/${locale}/` : "/") + template,
   )}`;
   const destination = `/${normaliseUrlPathname(pathname)}`;
   // console.log(`redirect template "${source}" to pathname "${destination}"`);
@@ -203,7 +203,7 @@ export async function getRedirects(
   defaultLocale: string,
   routes: Routes,
   permanent?: boolean,
-  debug?: boolean
+  debug?: boolean,
 ) {
   const redirects: Redirect[] = [];
   const routesMap = getRoutesMap({}, routes);
@@ -358,7 +358,7 @@ export function withKoine(
     ...custom
   }: NextConfig & KoineNextConfig = {
     i18n: { locales: ["en"], defaultLocale: "en" },
-  } as NextConfig & KoineNextConfig
+  } as NextConfig & KoineNextConfig,
 ) {
   const nextConfig: NextConfig = {
     // @see https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory
@@ -455,7 +455,7 @@ export function withKoine(
           defaultLocale,
           routes,
           permanent,
-          debug
+          debug,
         );
         if (nextConfig.redirects) {
           const customs = await nextConfig.redirects();

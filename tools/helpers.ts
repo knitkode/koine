@@ -1,6 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { basename, join } from "node:path";
+import { EOL } from "node:os";
 import { fileURLToPath } from "node:url";
 import json from "comment-json";
 import { globSync } from "glob";
@@ -72,7 +73,7 @@ export async function editJSONfile(
         let fileJSON = json.parse(fileContent);
         transformer(fileJSON);
         // const newContent = JSON.stringify(fileJSON, null, 2);
-        const newContent = json.stringify(fileJSON, null, 2);
+        const newContent = json.stringify(fileJSON, null, 2) + EOL;
 
         if (newContent) {
           await writeFile(filePath, newContent);

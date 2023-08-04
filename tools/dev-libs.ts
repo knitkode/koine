@@ -22,12 +22,12 @@ import { oraOpts } from "./dev.js";
 import { type Lib as LibBase, editJSONfile, self } from "./helpers.js";
 
 const libsConfig: LibConfig[] = [
-  { name: "api", type: "none", exports: "none", minify: false },
-  { name: "browser", type: "none", exports: "none", minify: false },
-  { name: "dom", type: "none", exports: "none", minify: false },
-  { name: "react", type: "none", exports: "none", minify: false },
-  { name: "next", type: "none", exports: "none", minify: false },
-  { name: "utils", type: "none", exports: "none", minify: false },
+  { name: "api", type: "module", exports: ["esm"], minify: false },
+  { name: "browser", type: "module", exports: ["esm"], minify: false },
+  { name: "dom", type: "module", exports: ["esm"], minify: false },
+  { name: "react", type: "module", exports: ["esm"], minify: false },
+  { name: "next", type: "module", exports: ["esm"], minify: false },
+  { name: "utils", type: "module", exports: ["esm"], minify: false },
 ];
 
 // FIXME: to fix in swc? just exclude `SystemjsConfig` because it does not extends `BaseModuleConfig`
@@ -184,6 +184,7 @@ function overrideByLibType<T, L extends NonNullable<LibConfig["type"]>>(
   override: Record<L, NonNullable<T>>
 ) {
   option = override[libType];
+  return override[libType];
 }
 
 async function setLibOptions(lib: Lib) {
@@ -191,11 +192,12 @@ async function setLibOptions(lib: Lib) {
     data.module = data.module || ({} as SWCConfig["module"]);
 
     if (lib.type !== "none") {
-      overrideByLibType(data.module.type, lib.type, {
+      data.module.type = overrideByLibType(data.module.type, lib.type, {
         module: "es6",
         commonjs: "commonjs",
       });
-      overrideByLibType(data.module.noInterop, lib.type, {
+      
+      data.module.noInterop = overrideByLibType(data.module.noInterop, lib.type, {
         module: true,
         commonjs: false,
       });
@@ -223,7 +225,7 @@ async function setLibOptions(lib: Lib) {
   await editJSONfile(lib.src, "tsconfig.json", (data: TsConfigJson) => {
     if (lib.type && lib.type !== "none") {
       data.compilerOptions = data.compilerOptions || {};
-      overrideByLibType(data.compilerOptions.module, lib.type, {
+      data.compilerOptions.module = overrideByLibType(data.compilerOptions.module, lib.type, {
         module: "ESNext",
         commonjs: "CommonJS",
       });

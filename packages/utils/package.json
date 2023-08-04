@@ -1,4 +1,427 @@
 {
   "name": "@koine/utils",
-  "sideEffects": false
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    },
+    "./Defer": {
+      "import": "./Defer.js"
+    },
+    "./Emitter": {
+      "import": "./Emitter.js"
+    },
+    "./accentSets": {
+      "import": "./accentSets.js"
+    },
+    "./addOrReplaceAtIdx": {
+      "import": "./addOrReplaceAtIdx.js"
+    },
+    "./areEqual": {
+      "import": "./areEqual.js"
+    },
+    "./arrayOfAll": {
+      "import": "./arrayOfAll.js"
+    },
+    "./arraySum": {
+      "import": "./arraySum.js"
+    },
+    "./arrayToLookup": {
+      "import": "./arrayToLookup.js"
+    },
+    "./buildUrlQueryString": {
+      "import": "./buildUrlQueryString.js"
+    },
+    "./capitalize": {
+      "import": "./capitalize.js"
+    },
+    "./changeUrlPath": {
+      "import": "./changeUrlPath.js"
+    },
+    "./chunkByChunks": {
+      "import": "./chunkByChunks.js"
+    },
+    "./chunkBySize": {
+      "import": "./chunkBySize.js"
+    },
+    "./clamp": {
+      "import": "./clamp.js"
+    },
+    "./clsx": {
+      "import": "./clsx.js"
+    },
+    "./convertRange": {
+      "import": "./convertRange.js"
+    },
+    "./cookie": {
+      "import": "./cookie.js"
+    },
+    "./createPalette": {
+      "import": "./createPalette.js"
+    },
+    "./debounce": {
+      "import": "./debounce.js"
+    },
+    "./debouncePromise": {
+      "import": "./debouncePromise.js"
+    },
+    "./debounceRaf": {
+      "import": "./debounceRaf.js"
+    },
+    "./decode": {
+      "import": "./decode.js"
+    },
+    "./encode": {
+      "import": "./encode.js"
+    },
+    "./ensureInt": {
+      "import": "./ensureInt.js"
+    },
+    "./env": {
+      "import": "./env.js"
+    },
+    "./errorToString": {
+      "import": "./errorToString.js"
+    },
+    "./findDuplicatedIndexes": {
+      "import": "./findDuplicatedIndexes.js"
+    },
+    "./forin": {
+      "import": "./forin.js"
+    },
+    "./gbToBytes": {
+      "import": "./gbToBytes.js"
+    },
+    "./getEmptyArray": {
+      "import": "./getEmptyArray.js"
+    },
+    "./getKeys": {
+      "import": "./getKeys.js"
+    },
+    "./getMediaQueryWidthResolvers": {
+      "import": "./getMediaQueryWidthResolvers.js"
+    },
+    "./getMediaQueryWidthTailwindScreens": {
+      "import": "./getMediaQueryWidthTailwindScreens.js"
+    },
+    "./getNonce": {
+      "import": "./getNonce.js"
+    },
+    "./getParamAmong": {
+      "import": "./getParamAmong.js"
+    },
+    "./getParamAsInt": {
+      "import": "./getParamAsInt.js"
+    },
+    "./getParamAsString": {
+      "import": "./getParamAsString.js"
+    },
+    "./getType": {
+      "import": "./getType.js"
+    },
+    "./getUrlHashParams": {
+      "import": "./getUrlHashParams.js"
+    },
+    "./getUrlHashPathname": {
+      "import": "./getUrlHashPathname.js"
+    },
+    "./getUrlPathnameParts": {
+      "import": "./getUrlPathnameParts.js"
+    },
+    "./getUrlQueryParams": {
+      "import": "./getUrlQueryParams.js"
+    },
+    "./imgEmptyPixel": {
+      "import": "./imgEmptyPixel.js"
+    },
+    "./invariant": {
+      "import": "./invariant.js"
+    },
+    "./isAnyObject": {
+      "import": "./isAnyObject.js"
+    },
+    "./isArray": {
+      "import": "./isArray.js"
+    },
+    "./isBlob": {
+      "import": "./isBlob.js"
+    },
+    "./isBoolean": {
+      "import": "./isBoolean.js"
+    },
+    "./isBrowser": {
+      "import": "./isBrowser.js"
+    },
+    "./isBrowserNow": {
+      "import": "./isBrowserNow.js"
+    },
+    "./isDate": {
+      "import": "./isDate.js"
+    },
+    "./isEmptyArray": {
+      "import": "./isEmptyArray.js"
+    },
+    "./isEmptyObject": {
+      "import": "./isEmptyObject.js"
+    },
+    "./isEmptyString": {
+      "import": "./isEmptyString.js"
+    },
+    "./isError": {
+      "import": "./isError.js"
+    },
+    "./isExternalUrl": {
+      "import": "./isExternalUrl.js"
+    },
+    "./isFile": {
+      "import": "./isFile.js"
+    },
+    "./isFloat": {
+      "import": "./isFloat.js"
+    },
+    "./isFormData": {
+      "import": "./isFormData.js"
+    },
+    "./isFullArray": {
+      "import": "./isFullArray.js"
+    },
+    "./isFullObject": {
+      "import": "./isFullObject.js"
+    },
+    "./isFullString": {
+      "import": "./isFullString.js"
+    },
+    "./isFunction": {
+      "import": "./isFunction.js"
+    },
+    "./isInt": {
+      "import": "./isInt.js"
+    },
+    "./isMap": {
+      "import": "./isMap.js"
+    },
+    "./isNaNValue": {
+      "import": "./isNaNValue.js"
+    },
+    "./isNegativeNumber": {
+      "import": "./isNegativeNumber.js"
+    },
+    "./isNull": {
+      "import": "./isNull.js"
+    },
+    "./isNullOrUndefined": {
+      "import": "./isNullOrUndefined.js"
+    },
+    "./isNumber": {
+      "import": "./isNumber.js"
+    },
+    "./isObject": {
+      "import": "./isObject.js"
+    },
+    "./isObjectLike": {
+      "import": "./isObjectLike.js"
+    },
+    "./isOneOf": {
+      "import": "./isOneOf.js"
+    },
+    "./isPlainObject": {
+      "import": "./isPlainObject.js"
+    },
+    "./isPositiveNumber": {
+      "import": "./isPositiveNumber.js"
+    },
+    "./isPrimitive": {
+      "import": "./isPrimitive.js"
+    },
+    "./isPromise": {
+      "import": "./isPromise.js"
+    },
+    "./isRegExp": {
+      "import": "./isRegExp.js"
+    },
+    "./isServer": {
+      "import": "./isServer.js"
+    },
+    "./isServerNow": {
+      "import": "./isServerNow.js"
+    },
+    "./isSet": {
+      "import": "./isSet.js"
+    },
+    "./isString": {
+      "import": "./isString.js"
+    },
+    "./isSymbol": {
+      "import": "./isSymbol.js"
+    },
+    "./isType": {
+      "import": "./isType.js"
+    },
+    "./isUndefined": {
+      "import": "./isUndefined.js"
+    },
+    "./isWeakMap": {
+      "import": "./isWeakMap.js"
+    },
+    "./isWeakSet": {
+      "import": "./isWeakSet.js"
+    },
+    "./kbToBytes": {
+      "import": "./kbToBytes.js"
+    },
+    "./location": {
+      "import": "./location.js"
+    },
+    "./lowercase": {
+      "import": "./lowercase.js"
+    },
+    "./mapListBy": {
+      "import": "./mapListBy.js"
+    },
+    "./matchSorter": {
+      "import": "./matchSorter.js"
+    },
+    "./mbToBytes": {
+      "import": "./mbToBytes.js"
+    },
+    "./mergeObjects": {
+      "import": "./mergeObjects.js"
+    },
+    "./mergeUrlQueryParams": {
+      "import": "./mergeUrlQueryParams.js"
+    },
+    "./moveSortableArrayItemByKey": {
+      "import": "./moveSortableArrayItemByKey.js"
+    },
+    "./noop": {
+      "import": "./noop.js"
+    },
+    "./normaliseUrl": {
+      "import": "./normaliseUrl.js"
+    },
+    "./normaliseUrlPathname": {
+      "import": "./normaliseUrlPathname.js"
+    },
+    "./objectOmit": {
+      "import": "./objectOmit.js"
+    },
+    "./objectPick": {
+      "import": "./objectPick.js"
+    },
+    "./parseCookie": {
+      "import": "./parseCookie.js"
+    },
+    "./parseURL": {
+      "import": "./parseURL.js"
+    },
+    "./quaranteneProps": {
+      "import": "./quaranteneProps.js"
+    },
+    "./randomInt": {
+      "import": "./randomInt.js"
+    },
+    "./randomKey": {
+      "import": "./randomKey.js"
+    },
+    "./readCookie": {
+      "import": "./readCookie.js"
+    },
+    "./removeAccents": {
+      "import": "./removeAccents.js"
+    },
+    "./removeCookie": {
+      "import": "./removeCookie.js"
+    },
+    "./removeDuplicates": {
+      "import": "./removeDuplicates.js"
+    },
+    "./removeDuplicatesByKey": {
+      "import": "./removeDuplicatesByKey.js"
+    },
+    "./removeDuplicatesComparing": {
+      "import": "./removeDuplicatesComparing.js"
+    },
+    "./removeIndexesFromArray": {
+      "import": "./removeIndexesFromArray.js"
+    },
+    "./removeTrailingSlash": {
+      "import": "./removeTrailingSlash.js"
+    },
+    "./removeUrlQueryParams": {
+      "import": "./removeUrlQueryParams.js"
+    },
+    "./render": {
+      "import": "./render.js"
+    },
+    "./roundTo": {
+      "import": "./roundTo.js"
+    },
+    "./serializeCookie": {
+      "import": "./serializeCookie.js"
+    },
+    "./setCookie": {
+      "import": "./setCookie.js"
+    },
+    "./shuffle": {
+      "import": "./shuffle.js"
+    },
+    "./slugify": {
+      "import": "./slugify.js"
+    },
+    "./split": {
+      "import": "./split.js"
+    },
+    "./swapMap": {
+      "import": "./swapMap.js"
+    },
+    "./throttle": {
+      "import": "./throttle.js"
+    },
+    "./titleCase": {
+      "import": "./titleCase.js"
+    },
+    "./toNumber": {
+      "import": "./toNumber.js"
+    },
+    "./toRgba": {
+      "import": "./toRgba.js"
+    },
+    "./transformToUrlPathname": {
+      "import": "./transformToUrlPathname.js"
+    },
+    "./truncate": {
+      "import": "./truncate.js"
+    },
+    "./tryUntil": {
+      "import": "./tryUntil.js"
+    },
+    "./types": {
+      "import": "./types.js"
+    },
+    "./uid": {
+      "import": "./uid.js"
+    },
+    "./updateLinkParams": {
+      "import": "./updateLinkParams.js"
+    },
+    "./updateUrlQueryParams": {
+      "import": "./updateUrlQueryParams.js"
+    },
+    "./uppercase": {
+      "import": "./uppercase.js"
+    },
+    "./uuid": {
+      "import": "./uuid.js"
+    },
+    "./uuidNumeric": {
+      "import": "./uuidNumeric.js"
+    },
+    "./wait": {
+      "import": "./wait.js"
+    },
+    "./without": {
+      "import": "./without.js"
+    }
+  }
 }

@@ -44,4 +44,9 @@ export { siblings } from "./siblings";
 export { toArray } from "./toArray";
 export { unlisten } from "./unlisten";
 
-export type { AnyDOMEventTarget, AnyDOMEventTargetLoose } from "./types";
+export type {
+  AnyDOMEventTarget,
+  AnyDOMEventTargetLoose,
+  AnyDOMEventType,
+  AnyDOMEvent,
+} from "./types";

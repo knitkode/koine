@@ -6,13 +6,12 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "./tools/executors/build:build",
+      "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/api",
         "tsConfig": "packages/api/tsconfig.lib.json",
         "main": "packages/api/index.ts",
-        "format": ["cjs", "esm"],
         "assets": ["packages/api/*.md", "packages/api/*.d.ts"]
       }
     },

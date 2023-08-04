@@ -1,6 +1,7 @@
 {
   "name": "@koine/next",
   "sideEffects": false,
+  "type": "module",
   "dependencies": {
     "@koine/browser": "*",
     "@koine/react": "*",
@@ -69,6 +70,149 @@
     },
     "tailwindcss": {
       "optional": true
+    }
+  },
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    },
+    "./12/AnalyticsGoogle": {
+      "import": "./12/AnalyticsGoogle.js"
+    },
+    "./12/DisableErrorOverlay": {
+      "import": "./12/DisableErrorOverlay.js"
+    },
+    "./12/DynamicNamespaces": {
+      "import": "./12/DynamicNamespaces.js"
+    },
+    "./12/Favicon": {
+      "import": "./12/Favicon.js"
+    },
+    "./12/Link": {
+      "import": "./12/Link.js"
+    },
+    "./12/NextProgress": {
+      "import": "./12/NextProgress.js"
+    },
+    "./12/Seo": {
+      "import": "./12/Seo.js"
+    },
+    "./12/SeoDefaults": {
+      "import": "./12/SeoDefaults.js"
+    },
+    "./12/T": {
+      "import": "./12/T.js"
+    },
+    "./12/TransText": {
+      "import": "./12/TransText.js"
+    },
+    "./12/app/AppHead": {
+      "import": "./12/app/AppHead.js"
+    },
+    "./12/app/AppMain": {
+      "import": "./12/app/AppMain.js"
+    },
+    "./12/app/css/AppMain": {
+      "import": "./12/app/css/AppMain.js"
+    },
+    "./12/app/css/AppTheme": {
+      "import": "./12/app/css/AppTheme.js"
+    },
+    "./12/app/css/auth": {
+      "import": "./12/app/css/auth/index.js"
+    },
+    "./12/app/css": {
+      "import": "./12/app/css/index.js"
+    },
+    "./12/app": {
+      "import": "./12/app/index.js"
+    },
+    "./12/app/sc/AppMain": {
+      "import": "./12/app/sc/AppMain.js"
+    },
+    "./12/app/sc/AppTheme": {
+      "import": "./12/app/sc/AppTheme.js"
+    },
+    "./12/app/sc/auth": {
+      "import": "./12/app/sc/auth/index.js"
+    },
+    "./12/app/sc": {
+      "import": "./12/app/sc/index.js"
+    },
+    "./12/document/Document": {
+      "import": "./12/document/Document.js"
+    },
+    "./12/document/css": {
+      "import": "./12/document/css/index.js"
+    },
+    "./12/document": {
+      "import": "./12/document/index.js"
+    },
+    "./12/document/sc": {
+      "import": "./12/document/sc/index.js"
+    },
+    "./12/getT": {
+      "import": "./12/getT.js"
+    },
+    "./12": {
+      "import": "./12/index.js"
+    },
+    "./12/seoBuildTags": {
+      "import": "./12/seoBuildTags.js"
+    },
+    "./12/to": {
+      "import": "./12/to.js"
+    },
+    "./12/translationAsOptions": {
+      "import": "./12/translationAsOptions.js"
+    },
+    "./12/types-i18n": {
+      "import": "./12/types-i18n.js"
+    },
+    "./12/types-seo": {
+      "import": "./12/types-seo.js"
+    },
+    "./12/types": {
+      "import": "./12/types.js"
+    },
+    "./12/typings.d": {
+      "import": "./12/typings.d.js"
+    },
+    "./12/useBackUrl": {
+      "import": "./12/useBackUrl.js"
+    },
+    "./12/useDateFormat": {
+      "import": "./12/useDateFormat.js"
+    },
+    "./12/useForm": {
+      "import": "./12/useForm.js"
+    },
+    "./12/useLocale": {
+      "import": "./12/useLocale.js"
+    },
+    "./12/useT": {
+      "import": "./12/useT.js"
+    },
+    "./12/useTo": {
+      "import": "./12/useTo.js"
+    },
+    "./ThemeContext": {
+      "import": "./ThemeContext.js"
+    },
+    "./ThemeProvider": {
+      "import": "./ThemeProvider.js"
+    },
+    "./config": {
+      "import": "./config.js"
+    },
+    "./getSiteUrl": {
+      "import": "./getSiteUrl.js"
+    },
+    "./load": {
+      "import": "./load.js"
+    },
+    "./useTheme": {
+      "import": "./useTheme.js"
     }
   }
 }

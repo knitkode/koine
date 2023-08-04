@@ -6,10 +6,9 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "./tools/executors/build:build",
+      "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "format": ["cjs", "esm"],
         "outputPath": "dist/packages/utils",
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "main": "packages/utils/index.ts",
