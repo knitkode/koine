@@ -6,6 +6,35 @@
   "tags": [],
   "targets": {
     "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run dom:build-esm",
+          "pnpm dev postbuild dom --ext --esm"
+        ],
+        "parallel": false
+      }
+    },
+    "build-esm": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/dom/esm",
+        "tsConfig": "packages/dom/tsconfig.lib.json",
+        "main": "packages/dom/index.ts",
+        "assets": ["packages/dom/*.md", "packages/dom/*.d.ts"]
+      }
+    },
+    "build-cjs": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/dom/cjs",
+        "tsConfig": "packages/dom/tsconfig.lib-cjs.json",
+        "main": "packages/dom/index.ts"
+      }
+    },
+    "build-swc": {
       "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {

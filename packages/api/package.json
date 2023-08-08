@@ -1,7 +1,6 @@
 {
   "name": "@koine/api",
   "sideEffects": false,
-  "type": "module",
   "dependencies": {
     "@koine/utils": "*"
   },
@@ -11,32 +10,6 @@
     },
     "swr": {
       "optional": true
-    }
-  },
-  "exports": {
-    ".": {
-      "import": "./index.js"
-    },
-    "./ApiError": {
-      "import": "./ApiError.js"
-    },
-    "./createApi": {
-      "import": "./createApi.js"
-    },
-    "./createApiResultFail": {
-      "import": "./createApiResultFail.js"
-    },
-    "./createApiResultOk": {
-      "import": "./createApiResultOk.js"
-    },
-    "./createSwrApi": {
-      "import": "./createSwrApi.js"
-    },
-    "./nextApiResponse": {
-      "import": "./nextApiResponse.js"
-    },
-    "./nextApiResponse12": {
-      "import": "./nextApiResponse12.js"
     }
   }
 }

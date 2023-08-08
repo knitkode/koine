@@ -1,59 +1,8 @@
 {
   "name": "@koine/browser",
   "sideEffects": false,
-  "type": "module",
   "dependencies": {
     "@koine/dom": "*",
     "@koine/utils": "*"
-  },
-  "exports": {
-    ".": {
-      "import": "./index.js"
-    },
-    "./createStorage": {
-      "import": "./createStorage.js"
-    },
-    "./getZonedDate": {
-      "import": "./getZonedDate.js"
-    },
-    "./gtagPageview": {
-      "import": "./gtagPageview.js"
-    },
-    "./isIE": {
-      "import": "./isIE.js"
-    },
-    "./isMobile": {
-      "import": "./isMobile.js"
-    },
-    "./navigateToHash": {
-      "import": "./navigateToHash.js"
-    },
-    "./navigateToHashParams": {
-      "import": "./navigateToHashParams.js"
-    },
-    "./navigateToMergedHashParams": {
-      "import": "./navigateToMergedHashParams.js"
-    },
-    "./navigateToMergedParams": {
-      "import": "./navigateToMergedParams.js"
-    },
-    "./navigateToParams": {
-      "import": "./navigateToParams.js"
-    },
-    "./navigateToUrl": {
-      "import": "./navigateToUrl.js"
-    },
-    "./navigateWithoutUrlParam": {
-      "import": "./navigateWithoutUrlParam.js"
-    },
-    "./redirectTo": {
-      "import": "./redirectTo.js"
-    },
-    "./storage": {
-      "import": "./storage.js"
-    },
-    "./storageClient": {
-      "import": "./storageClient.js"
-    }
   }
 }

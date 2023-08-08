@@ -34,7 +34,7 @@ export function useFixedOffset(selector?: string) {
     update();
 
     if (ResizeObserver) {
-      // const elements = $$("[data-fixed]");
+      // const elements = $all("[data-fixed]");
 
       const observer = new ResizeObserver((entries) => {
         let newFixedOffset = 0;
@@ -46,7 +46,7 @@ export function useFixedOffset(selector?: string) {
         const updateOnResize = debounce(
           () => inject(newFixedOffset),
           400,
-          true
+          true,
         );
         updateOnResize();
       });

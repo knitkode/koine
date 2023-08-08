@@ -1,6 +1,6 @@
-export { $$ } from "./$$";
-export { $each } from "./$each";
 export { $ } from "./$";
+export { $all } from "./$all";
+export { $each } from "./$each";
 export { addClass } from "./addClass";
 export { calculateFixedOffset } from "./calculateFixedOffset";
 export { createElement } from "./createElement";

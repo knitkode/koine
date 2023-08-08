@@ -9,6 +9,8 @@ import { Command, Option } from "commander";
 import ora from "ora";
 import { oraOpts } from "./dev.js";
 import { editJSONfile, self } from "./helpers.js";
+import { rm } from "node:fs/promises";
+import { join } from "node:path";
 
 type Options = {
   version: string;
@@ -41,6 +43,22 @@ export const publish = () =>
         (lib) => !!lib.name && !lib.pkg.private
       );
 
+      await Promise.all(
+        publishableLibs.map(async (lib) => {
+          const suffixText = chalk.dim(`[${lib.name}]`);
+          const spinner = ora({
+            suffixText,
+            text: `Remove useless build artifacts`,
+            ...oraOpts,
+          }).start();
+          
+          await rm(join(lib.dist, "esm"), { recursive: true, force: true });
+          await rm(join(lib.dist, ".npmignore"), { force: true });
+
+          spinner.succeed();
+        })
+      );
+          
       await Promise.all(
         publishableLibs.map(async (lib) => {
           const suffixText = chalk.dim(`[${lib.name}]`);

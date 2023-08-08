@@ -3,8 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "module": "ESNext"
+    "allowSyntheticDefaultImports": true
   },
   "files": [],
   "include": [],

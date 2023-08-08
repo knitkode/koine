@@ -6,14 +6,14 @@
  * @param parent It falls back to `window.document`
  * @param avoidEscape Whether to avoid escaping `:` in the selector string
  */
-export function $$<T extends Element = HTMLElement>(
+export function $all<T extends Element = HTMLElement>(
   selector: string,
   parent?: Element | HTMLElement | Document | null,
-  avoidEscape?: boolean
+  avoidEscape?: boolean,
 ) {
   return (parent ? parent : document).querySelectorAll(
-    avoidEscape ? selector : selector.replace(/:/g, "\\:")
+    avoidEscape ? selector : selector.replace(/:/g, "\\:"),
   ) as unknown as NodeListOf<T>;
 }
 
-export default $$;
+export default $all;

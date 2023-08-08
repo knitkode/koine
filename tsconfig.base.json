@@ -11,6 +11,8 @@
     "noEmitHelpers": true,
     "target": "es5",
     "module": "esnext",
+    "declaration": true, // this is important for dual packages compiled with @nx/js:tsc
+    "removeComments": true, // this would not be necessary when using @nx/js:swc rather than @nx/js:tsc
     "lib": ["es2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,

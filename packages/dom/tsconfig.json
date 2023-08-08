@@ -6,8 +6,5 @@
     {
       "path": "./tsconfig.lib.json"
     }
-  ],
-  "compilerOptions": {
-    "module": "ESNext"
-  }
+  ]
 }
