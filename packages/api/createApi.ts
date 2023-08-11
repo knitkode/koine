@@ -8,7 +8,11 @@ import type { AnyQueryParams } from "@koine/utils/location";
  * Create api client
  *
  * @param apiName Short name to use in debug logs
- * @param baseUrl Either relativ eor absolute, it must end without trailing slash
+ * @param baseUrl Either relative or absolute, it must end without trailing slash
+ *
+ * @resources
+ * - TODO: Requests deduplication
+ *   - [fetch-dedupe](https://github.com/joelvoss/fetch-dedupe/blob/master/src/index.js)
  */
 export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
   apiName: string,
@@ -115,16 +119,16 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
         }
 
         const timeoutNumber = Number(timeout);
-        let controller: AbortController;
+        const { signal, abort } = new AbortController();
         let timeoutId;
+
+        requestInit.signal = signal;
 
         if (json) {
           requestInit.body = JSON.stringify(json);
         }
         if (timeoutNumber > 0) {
-          controller = new AbortController();
-          timeoutId = setTimeout(() => controller.abort(), timeoutNumber);
-          requestInit.signal = controller.signal;
+          timeoutId = setTimeout(abort, timeoutNumber);
         }
 
         if (query) {
@@ -173,6 +177,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
               status: 100,
               fail: true,
               ok: false,
+              abort,
             } as Koine.Api.ResultFail<TResponseFail>;
           }
         }
@@ -192,6 +197,9 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
             console.info(`🔴 ${logMsg}`);
           }
         }
+
+        if (result) result.abort = abort;
+
         return result;
       };
       return api;

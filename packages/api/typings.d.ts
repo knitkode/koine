@@ -305,6 +305,7 @@ namespace Koine.Api {
         ok: true;
         fail?: false;
         data: TResponseOk;
+        abort: AbortController["abort"];
       }
     | {
         status: _Response["status"];
@@ -312,6 +313,7 @@ namespace Koine.Api {
         ok?: false;
         fail: true;
         data: TResponseFail;
+        abort: AbortController["abort"];
       };
 
   /**
