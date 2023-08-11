@@ -1,9 +1,11 @@
-import decode from "@koine/utils/decode";
-import encode from "@koine/utils/encode";
-import isBrowser from "@koine/utils/isBrowser";
-import isNullOrUndefined from "@koine/utils/isNullOrUndefined";
-import noop from "@koine/utils/noop";
-import on from "@koine/dom/on";
+import {
+  decode,
+  encode,
+  isBrowser,
+  isNullOrUndefined,
+  noop,
+} from "@koine/utils";
+import { on } from "@koine/dom";
 import storage from "./storage";
 
 /**
@@ -19,13 +21,13 @@ export type CreateStorageConfig = Record<string, any>;
  */
 export const createStorage = <T extends CreateStorageConfig>(
   config: Partial<T>,
-  useSessionStorage?: boolean
+  useSessionStorage?: boolean,
 ) => {
   const client = useSessionStorage ? storage.s : storage.l;
 
   const keys = Object.keys(config).reduce(
     (map, key) => ({ ...map, [key]: encode(key) }),
-    {} as Record<keyof T, string>
+    {} as Record<keyof T, string>,
   );
 
   return {
@@ -38,7 +40,7 @@ export const createStorage = <T extends CreateStorageConfig>(
      */
     get<TKey extends Extract<keyof T, string>>(
       key: TKey,
-      defaultValue?: null | T[TKey]
+      defaultValue?: null | T[TKey],
     ): T[TKey] | null {
       return client.get<T[TKey]>(keys[key] as T[TKey], decode, defaultValue);
     },
@@ -51,7 +53,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       if (!isBrowser) {
         if (process.env["NODE_ENV"] !== "production") {
           console.log(
-            `[@koine/utils:createStorage] attempt to use 'getAll' outside of browser.`
+            `[@koine/utils:createStorage] attempt to use 'getAll' outside of browser.`,
           );
         }
         return {} as T;
@@ -88,7 +90,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       if (process.env["NODE_ENV"] !== "production") {
         if (!isBrowser) {
           console.log(
-            `[@koine/utils:createStorage] attempt to use 'setMany' outside of browser.`
+            `[@koine/utils:createStorage] attempt to use 'setMany' outside of browser.`,
           );
         }
       }
@@ -122,7 +124,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       if (process.env["NODE_ENV"] !== "production") {
         if (!isBrowser) {
           console.log(
-            `[@koine/utils:createStorage] attempt to use 'clear' outside of browser.`
+            `[@koine/utils:createStorage] attempt to use 'clear' outside of browser.`,
           );
         }
       }
@@ -142,12 +144,12 @@ export const createStorage = <T extends CreateStorageConfig>(
     watch: <TKey extends keyof T>(
       keyToWatch: TKey,
       onRemoved?: () => void,
-      onAdded?: () => void
+      onAdded?: () => void,
     ) => {
       if (!isBrowser) {
         if (process.env["NODE_ENV"] !== "production") {
           console.log(
-            `[@koine/utils:createStorage] attempt to use 'watch' outside of browser.`
+            `[@koine/utils:createStorage] attempt to use 'watch' outside of browser.`,
           );
         }
         return noop;

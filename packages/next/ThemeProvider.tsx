@@ -2,7 +2,7 @@
 
 import NextScript from "next/script";
 import { memo, useCallback, useEffect, useState } from "react";
-import isServer from "@koine/utils/isServer";
+import { isServer } from "@koine/utils";
 import { ThemeContext } from "./ThemeContext";
 
 type ValueObject = {

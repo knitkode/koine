@@ -1,5 +1,5 @@
 import React from "react";
-import isArray from "@koine/utils/isArray";
+import { isArray } from "@koine/utils";
 import type { SeoProps } from "./Seo";
 import type { SeoDefaultsProps } from "./SeoDefaults";
 
@@ -106,14 +106,14 @@ export const seoBuildTags = ({
           rel="alternate"
           hrefLang={hrefLang}
           href={href}
-        />
+        />,
       );
     });
   }
 
   if (canonical) {
     render.push(
-      <link key={id + "canonical"} rel="canonical" href={canonical} />
+      <link key={id + "canonical"} rel="canonical" href={canonical} />,
     );
     $properties["og:url"] = canonical;
   }
@@ -138,7 +138,7 @@ export const seoBuildTags = ({
 
   Object.keys($names).forEach((key) => {
     render.push(
-      <meta key={id + "name-" + key} name={key} content={$names[key]} />
+      <meta key={id + "name-" + key} name={key} content={$names[key]} />,
     );
   });
 
@@ -148,7 +148,7 @@ export const seoBuildTags = ({
         key={id + "prop-" + +key}
         property={key}
         content={$properties[key]}
-      />
+      />,
     );
   });
 
@@ -158,7 +158,7 @@ export const seoBuildTags = ({
         <meta
           key={id + "meta-" + (tag.name || tag.property || tag.httpEquiv)}
           {...tag}
-        />
+        />,
       );
     });
   }

@@ -1,8 +1,6 @@
 import differenceInDays from "date-fns/differenceInDays";
 import subDays from "date-fns/subDays";
-import arrayToLookup from "@koine/utils/arrayToLookup";
-import isString from "@koine/utils/isString";
-import isUndefined from "@koine/utils/isUndefined";
+import { arrayToLookup, isString, isUndefined } from "@koine/utils";
 import type {
   Calendar,
   CalendarEvent,
@@ -85,7 +83,7 @@ export async function getCalendarsEventsFromGoogle({
       });
 
       addCalendarEvents(events, allEvents);
-    })
+    }),
   );
 
   return allEvents;
@@ -138,7 +136,7 @@ async function getCalendarEventsFromGoogle({
 
 function transformCalendarEventFromGoogle(
   event: GoogleEvent,
-  calendar: Calendar
+  calendar: Calendar,
 ): CalendarEvent {
   const created = new Date(event.created);
   const link = event.htmlLink;

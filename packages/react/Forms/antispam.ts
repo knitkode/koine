@@ -1,7 +1,5 @@
 import { type ObjectShape, object } from "@kuus/yup";
-import decode from "@koine/utils/decode";
-import encode from "@koine/utils/encode";
-import isUndefined from "@koine/utils/isUndefined";
+import { decode, encode, isUndefined } from "@koine/utils";
 
 /**
  * Encode form
@@ -44,7 +42,7 @@ export function encodeForm<T extends ObjectShape = {}>(validationRules: T) {
  */
 export function decodeForm<
   ReturnAs extends Record<string, unknown> = {},
-  FormData extends Record<string, unknown> = {}
+  FormData extends Record<string, unknown> = {},
 >(formData: FormData) {
   const json = {};
 

@@ -1,5 +1,5 @@
 import utcToZonedTime from "date-fns-tz/utcToZonedTime";
-import isBrowser from "@koine/utils/isBrowser";
+import { isBrowser } from "@koine/utils";
 
 /**
  * It returns a `Date` object from a date `string` adjusted on the user timeZone,
@@ -25,7 +25,7 @@ export function getZonedDate(dateString = "", timeZone?: string) {
       if (process.env["NODE_ENV"] !== "production") {
         console.warn(
           "[@koine/utils:getZonedDate] failed reading timeZone, error",
-          e
+          e,
         );
       }
       // no need to do anything here, it just means `Intl` failed, probably

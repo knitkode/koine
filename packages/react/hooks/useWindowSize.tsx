@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import debounce from "@koine/utils/debounce";
-import listenResize from "@koine/dom/listenResize";
-import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
+import { debounce } from "@koine/utils";
+import { listenResize, listenResizeDebounced } from "@koine/dom";
 
 /**
  * # Use `window` size
@@ -14,7 +13,7 @@ import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
  */
 export function useWindowSize(
   wait?: Parameters<typeof debounce>[1],
-  immediate?: Parameters<typeof debounce>[2]
+  immediate?: Parameters<typeof debounce>[2],
 ) {
   const [width, widthSet] = useState(0);
   const [height, heightSet] = useState(0);

@@ -1,5 +1,4 @@
-import isBrowser from "@koine/utils/isBrowser";
-import isString from "@koine/utils/isString";
+import { isBrowser, isString } from "@koine/utils";
 
 /**
  * @category storage
@@ -14,14 +13,14 @@ const methodsMap = { g: "getItem", s: "setItem", r: "removeItem" };
  * @category storage
  */
 export const storageClient = <
-  TConfig extends StorageClientConfig = StorageClientConfig
+  TConfig extends StorageClientConfig = StorageClientConfig,
 >(
-  useSessionStorage?: boolean
+  useSessionStorage?: boolean,
 ) => {
   const nativeMethod = <T extends "g" | "s" | "r">(
     method: T,
     key: string,
-    value?: T extends "s" ? string : undefined
+    value?: T extends "s" ? string : undefined,
   ) =>
     isBrowser
       ? window[useSessionStorage ? "sessionStorage" : "localStorage"][
@@ -32,18 +31,18 @@ export const storageClient = <
             console.warn(
               `[@koine/utils:storageClient]: ${
                 useSessionStorage ? "sessionStorage" : "localStorage"
-              } does not exists outside of browser.`
+              } does not exists outside of browser.`,
             );
           }
         };
 
   const get = <
     TKey extends Extract<keyof TConfig, string>,
-    TValue = TConfig[TKey]
+    TValue = TConfig[TKey],
   >(
     key: TKey,
     transform?: (value: string) => TValue,
-    defaultValue?: null | TValue
+    defaultValue?: null | TValue,
   ) => {
     let value = defaultValue ?? null;
 
@@ -51,8 +50,8 @@ export const storageClient = <
       if (!isBrowser) {
         console.log(
           `[@koine/utils:storage] called 'get' outside of browser with default value '${JSON.stringify(
-            defaultValue
-          )}'.`
+            defaultValue,
+          )}'.`,
         );
       }
     }
@@ -81,16 +80,16 @@ export const storageClient = <
 
   const set = <
     TKey extends Extract<keyof TConfig, string>,
-    TValue = TConfig[TKey]
+    TValue = TConfig[TKey],
   >(
     key: TKey,
     value?: TValue,
-    transform: (value: any) => string = (value) => value
+    transform: (value: any) => string = (value) => value,
   ) => {
     if (process.env["NODE_ENV"] !== "production") {
       if (!isBrowser) {
         console.log(
-          `[@koine/utils:storage] called 'set' outside of browser does not work.`
+          `[@koine/utils:storage] called 'set' outside of browser does not work.`,
         );
       }
     }
@@ -114,7 +113,7 @@ export const storageClient = <
     if (process.env["NODE_ENV"] !== "production") {
       if (!isBrowser) {
         console.log(
-          `[@koine/utils:storage] called 'remove' outside of browser does not work.`
+          `[@koine/utils:storage] called 'remove' outside of browser does not work.`,
         );
       }
     }
@@ -132,10 +131,10 @@ export const storageClient = <
 
   const has = <
     TKey extends Extract<keyof TConfig, string>,
-    TValue = TConfig[TKey]
+    TValue = TConfig[TKey],
   >(
     key: TKey,
-    defaultValue?: TValue
+    defaultValue?: TValue,
   ) => {
     let value = defaultValue ?? false;
 
@@ -143,8 +142,8 @@ export const storageClient = <
       if (!isBrowser) {
         console.log(
           `[@koine/utils:storage] called 'has' outside of browser with default value '${JSON.stringify(
-            defaultValue
-          )}'.`
+            defaultValue,
+          )}'.`,
         );
       }
     }

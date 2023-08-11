@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import on from "@koine/dom/on";
+import { on } from "@koine/dom";
 
 /**
  * @return A custom error message (most browser will ignore it), or just a
@@ -12,7 +12,7 @@ import on from "@koine/dom/on";
  * 3) A callback on cancel, user stays on page
  */
 export type UseNavigateAwayHandler = (
-  event: BeforeUnloadEvent
+  event: BeforeUnloadEvent,
 ) => string | boolean;
 // type UseNavigateAwayHandler = (event: BeforeUnloadEvent) => [
 //   string | boolean,
@@ -83,8 +83,10 @@ export const useNavigateAway = (handler: UseNavigateAwayHandler) => {
   }, [handler]);
 
   useEffect(() => {
-    const listenerBeforeunload = on(window, "beforeunload", (event) =>
-      beforeUnloadHandlerRef.current?.(event)
+    const listenerBeforeunload = on(
+      window,
+      "beforeunload",
+      (event) => beforeUnloadHandlerRef.current?.(event),
     );
     // const listenerPagehide = on(window, "pagehide", (event) =>
     //   pagehideHandlerRef.current?.(event)

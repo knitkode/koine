@@ -1,4 +1,4 @@
-import isBrowser from "@koine/utils/isBrowser";
+import { isBrowser } from "@koine/utils";
 import useHeader from "../Header/useHeader";
 
 export function useScrollTo(id = "", offset = 0) {

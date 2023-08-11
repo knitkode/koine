@@ -14,7 +14,7 @@
 // import ModalUnstyled from "@mui/base/ModalUnstyled";
 // import ClickAwayListener from "@mui/base/ClickAwayListener";
 // import { usePopper, type PopperChildrenProps } from "react-popper";
-// import clsx from "@koine/utils/clsx";
+// import { clsx } from "@koine/utils";
 
 // const MenuRoot = m.div;
 

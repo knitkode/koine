@@ -1,5 +1,5 @@
 import { LiteralUnion } from "type-fest";
-import type { AnythingFalsy } from "@koine/utils/types";
+import type { AnythingFalsy } from "@koine/utils";
 
 export type AnyDOMEventTarget = Window | Document | HTMLElement | Element;
 

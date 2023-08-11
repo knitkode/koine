@@ -1,4 +1,4 @@
-import throttle from "@koine/utils/throttle";
+import { throttle } from "@koine/utils";
 import { listenScroll } from "./listenScroll";
 
 /**

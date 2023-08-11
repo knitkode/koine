@@ -7,7 +7,7 @@
  *
  * @fileoverview
  */
-import isString from "@koine/utils/isString";
+import { isString } from "@koine/utils";
 import escapeSelector from "./escapeSelector";
 import type { AnyDOMEvent, AnyDOMEventTarget, AnyDOMEventType } from "./types";
 
@@ -16,7 +16,7 @@ import type { AnyDOMEvent, AnyDOMEventTarget, AnyDOMEventType } from "./types";
  */
 export type EventCallback<
   TTarget extends AnyDOMEventTarget = AnyDOMEventTarget,
-  TType extends AnyDOMEventType = AnyDOMEventType
+  TType extends AnyDOMEventType = AnyDOMEventType,
 > = (event: AnyDOMEvent<TType>, desiredTarget: TTarget) => any;
 
 /**
@@ -42,7 +42,7 @@ export const activeEvents: Partial<Record<AnyDOMEventType, ListenEvent[]>> = {};
 export function getIndex(
   arr: ListenEvent[],
   selector: string,
-  callback: EventCallback
+  callback: EventCallback,
 ) {
   for (let i = 0; i < arr.length; i++) {
     if (
@@ -64,7 +64,7 @@ export function getIndex(
  */
 export function getRunTarget(
   target: Element,
-  selector: string | Window | Document | Element
+  selector: string | Window | Document | Element,
 ) {
   // @ts-expect-error FIXME: type
   if (["*", "window", window].includes(selector)) {

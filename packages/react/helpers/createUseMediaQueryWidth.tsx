@@ -1,9 +1,10 @@
 import { useState } from "react";
-import type { Split } from "@koine/utils";
-import getMediaQueryWidthResolvers, {
+import {
   type GetMediaQueryWidthResolversBreakpoints,
-} from "@koine/utils/getMediaQueryWidthResolvers";
-import isUndefined from "@koine/utils/isUndefined";
+  type Split,
+  getMediaQueryWidthResolvers,
+  isUndefined,
+} from "@koine/utils";
 import useIsomorphicLayoutEffect from "../hooks/useIsomorphicLayoutEffect";
 
 type _MediaQuerWidthDefExplicit<TBreakpoint extends string> =
@@ -28,15 +29,15 @@ export type MediaQueryWidth<TBreakpoint extends string> =
  * @returns
  */
 export function createUseMediaQueryWidth<
-  TBreakpointsConfig extends GetMediaQueryWidthResolversBreakpoints
+  TBreakpointsConfig extends GetMediaQueryWidthResolversBreakpoints,
 >(customBreakpoints: TBreakpointsConfig) {
   const queryResolvers = getMediaQueryWidthResolvers(customBreakpoints);
 
   return function useMediaQueryWidth<
-    TBreakpoints extends Extract<keyof TBreakpointsConfig, string>
+    TBreakpoints extends Extract<keyof TBreakpointsConfig, string>,
   >(media: MediaQueryWidth<TBreakpoints>, serverValue?: null | boolean) {
     const definition = media.substring(
-      1
+      1,
     ) as _MediaQuerWidthDefExplicit<TBreakpoints>;
     let [rule, ruleBreakpoint] = definition.split("-") as Split<
       _MediaQuerWidthDefExplicit<TBreakpoints>,
@@ -55,12 +56,12 @@ export function createUseMediaQueryWidth<
     // >;
     const [br1, br2] = ruleBreakpoint.split("_") as [
       TBreakpoints,
-      TBreakpoints
+      TBreakpoints,
     ];
 
     const query = queryResolvers[rule](br1, br2);
     const [matches, setMatches] = useState<boolean | null>(
-      isUndefined(serverValue) ? null : serverValue
+      isUndefined(serverValue) ? null : serverValue,
     );
 
     useIsomorphicLayoutEffect(() => {
@@ -99,8 +100,7 @@ export default createUseMediaQueryWidth;
 //// ---------------------------------------------------------------------------
 
 // import { useState, useIsomorphicLayoutEffect, useMemo } from "react";
-// import type { Split } from "@koine/utils";
-// import isBrowser from "@koine/utils/isBrowser";
+// import { type Split, isBrowser } from "@koine/utils";
 // import { breakpoints as themeBreakpoints } from "@/config/theme/breakpoints";
 // import { useIsomorphicLayoutEffect } from "../hooks/useIsomorphicLayoutEffect"
 

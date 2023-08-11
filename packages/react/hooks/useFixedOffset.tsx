@@ -1,9 +1,11 @@
 import { useRef } from "react";
-import debounce from "@koine/utils/debounce";
-import $each from "@koine/dom/$each";
-import calculateFixedOffset from "@koine/dom/calculateFixedOffset";
-import injectCss from "@koine/dom/injectCss";
-import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
+import { debounce } from "@koine/utils";
+import {
+  $each,
+  calculateFixedOffset,
+  injectCss,
+  listenResizeDebounced,
+} from "@koine/dom";
 import useIsomorphicLayoutEffect from "./useIsomorphicLayoutEffect";
 
 const inject = (value: number) => {

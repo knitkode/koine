@@ -1,8 +1,10 @@
 /// <reference types="./typings.d.ts" />
-import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
-import errorToString from "@koine/utils/errorToString";
-import isFullObject from "@koine/utils/isFullObject";
-import type { AnyQueryParams } from "@koine/utils/location";
+import {
+  type AnyQueryParams,
+  buildUrlQueryString,
+  errorToString,
+  isFullObject,
+} from "@koine/utils";
 
 /**
  * Create api client

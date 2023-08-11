@@ -3,8 +3,7 @@ import type {
   UseFormRegister,
   UseFormSetValue,
 } from "react-hook-form";
-import isString from "@koine/utils/isString";
-import matchSorter from "@koine/utils/matchSorter";
+import { isString, matchSorter } from "@koine/utils";
 import type { Option } from "../types";
 
 type FormControlNativeType = "input" | "select" | "textarea";
@@ -26,7 +25,7 @@ export type FormControlProps<T extends FormControlFieldValues = any> = {
 
 export type FormControl<
   TControlType extends FormControlNativeType = "input",
-  TFieldValues extends FormControlFieldValues = any
+  TFieldValues extends FormControlFieldValues = any,
 > = FormControlNative<TControlType> & FormControlProps<TFieldValues>;
 
 export const normaliseOptions = (options: (string | Option)[] = []) => {
@@ -53,7 +52,7 @@ export function defaultOptionsFilterFn(options: Option[], inputValue?: string) {
 export function triggerOnChange<T extends HTMLElement = HTMLInputElement>(
   onChange?: React.ChangeEventHandler<T>,
   name?: string,
-  value?: any
+  value?: any,
 ) {
   // @ts-expect-error nevermind
   if (onChange) onChange({ target: { name, value } });
@@ -68,7 +67,7 @@ export function triggerChange(input: HTMLInputElement, value?: string) {
   if (!obj) {
     if (process.env["NODE_ENV"] !== "production") {
       console.warn(
-        "[@koine/react:Forms:triggerChange] window.Object does not exists, bailing."
+        "[@koine/react:Forms:triggerChange] window.Object does not exists, bailing.",
       );
     }
     return;
@@ -76,7 +75,7 @@ export function triggerChange(input: HTMLInputElement, value?: string) {
   // @ts-expect-error nevermind
   const nativeInputValueSetter = obj.getOwnPropertyDescriptor(
     window.HTMLInputElement.prototype,
-    "value"
+    "value",
   ).set;
   // @ts-expect-error nevermind
   nativeInputValueSetter.call(input, value);

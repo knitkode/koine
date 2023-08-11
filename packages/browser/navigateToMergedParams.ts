@@ -1,6 +1,8 @@
-import getUrlQueryParams from "@koine/utils/getUrlQueryParams";
-import type { AnyQueryParams } from "@koine/utils/location";
-import mergeUrlQueryParams from "@koine/utils/mergeUrlQueryParams";
+import {
+  type AnyQueryParams,
+  getUrlQueryParams,
+  mergeUrlQueryParams,
+} from "@koine/utils";
 import { navigateToParams } from "./navigateToParams";
 
 /**
@@ -11,11 +13,11 @@ import { navigateToParams } from "./navigateToParams";
  */
 export function navigateToMergedParams(
   params: NonNullable<AnyQueryParams> = {},
-  replace?: boolean
+  replace?: boolean,
 ) {
   return navigateToParams(
     mergeUrlQueryParams(getUrlQueryParams(), params),
-    replace
+    replace,
   );
 }
 

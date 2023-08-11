@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import isUndefined from "@koine/utils/isUndefined";
+import { isUndefined } from "@koine/utils";
 import {
   SpacingDevices,
   SpacingDirectionAxis,
@@ -24,7 +24,7 @@ type SpacingFnArgs = [
   SpacingSize,
   SpacingFactor,
   SpacingProperty,
-  SpacingDevices[]
+  SpacingDevices[],
 ];
 
 type SpacingSyntaxFactor = string;

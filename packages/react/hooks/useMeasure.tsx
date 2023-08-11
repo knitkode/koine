@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import debounce from "@koine/utils/debounce";
-import noop from "@koine/utils/noop";
-import listenResizeDebounced from "@koine/dom/listenResizeDebounced";
-import listenScrollDebounced from "@koine/dom/listenScrollDebounced";
-import off from "@koine/dom/off";
-import on from "@koine/dom/on";
+import { debounce, noop } from "@koine/utils";
+import {
+  listenResizeDebounced,
+  listenScrollDebounced,
+  off,
+  on,
+} from "@koine/dom";
 
 let observer: ResizeObserver | undefined;
 
@@ -30,19 +31,19 @@ type State = [
   /** resizeObserver */
   ResizeObserver | null,
   /** lastBounds */
-  RectReadOnly
+  RectReadOnly,
 ];
 
 // Returns a list of scroll offsets
 function findScrollContainers(
-  element: HTMLOrSVGElement | null
+  element: HTMLOrSVGElement | null,
 ): HTMLOrSVGElement[] {
   const result: HTMLOrSVGElement[] = [];
   if (!element || element === document.body) return result;
   const { overflow, overflowX, overflowY } = window.getComputedStyle(element);
   if (
     [overflow, overflowX, overflowY].some(
-      (prop) => prop === "auto" || prop === "scroll"
+      (prop) => prop === "auto" || prop === "scroll",
     )
   )
     result.push(element);
@@ -71,7 +72,7 @@ export type UseMeasureOptions = {
 export type UseMeasureReturn = [
   (element: HTMLOrSVGElement | null) => void,
   RectReadOnly,
-  () => void
+  () => void,
 ];
 
 /**
@@ -141,7 +142,7 @@ export function useMeasure(options?: UseMeasureOptions): UseMeasureReturn {
     const [, scrollContainers, resizeObserver] = state.current;
     if (scrollContainers) {
       scrollContainers.forEach((element) =>
-        off(element, "scroll", scrollChange)
+        off(element, "scroll", scrollChange),
       );
       state.current[1] = null;
     }
@@ -166,7 +167,7 @@ export function useMeasure(options?: UseMeasureOptions): UseMeasureReturn {
           on(scrollContainer, "scroll", scrollChange, {
             capture: true,
             passive: true,
-          })
+          }),
         );
       }
     }

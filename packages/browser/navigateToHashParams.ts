@@ -1,6 +1,8 @@
-import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
-import getUrlHashPathname from "@koine/utils/getUrlHashPathname";
-import type { AnyQueryParams } from "@koine/utils/location";
+import {
+  type AnyQueryParams,
+  buildUrlQueryString,
+  getUrlHashPathname,
+} from "@koine/utils";
 
 /**
  * It updates the `location.hash` with the given query params, it uses `location.hash`
@@ -10,7 +12,7 @@ import type { AnyQueryParams } from "@koine/utils/location";
  */
 export function navigateToHashParams(
   params: string | AnyQueryParams = {},
-  hash = ""
+  hash = "",
 ) {
   const useLocation = !hash;
   hash = hash || location.hash;

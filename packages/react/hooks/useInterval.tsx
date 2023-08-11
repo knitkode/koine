@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import noop from "@koine/utils/noop";
+import { noop } from "@koine/utils";
 
 /**
  * @borrows [dan abramov](https://overreacted.io/making-setinterval-declarative-with-react-hooks/)
@@ -9,7 +9,7 @@ import noop from "@koine/utils/noop";
 export function useInterval<T extends () => unknown>(
   callback: T,
   delay: number,
-  deps: unknown[] = []
+  deps: unknown[] = [],
 ) {
   const savedCallback = useRef<T>();
 

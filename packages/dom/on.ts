@@ -1,4 +1,4 @@
-// import noop from "@koine/utils/noop"; FIXME: build breaks with this import
+// import { noop } from "@koine/utils"; FIXME: build breaks with this import
 import off from "./off";
 import type {
   AnyDOMEvent,
@@ -16,7 +16,7 @@ export function on<TType extends AnyDOMEventType>(
   type: TType,
   handler: (event: AnyDOMEvent<TType>) => void,
   // handler: THandler /* EventListener |  */ /* ((event: Event) => void) */,
-  options: AddEventListenerOptions | boolean = false
+  options: AddEventListenerOptions | boolean = false,
 ) {
   if (process.env["NODE_ENV"] !== "production") {
     if (!el) {

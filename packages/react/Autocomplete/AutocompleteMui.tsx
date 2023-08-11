@@ -1,7 +1,7 @@
 import useAutocomplete from "@mui/base/useAutocomplete";
 import React, { useCallback, useMemo, useState } from "react";
 // forwardRef,
-import isString from "@koine/utils/isString";
+import { isString } from "@koine/utils";
 import {
   FormControl, // triggerOnChange,
   normaliseOptions,
@@ -26,7 +26,7 @@ import { normaliseAutocompleteValue } from "./helpers";
 export type AutocompleteOption = Option | string;
 
 export type AutocompleteValue<
-  TMultiple extends boolean | undefined = undefined
+  TMultiple extends boolean | undefined = undefined,
 > = TMultiple extends undefined
   ? null | Option[] | string[] | Option | string
   : TMultiple extends true
@@ -35,7 +35,7 @@ export type AutocompleteValue<
 
 export type AutocompleteConfig<
   TOption extends AutocompleteOption,
-  TValue extends AutocompleteValue
+  TValue extends AutocompleteValue,
 > = {
   creatable?: boolean;
   multiple?: boolean;
@@ -50,7 +50,7 @@ export type AutocompleteConfig<
 
 export type AutocompleteProps<
   TOption extends AutocompleteOption,
-  TValue extends AutocompleteValue
+  TValue extends AutocompleteValue,
 > = Omit<FormControl, keyof AutocompleteConfig<TOption, TValue>> &
   AutocompleteConfig<TOption, TValue> & {
     className?: string;
@@ -108,7 +108,7 @@ export type AutocompleteProps<
 // ) {
 export const Autocomplete = <
   TOption extends AutocompleteOption = AutocompleteOption,
-  TValue extends AutocompleteValue = AutocompleteValue
+  TValue extends AutocompleteValue = AutocompleteValue,
 >({
   creatable,
   multiple,
@@ -131,10 +131,10 @@ export const Autocomplete = <
 }: AutocompleteProps<TOption, TValue>) => {
   const defaultOptionsMemo = useMemo(
     () => normaliseOptions(defaultOptions),
-    [defaultOptions]
+    [defaultOptions],
   );
   const [options, setOptions] = useState<TOption[]>(
-    defaultOptionsMemo as TOption[]
+    defaultOptionsMemo as TOption[],
   );
   const [loading, setLoading] = useState(false);
 
@@ -174,7 +174,7 @@ export const Autocomplete = <
     // ),
     options: useMemo(
       () => (loadOptions ? options : defaultOptions),
-      [loadOptions, options, defaultOptions]
+      [loadOptions, options, defaultOptions],
     ),
 
     // update input change only if we are searching as you type, @see
@@ -200,7 +200,7 @@ export const Autocomplete = <
           // triggerChange({ value: "", label: "" });
         }
       },
-      [loadOptions, options]
+      [loadOptions, options],
     ),
     // TODO: check if we need this, probably, and check how to structure the
     // callback, here we get the actual input event
@@ -281,7 +281,7 @@ export const Autocomplete = <
                     </AutocompleteItemRemove>
                   </AutocompleteItem>
                 );
-              }
+              },
             )}
           <AutocompleteInput {...inputProps()} placeholder={placeholder} />
         </AutocompleteInner>

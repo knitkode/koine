@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import on from "@koine/dom/on";
+import { on } from "@koine/dom";
 
 export function useKeyUp(
   callback: (event: KeyboardEvent) => void,
-  deps: unknown[] = []
+  deps: unknown[] = [],
 ) {
   useEffect(() => {
     const listener = on(window, "keyup", (event: KeyboardEvent) => {

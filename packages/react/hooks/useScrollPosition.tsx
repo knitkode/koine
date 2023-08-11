@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import isBrowser from "@koine/utils/isBrowser";
-import listenScroll from "@koine/dom/listenScroll";
+import { isBrowser } from "@koine/utils";
+import { listenScroll } from "@koine/dom";
 import useIsomorphicLayoutEffect from "./useIsomorphicLayoutEffect";
 
 type Position = {
@@ -17,7 +17,7 @@ const getClientRect = (element?: HTMLElement) =>
 
 const getScrollPosition = (
   element?: null | ElementRef,
-  boundingElement?: ElementRef
+  boundingElement?: ElementRef,
 ) => {
   if (!isBrowser) {
     return zeroPosition;
@@ -54,7 +54,7 @@ export const useScrollPosition = (
   deps: React.DependencyList = [],
   element?: ElementRef,
   boundingElement?: ElementRef,
-  wait?: number
+  wait?: number,
 ): void => {
   const position = useRef(getScrollPosition(null, boundingElement));
 

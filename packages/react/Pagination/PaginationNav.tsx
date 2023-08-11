@@ -3,7 +3,7 @@ import {
   CgArrowRightR as IconArrowRight,
 } from "react-icons/cg";
 import styled from "styled-components";
-import ensureInt from "@koine/utils/ensureInt";
+import { ensureInt } from "@koine/utils";
 import { KoineComponent, KoineComponentProps } from "../types";
 
 const Root = styled.nav`
@@ -159,7 +159,7 @@ export const KoinePaginationNav = ({
           >
             {page}
           </ItemLink>
-        )
+        ),
       )}
       {nextDots && <DotsSeparator>...</DotsSeparator>}
       {lastPage !== currentPage && (

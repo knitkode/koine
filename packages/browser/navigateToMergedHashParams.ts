@@ -1,6 +1,8 @@
-import getUrlHashParams from "@koine/utils/getUrlHashParams";
-import type { AnyQueryParams } from "@koine/utils/location";
-import mergeUrlQueryParams from "@koine/utils/mergeUrlQueryParams";
+import {
+  type AnyQueryParams,
+  getUrlHashParams,
+  mergeUrlQueryParams,
+} from "@koine/utils";
 import { navigateToHashParams } from "./navigateToHashParams";
 
 /**
@@ -10,11 +12,11 @@ import { navigateToHashParams } from "./navigateToHashParams";
  */
 export function navigateToMergedHashParams(
   params: NonNullable<AnyQueryParams> = {},
-  hash = ""
+  hash = "",
 ) {
   return navigateToHashParams(
     mergeUrlQueryParams(getUrlHashParams(hash), params),
-    hash
+    hash,
   );
 }
 

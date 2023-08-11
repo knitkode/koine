@@ -1,6 +1,8 @@
-import buildUrlQueryString from "@koine/utils/buildUrlQueryString";
-import isBrowser from "@koine/utils/isBrowser";
-import type { AnyQueryParams } from "@koine/utils/location";
+import {
+  type AnyQueryParams,
+  buildUrlQueryString,
+  isBrowser,
+} from "@koine/utils";
 import navigateToUrl from "./navigateToUrl";
 
 /**
@@ -12,7 +14,7 @@ import navigateToUrl from "./navigateToUrl";
  */
 export function navigateToParams(
   params: string | AnyQueryParams = {},
-  replace?: boolean
+  replace?: boolean,
 ) {
   const queryString =
     typeof params === "string" ? params : buildUrlQueryString(params);

@@ -10,8 +10,12 @@ import useSWRMutation, {
   type SWRMutationConfiguration,
   type SWRMutationResponse,
 } from "swr/mutation";
-import isFunction from "@koine/utils/isFunction";
+import { isFunction } from "@koine/utils";
 import createApi from "./createApi";
+
+/// <reference types="./typings.d.ts" />
+
+/// <reference types="./typings.d.ts" />
 
 /// <reference types="./typings.d.ts" />
 

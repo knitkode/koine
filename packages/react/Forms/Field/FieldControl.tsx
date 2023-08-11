@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useFormState } from "react-hook-form";
-import decode from "@koine/utils/decode";
+import { decode } from "@koine/utils";
 import type { Translate } from "../../types";
 import type { FormControl } from "../helpers";
 import { InputHoneypot } from "../styles";
@@ -77,7 +77,7 @@ export const FieldControl = ({
       t,
       maybeEncodedName,
       placeholder,
-    ]
+    ],
   );
 
   return (

@@ -1,5 +1,4 @@
-import isArray from "@koine/utils/isArray";
-import isString from "@koine/utils/isString";
+import { isArray, isString } from "@koine/utils";
 import type { Option } from "../types";
 
 export type AutocompleteValue =
@@ -26,7 +25,7 @@ export type AutocompleteValue =
 
 export function normaliseAutocompleteValue(
   value?: AutocompleteValue,
-  asArray?: boolean
+  asArray?: boolean,
 ): any {
   if (!value) {
     return asArray ? [""] : "";

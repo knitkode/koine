@@ -1,4 +1,4 @@
-import debounce from "@koine/utils/debounce";
+import { debounce } from "@koine/utils";
 import { listenScroll } from "./listenScroll";
 
 /**

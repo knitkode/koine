@@ -1,4 +1,4 @@
-import debounce from "@koine/utils/debounce";
+import { debounce } from "@koine/utils";
 import listenResize from "./listenResize";
 
 /**
@@ -14,8 +14,7 @@ export const listenResizeDebounced = (
 export default listenResizeDebounced;
 
 // EXP: with too complex overload signature...
-// import debounce from "@koine/utils/debounce";
-// import isUndefined from "@koine/utils/isUndefined";
+// import { debounce, isUndefined } from "@koine/utils";
 // import listenResize from "./listenResize";
 
 // /**

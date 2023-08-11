@@ -1,9 +1,9 @@
-import isUndefined from "@koine/utils/isUndefined";
+import { isUndefined } from "@koine/utils";
 
 export type GtmPageviewArgs = [
   page_path?: string,
   page_title?: string,
-  page_location?: string
+  page_location?: string,
   // send_to?: string
 ];
 

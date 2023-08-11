@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import noop from "@koine/utils/noop";
-import listenScroll from "@koine/dom/listenScroll";
+import { noop } from "@koine/utils";
+import { listenScroll } from "@koine/dom";
 
 export const useScrollThreshold = (
   threshold?: number,
-  callback?: (isAbove: boolean, isBelow: boolean) => void
+  callback?: (isAbove: boolean, isBelow: boolean) => void,
 ) => {
   const [isBelow, setIsBelow] = useState(false);
 

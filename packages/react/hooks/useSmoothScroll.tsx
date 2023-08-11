@@ -1,7 +1,6 @@
 import { useCallback } from "react";
-import isNumber from "@koine/utils/isNumber";
-import getOffsetTopSlim from "@koine/dom/getOffsetTopSlim";
-import scrollTo from "@koine/dom/scrollTo";
+import { isNumber } from "@koine/utils";
+import { getOffsetTopSlim, scrollTo } from "@koine/dom";
 import useFixedOffset from "./useFixedOffset";
 
 /**
@@ -19,7 +18,7 @@ export function useSmoothScroll(disregardAutomaticFixedOffset?: boolean) {
       customOffset?: number,
       callback?: () => void,
       fallbackTimeout?: number,
-      behavior?: ScrollBehavior
+      behavior?: ScrollBehavior,
     ) => {
       let top: number | undefined = undefined;
       let toIsElement = false;
@@ -45,7 +44,7 @@ export function useSmoothScroll(disregardAutomaticFixedOffset?: boolean) {
         scrollTo(top, callback, fallbackTimeout, behavior);
       }
     },
-    [disregardAutomaticFixedOffset, fixedOffset]
+    [disregardAutomaticFixedOffset, fixedOffset],
   );
 
   return scroll;
