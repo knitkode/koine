@@ -36,7 +36,10 @@ export { forin } from "./forin";
 export { gbToBytes } from "./gbToBytes";
 export { getEmptyArray } from "./getEmptyArray";
 export { getKeys } from "./getKeys";
-export { getMediaQueryWidthResolvers } from "./getMediaQueryWidthResolvers";
+export {
+  type GetMediaQueryWidthResolversBreakpoints,
+  getMediaQueryWidthResolvers,
+} from "./getMediaQueryWidthResolvers";
 export { getMediaQueryWidthTailwindScreens } from "./getMediaQueryWidthTailwindScreens";
 export { getNonce } from "./getNonce";
 export { getParamAmong } from "./getParamAmong";
