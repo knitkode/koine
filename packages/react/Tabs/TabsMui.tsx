@@ -16,7 +16,7 @@ import {
   // type OverridableComponents,
   type WithComponents,
   extendComponent,
-} from "../helpers";
+} from "../extendComponent";
 
 type ReducedTabsUnstyledProps = Omit<
   TabsUnstyledProps,
@@ -86,7 +86,7 @@ export const Tab = forwardRef(function Tab(
     Indicator,
     ...props
   }: Components["Tab"]["props"],
-  ref
+  ref,
 ) {
   const { active, /* disabled, */ selected } = useTab({
     ...props,
@@ -127,7 +127,7 @@ const TabsWithRef = forwardRef<HTMLDivElement, KoineTabsProps>(function Tabs(
     Panel: _Panel,
     ...props
   },
-  ref
+  ref,
 ) {
   return <Root {...props} ref={ref} />;
 });

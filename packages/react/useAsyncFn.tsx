@@ -28,7 +28,7 @@ type StateFromFunctionReturningPromise<T extends FunctionReturningPromise> =
   UseAsyncState<PromiseType<ReturnType<T>>>;
 
 export type UseAsyncFnReturn<
-  T extends FunctionReturningPromise = FunctionReturningPromise
+  T extends FunctionReturningPromise = FunctionReturningPromise,
 > = [StateFromFunctionReturningPromise<T>, T];
 
 /**
@@ -37,7 +37,7 @@ export type UseAsyncFnReturn<
 export function useAsyncFn<T extends FunctionReturningPromise>(
   fn: T,
   deps: React.DependencyList = [],
-  initialState: StateFromFunctionReturningPromise<T> = { loading: false }
+  initialState: StateFromFunctionReturningPromise<T> = { loading: false },
 ): UseAsyncFnReturn<T> {
   const lastCallId = useRef(0);
   const isMounted = useMountedState();
@@ -65,7 +65,7 @@ export function useAsyncFn<T extends FunctionReturningPromise>(
           set({ error, loading: false });
 
         return error;
-      }
+      },
     ) as ReturnType<T>;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);

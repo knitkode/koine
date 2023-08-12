@@ -1,5 +1,5 @@
 // FIXME: cannot build this
-import { extendComponent } from "../../helpers";
+import { extendComponent } from "../../extendComponent";
 
 const Dialog = () => null;
 export const KoineDialog = extendComponent(Dialog, {});
@@ -7,7 +7,7 @@ export const KoineDialog = extendComponent(Dialog, {});
 // import { AnimatePresence, m } from "framer-motion";
 // import { forwardRef, useMemo, useRef } from "react";
 // import { MdClear as IconClose } from "react-icons/md";
-// import { extendComponent } from "../../helpers";
+// import { extendComponent } from "../../extendComponent";
 // import {
 //   Backdrop,
 //   Body,

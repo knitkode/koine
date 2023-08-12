@@ -12,8 +12,8 @@ import {
   // type OverridableComponents,
   type WithComponents,
   extendComponent,
-} from "../helpers";
-import { useWindowSize } from "../hooks/useWindowSize";
+} from "../extendComponent";
+import { useWindowSize } from "../useWindowSize";
 
 export type OwnProps = React.ComponentPropsWithoutRef<"details"> & {
   open?: boolean;
@@ -100,7 +100,7 @@ const DetailsWithRef = forwardRef<HTMLDetailsElement, KoineDetailsProps>(
       onChange,
       ...props
     },
-    ref
+    ref,
   ) {
     const isControlled = typeof propOpen !== "undefined";
     const [stateOpen, setStateOpen] = useState(propOpen);
@@ -118,7 +118,7 @@ const DetailsWithRef = forwardRef<HTMLDetailsElement, KoineDetailsProps>(
         window.history.replaceState(
           null,
           "",
-          open ? window.location.pathname + window.location.search : hash
+          open ? window.location.pathname + window.location.search : hash,
         );
       }
 
@@ -165,7 +165,7 @@ const DetailsWithRef = forwardRef<HTMLDetailsElement, KoineDetailsProps>(
         </Body>
       </Root>
     );
-  }
+  },
 );
 
 export const KoineDetails = extendComponent(DetailsWithRef, {

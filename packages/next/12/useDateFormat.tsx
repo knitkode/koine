@@ -3,7 +3,7 @@
 import format from "date-fns/format";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import useDateLocale from "@koine/react/hooks/useDateLocale";
+import { useDateLocale } from "@koine/react";
 
 type FormatType = typeof format;
 

@@ -1,5 +1,5 @@
 import { m } from "framer-motion";
-import { extendComponent } from "../../helpers";
+import { extendComponent } from "../../extendComponent";
 import { KoineDialog as _ } from "../m/bare";
 import { dialogBackdropMotion, dialogPaperMotion } from "../m/basic";
 import {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useScrollPosition } from "../hooks/useScrollPosition";
 import { useMedia } from "../styles/media";
 import { useTheme } from "../styles/theme";
+import { useScrollPosition } from "../useScrollPosition";
 
 // branded types to get good type annotation/hints on the array returned
 // by the hook, a kind of state but more compact than an object...
@@ -19,7 +19,7 @@ type UseHeaderState = readonly [
   isSticky,
   placeholderHeight,
   headerHeight,
-  logoWidth
+  logoWidth,
 ];
 
 export const useHeader = () => {
@@ -28,13 +28,13 @@ export const useHeader = () => {
   const isDesktopLayout = useMedia(`min:${themed.breakpoint}`);
   const valueIdx = isDesktopLayout ? 1 : 0;
   const [headerHeight, setHeaderHeight] = useState<number>(
-    themed.height[valueIdx]
+    themed.height[valueIdx],
   );
   const [placeholderHeight, setPlaceholderHeight] = useState<number>(
-    themed.height[valueIdx]
+    themed.height[valueIdx],
   );
   const [logoWidth, setLogoWidth] = useState<number>(
-    themed.logoWidth[valueIdx]
+    themed.logoWidth[valueIdx],
   );
 
   useScrollPosition(
@@ -42,7 +42,7 @@ export const useHeader = () => {
       const isPastThreshold = currentPosition.y * -1 > 40;
       if (isSticky !== isPastThreshold) setIsSticky(isPastThreshold);
     },
-    [isSticky]
+    [isSticky],
   );
 
   useEffect(() => {
@@ -50,10 +50,10 @@ export const useHeader = () => {
 
     setPlaceholderHeight(themed.height[valueIdx]);
     setHeaderHeight(
-      isSticky ? themed.heightSticky[valueIdx] : themed.height[valueIdx]
+      isSticky ? themed.heightSticky[valueIdx] : themed.height[valueIdx],
     );
     setLogoWidth(
-      isSticky ? themed.logoWidthSticky[valueIdx] : themed.logoWidth[valueIdx]
+      isSticky ? themed.logoWidthSticky[valueIdx] : themed.logoWidth[valueIdx],
     );
   }, [themed, isSticky, isDesktopLayout]);
 

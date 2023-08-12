@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { extendComponent } from "../../helpers";
+import { extendComponent } from "../../extendComponent";
 import { KoineDialog as _ } from "./bare";
 
 export type { KoineDialogProps } from "./bare";

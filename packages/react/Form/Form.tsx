@@ -5,7 +5,7 @@ import {
   // type OverridableComponents,
   type WithComponents,
   extendComponent,
-} from "../helpers";
+} from "../extendComponent";
 
 export type OwnProps = React.PropsWithChildren<{
   action: string;

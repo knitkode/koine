@@ -13,10 +13,10 @@ export type NextAppProps = AppProps & AppThemeProps & AppMainProps;
  * ```tsx
  * import { NextApp, NextAppProps } from "@koine/next/app/sc/auth";
  * import { Favicon, AnalyticsGoogle } from "@koine/next";
- * import { theme } from "src/helpers/theme";
- * import { Layout, ProgressOverlay } from "src/components/Layout";
+ * import { theme } from "@/config/theme";
+ * import { Layout, ProgressOverlay } from "@/components/Layout";
  * // import "@fontsource/myfont/800.css";
- * // import "src/helpers/theme.css";
+ * // import "@/config/theme.css";
  *
  * const motion = () => import("@koine/react/m/max").then((m) => m.default);
  *

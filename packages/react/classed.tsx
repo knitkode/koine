@@ -45,7 +45,7 @@ type ClassedFinalProps<Props, Component> = Component extends React.ReactHTML
  * - https://stackoverflow.com/q/73055695/1938970
  */
 export function classed<Props, Component extends React.ElementType = any>(
-  component: Component
+  component: Component,
 ) {
   // @ts-expect-error nevermind for now...
   const type = component.type || component;

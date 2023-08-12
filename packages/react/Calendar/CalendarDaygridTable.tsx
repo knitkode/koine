@@ -1,8 +1,8 @@
 import eachWeekOfInterval from "date-fns/eachWeekOfInterval";
 import { useEffect, useMemo, useState } from "react";
 import { useSwipeable } from "react-swipeable";
-import { useDateLocale } from "../hooks";
 import type { KoineComponent, KoineComponentProps } from "../types";
+import { useDateLocale } from "../useDateLocale";
 import {
   CalendarDaygridCell,
   CalendarDaygridCellComponents,
@@ -118,8 +118,8 @@ CalendarDaygridTableProps) => {
       setDays(
         [1, 2, 3, 4, 5, 6, 0].map(
           // @ts-expect-error nevermind
-          (i) => locale.localize.day(i, { width: "abbreviated" })
-        )
+          (i) => locale.localize.day(i, { width: "abbreviated" }),
+        ),
       );
     }
   }, [locale, dayLabels]);

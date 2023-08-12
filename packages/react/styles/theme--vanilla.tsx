@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { isBrowser } from "@koine/utils";
 // import { setCookie, parseCookie } from "@koine/utils";
-import useUpdateEffect from "../hooks/useUpdateEffect";
+import useUpdateEffect from "../useUpdateEffect";
 
 export const THEME_KEY = "theme";
 

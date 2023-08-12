@@ -8,7 +8,7 @@ export type Translate = (
   query?: any,
   // query?: Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: any
+  options?: any,
   // options?: {
   //   returnObjects?: boolean;
   //   fallback?: string | string[];
@@ -34,3 +34,15 @@ export type KoineComponent<Props = any> =
   | React.ExoticComponent<Props>
   | React.FC<Props>
   | ((props: Props) => JSX.Element);
+
+/**
+ * @borrows [streamich/react-use](https://github.com/streamich/react-use/blob/master/src/misc/types.ts)
+ */
+export type PromiseType<P extends Promise<any>> = P extends Promise<infer T>
+  ? T
+  : never;
+
+/**
+ * @borrows [streamich/react-use](https://github.com/streamich/react-use/blob/master/src/misc/types.ts)
+ */
+export type FunctionReturningPromise = (...args: any[]) => Promise<any>;

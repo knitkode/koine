@@ -1,4 +1,5 @@
-import { classed, extendComponent } from "../../helpers";
+import { classed } from "../../classed";
+import { extendComponent } from "../../extendComponent";
 import * as _ from "../DialogMui";
 
 // export type { KoineDialogProps } from "../DialogMui";

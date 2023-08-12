@@ -27,17 +27,9 @@ export * from "../Calendar";
 //   Calendars
 // } from "../Calendar";
 export * from "../Dialog";
-// export {
-//   KoineDialog,
-//   type KoineDialogProps
-// } from "../Dialog";
+// export { KoineDialog, type KoineDialogProps } from "../Dialog";
 export * from "../FaviconTags";
-// export {
-//   FaviconTags,
-//   type FaviconTagsProps
-// } from "../FaviconTags";
-export * from "../helpers";
-export * from "../hooks";
+export { FaviconTags, type FaviconTagsProps } from "../FaviconTags";
 export * from "../Meta";
 export * from "../NoJs";
 export * from "../types";

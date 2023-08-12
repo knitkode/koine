@@ -19,7 +19,7 @@ function classedOriginal<P extends {}>(
 
 function classedOriginal<
   T extends keyof JSX.IntrinsicElements,
-  P extends JSX.IntrinsicElements[T]
+  P extends JSX.IntrinsicElements[T],
 >(
   type: keyof JSX.IntrinsicElements,
   ...className: string[]
@@ -35,7 +35,7 @@ function classedOriginal<P extends {}>(
   type: React.ElementType | keyof JSX.IntrinsicElements,
   ...className: string[]
 ): (
-  props?: (React.Attributes & P & { className?: string }) | null
+  props?: (React.Attributes & P & { className?: string }) | null,
 ) => React.ReactElement<P> {
   return function (props) {
     return createElement(type, {
@@ -47,7 +47,7 @@ function classedOriginal<P extends {}>(
 
 const ClassedOriginal = classedOriginal<SharedClassedProps>(
   "div",
-  "bg-slate-800"
+  "bg-slate-800",
 );
 
 function classedBind<Props extends {} = {}>(
@@ -55,7 +55,7 @@ function classedBind<Props extends {} = {}>(
     as: React.ElementType;
     className?: string;
   }>,
-  props: Props
+  props: Props,
 ) {
   // @ts-expect-error no time now
   const classNameImpl = props.className ? " " + props.className : "";
@@ -67,20 +67,20 @@ function classedBind<Props extends {} = {}>(
       className: this.props.className + classNameImpl,
     },
     // @ts-expect-error no time now
-    props.children
+    props.children,
   );
 }
 
 const ClassedBind = classedBind.bind<SharedClassedProps>(
-  <div as={"h2"} className="bg-slate-800" />
+  <div as={"h2"} className="bg-slate-800" />,
 );
 
 function classedDynamic(
   ComponentFn: (
     props: React.PropsWithChildren<{
       className?: string;
-    }>
-  ) => any
+    }>,
+  ) => any,
 ) {
   return function (propsImplementation) {
     const { props, type } = ComponentFn(propsImplementation);
@@ -114,7 +114,7 @@ const ClassedDynamicUsingProps = classedDynamic((p: SharedClassedProps) => {
 // type ExtractedComponent<T extends string> = ExtractComponent<T>;
 
 function classedTaggedStatic<Props extends {} = {}, T extends string = string>(
-  value: T = "" as T
+  value: T = "" as T,
 ) {
   // @ts-expect-error we rely on correct implementation and assume it always matches
   const componentName = value.match(/<(.*?)\s/)[1];
@@ -132,7 +132,7 @@ function classedTaggedStatic<Props extends {} = {}, T extends string = string>(
 }
 
 const ClassedTaggedStatic = classedTaggedStatic<SharedClassedProps>(
-  `<div class="bg-teal-400`
+  `<div class="bg-teal-400`,
 );
 
 export default {

@@ -1,4 +1,5 @@
-import { classed, extendComponent } from "../../helpers";
+import { classed } from "../../classed";
+import { extendComponent } from "../../extendComponent";
 // import type { ComponentsProps } from "../TabsMui";
 import * as _ from "../TabsMui";
 
@@ -9,7 +10,7 @@ export const Root = classed(_.Root)`< class="tabs`;
 export const List = classed(_.List)`< class="tabsList flex`;
 
 export const Tab = classed(
-  _.Tab
+  _.Tab,
 )`< class="tabsTab inline-flex items-center justify-center [-webkit-tap-highlight-color:transparent] appearance-none select-none`;
 
 export const Indicator = classed(_.Indicator)`< class="tabsIndicator`;

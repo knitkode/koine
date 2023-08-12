@@ -1,6 +1,6 @@
 import format from "date-fns/format";
-import { useDateLocale } from "../hooks/useDateLocale";
 import type { KoineComponent, KoineComponentProps } from "../types";
+import { useDateLocale } from "../useDateLocale";
 import type { CalendarRange, CalendarView } from "./types";
 
 export type KoineCalendarDaygridNavProps = {
@@ -65,13 +65,13 @@ export const KoineCalendarDaygridNav = ({
     if (inSameMonth) {
       formatted = format(start, "# MMMM yyyy", opts).replace(
         "#",
-        `${start.getDate()}-${end.getDate()}`
+        `${start.getDate()}-${end.getDate()}`,
       );
     } else {
       formatted = `${format(start, "d MMMM", opts)} - ${format(
         end,
         "d MMMM yyyy",
-        opts
+        opts,
       )}`;
     }
   }

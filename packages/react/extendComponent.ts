@@ -8,10 +8,10 @@ export type ExtendableComponent<Props = any> =
 
 export const extendComponent = <
   Component extends ExtendableComponent,
-  DefaultProps extends {}
+  DefaultProps extends {},
 >(
   component: Component,
-  defaultProps: DefaultProps
+  defaultProps: DefaultProps,
 ) => {
   // FIXME: check if we need to forwardRef or not
   const NewComponent = (props: React.ComponentProps<Component>) =>
@@ -46,7 +46,7 @@ export interface OverridableComponents {
  */
 export type WithComponents<
   Props,
-  Components extends OverridableComponents
+  Components extends OverridableComponents,
 > = Props & {
   [Name in keyof Components]: NonNullable<
     Components[Name]["type"] extends keyof JSX.IntrinsicElements

@@ -2,7 +2,7 @@ import { m, useSpring } from "framer-motion";
 import React, { useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 // import { CgArrowsExpandDownRight as IconExpand } from "react-icons/cg";
-import { useIsomorphicLayoutEffect } from "../hooks";
+import { useIsomorphicLayoutEffect } from "../useIsomorphicLayoutEffect";
 
 const Root = styled.div``;
 
@@ -80,7 +80,7 @@ export const ReadMore = ({
   const height = useSpring(defaultMaxHeight);
   const styles = useMemo(
     () => (exceeds ? { height, overflow: "hidden" } : {}),
-    [exceeds, height]
+    [exceeds, height],
   );
   const handleExpandClick = () => {
     setExpanded((prevExpanded) => !prevExpanded);

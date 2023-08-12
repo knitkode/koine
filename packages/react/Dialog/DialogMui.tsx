@@ -5,7 +5,7 @@ import type { MotionProps } from "framer-motion";
 import React, { forwardRef, useRef } from "react";
 import { MdClear as IconClose } from "react-icons/md";
 import type { Simplify } from "@koine/utils";
-import { type WithComponents, extendComponent } from "../helpers";
+import { type WithComponents, extendComponent } from "../extendComponent";
 
 type ReducedModalUnstyledProps = Omit<
   ModalUnstyledProps,
@@ -140,7 +140,7 @@ const DialogWithRef = forwardRef<HTMLDivElement, KoineDialogProps>(
       onClose,
       ...props
     },
-    ref
+    ref,
   ) {
     // click handling is taken from
     // @see https://github.com/mui/material-ui/blob/c758b6c0b30f0831110458a746690b33147c45df/packages/mui-material/src/Dialog/Dialog.js#L205-L226
@@ -181,7 +181,7 @@ const DialogWithRef = forwardRef<HTMLDivElement, KoineDialogProps>(
         </Container>
       </Root>
     );
-  }
+  },
 );
 
 export const KoineDialog = extendComponent(DialogWithRef, {

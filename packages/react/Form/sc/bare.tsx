@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Alert } from "../../Alert";
 import { Collapsable } from "../../Collapsable";
 import { ProgressCircular } from "../../Progress";
-import { extendComponent } from "../../helpers";
+import { extendComponent } from "../../extendComponent";
 import { centered, overlay } from "../../styles/styled";
 import * as _ from "../Form";
 

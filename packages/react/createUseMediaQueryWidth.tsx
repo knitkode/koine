@@ -5,7 +5,7 @@ import {
   getMediaQueryWidthResolvers,
   isUndefined,
 } from "@koine/utils";
-import useIsomorphicLayoutEffect from "../hooks/useIsomorphicLayoutEffect";
+import useIsomorphicLayoutEffect from "./useIsomorphicLayoutEffect";
 
 type _MediaQuerWidthDefExplicit<TBreakpoint extends string> =
   | `min-${TBreakpoint}`
@@ -102,7 +102,7 @@ export default createUseMediaQueryWidth;
 // import { useState, useIsomorphicLayoutEffect, useMemo } from "react";
 // import { type Split, isBrowser } from "@koine/utils";
 // import { breakpoints as themeBreakpoints } from "@/config/theme/breakpoints";
-// import { useIsomorphicLayoutEffect } from "../hooks/useIsomorphicLayoutEffect"
+// import { useIsomorphicLayoutEffect } from "./useIsomorphicLayoutEffect"
 
 // type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl";
 

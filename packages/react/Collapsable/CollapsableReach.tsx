@@ -14,7 +14,7 @@
 // } from "@reach/disclosure";
 // import { BsBoxArrowInDown as IconCollapse } from "react-icons/bs";
 // import { btnStyleReset } from "../Buttons";
-// import { useWindowSize } from "../hooks/useWindowSize";
+// import { useWindowSize } from "../useWindowSize";
 // import { InputInvisible } from "../Forms/styles";
 
 // export type CollapsableStyledProps = {

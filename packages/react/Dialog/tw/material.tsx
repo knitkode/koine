@@ -1,4 +1,5 @@
-import { classed, extendComponent } from "../../helpers";
+import { classed } from "../../classed";
+import { extendComponent } from "../../extendComponent";
 import { KoineDialog as _ } from "./bare";
 
 export type { KoineDialogProps } from "./bare";
@@ -6,17 +7,17 @@ export type { KoineDialogProps } from "./bare";
 export const Root = classed(_.Root)``;
 
 export const Backdrop = classed(
-  _.Backdrop
+  _.Backdrop,
 )`< class="bg-black/[.5] backdrop-blur-sm`;
 
 export const Container = classed(_.Container)``;
 
 export const Paper = classed(
-  _.Paper
+  _.Paper,
 )`< class="rounded bg-white shadow-xl m-8 max-w-screen-sm`;
 
 export const Close = classed(
-  _.Close
+  _.Close,
 )`< class="absolute top-0 right-0 p-4 text-2xl opacity-50`;
 
 export const Header = classed(_.Header)`< class="p-4 text-xl`;
