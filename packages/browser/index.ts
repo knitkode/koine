@@ -3,6 +3,8 @@ export { getZonedDate } from "./getZonedDate";
 export { gtagPageview, type GtmPageviewArgs } from "./gtagPageview";
 export { isIE } from "./isIE";
 export { isMobile } from "./isMobile";
+export { listenUrlSearch } from "./listenUrlSearch";
+export { listenUrlSearchParams } from "./listenUrlSearchParams";
 export { navigateToHash } from "./navigateToHash";
 export { navigateToHashParams } from "./navigateToHashParams";
 export { navigateToMergedHashParams } from "./navigateToMergedHashParams";

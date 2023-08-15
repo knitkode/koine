@@ -113,6 +113,7 @@ export { moveSortableArrayItemByKey } from "./moveSortableArrayItemByKey";
 export { noop } from "./noop";
 export { normaliseUrlPathname } from "./normaliseUrlPathname";
 export { normaliseUrl } from "./normaliseUrl";
+export { objectFlip } from "./objectFlip";
 export { objectPick } from "./objectPick";
 export { objectOmit } from "./objectOmit";
 export { parseCookie } from "./parseCookie";
