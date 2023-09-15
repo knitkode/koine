@@ -4,6 +4,7 @@ export { areEqual } from "./areEqual";
 export { arrayOfAll } from "./arrayOfAll";
 export { arraySum } from "./arraySum";
 export { arrayToLookup } from "./arrayToLookup";
+export { arrayUniqueByProperties } from "./arrayUniqueByProperties";
 export { buildUrlQueryString } from "./buildUrlQueryString";
 export { capitalize } from "./capitalize";
 export { changeUrlPath } from "./changeUrlPath";

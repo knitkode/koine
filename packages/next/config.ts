@@ -1,253 +1,12 @@
 import type { NextConfig } from "next";
-import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
+import {
+  type ConfigI18nOptions,
+  type Routes,
+  getRedirects,
+  getRewrites,
+} from "./config-i18n.js";
 
-// type Route = string | Record<string, string | Record<string, string | Record<string, string | Record<string, string | Record<string, string>>>>>;
-type Route =
-  | string
-  | {
-      [key: string]: Route | string;
-    };
-type Routes = Record<string, Route>;
-
-type RoutesMap = Record<string, RoutesMapRoute>;
-
-type RoutesMapRoute = {
-  template: string;
-  pathname: string;
-  wildcard?: boolean;
-};
-
-/**
- * Normalise pathname
- *
- * From a path like `/some//malformed/path///` it returns `some/malformed/path`
- *
- * - Removes subsequent slashes
- * - Removing initial and ending slashes
- * - Returns an empty string `"""` if only slashes are given
- */
-export function normaliseUrlPathname(pathname = "") {
-  // with return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
-  // we would instead return a single slash if only slashes are given
-  return pathname.replace(/\/+\//g, "/").replace(/^\/*(.*?)\/*$/, "$1");
-}
-
-/**
- * Transform to path any absolute or relative URL
- *
- * Useful when setting up `rewrites` and `redirects` especally in a [multi-zones
- * setup](https://nextjs.org/docs/advanced-features/multi-zones).
- *
- * From a path like `http://localhost/some//malformed/path///` it returns `/some/malformed/path`
- *
- * @see {@link normaliseUrlPathname}
- */
-export function toPath(urlOrPathname = "") {
-  let pathname = "";
-  try {
-    const parsed = new URL(urlOrPathname);
-    pathname = parsed.pathname;
-  } catch (e) {
-    pathname = urlOrPathname;
-  }
-  // with return pathname.replace(/\/+\//g, "/").replace(/^\/+(.*?)\/+$/, "$1");
-  // we would instead return a single slash if only slashes are given
-  return pathname.replace(/\/+\//g, "/").replace(/^\/*(.*?)\/*$/, "$1");
-}
-
-/**
- * Clean a pathname and encode each part
- *
- * @see {@link normaliseUrlPathname}
- */
-export function encodePathname(pathname = "") {
-  const parts = normaliseUrlPathname(pathname).split("/");
-
-  return parts
-    .filter((part) => !!part)
-    .map((part) => encodeURIComponent(part))
-    .join("/");
-}
-
-type MapPathnameParts = Record<
-  string,
-  {
-    isDynamic?: boolean;
-    hasWildcard?: boolean;
-  }
->;
-
-/**
- * Transform the route translated defintion into a `pathname` and a `template`.
- *
- * Here we add the wildcard flag maybe found in the pathname to the template
- * name too, this is because we do not want to have the wildcard in the JSON
- * keys as those are also used to produce links throught the `useTo` hook and
- * having asterisks there is a bit cumbersome.
- *
- * @see https://nextjs.org/docs/messages/invalid-multi-match
- */
-function transformRoute(route: RoutesMapRoute) {
-  const { pathname: rawPathname, template: rawTemplate } = route;
-  const pathnameParts = rawPathname.split("/").filter((part) => !!part);
-  const templateParts = rawTemplate.split("/").filter((part) => !!part);
-  const mapPartsByIdx: MapPathnameParts = {};
-
-  const pathname = pathnameParts
-    .map((part) => {
-      const hasWildcard = part.endsWith("*");
-      part = part.replace("*", "");
-      const isDynamic = part.startsWith("{{") && part.endsWith("}}");
-      const asValue = isDynamic
-        ? part.match(/{{(.+)}}/)?.[1].trim() ?? ""
-        : part.trim();
-      const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
-
-      mapPartsByIdx[asValue] = {
-        isDynamic,
-        hasWildcard,
-      };
-      return isDynamic ? `:${asPath}` : asPath;
-    })
-    .join("/");
-
-  const template = templateParts
-    .map((part) => {
-      const isDynamic = part.startsWith("[") && part.endsWith("]");
-      const asValue = isDynamic
-        ? part.match(/\[(.+)\]/)?.[1].trim() ?? ""
-        : part.trim();
-      const hasWildcard = mapPartsByIdx[asValue]?.hasWildcard;
-      const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
-
-      return isDynamic ? `:${asPath}` : asPath;
-    })
-    .join("/");
-
-  return { pathname, template };
-}
-
-/**
- * Get routes map dictionary
- */
-function getRoutesMap(
-  map: RoutesMap = {},
-  routes: Routes,
-  pathnameBuffer = "",
-  templateBuffer = "",
-) {
-  for (const key in routes) {
-    const pathOrNestedRoutes = routes[key];
-    const template = `${templateBuffer}/${key}`;
-    if (typeof pathOrNestedRoutes === "string") {
-      map[template] = {
-        template,
-        pathname: pathOrNestedRoutes,
-        wildcard: pathOrNestedRoutes.includes("*"),
-      };
-    } else {
-      getRoutesMap(map, pathOrNestedRoutes, pathnameBuffer, template);
-    }
-  }
-
-  return map;
-}
-
-/**
- * Removes `/index` from a template/url path
- */
-function getWithoutIndex(template: string) {
-  return template.replace(/\/index$/, "");
-}
-
-/**
- * Get path rewrite
- */
-export function getPathRewrite(route: RoutesMapRoute) {
-  const { pathname, template } = transformRoute(route);
-  const source = `/${normaliseUrlPathname(pathname)}`;
-  const destination = `/${normaliseUrlPathname(template)}`;
-  // console.log(`rewrite pathname "${source}" to template "${destination}"`);
-  return {
-    source,
-    destination: getWithoutIndex(destination),
-  };
-}
-
-/**
- * Get path redirect
- */
-export function getPathRedirect(
-  locale = "",
-  route: RoutesMapRoute,
-  permanent?: boolean,
-) {
-  const { template, pathname } = transformRoute(route);
-  const source = `/${normaliseUrlPathname(
-    (locale ? `/${locale}/` : "/") + template,
-  )}`;
-  const destination = `/${normaliseUrlPathname(pathname)}`;
-  // console.log(`redirect template "${source}" to pathname "${destination}"`);
-
-  return {
-    source: getWithoutIndex(source),
-    destination,
-    permanent: Boolean(permanent),
-    locale: false as const,
-  };
-}
-
-/**
- */
-export async function getRedirects(
-  defaultLocale: string,
-  routes: Routes,
-  permanent?: boolean,
-  debug?: boolean,
-) {
-  const redirects: Redirect[] = [];
-  const routesMap = getRoutesMap({}, routes);
-
-  Object.keys(routesMap).forEach((template) => {
-    const route = routesMap[template];
-
-    // TODO: add option hideDefaultLocaleInUrl?
-    // this is meant to redirect the URL with the default locale to the same
-    // url without locale prefix, e.g.: /en/about -> /about (assuming en is the
-    // defualt locale).
-    // Actually this redirect seem not to be necessary, probably the i18n routing
-    // mechanism of next 12 already does this, enabling causes infinite redirects
-
-    // if (hideDefaultLocaleInUrl) {
-    // redirects.push(getPathRedirect(defaultLocale, route, permanent));
-    // }
-    if (route.pathname !== getWithoutIndex(template)) {
-      redirects.push(getPathRedirect("", route, permanent));
-    }
-  });
-  if (debug) console.info("[@koine/next/config:getRedirects]", redirects);
-
-  return redirects;
-}
-
-/**
- */
-export async function getRewrites(routes: Routes, debug?: boolean) {
-  const rewrites: Rewrite[] = [];
-  const routesMap = getRoutesMap({}, routes);
-
-  Object.keys(routesMap).forEach((template) => {
-    const route = routesMap[template];
-    if (route.pathname !== getWithoutIndex(template)) {
-      rewrites.push(getPathRewrite(route));
-    }
-  });
-  if (debug) console.info("[@koine/next/config:getRewrites]", rewrites);
-
-  return rewrites;
-}
-
-type KoineNextConfig = {
+interface KoineNextConfig {
   /** @default true Nx monorepo setup */
   nx?: boolean;
   /** @default true  Svg to react components */
@@ -322,6 +81,7 @@ type KoineNextConfig = {
    *   i18n: {
    *     defaultLocale: "en",
    *     locales: ["en"],
+   *     hideDefaultLocaleInUrl: false
    *   }
    * }
    * ```
@@ -333,7 +93,10 @@ type KoineNextConfig = {
    */
   permanent?: boolean;
   debug?: boolean;
-};
+  i18n: ConfigI18nOptions & { loader?: any };
+}
+
+interface MergedConfig extends KoineNextConfig, Omit<NextConfig, "i18n"> {}
 
 /**
  * Get Next.js config with some basic opinionated defaults
@@ -356,9 +119,13 @@ export function withKoine(
     permanent,
     debug,
     ...custom
-  }: NextConfig & KoineNextConfig = {
-    i18n: { locales: ["en"], defaultLocale: "en" },
-  } as NextConfig & KoineNextConfig,
+  }: MergedConfig = {
+    i18n: {
+      locales: ["en"],
+      defaultLocale: "en",
+      hideDefaultLocaleInUrl: false,
+    },
+  },
 ) {
   const nextConfig: NextConfig = {
     // @see https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions#including-non-page-files-in-the-pages-directory
@@ -407,7 +174,11 @@ export function withKoine(
         svgr: true,
       };
     } else {
-      nextConfig.webpack = (_config, options) => {
+      nextConfig.webpack = (
+        _config,
+        options,
+        // ...[_config, options]: Parameters<NonNullable<NextConfig['webpack']>>
+      ) => {
         const webpackConfig =
           typeof nextConfig.webpack === "function"
             ? nextConfig.webpack(_config, options)
@@ -444,19 +215,31 @@ export function withKoine(
     };
   }
 
-  if (routes) {
-    // we pass the default values, so we can assert I guess
-    const defaultLocale = nextConfig?.i18n?.defaultLocale as string;
+  if (custom.i18n) {
+    const { hideDefaultLocaleInUrl, localeParam, loader, ...nextI18nConfig } =
+      custom.i18n || {};
+    if (localeParam) {
+      // app router:
+      // after thousands attempts turns out that passing the i18n settings to
+      // the app router messes up everything, just rely on our internal i18n
+      // mechanisms
+      delete nextConfig.i18n;
+    } else {
+      // pages routes:
+      nextConfig.i18n = nextI18nConfig;
+    }
+  }
 
+  if (routes) {
     return {
       ...nextConfig,
       async redirects() {
-        const defaults = await getRedirects(
-          defaultLocale,
+        const defaults = await getRedirects({
           routes,
           permanent,
           debug,
-        );
+          ...custom.i18n,
+        });
         if (nextConfig.redirects) {
           const customs = await nextConfig.redirects();
           return [...defaults, ...customs];
@@ -464,7 +247,11 @@ export function withKoine(
         return defaults;
       },
       async rewrites() {
-        const defaults = await getRewrites(routes, debug);
+        const defaults = await getRewrites({
+          routes,
+          debug,
+          ...custom.i18n,
+        });
 
         if (nextConfig.rewrites) {
           const customs = await nextConfig.rewrites();

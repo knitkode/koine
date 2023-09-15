@@ -3,7 +3,7 @@
  *
  * @param nodes The object to check
  */
-export function isNodeList<T>(nodes: any): nodes is NodeList {
+export function isNodeList(nodes: any): nodes is NodeList {
   const stringRepr = Object.prototype.toString.call(nodes);
 
   return (
