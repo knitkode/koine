@@ -7,14 +7,14 @@ export type Split<S extends string, D extends string> = string extends S
   : [S];
 
 /**
- * @category native
+ * Quick typed replacement for `string.split("delimiter")`
+ *
+ * @category string
  * @category text
  */
-export function split<T extends string, D extends string>(
-  str: T,
-  delimiter: D
-) {
-  return str.split(delimiter) as Split<T, D>;
-}
+export const split = <T extends string, D extends string>(
+  string: T,
+  delimiter: D,
+) => string.split(delimiter) as Split<T, D>;
 
 export default split;

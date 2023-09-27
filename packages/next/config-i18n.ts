@@ -157,17 +157,23 @@ function getRoutesMap(
   pathnameBuffer = "",
   templateBuffer = "",
 ) {
+  const isSpaRoute = Object.keys(routesByLocale).includes("[spa]");
+
   for (const key in routesByLocale) {
     const pathOrNestedRoutes = routesByLocale[key];
     const template = `${templateBuffer}/${key}`;
     if (typeof pathOrNestedRoutes === "string") {
-      map[template] = {
-        template,
-        pathname: pathOrNestedRoutes,
-        wildcard: pathOrNestedRoutes.includes("*"),
-      };
+      if (!isSpaRoute || (isSpaRoute && ["[spa]", "index"].includes(key))) {
+        map[template] = {
+          template,
+          pathname: pathOrNestedRoutes,
+          wildcard: pathOrNestedRoutes.includes("*"),
+        };
+      }
     } else {
-      getRoutesMap(map, pathOrNestedRoutes, pathnameBuffer, template);
+      if (!isSpaRoute) {
+        getRoutesMap(map, pathOrNestedRoutes, pathnameBuffer, template);
+      }
     }
   }
 

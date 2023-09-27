@@ -57,7 +57,23 @@ const DATA = {
               }
             }
           }
-        }
+        },
+        "apps": {
+          "listr": {
+            "index": "/tools/listr",
+            "[spa]": "/tools/listr/{{ spa }}*",
+            "orgs": {
+              "index": "/orgs",
+              "[id]": {
+                "index": "/orgs/{{ id }}",
+                "user": {
+                  "index": "/orgs/{{ id }}/user",
+                  "new": "/orgs/{{ id }}/user/new"
+                }
+              }
+            }
+          }
+        },
       },
       "it": {
         "account": {
@@ -102,6 +118,22 @@ const DATA = {
                 }
               }
             }
+          },
+        },
+        "apps": {
+          "listr": {
+            "index": "/strumenti/listr",
+            "[spa]": "/strumenti/listr/{{ spa }}*",
+            "orgs": {
+              "index": "/orgs",
+              "[id]": {
+                "index": "/orgs/{{ id }}",
+                "source": {
+                  "index": "/orgs/{{ id }}/source",
+                  "new": "/orgs/{{ id }}/source/new"
+                }
+              }
+            }
           }
         }
       }
@@ -122,6 +154,8 @@ const DATA = {
         { source: '/p/:slug/:id', destination: '/www/product/:slug/:id' },
         { source: '/p/:slug/:id/revisions', destination: '/www/product/:slug/:id/revisions' },
         { source: '/p/:slug/:id/revisions/:revisionId', destination: '/www/product/:slug/:id/revisions/:revisionId' },
+        { source: "/tools/listr", destination: "/apps/listr" },
+        { source: "/tools/listr/:spa*", destination: "/apps/listr/:spa*" },
       ],
       it: [
         { source: "/profilo", destination: "/account/user/profile" },
@@ -138,6 +172,8 @@ const DATA = {
         { source: "/prodotti/:slug/:id", destination: "/www/product/:slug/:id" },
         { source: "/prodotti/:slug/:id/revisioni", destination: "/www/product/:slug/:id/revisions" },
         { source: "/prodotti/:slug/:id/revisioni/:revisionId", destination: "/www/product/:slug/:id/revisions/:revisionId" },
+        { source: "/strumenti/listr", destination: "/apps/listr" },
+        { source: "/strumenti/listr/:spa*", destination: "/apps/listr/:spa*" },
       ]
     },
     redirects: {
@@ -154,7 +190,8 @@ const DATA = {
         { source: '/www/product/:slug/:id', destination: '/p/:slug/:id', permanent: false, locale: false },
         { source: '/www/product/:slug/:id/revisions', destination: '/p/:slug/:id/revisions', permanent: false, locale: false },
         { source: '/www/product/:slug/:id/revisions/:revisionId', destination: '/p/:slug/:id/revisions/:revisionId', permanent: false, locale: false },
-  
+        { source: "/apps/listr", destination: "/tools/listr" },
+        { source: "/apps/listr/:spa*", destination: "/tools/listr/:spa*" },
       ],
       it: [
         { source: "/it/account/user/profile", destination: "/profilo", permanent: false, locale: false },
@@ -171,6 +208,8 @@ const DATA = {
         { source: "/it/www/product/:slug/:id", destination: "/prodotti/:slug/:id", permanent: false, locale: false },
         { source: "/it/www/product/:slug/:id/revisions", destination: "/prodotti/:slug/:id/revisioni", permanent: false, locale: false },
         { source: "/it/www/product/:slug/:id/revisions/:revisionId", destination: "/prodotti/:slug/:id/revisioni/:revisionId", permanent: false, locale: false },
+        { source: "/it/apps/listr", destination: "/strumenti/listr" },
+        { source: "/it/apps/listr/:spa*", destination: "/strumenti/listr/:spa*" },
       ]
     }
   },
