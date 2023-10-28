@@ -1,5 +1,5 @@
 import { useTheme as _useTheme } from "styled-components";
-import { __assign } from "tslib";
+import { __assign, __read } from "tslib";
 
 var DEFAULT_BREAKPOINTS = {
   xs: 0,
@@ -11,7 +11,7 @@ var DEFAULT_BREAKPOINTS = {
 };
 export var breakpoints = process.env["BREAKPOINTS"]
   ? process.env["BREAKPOINTS"].split(",").reduce(function (map, pair) {
-      var _a = pair.split(":"),
+      var _a = __read(pair.split(":"), 2),
         key = _a[0],
         value = _a[1];
       map[key] = parseFloat(value);

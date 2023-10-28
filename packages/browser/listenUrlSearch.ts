@@ -1,3 +1,4 @@
+import { isBrowser } from "@koine/utils";
 import { on } from "@koine/dom";
 
 type Extension = {
@@ -36,7 +37,7 @@ function extendHistoryMethod(
   };
 }
 
-let prevSearch = location.search;
+let prevSearch = isBrowser ? location.search : "";
 
 function runHandlers() {
   const newSearch = location.search;
