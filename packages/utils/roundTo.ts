@@ -28,7 +28,7 @@ export function roundTo(num: number, decimals = 2): string {
     // return outputNum;
   }
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env["NODE_ENV"] === "development") {
     console.warn(
       "[@koine/utils] math:roundTo -> given not a finite number as first arg",
     );

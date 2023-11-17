@@ -194,7 +194,7 @@ export const render = (tmpl: string, def?: Definitions): RenderFunction => {
   try {
     return new Function(varname, str) as RenderFunction;
   } catch (e) {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env["NODE_ENV"] === "development") {
       console.log("Could not create a template function: " + str);
       throw e;
     }

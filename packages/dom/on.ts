@@ -18,7 +18,7 @@ export function on<TType extends AnyDOMEventType>(
   // handler: THandler /* EventListener |  */ /* ((event: Event) => void) */,
   options: AddEventListenerOptions | boolean = false,
 ) {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env["NODE_ENV"] === "development") {
     if (!el) {
       console.warn("[@koine/dom:on] unexisting DOM element");
     }

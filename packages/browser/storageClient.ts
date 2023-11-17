@@ -27,7 +27,7 @@ export const storageClient = <
           methodsMap[method]
         ](key, value)
       : () => {
-          if (process.env.NODE_ENV === "development") {
+          if (process.env["NODE_ENV"] === "development") {
             console.warn(
               `[@koine/utils:storageClient]: ${
                 useSessionStorage ? "sessionStorage" : "localStorage"
@@ -46,7 +46,7 @@ export const storageClient = <
   ) => {
     let value = defaultValue ?? null;
 
-    if (process.env.NODE_ENV === "development") {
+    if (process.env["NODE_ENV"] === "development") {
       if (!isBrowser) {
         console.log(
           `[@koine/utils:storage] called 'get' outside of browser with default value '${JSON.stringify(
@@ -67,7 +67,7 @@ export const storageClient = <
         } catch (_e) {
           value = stored;
 
-          // if (process.env.NODE_ENV === "development") {
+          // if (process.env["NODE_ENV"] === "development") {
           //   console.warn(
           //     `[@koine/utils:storage]: 'get' failed to parse stored value as JSON. Plain '${stored}' value is returned.`
           //   );
@@ -86,7 +86,7 @@ export const storageClient = <
     value?: TValue,
     transform: (value: any) => string = (value) => value,
   ) => {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env["NODE_ENV"] === "development") {
       if (!isBrowser) {
         console.log(
           `[@koine/utils:storage] called 'set' outside of browser does not work.`,
@@ -102,7 +102,7 @@ export const storageClient = <
 
         nativeMethod("s", key, transformedValue);
       } catch (_e) {
-        if (process.env.NODE_ENV === "development") {
+        if (process.env["NODE_ENV"] === "development") {
           console.warn(`[@koine/utils:createStorage]: 'set' error.`, _e);
         }
       }
@@ -110,7 +110,7 @@ export const storageClient = <
   };
 
   const remove = <TKey extends Extract<keyof TConfig, string>>(key: TKey) => {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env["NODE_ENV"] === "development") {
       if (!isBrowser) {
         console.log(
           `[@koine/utils:storage] called 'remove' outside of browser does not work.`,
@@ -122,7 +122,7 @@ export const storageClient = <
       try {
         nativeMethod("r", key);
       } catch (_e) {
-        if (process.env.NODE_ENV === "development") {
+        if (process.env["NODE_ENV"] === "development") {
           console.warn(`[@koine/utils:createStorage]: 'remove' error.`, _e);
         }
       }
@@ -138,7 +138,7 @@ export const storageClient = <
   ) => {
     let value = defaultValue ?? false;
 
-    if (process.env.NODE_ENV === "development") {
+    if (process.env["NODE_ENV"] === "development") {
       if (!isBrowser) {
         console.log(
           `[@koine/utils:storage] called 'has' outside of browser with default value '${JSON.stringify(

@@ -2,7 +2,7 @@
  * FIXME: invariant calls do not get tree shaked in minified output of projects
  * using it. Let's not use it internally and not export it from `@koine/utils`
  * until we find a tree-shakeable way of doing this. For now just wrapping
- * the logging code into `if (process.env.NODE_ENV === "development") {}`
+ * the logging code into `if (process.env["NODE_ENV"] === "development") {}`
  * works better despite it is more verbose.
  *
  * @resources
@@ -21,7 +21,7 @@ export function invariant(
   lib?: string,
   prefix?: string,
 ): asserts condition {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env["NODE_ENV"] === "development") {
     if (condition) {
       return;
     }

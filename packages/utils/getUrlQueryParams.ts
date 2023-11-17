@@ -34,7 +34,7 @@ export function getUrlQueryParams<T extends NonNullable<AnyQueryParams>>(
       key === "" ? value : decodeURIComponent(value),
     );
   } catch (e) {
-    // do nothing or warn on process.env.NODE_ENV === "development"
+    // do nothing or warn on process.env["NODE_ENV"] === "development"
   }
 
   return params as T;

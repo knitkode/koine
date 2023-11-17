@@ -13,7 +13,7 @@ export function off<TType extends AnyDOMEventType>(
   handler: (event: AnyDOMEvent<TType>) => void,
   options: EventListenerOptions | boolean = false,
 ) {
-  if (process.env.NODE_ENV === "development") {
+  if (process.env["NODE_ENV"] === "development") {
     if (!el) {
       console.warn("[@koine/dom:off] unexisting DOM element");
     }

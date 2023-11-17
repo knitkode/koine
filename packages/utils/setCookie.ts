@@ -26,7 +26,7 @@ export function setCookie<T extends string = string>(
   };
 
   if (isUndefined(document)) {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env["NODE_ENV"] === "development") {
       console.warn("[@koine/utils:setCookie] document is undefined");
     }
     return undefined;

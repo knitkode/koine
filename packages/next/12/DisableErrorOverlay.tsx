@@ -8,7 +8,7 @@ import Head from "next/head";
 export const DisableErrorOverlay = () => {
   return (
     <Head>
-      {process.env.NODE_ENV === "development" && (
+      {process.env["NODE_ENV"] === "development" && (
         <script
           dangerouslySetInnerHTML={{
             __html: `window.addEventListener('error',event =>{event.stopImmediatePropagation()});window.addEventListener('unhandledrejection',event =>{event.stopImmediatePropagation()});`,

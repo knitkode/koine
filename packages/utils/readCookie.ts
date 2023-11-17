@@ -22,7 +22,7 @@ export function readCookie<
   N extends string = string,
 >(name?: N | null): T[N] | T {
   if (typeof document === "undefined") {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env["NODE_ENV"] === "development") {
       console.warn("[@koine/utils:readCookie] document is undefined");
     }
     return name ? ("" as T[N]) : ({} as T);
@@ -43,7 +43,7 @@ export function readCookie<
         break;
       }
     } catch (e) {
-      if (process.env.NODE_ENV === "development") {
+      if (process.env["NODE_ENV"] === "development") {
         console.warn("[@koine/utils:readCookie] failed to decode", value);
       }
     }

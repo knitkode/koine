@@ -29,7 +29,7 @@ export function useForm<T extends FieldValues>(
   // const { control, register, setValue } = form;
   // const field = { control, register, setValue, t };
 
-  // if (process.env.NODE_ENV === "development") {
+  // if (process.env["NODE_ENV"] === "development") {
   //   if (debug) {
   //     console.info(
   //       `Form ${i18nNamespace} data`,

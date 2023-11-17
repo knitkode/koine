@@ -22,7 +22,7 @@ export function getZonedDate(dateString = "", timeZone?: string) {
     try {
       timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     } catch (e) {
-      if (process.env.NODE_ENV === "development") {
+      if (process.env["NODE_ENV"] === "development") {
         console.warn(
           "[@koine/utils:getZonedDate] failed reading timeZone, error",
           e,
