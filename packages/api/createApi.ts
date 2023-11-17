@@ -186,7 +186,7 @@ export const createApi = <TEndpoints extends Koine.Api.Endpoints>(
           throw result;
         }
 
-        if (process.env["NODE_ENV"] !== "production") {
+        if (process.env.NODE_ENV === "development") {
           const logMsg = `${result?.status}: api[${apiName}] ${method.toUpperCase()} ${url}`;
           if (result?.ok) {
             console.info(`🟢 ${logMsg}`);

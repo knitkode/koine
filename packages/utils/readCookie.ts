@@ -11,18 +11,18 @@ function converterRead(value: string) {
  * @category cookie
  */
 export function readCookie<
-  T extends Record<string, unknown> = Record<string, string>
+  T extends Record<string, unknown> = Record<string, string>,
 >(name?: null): T;
 export function readCookie<
   T extends Record<string, unknown> = Record<string, string>,
-  N extends keyof T = keyof T
+  N extends keyof T = keyof T,
 >(name: N): T[N];
 export function readCookie<
   T extends Record<string, unknown> = Record<string, string>,
-  N extends string = string
+  N extends string = string,
 >(name?: N | null): T[N] | T {
   if (typeof document === "undefined") {
-    if (process.env["NODE_ENV"] !== "production") {
+    if (process.env.NODE_ENV === "development") {
       console.warn("[@koine/utils:readCookie] document is undefined");
     }
     return name ? ("" as T[N]) : ({} as T);
@@ -43,7 +43,7 @@ export function readCookie<
         break;
       }
     } catch (e) {
-      if (process.env["NODE_ENV"] !== "production") {
+      if (process.env.NODE_ENV === "development") {
         console.warn("[@koine/utils:readCookie] failed to decode", value);
       }
     }

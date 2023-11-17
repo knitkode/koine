@@ -12,7 +12,7 @@ import { type AnyQueryParams } from "./location";
  *
  */
 export function getUrlQueryParams<T extends NonNullable<AnyQueryParams>>(
-  url?: string
+  url?: string,
 ) {
   let params = {};
   const search = url
@@ -31,10 +31,10 @@ export function getUrlQueryParams<T extends NonNullable<AnyQueryParams>>(
       .replace(/&/g, '","')
       .replace(/=/g, '":"')}"}`;
     params = JSON.parse(paramsAsObj, (key, value) =>
-      key === "" ? value : decodeURIComponent(value)
+      key === "" ? value : decodeURIComponent(value),
     );
   } catch (e) {
-    // do nothing or warn on process.env["NODE_ENV"] !== "production"
+    // do nothing or warn on process.env.NODE_ENV === "development"
   }
 
   return params as T;

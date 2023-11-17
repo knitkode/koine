@@ -34,7 +34,7 @@ const fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
 export function serializeCookie(
   name: string,
   val: string,
-  attributes: CookieAttributesServer = {}
+  attributes: CookieAttributesServer = {},
 ) {
   const {
     encode = encodeURIComponent,
@@ -48,7 +48,7 @@ export function serializeCookie(
 
   const value = encode(val);
 
-  if (process.env["NODE_ENV"] !== "production") {
+  if (process.env.NODE_ENV === "development") {
     if (!fieldContentRegExp.test(name)) {
       throw new TypeError("argument name is invalid");
     }
@@ -73,7 +73,7 @@ export function serializeCookie(
   }
 
   if (domain) {
-    if (process.env["NODE_ENV"] !== "production") {
+    if (process.env.NODE_ENV === "development") {
       if (!fieldContentRegExp.test(domain)) {
         throw new TypeError("option domain is invalid");
       }
@@ -83,7 +83,7 @@ export function serializeCookie(
   }
 
   if (path) {
-    if (process.env["NODE_ENV"] !== "production") {
+    if (process.env.NODE_ENV === "development") {
       if (!fieldContentRegExp.test(path)) {
         throw new TypeError("option path is invalid");
       }

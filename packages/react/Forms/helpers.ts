@@ -65,7 +65,7 @@ export function triggerOnChange<T extends HTMLElement = HTMLInputElement>(
 export function triggerChange(input: HTMLInputElement, value?: string) {
   const obj = window.Object;
   if (!obj) {
-    if (process.env["NODE_ENV"] !== "production") {
+    if (process.env.NODE_ENV === "development") {
       console.warn(
         "[@koine/react:Forms:triggerChange] window.Object does not exists, bailing.",
       );

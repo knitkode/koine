@@ -51,7 +51,7 @@ const resolveDefs = (block: string | object, def: Definitions): string =>
               // @ts-expect-error nevermind
               (_, param: string, v: string) => {
                 def[code] = { arg: param, text: v };
-              }
+              },
             );
             // @ts-expect-error nevermind
             if (!(code in def)) def[code] = value;
@@ -60,7 +60,7 @@ const resolveDefs = (block: string | object, def: Definitions): string =>
           }
         }
         return "";
-      }
+      },
     )
     .replace(use || skip, (_, code: string) => {
       code = code.replace(
@@ -71,12 +71,12 @@ const resolveDefs = (block: string | object, def: Definitions): string =>
             def.__exp = def.__exp || {};
             def.__exp[rw] = def[d].text.replace(
               new RegExp("(^|[^\\w$])" + def[d].arg + "([^\\w$])", "g"),
-              "$1" + param + "$2"
+              "$1" + param + "$2",
             );
             return s + "def.__exp['" + rw + "']";
           }
           return s;
-        }
+        },
       );
       const v = new Function("def", "return " + code)(def) as string;
       return v ? resolveDefs(v, def) : v;
@@ -146,7 +146,7 @@ export const render = (tmpl: string, def?: Definitions): RenderFunction => {
             : "';}else{X+='"
           : code
           ? "';if(" + unescape(code) + "){X+='"
-          : "';}X+='"
+          : "';}X+='",
       )
       .replace(iterate || skip, (_, arr, vName, iName) => {
         if (!arr) return "';} } X+='";
@@ -194,7 +194,7 @@ export const render = (tmpl: string, def?: Definitions): RenderFunction => {
   try {
     return new Function(varname, str) as RenderFunction;
   } catch (e) {
-    if (process.env["NODE_ENV"] !== "production") {
+    if (process.env.NODE_ENV === "development") {
       console.log("Could not create a template function: " + str);
       throw e;
     }

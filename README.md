@@ -32,7 +32,7 @@ Deep import paths considered as public and safe always need a folder with an `in
 
 ### Logging
 
-Use `console.log` only for internal development, all other _public_ logging should use either `console.info`, `console.warn` or `console.error`. Their messages should always follow this syntax `[@koine/{package}:{function}] some details`. Most of the time these logging should be wrapped in an `if` condition to be eliminated in production code (`if (process.env["NODE_ENV"] !== "production") { ... }`).
+Use `console.log` only for internal development, all other _public_ logging should use either `console.info`, `console.warn` or `console.error`. Their messages should always follow this syntax `[@koine/{package}:{function}] some details`. Most of the time these logging should be wrapped in an `if` condition to be eliminated in production code (`if (process.env.NODE_ENV === "development") { ... }`).
 
 ### React components structure
 

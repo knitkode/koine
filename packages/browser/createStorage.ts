@@ -51,7 +51,7 @@ export const createStorage = <T extends CreateStorageConfig>(
      */
     getAll(defaultValues?: Partial<T>): T {
       if (!isBrowser) {
-        if (process.env["NODE_ENV"] !== "production") {
+        if (process.env.NODE_ENV === "development") {
           console.log(
             `[@koine/utils:createStorage] attempt to use 'getAll' outside of browser.`,
           );
@@ -87,7 +87,7 @@ export const createStorage = <T extends CreateStorageConfig>(
      * and `null` values are removed from the storage
      */
     setMany(newValues: Partial<T>) {
-      if (process.env["NODE_ENV"] !== "production") {
+      if (process.env.NODE_ENV === "development") {
         if (!isBrowser) {
           console.log(
             `[@koine/utils:createStorage] attempt to use 'setMany' outside of browser.`,
@@ -121,7 +121,7 @@ export const createStorage = <T extends CreateStorageConfig>(
      * Clear all storage values (it uses `localStorage.remove()`).
      */
     clear() {
-      if (process.env["NODE_ENV"] !== "production") {
+      if (process.env.NODE_ENV === "development") {
         if (!isBrowser) {
           console.log(
             `[@koine/utils:createStorage] attempt to use 'clear' outside of browser.`,
@@ -147,7 +147,7 @@ export const createStorage = <T extends CreateStorageConfig>(
       onAdded?: () => void,
     ) => {
       if (!isBrowser) {
-        if (process.env["NODE_ENV"] !== "production") {
+        if (process.env.NODE_ENV === "development") {
           console.log(
             `[@koine/utils:createStorage] attempt to use 'watch' outside of browser.`,
           );

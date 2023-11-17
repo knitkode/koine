@@ -5,7 +5,7 @@ import isUndefined from "./isUndefined";
 function converterWrite(value: string) {
   return encodeURIComponent(value).replace(
     /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
-    decodeURIComponent
+    decodeURIComponent,
   );
 }
 
@@ -15,7 +15,7 @@ function converterWrite(value: string) {
 export function setCookie<T extends string = string>(
   name: string,
   value: string | T,
-  attributes: CookieAttributesClient = {}
+  attributes: CookieAttributesClient = {},
 ): string | undefined {
   // eslint-disable-next-line prefer-const
   let { expires, ...restAttrs } = attributes;
@@ -26,7 +26,7 @@ export function setCookie<T extends string = string>(
   };
 
   if (isUndefined(document)) {
-    if (process.env["NODE_ENV"] !== "production") {
+    if (process.env.NODE_ENV === "development") {
       console.warn("[@koine/utils:setCookie] document is undefined");
     }
     return undefined;
