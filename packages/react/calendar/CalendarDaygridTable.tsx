@@ -1,4 +1,4 @@
-import eachWeekOfInterval from "date-fns/eachWeekOfInterval";
+import { eachWeekOfInterval } from "date-fns/eachWeekOfInterval";
 import { useEffect, useMemo, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import type { KoineComponent, KoineComponentProps } from "../types";

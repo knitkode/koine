@@ -1,12 +1,12 @@
-import addDays from "date-fns/addDays";
-import addMonths from "date-fns/addMonths";
-import addWeeks from "date-fns/addWeeks";
-import endOfMonth from "date-fns/endOfMonth";
-import endOfWeek from "date-fns/endOfWeek";
-import isWithinInterval from "date-fns/isWithinInterval";
-import startOfWeek from "date-fns/startOfWeek";
-import subMonths from "date-fns/subMonths";
-import subWeeks from "date-fns/subWeeks";
+import { addDays } from "date-fns/addDays";
+import { addMonths } from "date-fns/addMonths";
+import { addWeeks } from "date-fns/addWeeks";
+import { endOfMonth } from "date-fns/endOfMonth";
+import { endOfWeek } from "date-fns/endOfWeek";
+import { isWithinInterval } from "date-fns/isWithinInterval";
+import { startOfWeek } from "date-fns/startOfWeek";
+import { subMonths } from "date-fns/subMonths";
+import { subWeeks } from "date-fns/subWeeks";
 import type {
   CalendarEvent,
   CalendarEventsMap,

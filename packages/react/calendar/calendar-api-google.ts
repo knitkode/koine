@@ -1,5 +1,5 @@
-import differenceInDays from "date-fns/differenceInDays";
-import subDays from "date-fns/subDays";
+import { differenceInDays } from "date-fns/differenceInDays";
+import { subDays } from "date-fns/subDays";
 import { arrayToLookup, isString, isUndefined } from "@koine/utils";
 import type {
   Calendar,

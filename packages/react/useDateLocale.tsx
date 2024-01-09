@@ -23,9 +23,9 @@ export function useDateLocale(locale?: string, defaultLocale = "en") {
       //   /FIXME: * webpackMode: "lazy", webpackChunkName: "df-[index]", webpackExclude: /_lib/ */
       //   `date-fns/locale/${locale}/index.js`,
       // );
-      const localeToSet = await import(`date-fns/locale/en-US/index.js`);
+      const localeToSet = await import(`date-fns/locale/en-US`);
       setCurrent(locale || current);
-      setData(localeToSet.default);
+      setData(localeToSet.enUS);
       // setReady(true);
     };
 

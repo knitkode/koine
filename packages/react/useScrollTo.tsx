@@ -1,12 +1,14 @@
 import { isBrowser } from "@koine/utils";
-import useHeader from "./Header/useHeader";
+
+// import useHeader from "./Header/useHeader";
 
 export function useScrollTo(id = "", offset = 0) {
-  const [, , headerHeight] = useHeader();
+  // FIXME: is the useHeader still needed?
+  // const [, , headerHeight] = useHeader();
   if (!isBrowser) {
     return;
   }
-  const headerOffset = headerHeight || 0;
+  const headerOffset = /* headerHeight || */ 0;
   let element = document.getElementById(id);
   let top = 0;
 

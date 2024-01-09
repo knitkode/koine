@@ -1,4 +1,4 @@
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import type { KoineComponent, KoineComponentProps } from "../types";
 import { useDateLocale } from "../useDateLocale";
 import type { CalendarRange, CalendarView } from "./types";
