@@ -18,8 +18,6 @@ export type NextAppProps = AppProps & AppThemeProps & AppMainProps;
  * // import "@fontsource/myfont/800.css";
  * // import "@/config/theme.css";
  *
- * const motion = () => import("@koine/react/m/max").then((m) => m.default);
- *
  * export default function App(props: NextAppProps) {
  *   return (
  *     <NextApp

@@ -1,7 +1,5 @@
-import type { HTMLMotionProps } from "framer-motion";
 import type { AppProps as NextAppProps } from "next/app";
 import React from "react";
-import type { MotionProviderFeatures } from "@koine/react/m";
 import type { NextProgressProps } from "../NextProgress";
 import type { SeoDefaultsProps } from "../SeoDefaults";
 
@@ -26,12 +24,4 @@ export type AppMainBaseProps = NextAppProps & {
    * JSX to render just at the end of the markup
    */
   post?: React.ReactNode;
-};
-
-export type AppMainFramerProps = {
-  motion: MotionProviderFeatures;
-  /**
-   * Default layout transition, by default it is a simple fade in/out
-   */
-  transition?: Omit<HTMLMotionProps<"div">, "key">;
 };

@@ -9,8 +9,6 @@ import React from "react";
 import Meta from "@koine/react/Meta";
 import NoJs from "@koine/react/NoJs";
 
-// import { getInitialThemeFromRequest, ThemeVanillaValue } from "@koine/react/sc"; // FIXME: this should be imported from another entrypoint
-
 /**
  * Next Document wrapper for `css/tailwind` based projects
  *
