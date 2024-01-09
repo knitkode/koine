@@ -6,43 +6,16 @@
     "@koine/utils": "*"
   },
   "peerDependenciesMeta": {
-    "@hookform/resolvers": {
-      "optional": true
-    },
     "@kuus/yup": {
-      "optional": true
-    },
-    "@mui/base": {
-      "optional": true
-    },
-    "@tiptap/react": {
-      "optional": true
-    },
-    "@tiptap/starter-kit": {
       "optional": true
     },
     "date-fns": {
       "optional": true
     },
-    "framer-motion": {
-      "optional": true
-    },
     "react-hook-form": {
       "optional": true
     },
-    "react-icons": {
-      "optional": true
-    },
-    "react-is": {
-      "optional": true
-    },
-    "react-popper": {
-      "optional": true
-    },
     "react-swipeable": {
-      "optional": true
-    },
-    "styled-components": {
       "optional": true
     },
     "tailwindcss": {

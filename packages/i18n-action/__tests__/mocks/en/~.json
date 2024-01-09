@@ -1,0 +1,12 @@
+{
+  "account": {
+    "user": {
+      "profile": "/account/user",
+      "public": "/account/user/{{ id }}",
+      "settings": {
+        "index": "/account/user/settings",
+        "personal": "/account/user/settings/personal"
+      }
+    }
+  }
+}

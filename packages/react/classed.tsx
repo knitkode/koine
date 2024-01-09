@@ -1,7 +1,5 @@
 import React, { createElement, forwardRef } from "react";
 
-// import { OverridableComponent } from "@mui/types";
-
 // FIXME: use
 // React.ComponentProps<typeof Component>
 // ? @see https://react-typescript-cheatsheet.netlify.app/docs/advanced/patterns_by_usecase/#props-extracting-prop-types-of-a-component

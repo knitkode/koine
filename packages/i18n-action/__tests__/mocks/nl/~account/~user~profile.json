@@ -1,0 +1,20 @@
+{
+  "boolShouldntBeHereBut": true,
+  "titles": {
+    "user": {
+      "card": "Username",
+      "list": [
+        {
+          "keyInList": "value in list",
+          "key2InList": "value2 in list"
+        }
+      ],
+      "meta": {
+        "social": {
+          "platform": "value"
+        },
+        "traits": ["tall", "flat"]
+      }
+    }
+  }
+}

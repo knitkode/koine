@@ -1,19 +1,3 @@
-import "styled-components";
-
-// import type {} from "styled-components/cssprop"; // for `css` prop
-
-/**
- * Styled components utility types
- */
-type Theme = import("./styles/theme").Theme;
-
-declare module "styled-components" {
-  // extends the global DefaultTheme with our ThemeType.
-  export interface DefaultTheme extends Theme {
-    maxWidth: number;
-  }
-}
-
 /**
  * Types specifically related to `@koine/react` exposed on the global unique
  * namespace `Koine`. Most of the types here should be prefixed by `React`, e.g.
@@ -72,7 +56,7 @@ declare namespace Polymorphic {
 
   type Props<
     TComponent extends React.ElementType,
-    TProps = {}
+    TProps = {},
   > = /* Omit< */ InferProps<TComponent> /* , keyof Props> */ &
     AsProp<TComponent> &
     TProps;
@@ -93,7 +77,7 @@ declare namespace Polymorphic {
         ? Merge<P, TProps & { as: As }>
         : As extends keyof JSX.IntrinsicElements
         ? Merge<JSX.IntrinsicElements[As], TProps & { as: As }>
-        : never
+        : never,
     ): React.ReactElement | null;
   }
 }

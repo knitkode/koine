@@ -13,31 +13,7 @@
     "@kuus/yup": {
       "optional": true
     },
-    "@mui/base": {
-      "optional": true
-    },
-    "@mui/material": {
-      "optional": true
-    },
-    "@emotion/react": {
-      "optional": true
-    },
-    "@emotion/server": {
-      "optional": true
-    },
-    "@emotion/styled": {
-      "optional": true
-    },
-    "@tiptap/react": {
-      "optional": true
-    },
-    "@tiptap/starter-kit": {
-      "optional": true
-    },
     "date-fns": {
-      "optional": true
-    },
-    "framer-motion": {
       "optional": true
     },
     "next-auth": {
@@ -52,19 +28,7 @@
     "react-hook-form": {
       "optional": true
     },
-    "react-icons": {
-      "optional": true
-    },
-    "react-is": {
-      "optional": true
-    },
-    "react-popper": {
-      "optional": true
-    },
     "react-swipeable": {
-      "optional": true
-    },
-    "styled-components": {
       "optional": true
     },
     "tailwindcss": {
