@@ -2,6 +2,6 @@
   "name": "@koine/i18n",
   "sideEffects": false,
   "dependencies": {
-    "@koine/utils": "*"
+    "@koine/node": "*"
   }
 }

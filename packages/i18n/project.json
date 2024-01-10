@@ -50,6 +50,14 @@
       "options": {
         "lintFilePatterns": ["packages/i18n/**/*.ts"]
       }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/i18n"],
+      "options": {
+        "jestConfig": "packages/i18n/jest.config.js",
+        "passWithNoTests": true
+      }
     }
   }
 }

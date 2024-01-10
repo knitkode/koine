@@ -1,11 +1,10 @@
 import { join } from "node:path";
-import { generate } from "../helpers";
+import { i18nWriteTypes } from "./i18nWriteTypes";
 
 test("test runs", async () => {
-  await generate({
-    root: join(process.cwd(), "__tests__/mocks"),
+  await i18nWriteTypes({
+    cwd: join(process.cwd(), "__mocks__"),
     defaultLocale: "en",
-    outputData: "index",
     outputTypes: "types.d.ts",
   });
 });
