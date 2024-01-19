@@ -16,21 +16,6 @@ import type {
  * I might take a better look at how things were done in [i18next](https://github.com/i18next/i18next/blob/master/index.d.ts)
  */
 
-// import type { Get, Split } from "@koine/utils";
-
-export type I18nLocale = string & { branded: true };
-
-export type I18nIndexedFile = {
-  path: string;
-  locale: I18nLocale;
-  data: { [key: string]: any };
-};
-
-export type I18nIndexedLocale = {
-  path: string;
-  code: I18nLocale;
-};
-
 type MergeDictionaries<T, K> = Omit<T, keyof K> & K;
 
 type Join<A, Sep extends string = "", R extends string = ""> = A extends [
