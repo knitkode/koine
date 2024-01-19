@@ -1,16 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { glob } from "glob";
-import {
-  I18nIndexedLocale,
-  i18nGetLocalesFolders,
-} from "./i18nGetLocalesFolders";
-
-export type I18nIndexedFile = {
-  path: string;
-  locale: string;
-  data: { [key: string]: any };
-};
+import { i18nGetLocalesFolders } from "./i18nGetLocalesFolders";
+import type { I18nIndexedFile, I18nIndexedLocale } from "./types";
 
 type I18nGetFsDataOutput = {
   locales: I18nIndexedLocale[];
@@ -25,8 +17,9 @@ export async function i18nGetFsData(options: {
   let locales = await i18nGetLocalesFolders({ cwd });
   const dataOutput: I18nGetFsDataOutput = { locales, files: [] };
 
-  if (onlyFilesForLocales)
+  if (onlyFilesForLocales.length) {
     locales = locales.filter((l) => onlyFilesForLocales.includes(l.code));
+  }
 
   await Promise.all(
     locales.map(async (locale) => {

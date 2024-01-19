@@ -1,0 +1,84 @@
+{
+  "en": {
+    "files": [
+      {
+        "locale": "en",
+        "path": "~.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/~.json",
+        "words": 6,
+        "characters": 86
+      },
+      {
+        "locale": "en",
+        "path": "404.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/404.json",
+        "words": 8,
+        "characters": 28
+      },
+      {
+        "locale": "en",
+        "path": "$faq.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/$faq.json",
+        "words": 3,
+        "characters": 11
+      },
+      {
+        "locale": "en",
+        "path": "~account/~user~profile.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/~account/~user~profile.json",
+        "words": 23,
+        "characters": 52
+      },
+      {
+        "locale": "en",
+        "path": "~account/FormUserLanguages.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/~account/FormUserLanguages.json",
+        "words": 2,
+        "characters": 8
+      }
+    ],
+    "words": 42,
+    "characters": 185
+  },
+  "nl": {
+    "files": [
+      {
+        "locale": "nl",
+        "path": "~.json",
+        "url": "https://github.com/your-network/translations/tree/dev/nl/~.json",
+        "words": 6,
+        "characters": 86
+      },
+      {
+        "locale": "nl",
+        "path": "404.json",
+        "url": "https://github.com/your-network/translations/tree/dev/nl/404.json",
+        "words": 8,
+        "characters": 28
+      },
+      {
+        "locale": "nl",
+        "path": "$faq.json",
+        "url": "https://github.com/your-network/translations/tree/dev/nl/$faq.json",
+        "words": 3,
+        "characters": 11
+      },
+      {
+        "locale": "nl",
+        "path": "~account/~user~profile.json",
+        "url": "https://github.com/your-network/translations/tree/dev/nl/~account/~user~profile.json",
+        "words": 10,
+        "characters": 44
+      },
+      {
+        "locale": "nl",
+        "path": "~account/FormUserLanguages.json",
+        "url": "https://github.com/your-network/translations/tree/dev/nl/~account/FormUserLanguages.json",
+        "words": 2,
+        "characters": 8
+      }
+    ],
+    "words": 29,
+    "characters": 177
+  }
+}

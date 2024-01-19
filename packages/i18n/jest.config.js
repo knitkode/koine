@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: "utils",
+  displayName: "i18n",
   preset: "../../jest.preset.js",
   transform: {
     "^.+\\.[tj]s?$": [

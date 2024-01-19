@@ -1,3 +1,8 @@
+import type {
+  // Get,
+  Split,
+} from "@koine/utils";
+
 /**
  * @file
  *
@@ -11,19 +16,86 @@
  * I might take a better look at how things were done in [i18next](https://github.com/i18next/i18next/blob/master/index.d.ts)
  */
 
-type Merge<T, K> = Omit<T, keyof K> & K;
+// import type { Get, Split } from "@koine/utils";
 
-type Join<S1, S2> = S1 extends string
+export type I18nLocale = string & { branded: true };
+
+export type I18nIndexedFile = {
+  path: string;
+  locale: I18nLocale;
+  data: { [key: string]: any };
+};
+
+export type I18nIndexedLocale = {
+  path: string;
+  code: I18nLocale;
+};
+
+type MergeDictionaries<T, K> = Omit<T, keyof K> & K;
+
+type Join<A, Sep extends string = "", R extends string = ""> = A extends [
+  infer First,
+  ...infer Rest,
+]
+  ? Join<
+      Rest,
+      Sep,
+      R extends "" ? `${First & string}` : `${R}${Sep}${First & string}`
+    >
+  : R;
+
+type BuildRecursiveJoin<TList, TSeparator extends string> = Exclude<
+  TList extends [...infer ButLast, unknown]
+    ? Join<ButLast, TSeparator> | BuildRecursiveJoin<ButLast, TSeparator>
+    : never,
+  ""
+>;
+
+type JoinObjectPath<S1, S2> = S1 extends string
   ? S2 extends string
     ? `${S1}.${S2}`
     : S1
   : never;
 
 /**
+ * A very simplified version of `type-fest`'s `Get` type
+ */
+type GetWithPath<BaseType, Keys extends readonly string[]> = Keys extends []
+  ? BaseType
+  : Keys extends readonly [infer Head, ...infer Tail]
+    ? GetWithPath<
+        Head extends keyof BaseType ? BaseType[Head] : unknown,
+        Extract<Tail, string[]>
+      >
+    : never;
+
+/**
+ * A very simplified version of `type-fest`'s `Get` type, its implementation
+ * of square brackets doesn't match our convention as we always keep dots
+ * around the brackets and the brackets do not mean dynamic object access but
+ * just a dynamic portion of a route.
+ */
+type Get<BaseType, Path extends string | readonly string[]> = GetWithPath<
+  BaseType,
+  Path extends string ? Split<Path, "."> : Path
+>;
+
+/**
  *
  */
-export type TranslationsDictionaryDefault = {
-  "~": any;
+type TranslationsDictionaryDefault = {
+  // "~": any;
+  "~": {
+    test: string;
+    static: string;
+    dynamic: {
+      static: string;
+      "[key]": {
+        index: string;
+        "[id]": string;
+      };
+    };
+  };
 };
 
 /**
@@ -32,7 +104,7 @@ export type TranslationsDictionaryDefault = {
  * It must uses `~` as namespace for routes defintions to make the `to` and `useTo`
  * working
  */
-export type TranslationsDictionary = Merge<
+export type TranslationsDictionary = MergeDictionaries<
   TranslationsDictionaryDefault,
   Koine.Translations
 >;
@@ -43,32 +115,102 @@ export type TranslationsDictionary = Merge<
 export type TranslateNamespace = Extract<keyof TranslationsDictionary, string>;
 
 /**
+ * Translation **value** found at a specific _path_ in the given _namespace_
+ *
+ * `TPath` can be any of all possible paths:
+ * - `plusKey` sub dictionaries within a namespace
+ * - `plusKey.nested` whatever nested level of nesting within a namespace
+ */
+export type TranslationAtPathFromNamespace<
+  TNamespace extends TranslateNamespace,
+  TPath extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
+> = TNamespace extends TranslateNamespace
+  ? TPath extends string // TranslationsPaths<TranslationsDictionary[TNamespace]>
+    ? Get<TranslationsDictionary[TNamespace], TPath>
+    : TranslationsDictionary[TNamespace]
+  : never;
+
+/**
+ * The generic type passed and to use with {@link TranslationAtPath} when you
+ * want to build a type extending that
+ */
+export type TranslationAtPathGeneric =
+  | TranslateNamespace
+  | TranslationsAllPaths;
+
+/**
+ * Translation **value** found at a _path_
+ *
+ * `TPath` can be any of all possible paths begininng with a namespace:
+ * - `namespace` only a namespace
+ * - `namespace:plusKey` sub dictionaries within a namespace
+ * - `namespace:plusKey.nested` whatever nested level of nesting
+ */
+export type TranslationAtPath<TPath extends TranslationAtPathGeneric> =
+  TPath extends TranslateNamespace
+    ? TranslationsDictionary[TPath]
+    : TPath extends `${infer Namespace}:${infer Path}`
+      ? Namespace extends TranslateNamespace
+        ? Get<TranslationsDictionary[Namespace], Path>
+        : never
+      : never;
+
+/**
+ * All translations paths from the given _path_
+ *
+ * `TPath` can be any of all possible paths begininng with a namespace:
+ * - `namespace` only a namespace
+ * - `namespace:plusKey` sub dictionaries within a namespace
+ * - `namespace:plusKey.nested` whatever nested level of nesting
+ */
+export type TranslationPathsFrom<TPath extends TranslationAtPathGeneric> =
+  TPath extends TranslateNamespace
+    ? TranslationsPaths<TranslationsDictionary[TPath]>
+    : TPath extends `${infer Namespace}:${infer Path}`
+      ? Namespace extends TranslateNamespace
+        ? Get<TranslationsDictionary[Namespace], Path> extends object
+          ? TranslationsPaths<Get<TranslationsDictionary[Namespace], Path>>
+          : TranslationsPaths<TranslationsDictionary[Namespace]>
+        : never
+      : never;
+
+/**
+ * All translations _paths_ of the given one, e.g. if `TPath` would be
+ * `"dashboard.users.[id].edit"` the generated type would be the union
+ * `"dashboard.users.[id]" | "dashboard.users" | "dashboard"`.
+ */
+export type TranslationsPathsAncestors<
+  TPath extends string,
+  TSeparator extends string = ".",
+> = BuildRecursiveJoin<Split<TPath, TSeparator>, TSeparator>;
+
+/**
  * Recursive mapped type to extract all usable string paths from a translation
  * definition object (usually from a JSON file).
  * It uses the `infer` "trick" to store the object in memory and prevent
  * [infinite instantiation errors](https://stackoverflow.com/q/75531366/1938970)
  */
-export type TranslationsPaths<T> = {
+export type TranslationsPaths<T, TAsObj extends boolean = true> = {
   [K in Extract<keyof T, string>]: T[K] extends  // exclude empty objects, empty arrays, empty strings
     | Record<string, never>
     | never[]
     | ""
     ? never
     : // recursively manage objects
-    T[K] extends Record<string, unknown>
-    ?
-        | `${K}` // this is to be able to use the "obj" shortcut
-        | Join<K, TranslationsPaths<T[K]>>
-    : // allow primitives or array of primitives
-    // TODO: support array of objects recusrively? For now we just stop at the array name
-    T[K] extends
-        | string
-        | number
-        | boolean
-        | Array<string | number | boolean | object>
-    ? `${K}`
-    : // exclude anything else
-      never;
+      T[K] extends Record<string, unknown>
+      ?
+          | (TAsObj extends true ? `${K}` : never) // this is to be able to use the "obj" shortcut
+          | JoinObjectPath<K, TranslationsPaths<T[K], TAsObj>>
+      : // allow primitives or array of primitives
+        // TODO: support array of objects recusrively? For now we just stop at the array name
+        T[K] extends
+            | string
+            | number
+            | boolean
+            | Array<string | number | boolean | object>
+        ? `${K}`
+        : // exclude anything else
+          never;
 }[Extract<keyof T, string>] extends infer O
   ? O
   : never;
@@ -89,30 +231,30 @@ export type TranslationsAllPaths = {
       | ""
       ? never
       : // recursively manage objects
-      TranslationsDictionary[N][K] extends Record<string, unknown>
-      ?
-          | `${N}:${K}` // this is to be able to use the "obj" shortcut
-          | Join<
-              K extends string ? `${N}:${K}` : `${N}:`,
-              TranslationsPaths<TranslationsDictionary[N][K]>
-            >
-      : // allow primitives or array of primitives
-      // TODO: support array of objects recusrively? For now we just stop at the array name
-      TranslationsDictionary[N][K] extends
-          | string
-          | number
-          | boolean
-          | Array<string | number | boolean | object>
-      ? `${N}:${K}`
-      : // exclude anything else
-        never;
+        TranslationsDictionary[N][K] extends Record<string, unknown>
+        ?
+            | `${N}:${K}` // this is to be able to use the "obj" shortcut
+            | JoinObjectPath<
+                K extends string ? `${N}:${K}` : `${N}:`,
+                TranslationsPaths<TranslationsDictionary[N][K]>
+              >
+        : // allow primitives or array of primitives
+          // TODO: support array of objects recusrively? For now we just stop at the array name
+          TranslationsDictionary[N][K] extends
+              | string
+              | number
+              | boolean
+              | Array<string | number | boolean | object>
+          ? `${N}:${K}`
+          : // exclude anything else
+            never;
   }[Extract<keyof TranslationsDictionary[N], string>];
 }[Extract<keyof TranslationsDictionary, string>] extends infer O
   ? O
   : never;
 
 /**
- * Unlike in `next-translate` we add passing some predefined arguments as
+ * Unlike in `next-translate` we allow passing some predefined arguments as
  * shortcuts for common use cases:
  * - `"obj"` as a shortcut for `{ returnObjects: true }`
  * - `""` as a shortcut for `{ fallback: "" }`
@@ -154,32 +296,32 @@ export type TranslationOptions =
  * Translate function which optionally accept a namespace as first argument
  */
 export type Translate<
-  TNamespace extends TranslateNamespace | undefined = TranslateNamespace
+  TNamespace extends TranslateNamespace | undefined = TranslateNamespace,
 > = TNamespace extends TranslateNamespace
   ? TranslateNamespaced<TNamespace>
   : TranslateDefault;
 
 /**
  * Translate function **without** namespace, it allows to select any of the all
- * available strings in all namespaces.
+ * available strings in _all_ namespaces.
  */
-export type TranslateDefault = <TReturn = string>(
-  s: TranslationsAllPaths,
+export type TranslateDefault = <TPath extends TranslationsAllPaths>(
+  s: TPath,
   q?: TranslationQuery,
-  o?: TranslationOptions
-) => TReturn;
+  o?: TranslationOptions,
+) => TranslationAtPath<TPath>;
 
 /**
- * Translate function **with** namespace, it allows to select only the all available
- * strings in the given namespace.
+ * Translate function **with** namespace, it allows to select all available
+ * strings _only_ in the given namespace.
  */
 export type TranslateNamespaced<TNamespace extends TranslateNamespace> = <
-  TReturn = string
+  TPath extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
 >(
-  s: TranslationsPaths<TranslationsDictionary[TNamespace]>,
+  s: TPath,
   q?: TranslationQuery,
-  o?: TranslationOptions
-) => TReturn;
+  o?: TranslationOptions,
+) => TranslationAtPathFromNamespace<TNamespace, TPath>;
 
 /**
  * Translate function loose type, to use only in implementations that uses
@@ -189,7 +331,7 @@ export type TranslateNamespaced<TNamespace extends TranslateNamespace> = <
 export type TranslateLoose = (
   s?: any,
   q?: TranslationQuery,
-  o?: TranslationOptions
+  o?: TranslationOptions,
 ) => string;
 
 /**
@@ -197,7 +339,10 @@ export type TranslateLoose = (
  * root folder. This type represent every possibly name of the defined route's
  * localised pathname (even with dynamic portions).
  */
-export type TranslatedRoute = TranslationsPaths<TranslationsDictionary["~"]>;
+export type TranslatedRoute = TranslationsPaths<
+  TranslationsDictionary["~"],
+  false
+>;
 
 /**
  * Utility standalone type to extract all (max two level depth) children routes
@@ -212,10 +357,53 @@ export type TranslatedRoute = TranslationsPaths<TranslationsDictionary["~"]>;
  */
 export type TranslatedRoutesChildrenOf<
   TStarts extends string,
-  T extends string = TranslatedRoute
+  T extends string = TranslatedRoute,
 > = T extends `${TStarts}.${infer First}.${infer Second}`
   ? First | `${First}.${Second}`
   : // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  T extends `${TStarts}.${infer First}`
-  ? First
+    T extends `${TStarts}.${infer First}`
+    ? First
+    : never;
+
+type OnlyStatic<T extends string> = T extends
+  | `${string}.[${string}].${string}`
+  | `${string}.[${string}]`
+  | `[${string}].${string}`
+  | `[${string}]`
+  ? never
+  : T;
+type OnlyDynamic<T extends string> = T extends
+  | `${string}.[${string}].${string}`
+  | `${string}.[${string}]`
+  | `[${string}].${string}`
+  | `[${string}]`
+  ? T
   : never;
+
+/**
+ * @borrows [awesome-template-literal-types](https://github.com/ghoullier/awesome-template-literal-types)
+ */
+export type ToRouteDynamicParams<T extends string> = string extends T
+  ? Record<string, string>
+  : T extends `${string}[${infer Param}].${infer Rest}`
+    ? {
+        [k in Param | keyof ToRouteDynamicParams<Rest>]: string | number;
+      }
+    : T extends `${string}[${infer Param}]`
+      ? {
+          [k in Param]: string | number;
+        }
+      : // eslint-disable-next-line @typescript-eslint/ban-types
+        {};
+
+export type ToTranslate = TranslateNamespaced<"~">;
+
+export type ToRouteDynamic = OnlyDynamic<TranslatedRoute>;
+
+export type ToRouteStatic = OnlyStatic<TranslatedRoute>;
+
+export type ToRoute = ToRouteDynamic | ToRouteStatic;
+
+export type ToArgs<TRoute extends ToRoute> = TRoute extends ToRouteDynamic
+  ? [TRoute, ToRouteDynamicParams<TRoute>]
+  : [TRoute];

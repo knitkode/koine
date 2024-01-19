@@ -1,12 +1,23 @@
-import { format } from "prettier";
-import { I18nIndexedFile } from "./i18nGetFsData";
+// import { format } from "prettier";
+import type { I18nIndexedFile } from "./types";
+
+/**
+ * @see https://github.com/sindresorhus/type-fest/blob/main/source/internal.d.ts#L120
+ */
+const pluralSuffixes = ["_zero", "_one", "_two", "_few", "_many", "_other"];
 
 /**
  * Some translations keys won't be used directly and should be omitted
  * from the generated types, e.g. the plural versions of the same string.
  */
-const filterTranslationKey = (key: string) =>
-  key.endsWith("_one") || key.endsWith("_zero") || key.endsWith("_other");
+const filterTranslationKey = (key: string) => {
+  const parts = key.split("_").filter(Boolean);
+  if (parts.length > 1) {
+    const lastPart = parts[parts.length - 1];
+    return /^[0-9]+$/.test(lastPart) || pluralSuffixes.includes(lastPart);
+  }
+  return false;
+};
 
 function getType(
   value: string | string[] | object | object[],
@@ -75,9 +86,13 @@ declare namespace Koine {
 
   out += footer;
 
-  out = await format(out, {
-    parser: "typescript",
-  });
+  // prettier breaks jest, @see https://jestjs.io/docs/ecmascript-modules
+  // https://github.com/jestjs/jest/issues/14305
+  if (!process.env["JEST_WORKER_ID"]) {
+    // out = await format(out, {
+    //   parser: "typescript",
+    // });
+  }
 
   // console.log("i18nGenerateTypes: outputDir", outputDir, "outputPath", outputPath);
   return out;
