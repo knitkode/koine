@@ -5,6 +5,17 @@
   "plural_one": "One",
   "plural_other": "Some",
   "plural_zero": "Zero",
+  "pluralNoDefault_one": "One",
+  "pluralNoDefault_other": "Some",
+  "pluralAsObject": {
+    "one": "One",
+    "other": "Others"
+  },
+  "pluralAsObjectWithExtraKeys": {
+    "one": "One",
+    "other": "Others",
+    "noPluralRelated": "Yes"
+  },
   "listFlat": ["v1", "v2"],
   "listComplex": [
     {

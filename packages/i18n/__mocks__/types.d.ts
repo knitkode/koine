@@ -14,11 +14,12 @@ declare namespace Koine {
     };
     "404": { seo: { title: string }; title: string };
     $faq: { home: { question: string; answer: string }[] };
-    "~account/FormUserLanguages": { empty: {}; msg: string };
     "~account/~user~profile": {
       boolShouldntBeHereBut: boolean;
       title: string;
       plural: string;
+      pluralAsObject: string;
+      pluralAsObjectWithExtraKeys: string | { noPluralRelated: string };
       listFlat: string[];
       listComplex: { k1: string; k2: string }[];
       obj: {
@@ -39,6 +40,8 @@ declare namespace Koine {
           };
         };
       };
+      pluralNoDefault: string;
     };
+    "~account/FormUserLanguages": { empty: {}; msg: string };
   }
 }
