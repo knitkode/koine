@@ -15,10 +15,10 @@ const pluralSuffixes = ["zero", "one", "two", "few", "many", "other"] as const;
 const requiredPluralSuffix: PluralSuffixNamed = "other";
 
 const isPluralSuffix = (suffix: string): suffix is PluralSuffix => {
-  return suffix
-    ? isNumericLiteral(suffix) ||
-        pluralSuffixes.includes(suffix as PluralSuffixNamed)
-    : false;
+  return (
+    pluralSuffixes.includes(suffix as PluralSuffixNamed) ||
+    isNumericLiteral(suffix)
+  );
 };
 
 const isPluralKey = (key: string): key is PluralKey => {

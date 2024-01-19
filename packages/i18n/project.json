@@ -48,7 +48,10 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/i18n/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/i18n/**/*.ts",
+          "packages/i18n/package.json"
+        ]
       }
     },
     "test": {
