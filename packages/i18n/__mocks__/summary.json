@@ -17,17 +17,10 @@
       },
       {
         "locale": "en",
-        "path": "$faq.json",
-        "url": "https://github.com/your-network/translations/tree/dev/en/$faq.json",
-        "words": 3,
-        "characters": 11
-      },
-      {
-        "locale": "en",
         "path": "~account/~user~profile.json",
         "url": "https://github.com/your-network/translations/tree/dev/en/~account/~user~profile.json",
-        "words": 23,
-        "characters": 52
+        "words": 30,
+        "characters": 80
       },
       {
         "locale": "en",
@@ -35,20 +28,20 @@
         "url": "https://github.com/your-network/translations/tree/dev/en/~account/FormUserLanguages.json",
         "words": 2,
         "characters": 8
+      },
+      {
+        "locale": "en",
+        "path": "$faq.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/$faq.json",
+        "words": 3,
+        "characters": 11
       }
     ],
-    "words": 42,
-    "characters": 185
+    "words": 49,
+    "characters": 213
   },
   "nl": {
     "files": [
-      {
-        "locale": "nl",
-        "path": "~.json",
-        "url": "https://github.com/your-network/translations/tree/dev/nl/~.json",
-        "words": 6,
-        "characters": 86
-      },
       {
         "locale": "nl",
         "path": "404.json",
@@ -58,10 +51,10 @@
       },
       {
         "locale": "nl",
-        "path": "$faq.json",
-        "url": "https://github.com/your-network/translations/tree/dev/nl/$faq.json",
-        "words": 3,
-        "characters": 11
+        "path": "~.json",
+        "url": "https://github.com/your-network/translations/tree/dev/nl/~.json",
+        "words": 6,
+        "characters": 86
       },
       {
         "locale": "nl",
@@ -76,6 +69,13 @@
         "url": "https://github.com/your-network/translations/tree/dev/nl/~account/FormUserLanguages.json",
         "words": 2,
         "characters": 8
+      },
+      {
+        "locale": "nl",
+        "path": "$faq.json",
+        "url": "https://github.com/your-network/translations/tree/dev/nl/$faq.json",
+        "words": 3,
+        "characters": 11
       }
     ],
     "words": 29,

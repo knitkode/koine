@@ -105,7 +105,7 @@ function i18nSummaryGetData(options: I18nGenerateSummaryOptions) {
 }
 
 function i18nSummaryGetDataByPath(data: I18nSummary) {
-  const out: I18nSummaryByPath = {};
+  let out: I18nSummaryByPath = {};
 
   forin(data, (locale, dataPerLocale) => {
     const { files } = dataPerLocale;
@@ -118,6 +118,8 @@ function i18nSummaryGetDataByPath(data: I18nSummary) {
       out[path][locale] = file;
     }
   });
+
+  out = Object.fromEntries(Object.entries(out).sort());
 
   return out;
 }
