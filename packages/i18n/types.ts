@@ -305,11 +305,14 @@ export type Translate<
  * Translate function **without** namespace, it allows to select any of the all
  * available strings in _all_ namespaces.
  */
-export type TranslateDefault = <TPath extends TranslationsAllPaths>(
+export type TranslateDefault = <
+  TPath extends TranslationsAllPaths,
+  TReturn = TranslationAtPath<TPath>,
+>(
   s: TPath,
   q?: TranslationQuery,
   o?: TranslationOptions,
-) => TranslationAtPath<TPath>;
+) => TReturn;
 
 /**
  * Translate function **with** namespace, it allows to select all available
@@ -317,22 +320,33 @@ export type TranslateDefault = <TPath extends TranslationsAllPaths>(
  */
 export type TranslateNamespaced<TNamespace extends TranslateNamespace> = <
   TPath extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
+  TReturn = TranslationAtPathFromNamespace<TNamespace, TPath>,
 >(
   s: TPath,
   q?: TranslationQuery,
   o?: TranslationOptions,
-) => TranslationAtPathFromNamespace<TNamespace, TPath>;
+) => TReturn;
 
 /**
- * Translate function loose type, to use only in implementations that uses
+ * Translate function _loose_ type, to use only in implementations that uses
  * the `t` function indirectly without needng knowledge of the string it needs
  * to output.
  */
-export type TranslateLoose = (
+export type TranslateLoose<TReturn = string> = (
   s?: any,
   q?: TranslationQuery,
   o?: TranslationOptions,
-) => string;
+) => TReturn;
+
+/**
+ * Translate function _loosest_ type it allows to return string or object or array
+ * or whatever basically.
+ */
+export type TranslateLoosest<TReturn = any> = (
+  s?: any,
+  q?: TranslationQuery,
+  o?: TranslationOptions,
+) => TReturn;
 
 /**
  * By convention routes definitions are in the `~.json` file in the locales/{locale}/
