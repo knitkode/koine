@@ -1,7 +1,16 @@
-import type {
-  // Get,
-  Split,
-} from "@koine/utils";
+// import type {
+//   // Get,
+//   Split,
+// } from "@koine/utils";
+
+type Split<
+  S extends string,
+  Delimiter extends string,
+> = S extends `${infer Head}${Delimiter}${infer Tail}`
+  ? [Head, ...Split<Tail, Delimiter>]
+  : S extends Delimiter
+    ? []
+    : [S];
 
 /**
  * @file
