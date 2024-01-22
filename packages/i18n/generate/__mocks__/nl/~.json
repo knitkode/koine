@@ -1,11 +1,11 @@
 {
   "account": {
     "user": {
-      "profile": "/account/user",
-      "public": "/account/user/{{ id }}",
+      "profile": "/rekening/gebruiker",
+      "[id]": "/rekening/gebruiker/{{ id }}",
       "settings": {
-        "index": "/account/user/settings",
-        "personal": "/account/user/settings/personal"
+        "index": "/rekening/gebruiker/instellingen",
+        "personal": "/rekening/gebruiker/instellingen/persoonlijk"
       }
     }
   }

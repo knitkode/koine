@@ -5,6 +5,7 @@ import {
   generateSummary,
 } from "./generateSummary";
 import { getFsData } from "./getFsData";
+import type { I18nLocale } from "./types";
 
 export async function writeSummary(
   options: {
@@ -21,7 +22,7 @@ export async function writeSummary(
 
   const summary = await generateSummary({
     files: data.files,
-    defaultLocale,
+    defaultLocale: defaultLocale as I18nLocale,
     sourceUrl,
   });
 

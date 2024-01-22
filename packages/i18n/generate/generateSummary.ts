@@ -1,4 +1,5 @@
 import { arraySum, forin } from "@koine/utils";
+import { sortObjectKeysMatching } from "./sortObjectKeysMatching";
 import type { I18nIndexedFile, I18nLocale } from "./types";
 
 export type I18nGenerateSummaryConfig = {
@@ -6,14 +7,13 @@ export type I18nGenerateSummaryConfig = {
   sourceUrl: string;
 };
 
-type Locale = string & { branded: true };
-
 type I18nGenerateSummaryOptions = I18nGenerateSummaryConfig & {
+  defaultLocale: I18nLocale;
   files: I18nIndexedFile[];
 };
 
 type I18nSummary = Record<
-  Locale,
+  I18nLocale,
   {
     words: number;
     characters: number;
@@ -21,10 +21,10 @@ type I18nSummary = Record<
   }
 >;
 
-type I18nSummaryByPath = Record<string, Record<Locale, I18nSummaryFile>>;
+type I18nSummaryByPath = Record<string, Record<I18nLocale, I18nSummaryFile>>;
 
 type I18nSummaryFile = {
-  locale: Locale;
+  locale: I18nLocale;
   path: string;
   url: string;
   words: number;
@@ -88,11 +88,7 @@ function getSummaryData(options: I18nGenerateSummaryOptions) {
   }
 
   // sort by default locale
-  data = Object.fromEntries(
-    Object.entries(data).sort(([a], [b]) => {
-      return a === defaultLocale ? -1 : a.localeCompare(b);
-    }),
-  );
+  data = sortObjectKeysMatching(data, defaultLocale);
 
   forin(data, (locale, dataPerLocale) => {
     data[locale].characters = arraySum(

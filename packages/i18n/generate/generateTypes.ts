@@ -1,5 +1,14 @@
 import { forin, isNumericLiteral, objectPick, split } from "@koine/utils";
-import type { I18nIndexedFile } from "./types";
+import type { I18nIndexedFile, I18nLocale } from "./types";
+
+export type I18nGenerateTypesConfig = {
+  defaultLocale: string;
+};
+
+type I18nGenerateTypesOptions = I18nGenerateTypesConfig & {
+  defaultLocale: I18nLocale;
+  files: I18nIndexedFile[];
+};
 
 type PluralKey = `${string}_${PluralSuffix}`;
 
@@ -149,10 +158,7 @@ function getType(value: string | string[] | object | object[]) {
   return out;
 }
 
-export async function generateTypes(options: {
-  defaultLocale: string;
-  files: I18nIndexedFile[];
-}) {
+export async function generateTypes(options: I18nGenerateTypesOptions) {
   const { defaultLocale, files } = options;
   const defaultLocaleFiles = files.filter((f) => f.locale === defaultLocale);
   const header = `
