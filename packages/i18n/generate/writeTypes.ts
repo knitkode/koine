@@ -1,8 +1,8 @@
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
+import type { I18n } from "../types";
 import { I18nGenerateTypesConfig, generateTypes } from "./generateTypes";
 import { getFsData } from "./getFsData";
-import { I18nLocale } from "./types";
 
 export async function writeTypes(
   options: {
@@ -17,7 +17,7 @@ export async function writeTypes(
     onlyFilesForLocales: [defaultLocale],
   });
   const types = await generateTypes({
-    defaultLocale: defaultLocale as I18nLocale,
+    defaultLocale: defaultLocale as I18n.Locale,
     files: data.files,
   });
 

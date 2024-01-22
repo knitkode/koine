@@ -1,11 +1,11 @@
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
+import type { I18n } from "../types";
 import {
   type I18nGenerateSummaryConfig,
   generateSummary,
 } from "./generateSummary";
 import { getFsData } from "./getFsData";
-import type { I18nLocale } from "./types";
 
 export async function writeSummary(
   options: {
@@ -22,7 +22,7 @@ export async function writeSummary(
 
   const summary = await generateSummary({
     files: data.files,
-    defaultLocale: defaultLocale as I18nLocale,
+    defaultLocale: defaultLocale as I18n.Locale,
     sourceUrl,
   });
 

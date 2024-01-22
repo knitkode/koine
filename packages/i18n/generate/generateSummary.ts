@@ -1,6 +1,6 @@
 import { arraySum, forin } from "@koine/utils";
+import type { I18n } from "../types";
 import { sortObjectKeysMatching } from "./sortObjectKeysMatching";
-import type { I18nIndexedFile, I18nLocale } from "./types";
 
 export type I18nGenerateSummaryConfig = {
   defaultLocale: string;
@@ -8,12 +8,12 @@ export type I18nGenerateSummaryConfig = {
 };
 
 type I18nGenerateSummaryOptions = I18nGenerateSummaryConfig & {
-  defaultLocale: I18nLocale;
-  files: I18nIndexedFile[];
+  defaultLocale: I18n.Locale;
+  files: I18n.IndexedFile[];
 };
 
 type I18nSummary = Record<
-  I18nLocale,
+  I18n.Locale,
   {
     words: number;
     characters: number;
@@ -21,10 +21,10 @@ type I18nSummary = Record<
   }
 >;
 
-type I18nSummaryByPath = Record<string, Record<I18nLocale, I18nSummaryFile>>;
+type I18nSummaryByPath = Record<string, Record<I18n.Locale, I18nSummaryFile>>;
 
 type I18nSummaryFile = {
-  locale: I18nLocale;
+  locale: I18n.Locale;
   path: string;
   url: string;
   words: number;
@@ -56,7 +56,7 @@ function getWords(
 
 function getSummaryDataEntry(
   options: I18nGenerateSummaryOptions,
-  file: I18nIndexedFile,
+  file: I18n.IndexedFile,
 ): I18nSummaryFile {
   const { locale, path } = file;
   const url = `${options.sourceUrl}/${locale}/${path}`;
@@ -105,7 +105,7 @@ function getSummaryData(options: I18nGenerateSummaryOptions) {
     // sort object keys
     data[locale] = Object.fromEntries(
       Object.entries(data[locale]).sort(),
-    ) as I18nSummary[I18nLocale];
+    ) as I18nSummary[I18n.Locale];
   });
 
   return data;
@@ -138,7 +138,7 @@ function generateSummaryMarkdownByPath(
   const dataByPath = getSummaryDataByPath(data);
   let output = "";
   let body = "";
-  const locales: I18nLocale[] = [];
+  const locales: I18n.Locale[] = [];
   const styleBorder = `style="border-right:1px solid grey"`;
 
   forin(dataByPath, (path, dataPerPath) => {

@@ -1,13 +1,13 @@
 import { forin, isNumericLiteral, objectPick, split } from "@koine/utils";
-import type { I18nIndexedFile, I18nLocale } from "./types";
+import type { I18n } from "../types";
 
 export type I18nGenerateTypesConfig = {
   defaultLocale: string;
 };
 
 type I18nGenerateTypesOptions = I18nGenerateTypesConfig & {
-  defaultLocale: I18nLocale;
-  files: I18nIndexedFile[];
+  defaultLocale: I18n.Locale;
+  files: I18n.IndexedFile[];
 };
 
 type PluralKey = `${string}_${PluralSuffix}`;

@@ -1,12 +1,12 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { glob } from "glob";
+import type { I18n } from "../types";
 import { getLocalesFolders } from "./getLocalesFolders";
-import type { I18nIndexedFile, I18nIndexedLocale } from "./types";
 
 type I18nGetFsDataOutput = {
-  locales: I18nIndexedLocale[];
-  files: I18nIndexedFile[];
+  locales: I18n.IndexedLocale[];
+  files: I18n.IndexedFile[];
 };
 
 export async function getFsData(options: {

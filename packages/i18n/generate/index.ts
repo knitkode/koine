@@ -6,4 +6,3 @@ export { getLocalesFolders } from "./getLocalesFolders";
 export { writeRoutes } from "./writeRoutes";
 export { writeTypes } from "./writeTypes";
 export { writeSummary } from "./writeSummary";
-export * from "./types";

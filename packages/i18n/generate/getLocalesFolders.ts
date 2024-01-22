@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { glob } from "glob";
-import type { I18nIndexedLocale, I18nLocale } from "./types";
+import type { I18n } from "../types";
 
 const ignoredFolderNames = ["node_modules"];
 
@@ -18,9 +18,9 @@ export async function getLocalesFolders(options: { cwd: string }) {
   )
     .filter((folder) => folder.isDirectory())
     .map((path) => path.relative())
-    .filter((path) => !ignoredFolderNames.includes(path)) as I18nLocale[];
+    .filter((path) => !ignoredFolderNames.includes(path)) as I18n.Locale[];
 
-  const output: I18nIndexedLocale[] = folders.map((locale) => ({
+  const output: I18n.IndexedLocale[] = folders.map((locale) => ({
     path: join(cwd, locale),
     code: locale,
   }));

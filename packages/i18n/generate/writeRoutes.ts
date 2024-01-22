@@ -1,11 +1,11 @@
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
+import type { I18n } from "../types";
 import {
   type I18nGenerateRoutesConfig,
   generateRoutes,
 } from "./generateRoutes";
 import { getFsData } from "./getFsData";
-import { I18nLocale } from "./types";
 
 export async function writeRoutes(
   options: {
@@ -20,7 +20,7 @@ export async function writeRoutes(
   });
 
   const routes = await generateRoutes({
-    defaultLocale: defaultLocale as I18nLocale,
+    defaultLocale: defaultLocale as I18n.Locale,
     files: data.files,
   });
 
