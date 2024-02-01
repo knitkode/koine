@@ -7,3 +7,4 @@ export { getLocalesFolders } from "./getLocalesFolders";
 export { write } from "./write";
 export { writeSource } from "./writeSource";
 export { writeSummary } from "./writeSummary";
+export type { I18nGenerate } from "./types";

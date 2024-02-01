@@ -102,7 +102,7 @@ export namespace I18nGenerate {
     /**
      * File extension
      */
-    ext: "ts" | "tsx" | "js" | "json";
+    ext: "ts" | "tsx" | "mjs" | "js" | "json";
     /**
      * Function that generates the file content
      */

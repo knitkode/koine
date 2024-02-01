@@ -7,8 +7,5 @@
     "module": "ESNext"
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": [
-    "**/*.spec.ts"
-    // "**/__mocks__"
-  ]
+  "exclude": ["**/*.spec.ts", "**/__mocks__"]
 }

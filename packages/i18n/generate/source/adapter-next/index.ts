@@ -18,7 +18,7 @@ const adapter: I18nGenerate.Adpater = () => {
         index: true,
       },
       { name: "useRouteId", fn: useRouteId, ext: "ts", index: true },
-      { name: "withI18n", fn: withI18n, ext: "ts" },
+      { name: "withI18n", fn: withI18n, ext: "mjs" },
     ],
   };
 };

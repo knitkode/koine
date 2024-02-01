@@ -3,7 +3,7 @@ import DynamicNamespaces from "./DynamicNamespaces";
 import T from "./T";
 import TransText from "./TransText";
 import getT from "./getT";
-import nextTranslateI18n from "./next-translate-i18n";
+import nextTranslateI18n from "./nextTranslateI18n";
 import useLocale from "./useLocale";
 import useT from "./useT";
 import useTo from "./useTo";
@@ -19,7 +19,7 @@ const adapter: I18nGenerate.Adpater = () => {
         index: true,
       },
       { name: "getT", fn: getT, ext: "ts", index: true },
-      { name: "nextTranslateI18n", fn: nextTranslateI18n, ext: "ts" },
+      { name: "nextTranslateI18n", fn: nextTranslateI18n, ext: "js" },
       { name: "T", fn: T, ext: "tsx", index: true },
       { name: "TransText", fn: TransText, ext: "tsx", index: true },
       { name: "useLocale", fn: useLocale, ext: "ts", index: true },
