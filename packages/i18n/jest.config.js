@@ -2,13 +2,13 @@ module.exports = {
   displayName: "i18n",
   preset: "../../jest.preset.js",
   transform: {
-    "^.+\\.[tj]s?$": [
+    "^.+\\.[tj]sx?$": [
       "ts-jest",
       {
         tsconfig: "<rootDir>/tsconfig.spec.json",
       },
     ],
   },
-  moduleFileExtensions: ["ts", "js", "html"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
   // setupFiles: ["<rootDir>/env.test.ts"],
 };

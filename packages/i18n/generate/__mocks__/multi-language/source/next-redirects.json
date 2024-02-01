@@ -1,0 +1,74 @@
+[
+  {
+    "source": "/it/about",
+    "destination": "/it/chi-siamo",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/account/user/:id",
+    "destination": "/it/account/profilo/:id",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/account/user/profile",
+    "destination": "/account/user",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/account/user/profile",
+    "destination": "/it/account/profilo",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/account/user/settings",
+    "destination": "/it/account/profilo/impostazioni",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/account/user/settings/personal",
+    "destination": "/it/account/profilo/impostazioni/personali",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/home",
+    "destination": "/",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/home",
+    "destination": "/it",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/products",
+    "destination": "/it/prodotti",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/products/:id",
+    "destination": "/it/prodotti/:id",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/products/:id/edit",
+    "destination": "/it/prodotti/:id/modifica",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/it/products/:id/edit/details",
+    "destination": "/it/prodotti/:id/modifica/dettagli",
+    "permanent": false,
+    "locale": false
+  }
+]

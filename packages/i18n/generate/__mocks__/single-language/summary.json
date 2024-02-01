@@ -1,0 +1,63 @@
+{
+  "en": {
+    "characters": 404,
+    "files": [
+      {
+        "characters": 277,
+        "locale": "en",
+        "path": "~.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/~.json",
+        "words": 35
+      },
+      {
+        "characters": 80,
+        "locale": "en",
+        "path": "~account/~user~profile.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/~account/~user~profile.json",
+        "words": 30
+      },
+      {
+        "characters": 8,
+        "locale": "en",
+        "path": "~account/FormUserLanguages.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/~account/FormUserLanguages.json",
+        "words": 2
+      },
+      {
+        "characters": 11,
+        "locale": "en",
+        "path": "$faq.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/$faq.json",
+        "words": 3
+      },
+      {
+        "characters": 28,
+        "locale": "en",
+        "path": "404.json",
+        "url": "https://github.com/your-network/translations/tree/dev/en/404.json",
+        "words": 8
+      }
+    ],
+    "words": 78
+  },
+  "source": {
+    "characters": 80,
+    "files": [
+      {
+        "characters": 40,
+        "locale": "source",
+        "path": "next-redirects.json",
+        "url": "https://github.com/your-network/translations/tree/dev/source/next-redirects.json",
+        "words": 4
+      },
+      {
+        "characters": 40,
+        "locale": "source",
+        "path": "next-rewrites.json",
+        "url": "https://github.com/your-network/translations/tree/dev/source/next-rewrites.json",
+        "words": 4
+      }
+    ],
+    "words": 8
+  }
+}

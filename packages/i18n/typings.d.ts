@@ -3,13 +3,13 @@
  * namespace `Koine`. Most of the types here should be prefixed by `I18n`, e.g.
  * `I18nSomeFeature` accessible anywhere from `Koine.I18nSomeFeature`
  */
-declare namespace Koine {
+declare namespace I18n {
   /**
    * Translations dictionary extracted from JSON files.
    * You need to augment this type with something like:
    *
    * ```ts
-   * declare namespace Koine {
+   * declare namespace I18n {
    *   interface Translations {
    *     "~": typeof import("./locales/en/~.json");
    *     "_": typeof import("./locales/en/_.json");

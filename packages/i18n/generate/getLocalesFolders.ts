@@ -1,29 +1,33 @@
 import { join } from "node:path";
 import { glob } from "glob";
-import type { I18n } from "../types";
+import type { I18nGenerate } from "./types";
 
-const ignoredFolderNames = ["node_modules"];
-
-export async function getLocalesFolders(options: { cwd: string }) {
-  const { cwd } = options;
+export async function getLocalesFolders(options: {
+  cwd: string;
+  ignore?: string[];
+  defaultLocale?: string;
+}) {
+  const { cwd, ignore = [], defaultLocale } = options;
 
   const folders = (
     await glob("*", {
       cwd,
       withFileTypes: true,
+      ignore: [...ignore, "node_modules/**"],
       // onlyDirectories: true,
       // @see defaults https://www.npmjs.com/package/glob#dots
       // dot: false,
     })
   )
     .filter((folder) => folder.isDirectory())
-    .map((path) => path.relative())
-    .filter((path) => !ignoredFolderNames.includes(path)) as I18n.Locale[];
+    .map((path) => path.relative()) as I18nGenerate.Locale[];
 
-  const output: I18n.IndexedLocale[] = folders.map((locale) => ({
-    path: join(cwd, locale),
-    code: locale,
-  }));
+  const output: I18nGenerate.LocalesFolders[] = folders
+    .sort((a, b) => (a === defaultLocale ? -1 : a.localeCompare(b)))
+    .map((locale) => ({
+      path: join(cwd, locale),
+      code: locale,
+    }));
 
   return output;
 }

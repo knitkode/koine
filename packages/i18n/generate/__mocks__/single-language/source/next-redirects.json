@@ -1,0 +1,14 @@
+[
+  {
+    "source": "/account/user/profile",
+    "destination": "/account/user",
+    "permanent": false,
+    "locale": false
+  },
+  {
+    "source": "/home",
+    "destination": "/",
+    "permanent": false,
+    "locale": false
+  }
+]

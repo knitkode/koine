@@ -1,19 +1,20 @@
-import { arraySum, forin } from "@koine/utils";
-import type { I18n } from "../types";
+// import { arraySum, forin } from "@koine/utils";
+import arraySum from "@koine/utils/arraySum";
+import forin from "@koine/utils/forin";
 import { sortObjectKeysMatching } from "./sortObjectKeysMatching";
+import type { I18nGenerate } from "./types";
 
-export type I18nGenerateSummaryConfig = {
-  defaultLocale: string;
+export type I18nGenerateSummaryConfig = Pick<
+  I18nGenerate.Config,
+  "defaultLocale"
+> & {
   sourceUrl: string;
 };
 
-type I18nGenerateSummaryOptions = I18nGenerateSummaryConfig & {
-  defaultLocale: I18n.Locale;
-  files: I18n.IndexedFile[];
-};
+type I18nGenerateSummaryOptions = I18nGenerate.Data & I18nGenerateSummaryConfig;
 
 type I18nSummary = Record<
-  I18n.Locale,
+  I18nGenerate.Locale,
   {
     words: number;
     characters: number;
@@ -21,10 +22,13 @@ type I18nSummary = Record<
   }
 >;
 
-type I18nSummaryByPath = Record<string, Record<I18n.Locale, I18nSummaryFile>>;
+type I18nSummaryByPath = Record<
+  string,
+  Record<I18nGenerate.Locale, I18nSummaryFile>
+>;
 
 type I18nSummaryFile = {
-  locale: I18n.Locale;
+  locale: I18nGenerate.Locale;
   path: string;
   url: string;
   words: number;
@@ -56,7 +60,7 @@ function getWords(
 
 function getSummaryDataEntry(
   options: I18nGenerateSummaryOptions,
-  file: I18n.IndexedFile,
+  file: I18nGenerate.TranslationFile,
 ): I18nSummaryFile {
   const { locale, path } = file;
   const url = `${options.sourceUrl}/${locale}/${path}`;
@@ -105,7 +109,7 @@ function getSummaryData(options: I18nGenerateSummaryOptions) {
     // sort object keys
     data[locale] = Object.fromEntries(
       Object.entries(data[locale]).sort(),
-    ) as I18nSummary[I18n.Locale];
+    ) as I18nSummary[I18nGenerate.Locale];
   });
 
   return data;
@@ -138,7 +142,7 @@ function generateSummaryMarkdownByPath(
   const dataByPath = getSummaryDataByPath(data);
   let output = "";
   let body = "";
-  const locales: I18n.Locale[] = [];
+  const locales: I18nGenerate.Locale[] = [];
   const styleBorder = `style="border-right:1px solid grey"`;
 
   forin(dataByPath, (path, dataPerPath) => {

@@ -1,0 +1,20 @@
+{
+  "boolShouldntBeHereBut": true,
+  "titles": {
+    "user": {
+      "card": "Nome utente",
+      "list": [
+        {
+          "keyInList": "valore nella lista",
+          "key2InList": "valore2 nella lista"
+        }
+      ],
+      "meta": {
+        "social": {
+          "platform": "valore"
+        },
+        "traits": ["alto", "piatto"]
+      }
+    }
+  }
+}

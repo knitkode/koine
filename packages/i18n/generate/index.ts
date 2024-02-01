@@ -1,8 +1,9 @@
-export { generateRoutes } from "./generateRoutes";
+export { generateSource } from "./generateSource";
 export { generateSummary } from "./generateSummary";
-export { generateTypes } from "./generateTypes";
+export { getConfig } from "./getConfig";
 export { getFsData } from "./getFsData";
+export { getRoutesData } from "./getRoutesData";
 export { getLocalesFolders } from "./getLocalesFolders";
-export { writeRoutes } from "./writeRoutes";
-export { writeTypes } from "./writeTypes";
+export { write } from "./write";
+export { writeSource } from "./writeSource";
 export { writeSummary } from "./writeSummary";

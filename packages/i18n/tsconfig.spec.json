@@ -4,5 +4,5 @@
     "outDir": "../../dist/out-tsc",
     "types": ["jest", "node"]
   },
-  "include": ["**/*.ts", "**/*.spec.ts", "**/*.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.spec.ts", "**/*.d.ts"]
 }

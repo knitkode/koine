@@ -1,0 +1,3 @@
+__mocks__/source/*/compiled
+# __mocks__/source/*.js
+# __mocks__/source/*.d.ts

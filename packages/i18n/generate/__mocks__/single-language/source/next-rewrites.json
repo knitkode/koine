@@ -1,0 +1,10 @@
+[
+  {
+    "source": "/account/user",
+    "destination": "/account/user/profile"
+  },
+  {
+    "source": "/",
+    "destination": "/home"
+  }
+]
