@@ -1,6 +1,6 @@
 import type { Redirect as _Redirect } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties } from "@koine/utils";
-import { formatRoutePathname } from "../../routeHelpers";
+import { formatRoutePathname } from "../../../shared";
 import type { I18nGenerate } from "../../types";
 import { transformPathname } from "./transformPathname";
 
@@ -43,8 +43,8 @@ export function getPathRedirect(arg: {
  */
 export function getRedirects(
   data: I18nGenerate.Data,
-  localeParam: string = "",
-  permanent: boolean = false,
+  localeParam = "",
+  permanent = false,
 ) {
   const { routes, defaultLocale, hideDefaultLocaleInUrl } = data;
   const redirects: (Redirect | undefined)[] = [];

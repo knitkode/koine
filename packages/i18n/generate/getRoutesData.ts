@@ -1,6 +1,5 @@
 import { capitalize, changeCaseCamel, forin, objectFlat } from "@koine/utils";
-import { routeHasDynamicPortion } from "../routeHasDynamicPortion";
-import { formatRoutePathname } from "./routeHelpers";
+import { formatRoutePathname, routeHasDynamicPortion } from "../shared";
 import { sortObjectKeysMatching } from "./sortObjectKeysMatching";
 import type { I18nGenerate } from "./types";
 

@@ -1,8 +1,4 @@
 import { forin, isNumericLiteral, objectPick, split } from "@koine/utils";
-// import forin from "@koine/utils/forin";
-// import isNumericLiteral from "@koine/utils/isNumericLiteral";
-// import objectPick from "@koine/utils/objectPick";
-// import split from "@koine/utils/split";
 import type { I18nGenerate } from "../../types";
 
 export type I18nGenerateTypesConfig = Pick<

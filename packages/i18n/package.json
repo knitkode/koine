@@ -3,7 +3,8 @@
   "sideEffects": false,
   "dependencies": {
     "@koine/node": "*",
-    "@koine/utils": "*"
+    "@koine/utils": "*",
+    "@swc/helpers": "^0.5.3"
   },
   "peerDependencies": {
     "glob": "^10.3.10",

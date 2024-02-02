@@ -6,35 +6,30 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "nx run i18n:build-esm",
-          "pnpm dev postbuild i18n --ext --esm"
-        ],
-        "parallel": false
-      }
-    },
-    "build-esm": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/rollup:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/i18n/esm",
+        "outputPath": "dist/packages/i18n",
         "tsConfig": "packages/i18n/tsconfig.lib.json",
+        "project": "packages/i18n/package.json",
         "main": "packages/i18n/index.ts",
-        "assets": ["packages/i18n/*.md", "packages/i18n/*.d.ts"]
+        "assets": [
+          {
+            "input": "packages/i18n",
+            "glob": "/**/*.{md,.d.ts}",
+            "output": "./"
+          }
+        ],
+        "generateExportsField": true,
+        "skipTypeCheck": false,
+        "external": "all",
+        "format": ["cjs", "esm"],
+        "compiler": "swc",
+        "deleteOutputPath": true,
+        "additionalEntryPoints": ["packages/i18n/generate.ts"]
       }
     },
-    "build-cjs": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/i18n/cjs",
-        "tsConfig": "packages/i18n/tsconfig.lib-cjs.json",
-        "main": "packages/i18n/index.ts"
-      }
-    },
-    "build-swc": {
+    "_build": {
       "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {

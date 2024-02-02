@@ -1,6 +1,4 @@
-// import { arraySum, forin } from "@koine/utils";
-import arraySum from "@koine/utils/arraySum";
-import forin from "@koine/utils/forin";
+import { arraySum, forin } from "@koine/utils";
 import { sortObjectKeysMatching } from "./sortObjectKeysMatching";
 import type { I18nGenerate } from "./types";
 

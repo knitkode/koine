@@ -1,0 +1,10 @@
+export { generateSource } from "./generate/generateSource";
+export { generateSummary } from "./generate/generateSummary";
+export { getConfig } from "./generate/getConfig";
+export { getFsData } from "./generate/getFsData";
+export { getRoutesData } from "./generate/getRoutesData";
+export { getLocalesFolders } from "./generate/getLocalesFolders";
+export { write } from "./generate/write";
+export { writeSource } from "./generate/writeSource";
+export { writeSummary } from "./generate/writeSummary";
+export type { I18nGenerate } from "./generate/types";

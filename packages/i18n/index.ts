@@ -1,3 +1,3 @@
-export { interpolateTo } from "./interpolateTo";
-export { routeHasDynamicPortion } from "./routeHasDynamicPortion";
+export * from "./client";
+export * from "./shared";
 export * from "./types";

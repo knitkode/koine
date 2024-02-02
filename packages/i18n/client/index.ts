@@ -1,0 +1,1 @@
+export { interpolateTo } from "./interpolateTo";
