@@ -70,8 +70,6 @@ export default (data: I18nGenerate.Data) => {
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-// import { routesSlim } from "./routesSlim";
-export namespace I18n.RouteParams {${routeParamsInterfaces}}
 
 export namespace I18n {
   export type Locale = ${data.locales.map((l) => `"${l}"`).join(" | ")};
@@ -80,9 +78,6 @@ export namespace I18n {
 
   ${generateTypesTranslations(data)}
 ${file_types}
-}
-
-export namespace I18n.Routing {
   
   // export type RouteId = keyof typeof routesSlim;
   export type RouteId = RouteIdStatic | RouteIdDynamic;
@@ -109,6 +104,8 @@ export namespace I18n.Routing {
     T extends string = RouteId,
   > = T extends \`\${TStarts}.\${infer First}\` ? \`\${TStarts}.\${First}\` : never;   
 }
+
+export namespace I18n.RouteParams {${routeParamsInterfaces}}
 
 export namespace I18n.Utils {
 ${file_typesRouting}

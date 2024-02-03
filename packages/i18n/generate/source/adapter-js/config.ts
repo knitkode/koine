@@ -11,6 +11,4 @@ export const config = {
   defaultLocale,
   hideDefaultLocaleInUrl: ${data.hideDefaultLocaleInUrl},
 }
-
-export default config;
 `;

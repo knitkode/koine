@@ -29,9 +29,9 @@ export async function writeSourceCompiled(
     declaration: true,
     // target: ts.ScriptTarget.ES5,
     target: ts.ScriptTarget.ESNext,
-    module: ts.ModuleKind.CommonJS,
-    // module: ts.ModuleKind.ESNext,
-    // moduleResolution: ts.ModuleResolutionKind.Bundler,
+    // module: ts.ModuleKind.CommonJS,
+    module: ts.ModuleKind.ESNext,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
     resolveJsonModule: true,
     allowJs: false,
     esModuleInterop: true,
@@ -42,7 +42,12 @@ export async function writeSourceCompiled(
     importHelpers: true,
     ...(tsOptions || {}),
   };
-  const program = ts.createProgram(rootNames, compilerOptions);
+  // Create a Program with an in-memory emit
+  // const createdFiles: Record<string, string> = {};
+  // const host = ts.createCompilerHost(compilerOptions);
+  // host.writeFile = (fileName: string, contents: string) => createdFiles[fileName] = contents;
+
+  const program = ts.createProgram(rootNames, compilerOptions /* , host */);
   const emitResult = program.emit();
 
   // const programCjs = ts.createProgram(rootNames, {
@@ -50,7 +55,6 @@ export async function writeSourceCompiled(
   //   module: ts.ModuleKind.CommonJS,
   //   moduleResolution: ts.ModuleResolutionKind.Classic,
   //   declaration: false,
-
   // });
   // const emitResultCjs = programCjs.emit();
 
@@ -63,6 +67,7 @@ export async function writeSourceCompiled(
     if (diagnostic.file) {
       const { line, character } = ts.getLineAndCharacterOfPosition(
         diagnostic.file,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         diagnostic.start!,
       );
       const message = ts.flattenDiagnosticMessageText(
@@ -80,4 +85,6 @@ export async function writeSourceCompiled(
       );
     }
   });
+
+  return emitResult;
 }

@@ -57,6 +57,4 @@ export function toFormat(
   }
   return pathname;
 }
-
-export default toFormat;
 `;

@@ -28,6 +28,4 @@ const TypedT = <
   >;
 
 export const T = Trans as typeof TypedT;
-
-export default T;
 `;

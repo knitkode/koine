@@ -12,9 +12,9 @@ import type { I18n } from "./types";
  * argument that interpolates the dynamic portions of the route name. The types
  * of these portions are automatically inferred.
  */
-export function to<TRoute extends I18n.Routing.RouteId>(
+export function to<TRoute extends I18n.RouteId>(
   id: TRoute,
-  ...args: TRoute extends I18n.Routing.RouteIdDynamic
+  ...args: TRoute extends I18n.RouteIdDynamic
     ?
         | [I18n.Utils.DynamicParams<TRoute>]
         | [I18n.Utils.DynamicParams<TRoute>, I18n.Locale]
@@ -27,6 +27,4 @@ export function to<TRoute extends I18n.Routing.RouteId>(
 
   return toFormat(locale, pathname, params);
 }
-
-export default to;
 `;

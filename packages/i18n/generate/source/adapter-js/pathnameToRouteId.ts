@@ -11,6 +11,4 @@ export const pathnameToRouteId = (pathname: string) =>
     .replace(/^\\//g, "")
     .replace(/\\//g, ".")
     .replace(/\\/index$/, "");
-
-export default pathnameToRouteId;
 `;

@@ -13,6 +13,5 @@ export default (data: I18nGenerate.Data) => {
   );
   return `
 export const routes = ${value} as const;
-
-export default routes;`;
+`;
 };

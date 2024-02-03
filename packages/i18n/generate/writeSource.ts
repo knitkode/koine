@@ -1,3 +1,4 @@
+import { rmSync } from "node:fs";
 import { cp } from "node:fs/promises";
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
@@ -30,7 +31,8 @@ export async function writeSource(options: WriteSourceOptions) {
   const data = await getFsData({ ...options, ignore: [output + "/**"] });
   const sources = await generateSource({ ...data, ...configSource });
 
-  const writtenSources: Set<string> = new Set();
+  const prettifiablePaths: Set<string> = new Set();
+  const writtenFiles: Set<string> = new Set();
   const writtenFolders: Set<string> = new Set();
 
   await Promise.all(
@@ -39,21 +41,25 @@ export async function writeSource(options: WriteSourceOptions) {
       const filepath = join(cwd, output, relativePath);
 
       await fsWrite(filepath, content);
-      writtenSources.add(relativePath);
+      writtenFiles.add(relativePath);
+      prettifiablePaths.add(filepath);
     }),
   );
 
   if (!skipTsCompile) {
-    await writeSourceCompiled(
-      options,
-      Array.from(writtenSources).filter(
-        (source) => source.endsWith(".ts") || source.endsWith(".tsx"),
-      ),
+    const tsFiles = Array.from(writtenFiles).filter(
+      (source) => source.endsWith(".ts") || source.endsWith(".tsx"),
     );
-    Array.from(writtenSources).forEach((relativePath) => {
-      writtenSources.add(relativePath.replace(".tsx", ".js"));
-      writtenSources.add(relativePath.replace(".ts", ".js"));
-      writtenSources.add(relativePath.replace(".ts", ".d.ts"));
+    await writeSourceCompiled(options, tsFiles);
+
+    Array.from(tsFiles).forEach((relativePath) => {
+      writtenFiles.add(relativePath.replace(/\.tsx?$/, ".js"));
+      writtenFiles.add(relativePath.replace(/\.tsx?$/, ".d.ts"));
+
+      // remove TypeScript source file
+      const filepath = join(cwd, output, relativePath);
+      rmSync(filepath, { force: true });
+      writtenFiles.delete(relativePath);
     });
   }
 
@@ -66,7 +72,7 @@ export async function writeSource(options: WriteSourceOptions) {
   if (!skipGitignore) {
     await fsWrite(
       join(cwd, output, ".gitignore"),
-      Array.from(new Set([...writtenFolders, ...writtenSources]))
+      Array.from(new Set([...writtenFolders, ...writtenFiles]))
         .sort()
         .map((relativePath) => `/${relativePath}`)
         .join(`\n`),

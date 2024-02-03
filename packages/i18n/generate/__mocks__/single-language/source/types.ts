@@ -452,7 +452,7 @@ export namespace I18n {
   ) => TReturn;
 }
 
-export namespace I18n.Routing {
+export namespace I18n {
   // export type RouteId = keyof typeof routesSlim;
   export type RouteId = RouteIdStatic | RouteIdDynamic;
 
@@ -543,16 +543,14 @@ export namespace I18n.Utils {
     | `${Start}${string}${End}${string}`
     | `${Start}${string}${End}`;
 
-  type InferredDelimiters<T extends string> = T extends WithDelimitedString<
-    "[",
-    "]"
-  >
-    ? { start: "["; end: "]" }
-    : T extends WithDelimitedString<"{{", "}}">
-      ? { start: "{{"; end: "}}" }
-      : T extends WithDelimitedString<"{", "}">
-        ? { start: "{"; end: "}" }
-        : never;
+  type InferredDelimiters<T extends string> =
+    T extends WithDelimitedString<"[", "]">
+      ? { start: "["; end: "]" }
+      : T extends WithDelimitedString<"{{", "}}">
+        ? { start: "{{"; end: "}}" }
+        : T extends WithDelimitedString<"{", "}">
+          ? { start: "{"; end: "}" }
+          : never;
 
   /**
    * @borrows [awesome-template-literal-types](https://github.com/ghoullier/awesome-template-literal-types)

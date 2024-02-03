@@ -26,10 +26,10 @@ function getPathnameParts(pathname: string) {
 function localisePathname(
   locale: I18n.Locale,
   // e.g. "my.path.[id].view"
-  routeId: I18n.Routing.RouteIdDynamic | I18n.Routing.RouteIdStatic,
+  routeId: I18n.RouteIdDynamic | I18n.RouteIdStatic,
   locationLike: LocationLike
 ) {
-  const toPathname = to(routeId as I18n.Routing.RouteIdStatic, locale);
+  const toPathname = to(routeId as I18n.RouteIdStatic, locale);
 
   if (isStaticPathname(toPathname)) {
     return toPathname;
@@ -37,7 +37,7 @@ function localisePathname(
   // e.g. ['my', 'path', '[id]', 'view']
   const toPathnameParts = getPathnameParts(toPathname);
   // e.g. "my.path.[id].view"
-  const routeIdDynamic = routeId as I18n.Routing.RouteIdDynamic;
+  const routeIdDynamic = routeId as I18n.RouteIdDynamic;
   // e.g. /my/path/1 23/view
   const currentPathname = locationLike.pathname;
   // e.g. ['my', 'path', '123', 'view']
@@ -68,11 +68,9 @@ type LocationLike = { pathname: string; search?: string; hash?: string; };
 
 export type LocalisedPathnames = Record<I18n.Locale, string>;
 
-export const deriveLocalisedPathnames = (routeId: I18n.Routing.RouteId, locationLike: LocationLike) =>
+export const deriveLocalisedPathnames = (routeId: I18n.RouteId, locationLike: LocationLike) =>
   locales.reduce((pathnames, locale) => {
     pathnames[locale] = localisePathname(locale, routeId, locationLike);
     return pathnames;
   }, {} as LocalisedPathnames);
-
-export default deriveLocalisedPathnames;
 `;

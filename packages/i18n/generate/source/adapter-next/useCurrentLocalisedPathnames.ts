@@ -17,6 +17,4 @@ export function useCurrentLocalisedPathnames() {
 
   return urls;
 }
-
-export default useCurrentLocalisedPathnames;
 `;

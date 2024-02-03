@@ -40,6 +40,4 @@ export const useT = <TNamespace extends I18n.TranslateNamespace>(namespace: TNam
   );
   return tMemoized;
 };
-
-export default useT;
 `;

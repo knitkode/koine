@@ -84,6 +84,4 @@ export function withI18n(
 
   return withTranslate(newNextConfig);
 }
-
-export default withI18n;
 `;
