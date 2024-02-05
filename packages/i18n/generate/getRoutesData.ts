@@ -1,6 +1,13 @@
-import { capitalize, changeCaseCamel, forin, objectFlat } from "@koine/utils";
-import { formatRoutePathname, routeHasDynamicPortion } from "../shared";
-import { sortObjectKeysMatching } from "./sortObjectKeysMatching";
+import {
+  capitalize,
+  changeCaseCamel,
+  forin,
+  objectFlat,
+  objectSortByKeysMatching,
+} from "@koine/utils";
+import { formatRoutePathname, routeHasDynamicPortion } from "../index";
+// import { formatRoutePathname } from "../client/formatRoutePathname";
+// import { routeHasDynamicPortion } from "../client/routeHasDynamicPortion";
 import type { I18nGenerate } from "./types";
 
 const ROUTES_TRANSLATION_JSON_FILE_NAME = "~.json";
@@ -213,7 +220,7 @@ export const getRoutesData = (
         dataRoutes[routeId].pathnames = dataRoutes[routeId].pathnames || {};
         dataRoutes[routeId].pathnames[locale] =
           normaliseUserDefinedRoutePathname(routePathname);
-        dataRoutes[routeId].pathnames = sortObjectKeysMatching(
+        dataRoutes[routeId].pathnames = objectSortByKeysMatching(
           dataRoutes[routeId].pathnames,
           defaultLocale,
         );

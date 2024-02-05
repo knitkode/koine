@@ -1,6 +1,6 @@
 import { getType } from "@koine/utils";
-import { formatRoutePathname } from "../shared";
-import type { DynamicParams } from "../typesRouting";
+import type { DynamicParams } from "../types-utils";
+import { formatRoutePathname } from "./formatRoutePathname";
 
 // import type { I18n } from "./types";
 

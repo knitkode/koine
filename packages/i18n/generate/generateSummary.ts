@@ -1,5 +1,4 @@
-import { arraySum, forin } from "@koine/utils";
-import { sortObjectKeysMatching } from "./sortObjectKeysMatching";
+import { arraySum, forin, objectSortByKeysMatching } from "@koine/utils";
 import type { I18nGenerate } from "./types";
 
 export type I18nGenerateSummaryConfig = Pick<
@@ -90,7 +89,7 @@ function getSummaryData(options: I18nGenerateSummaryOptions) {
   }
 
   // sort by default locale
-  data = sortObjectKeysMatching(data, defaultLocale);
+  data = objectSortByKeysMatching(data, defaultLocale);
 
   forin(data, (locale, dataPerLocale) => {
     data[locale].characters = arraySum(

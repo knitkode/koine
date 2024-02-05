@@ -40,7 +40,7 @@ const getAdapterFiles = async (
   adapter: I18nGenerate.BuiltinAdapters,
   allFiles: I18nGenerate.AdpaterFiles = [],
 ) => {
-  const creator = (await import(`./source/adapter-${adapter}`).then(
+  const creator = (await import(`./adapter-${adapter}`).then(
     (m) => m.default,
   )) as I18nGenerate.Adpater;
 

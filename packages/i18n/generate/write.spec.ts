@@ -53,7 +53,7 @@ test("test your.io", async () => {
     hideDefaultLocaleInUrl: true,
     output: "../frontend/libs/i18n",
     adapter: "next-translate",
-    // skipTsCompile: true,
+    skipTsCompile: true,
     // skipGitignore: true
     // skipTranslations: true,
   });

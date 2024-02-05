@@ -7,7 +7,7 @@ import {
   generateSource,
 } from "./generateSource";
 import { getFsData } from "./getFsData";
-import { I18nGenerate } from "./types";
+import type { I18nGenerate } from "./types";
 import { writeSourceCompiled } from "./writeSourceCompiled";
 
 export type WriteSourceOptions = {
@@ -57,9 +57,8 @@ export async function writeSource(options: WriteSourceOptions) {
       writtenFiles.add(relativePath.replace(/\.tsx?$/, ".d.ts"));
 
       // remove TypeScript source file
-      const filepath = join(cwd, output, relativePath);
-      rmSync(filepath, { force: true });
       writtenFiles.delete(relativePath);
+      rmSync(join(cwd, output, relativePath), { force: true });
     });
   }
 
