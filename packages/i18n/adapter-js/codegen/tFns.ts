@@ -54,11 +54,18 @@ import { tInterpolateParams } from "./tInterpolateParams";
 
   forin(
     data.translations,
-    (translationId, { typeName, dynamic, values, params }) => {
+    (translationId, { typeName, dynamic, values, params, paramsNames }) => {
       const name = `t_${translationId}`;
-      const paramsType = JSON.stringify(params);
-
+      // TODO: maybe use `params` to determine the right type with some kind of
+      // special token used in the route id
+      const paramsType = paramsNames
+        ? `{ ${paramsNames.reduce((params, paramName) => {
+            params += `${paramName}: string | number; `;
+            return params;
+          }, "")}}`
+        : "never";
       const argParam = dynamic ? `params: ${paramsType}` : "";
+
       // for ergonomy always allow the user to pass the locale
       const argLocale = "locale?: I18n.Locale";
       const args = [argParam, argLocale].filter(Boolean).join(", ");
