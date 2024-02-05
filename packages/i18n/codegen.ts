@@ -1,0 +1,11 @@
+export { generateSource } from "./codegen/generateSource";
+export { generateSummary } from "./codegen/generateSummary";
+export { getConfig } from "./codegen/getConfig";
+export { getData } from "./codegen/getData";
+export { getDataRoutes } from "./codegen/getDataRoutes";
+export { getDataTranslations } from "./codegen/getDataTranslations";
+export { getLocalesFolders } from "./codegen/getLocalesFolders";
+export { write } from "./codegen/write";
+export { writeSource } from "./codegen/writeSource";
+export { writeSummary } from "./codegen/writeSummary";
+export type { I18nCodegen } from "./codegen/types";

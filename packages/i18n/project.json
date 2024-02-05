@@ -26,17 +26,7 @@
         "format": ["cjs", "esm"],
         "compiler": "swc",
         "deleteOutputPath": true,
-        "additionalEntryPoints": ["packages/i18n/{generate,next-config}.ts"]
-      }
-    },
-    "_build": {
-      "executor": "@nx/js:swc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/i18n",
-        "tsConfig": "packages/i18n/tsconfig.lib.json",
-        "main": "packages/i18n/index.ts",
-        "assets": ["packages/i18n/*.md", "packages/i18n/*.d.ts"]
+        "additionalEntryPoints": ["packages/i18n/{codegen,next-config}.ts"]
       }
     },
     "lint": {
