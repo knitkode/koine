@@ -22,7 +22,7 @@ const adapter: I18nCodegen.Adpater = () => {
       { name: "useLocale", fn: useLocale, ext: "ts", index: true },
       { name: "useRouteId", fn: useRouteId, ext: "ts", index: true },
       { name: "useTo", fn: useTo, ext: "ts", index: true },
-      { name: "withI18n", fn: withI18n, ext: "mjs" },
+      { name: "withI18n", fn: withI18n, ext: "js" },
     ],
   };
 };

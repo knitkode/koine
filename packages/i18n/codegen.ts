@@ -4,7 +4,6 @@ export { getConfig } from "./codegen/getConfig";
 export { getData } from "./codegen/getData";
 export { getDataRoutes } from "./codegen/getDataRoutes";
 export { getDataTranslations } from "./codegen/getDataTranslations";
-export { getLocalesFolders } from "./codegen/getLocalesFolders";
 export { write } from "./codegen/write";
 export { writeSource } from "./codegen/writeSource";
 export { writeSummary } from "./codegen/writeSummary";

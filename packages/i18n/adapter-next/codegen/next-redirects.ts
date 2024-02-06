@@ -10,7 +10,10 @@ export function getRedirects(
   localeParam = "",
   permanent = false,
 ) {
-  const { routes, defaultLocale, hideDefaultLocaleInUrl } = data;
+  const {
+    routes,
+    config: { defaultLocale, hideDefaultLocaleInUrl },
+  } = data;
   const redirects: (Redirect | undefined)[] = [];
 
   for (const routeId in routes) {

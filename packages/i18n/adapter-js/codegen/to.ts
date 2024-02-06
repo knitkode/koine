@@ -21,7 +21,7 @@ export function to<TRoute extends I18n.RouteId>(
     : [] | [I18n.Locale]
 ) {
   const params = isLocale(args[0]) ? undefined : args[0];
-  const locale = (isLocale(args[0]) ? args[0] : args[1]) || "${data.defaultLocale}";
+  const locale = (isLocale(args[0]) ? args[0] : args[1]) || "${data.config.defaultLocale}";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pathname = ((routesSlim as any)[id]?.[locale] ?? routesSlim[id]) as string;
 

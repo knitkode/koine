@@ -5,40 +5,38 @@ const getFunctionBodyWithLocales = (
   data: I18nCodegen.Data,
   perLocaleValues: Record<string, string>,
 ) => {
+  const { defaultLocale } = data.config;
   let output = "";
   forin(perLocaleValues, (locale, value) => {
-    if (
-      locale !== data.defaultLocale &&
-      value !== perLocaleValues[data.defaultLocale]
-    ) {
+    if (locale !== defaultLocale && value !== perLocaleValues[defaultLocale]) {
       output += `locale === "${locale}" ? "${value}" : `;
     }
   });
 
-  output += '"' + perLocaleValues[data.defaultLocale] + '"';
+  output += '"' + perLocaleValues[defaultLocale] + '"';
 
   return output;
 };
 
 export default (data: I18nCodegen.Data) => {
-  const hasOneLocale = data.locales.length === 1;
+  const hasOneLocale = data.config.locales.length === 1;
   let output = `
 import { toFormat } from "./toFormat";
 import type { I18n } from "./types";
 
 `;
 
-  forin(data.routes, (routeId, { typeName, pathnames, dynamic }) => {
+  forin(data.routes, (routeId, { typeName, pathnames, params }) => {
     const name = `to_${changeCaseCamel(routeId)}`;
     const paramsType = `I18n.RouteParams.${typeName}`;
 
-    const argParam = dynamic ? `params: ${paramsType}` : "";
+    const argParam = params ? `params: ${paramsType}` : "";
     const argLocale = hasOneLocale ? "" : "locale?: I18n.Locale";
     const args = [argParam, argLocale].filter(Boolean).join(", ");
     const formatArgLocale = hasOneLocale ? `""` : "locale";
-    const formatArgParams = dynamic ? ", params" : "";
+    const formatArgParams = params ? ", params" : "";
 
-    output += `export const ${name} = (${args}) => `;
+    output += `export let ${name} = (${args}) => `;
 
     if (isString(pathnames)) {
       output += `toFormat(${formatArgLocale}, "${pathnames}"${formatArgParams});`;

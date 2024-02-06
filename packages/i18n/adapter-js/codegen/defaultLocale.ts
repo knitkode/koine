@@ -4,7 +4,7 @@ export default (data: I18nCodegen.Data) =>
   `
 import type { I18n } from "./types";
 
-export const defaultLocale: I18n.Locale = "${data.defaultLocale}";
+export const defaultLocale: I18n.Locale = "${data.config.defaultLocale}";
 
 export default defaultLocale;
 `;

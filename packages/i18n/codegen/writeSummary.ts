@@ -1,22 +1,23 @@
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
 import {
-  type I18nCodegenSummaryConfig,
+  type I18nCodegenSummaryOptions,
   generateSummary,
 } from "./generateSummary";
-import { getData } from "./getData";
+import type { I18nCodegen } from "./types";
 
 export type WriteSummaryOptions = {
-  cwd: string;
   outputJson: string;
   outputMarkdown: string;
-} & I18nCodegenSummaryConfig;
+} & I18nCodegenSummaryOptions;
 
-export let writeSummary = async (options: WriteSummaryOptions) => {
-  const { cwd, outputJson, outputMarkdown, sourceUrl } = options;
-
-  const data = await getData(options);
-  const summary = await generateSummary({ ...data, sourceUrl });
+export let writeSummary = async (
+  data: I18nCodegen.Data,
+  options: WriteSummaryOptions,
+) => {
+  const { cwd } = data.config.fs;
+  const { outputJson, outputMarkdown, ...restOptions } = options;
+  const summary = await generateSummary(data, restOptions);
 
   await fsWrite(join(cwd, outputJson), JSON.stringify(summary.data, null, 2));
   await fsWrite(join(cwd, outputMarkdown), summary.md);

@@ -1,63 +1,583 @@
 {
-  "en": {
-    "characters": 451,
-    "files": [
-      {
-        "characters": 277,
-        "locale": "en",
-        "path": "~.json",
-        "url": "https://github.com/your-network/translations/tree/dev/en/~.json",
-        "words": 35
-      },
-      {
-        "characters": 127,
-        "locale": "en",
-        "path": "~account/~user~profile.json",
-        "url": "https://github.com/your-network/translations/tree/dev/en/~account/~user~profile.json",
-        "words": 39
-      },
-      {
-        "characters": 8,
-        "locale": "en",
-        "path": "~account/FormUserLanguages.json",
-        "url": "https://github.com/your-network/translations/tree/dev/en/~account/FormUserLanguages.json",
-        "words": 2
-      },
-      {
-        "characters": 11,
-        "locale": "en",
-        "path": "$faq.json",
-        "url": "https://github.com/your-network/translations/tree/dev/en/$faq.json",
-        "words": 3
-      },
-      {
-        "characters": 28,
-        "locale": "en",
-        "path": "404.json",
-        "url": "https://github.com/your-network/translations/tree/dev/en/404.json",
-        "words": 8
+  "config": {
+    "locales": ["en"],
+    "defaultLocale": "en",
+    "hideDefaultLocaleInUrl": true,
+    "fs": {
+      "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/codegen/__mocks__/single-language",
+      "ignore": []
+    },
+    "routes": {
+      "translationJsonFileName": "~.json",
+      "tokens": {
+        "parentReference": "^",
+        "idDelimiter": ".",
+        "pathnameWildcard": "*"
       }
-    ],
-    "words": 87
+    },
+    "translations": {
+      "dynamicDelimiters": {
+        "start": "{{",
+        "end": "}}"
+      },
+      "fnsAsDataSources": true,
+      "createArrayIndexBasedFns": false
+    }
   },
-  "source": {
-    "characters": 80,
-    "files": [
-      {
-        "characters": 40,
-        "locale": "source",
-        "path": "next-redirects.json",
-        "url": "https://github.com/your-network/translations/tree/dev/source/next-redirects.json",
-        "words": 4
+  "files": [
+    {
+      "path": "~.json",
+      "data": {
+        "home": "/",
+        "about": "/about",
+        "account": {
+          "user": {
+            "profile": "/account/user",
+            "[id]": "/account/user/{{ id }}",
+            "settings": {
+              "index": "/account/user/settings",
+              "personal": "/account/user/settings/personal"
+            }
+          }
+        },
+        "products": {
+          "index": "/products",
+          "[id]": {
+            "index": "^/{{ id }}",
+            "edit": {
+              "index": "^/edit",
+              "details": "^/details"
+            }
+          }
+        },
+        "apps": {
+          "tool": {
+            "index": "/apps/tool/*",
+            "things": {
+              "index": "/things",
+              "[id]": {
+                "index": "/things/{{ id }}",
+                "detail": {
+                  "index": "/things/{{ id }}/detail",
+                  "new": "/things/{{ id }}/detail/new",
+                  "[detailId]": {
+                    "index": "/things/{{ id }}/detail/{{ detailId }}",
+                    "edit": "/things/{{ id }}/detail/{{ detailId }}/edit"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
-      {
-        "characters": 40,
-        "locale": "source",
-        "path": "next-rewrites.json",
-        "url": "https://github.com/your-network/translations/tree/dev/source/next-rewrites.json",
-        "words": 4
+      "locale": "en"
+    },
+    {
+      "path": "404.json",
+      "data": {
+        "seo": {
+          "title": "404 - Not found"
+        },
+        "title": "404, page not found"
+      },
+      "locale": "en"
+    },
+    {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
+      },
+      "locale": "en"
+    },
+    {
+      "path": "~account/~user~profile.json",
+      "data": {
+        "boolShouldntBeHereBut": true,
+        "title": "Title {{ varName }}",
+        "plural": "Plural",
+        "plural_one": "One",
+        "plural_other": "Some",
+        "plural_zero": "Zero",
+        "pluralNoDefault_one": "One",
+        "pluralNoDefault_other": "Some",
+        "pluralAsObject": {
+          "one": "One",
+          "other": "Others"
+        },
+        "pluralAsObjectWithExtraKeys": {
+          "one": "One",
+          "other": "Others",
+          "noPluralRelated": "Yes"
+        },
+        "listFlat": ["v1", "v2"],
+        "listComplex": [
+          {
+            "k1": "v1",
+            "k2": "v2"
+          }
+        ],
+        "obj": {
+          "objNested": {
+            "str": "v",
+            "listFlatNested": ["v1", "v2"],
+            "listComplexNested": [
+              {
+                "k1": "v1 {{ nestedVarName1 }}",
+                "k2": "v2 {{ nestedVarName2 }}"
+              }
+            ],
+            "objNested2": {
+              "objNested21": {
+                "k": "v"
+              },
+              "listFlatNested22": ["v1", "v2"],
+              "str3": "v"
+            },
+            "objNested2b": {
+              "str2b1": "v",
+              "str2b2": "v",
+              "listFlatNested2b3": ["v1", "v2"],
+              "str2b4": "v"
+            }
+          }
+        }
+      },
+      "locale": "en"
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "data": {
+        "empty": {},
+        "msg": "Some text"
+      },
+      "locale": "en"
+    }
+  ],
+  "routes": {
+    "about": {
+      "id": "about",
+      "typeName": "About",
+      "pathnames": {
+        "en": "/about"
       }
-    ],
-    "words": 8
+    },
+    "account.user.[id]": {
+      "id": "account.user.[id]",
+      "typeName": "AccountUserId",
+      "params": {
+        "id": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/account/user/[id]"
+      }
+    },
+    "account.user.profile": {
+      "id": "account.user.profile",
+      "typeName": "AccountUserProfile",
+      "pathnames": {
+        "en": "/account/user"
+      }
+    },
+    "account.user.settings": {
+      "id": "account.user.settings",
+      "typeName": "AccountUserSettings",
+      "pathnames": {
+        "en": "/account/user/settings"
+      }
+    },
+    "account.user.settings.personal": {
+      "id": "account.user.settings.personal",
+      "typeName": "AccountUserSettingsPersonal",
+      "pathnames": {
+        "en": "/account/user/settings/personal"
+      }
+    },
+    "apps.tool": {
+      "id": "apps.tool",
+      "typeName": "AppsTool",
+      "wildcard": true,
+      "pathnames": {
+        "en": "/apps/tool"
+      }
+    },
+    "apps.tool.things": {
+      "id": "apps.tool.things",
+      "typeName": "AppsToolThings",
+      "pathnames": {
+        "en": "/things"
+      },
+      "inWildcard": true
+    },
+    "apps.tool.things.[id]": {
+      "id": "apps.tool.things.[id]",
+      "typeName": "AppsToolThingsId",
+      "params": {
+        "id": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/things/[id]"
+      },
+      "inWildcard": true
+    },
+    "apps.tool.things.[id].detail": {
+      "id": "apps.tool.things.[id].detail",
+      "typeName": "AppsToolThingsIdDetail",
+      "params": {
+        "id": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/things/[id]/detail"
+      },
+      "inWildcard": true
+    },
+    "apps.tool.things.[id].detail.[detailId]": {
+      "id": "apps.tool.things.[id].detail.[detailId]",
+      "typeName": "AppsToolThingsIdDetailDetailId",
+      "params": {
+        "id": "stringOrNumber",
+        "detailId": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/things/[id]/detail/[detailId]"
+      },
+      "inWildcard": true
+    },
+    "apps.tool.things.[id].detail.[detailId].edit": {
+      "id": "apps.tool.things.[id].detail.[detailId].edit",
+      "typeName": "AppsToolThingsIdDetailDetailIdEdit",
+      "params": {
+        "id": "stringOrNumber",
+        "detailId": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/things/[id]/detail/[detailId]/edit"
+      },
+      "inWildcard": true
+    },
+    "apps.tool.things.[id].detail.new": {
+      "id": "apps.tool.things.[id].detail.new",
+      "typeName": "AppsToolThingsIdDetailNew",
+      "params": {
+        "id": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/things/[id]/detail/new"
+      },
+      "inWildcard": true
+    },
+    "home": {
+      "id": "home",
+      "typeName": "Home",
+      "pathnames": {
+        "en": "/"
+      }
+    },
+    "products": {
+      "id": "products",
+      "typeName": "Products",
+      "pathnames": {
+        "en": "/products"
+      }
+    },
+    "products.[id]": {
+      "id": "products.[id]",
+      "typeName": "ProductsId",
+      "params": {
+        "id": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/products/[id]"
+      }
+    },
+    "products.[id].edit": {
+      "id": "products.[id].edit",
+      "typeName": "ProductsIdEdit",
+      "params": {
+        "id": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/products/[id]/edit"
+      }
+    },
+    "products.[id].edit.details": {
+      "id": "products.[id].edit.details",
+      "typeName": "ProductsIdEditDetails",
+      "params": {
+        "id": "stringOrNumber"
+      },
+      "pathnames": {
+        "en": "/products/[id]/edit/details"
+      }
+    }
+  },
+  "translations": {
+    "404_seo": {
+      "values": {
+        "en": {
+          "title": "404 - Not found"
+        }
+      },
+      "typeValue": "Object"
+    },
+    "404_seo_title": {
+      "values": {
+        "en": "404 - Not found"
+      },
+      "typeValue": "Primitive"
+    },
+    "404_title": {
+      "values": {
+        "en": "404, page not found"
+      },
+      "typeValue": "Primitive"
+    },
+    "faq_home": {
+      "values": {
+        "en": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
+      },
+      "typeValue": "Array"
+    },
+    "_user_profile_boolShouldntBeHereBut": {
+      "values": {
+        "en": true
+      },
+      "typeValue": "Primitive"
+    },
+    "_user_profile_title": {
+      "values": {
+        "en": "Title {{ varName }}"
+      },
+      "typeValue": "Primitive",
+      "params": {
+        "varName": "stringOrNumber"
+      }
+    },
+    "_user_profile_plural": {
+      "values": {
+        "en": "Plural"
+      },
+      "typeValue": "Primitive",
+      "plural": true
+    },
+    "_user_profile_pluralAsObject": {
+      "values": {
+        "en": {
+          "one": "One",
+          "other": "Others"
+        }
+      },
+      "typeValue": "Object",
+      "plural": true
+    },
+    "_user_profile_pluralAsObjectWithExtraKeys": {
+      "values": {
+        "en": {
+          "one": "One",
+          "other": "Others",
+          "noPluralRelated": "Yes"
+        }
+      },
+      "typeValue": "Object",
+      "plural": true
+    },
+    "_user_profile_pluralAsObjectWithExtraKeys_noPluralRelated": {
+      "values": {
+        "en": "Yes"
+      },
+      "typeValue": "Primitive"
+    },
+    "_user_profile_listFlat": {
+      "values": {
+        "en": ["v1", "v2"]
+      },
+      "typeValue": "Array"
+    },
+    "_user_profile_listComplex": {
+      "values": {
+        "en": [
+          {
+            "k1": "v1",
+            "k2": "v2"
+          }
+        ]
+      },
+      "typeValue": "Array"
+    },
+    "_user_profile_obj": {
+      "values": {
+        "en": {
+          "objNested": {
+            "str": "v",
+            "listFlatNested": ["v1", "v2"],
+            "listComplexNested": [
+              {
+                "k1": "v1 {{ nestedVarName1 }}",
+                "k2": "v2 {{ nestedVarName2 }}"
+              }
+            ],
+            "objNested2": {
+              "objNested21": {
+                "k": "v"
+              },
+              "listFlatNested22": ["v1", "v2"],
+              "str3": "v"
+            },
+            "objNested2b": {
+              "str2b1": "v",
+              "str2b2": "v",
+              "listFlatNested2b3": ["v1", "v2"],
+              "str2b4": "v"
+            }
+          }
+        }
+      },
+      "typeValue": "Object"
+    },
+    "_user_profile_obj_objNested": {
+      "values": {
+        "en": {
+          "str": "v",
+          "listFlatNested": ["v1", "v2"],
+          "listComplexNested": [
+            {
+              "k1": "v1 {{ nestedVarName1 }}",
+              "k2": "v2 {{ nestedVarName2 }}"
+            }
+          ],
+          "objNested2": {
+            "objNested21": {
+              "k": "v"
+            },
+            "listFlatNested22": ["v1", "v2"],
+            "str3": "v"
+          },
+          "objNested2b": {
+            "str2b1": "v",
+            "str2b2": "v",
+            "listFlatNested2b3": ["v1", "v2"],
+            "str2b4": "v"
+          }
+        }
+      },
+      "typeValue": "Object"
+    },
+    "_user_profile_obj_objNested_str": {
+      "values": {
+        "en": "v"
+      },
+      "typeValue": "Primitive"
+    },
+    "_user_profile_obj_objNested_listFlatNested": {
+      "values": {
+        "en": ["v1", "v2"]
+      },
+      "typeValue": "Array"
+    },
+    "_user_profile_obj_objNested_listComplexNested": {
+      "values": {
+        "en": [
+          {
+            "k1": "v1 {{ nestedVarName1 }}",
+            "k2": "v2 {{ nestedVarName2 }}"
+          }
+        ]
+      },
+      "typeValue": "Array"
+    },
+    "_user_profile_obj_objNested_objNested2": {
+      "values": {
+        "en": {
+          "objNested21": {
+            "k": "v"
+          },
+          "listFlatNested22": ["v1", "v2"],
+          "str3": "v"
+        }
+      },
+      "typeValue": "Object"
+    },
+    "_user_profile_obj_objNested_objNested2_objNested21": {
+      "values": {
+        "en": {
+          "k": "v"
+        }
+      },
+      "typeValue": "Object"
+    },
+    "_user_profile_obj_objNested_objNested2_objNested21_k": {
+      "values": {
+        "en": "v"
+      },
+      "typeValue": "Primitive"
+    },
+    "_user_profile_obj_objNested_objNested2_listFlatNested22": {
+      "values": {
+        "en": ["v1", "v2"]
+      },
+      "typeValue": "Array"
+    },
+    "_user_profile_obj_objNested_objNested2_str3": {
+      "values": {
+        "en": "v"
+      },
+      "typeValue": "Primitive"
+    },
+    "_user_profile_obj_objNested_objNested2b": {
+      "values": {
+        "en": {
+          "str2b1": "v",
+          "str2b2": "v",
+          "listFlatNested2b3": ["v1", "v2"],
+          "str2b4": "v"
+        }
+      },
+      "typeValue": "Object"
+    },
+    "_user_profile_obj_objNested_objNested2b_str2b1": {
+      "values": {
+        "en": "v"
+      },
+      "typeValue": "Primitive"
+    },
+    "_user_profile_obj_objNested_objNested2b_str2b2": {
+      "values": {
+        "en": "v"
+      },
+      "typeValue": "Primitive"
+    },
+    "_user_profile_obj_objNested_objNested2b_listFlatNested2b3": {
+      "values": {
+        "en": ["v1", "v2"]
+      },
+      "typeValue": "Array"
+    },
+    "_user_profile_obj_objNested_objNested2b_str2b4": {
+      "values": {
+        "en": "v"
+      },
+      "typeValue": "Primitive"
+    },
+    "FormUserLanguages_empty": {
+      "values": {
+        "en": {}
+      },
+      "typeValue": "Object"
+    },
+    "FormUserLanguages_msg": {
+      "values": {
+        "en": "Some text"
+      },
+      "typeValue": "Primitive"
+    }
   }
 }

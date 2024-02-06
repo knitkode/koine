@@ -3,6 +3,7 @@ import { join } from "node:path";
 // import { fileURLToPath } from "node:url";
 import { forin, isArray, isBoolean, isObject, isString } from "@koine/utils";
 import type { I18nCodegen } from "../../codegen";
+import { dataParamsToTsInterfaceBody } from "../../codegen/helpers";
 import {
   hasOnlyPluralKeys,
   hasPlurals,
@@ -70,7 +71,10 @@ const buildTypeForValue = (value: I18nCodegen.DataTranslationValue) => {
 };
 
 const buildTranslationsTypes = (data: I18nCodegen.Data) => {
-  const { defaultLocale, files } = data;
+  const {
+    config: { defaultLocale },
+    files,
+  } = data;
   const defaultLocaleFiles = files.filter((f) => f.locale === defaultLocale);
   let out = `
   export interface Translations {
@@ -94,18 +98,9 @@ const buildTranslationsTypes = (data: I18nCodegen.Data) => {
 const buildRouteParamsInterfaces = (data: I18nCodegen.Data) => {
   let output = "\n";
 
-  forin(data.routes, (_routeId, { typeName, paramsNames }) => {
-    if (paramsNames) {
-      // TODO: maybe use `params` to determine the right type with some kind of
-      // special token used in the route id
-      let type = `  export interface ${typeName} { `;
-      type += paramsNames.reduce((params, paramName) => {
-        params += `${paramName}: string | number; `;
-        return params;
-      }, "");
-      type += `}`;
-
-      output += `${type}\n`;
+  forin(data.routes, (_routeId, { typeName, params }) => {
+    if (params) {
+      output += `  export interface ${typeName} { ${dataParamsToTsInterfaceBody(params)} }\n`;
     }
   });
 
@@ -117,7 +112,7 @@ const buildRoutesUnion = (
   filterFn: (
     routeId: keyof I18nCodegen.Data["routes"],
     routeData: I18nCodegen.DataRoutes[string],
-  ) => boolean,
+  ) => undefined | boolean,
 ) =>
   Object.keys(data.routes)
     .filter((routeId) =>
@@ -136,11 +131,11 @@ export default (data: I18nCodegen.Data) => {
   );
   const RouteIdStatic = buildRoutesUnion(
     data,
-    (_, routeData) => !routeData.dynamic,
+    (_, routeData) => !routeData.params,
   );
   const RouteIdDynamic = buildRoutesUnion(
     data,
-    (_, routeData) => routeData.dynamic,
+    (_, routeData) => !!routeData.params,
   );
 
   return `
@@ -149,7 +144,7 @@ export default (data: I18nCodegen.Data) => {
 /* eslint-disable @typescript-eslint/ban-types */
 
 export namespace I18n {
-  export type Locale = ${data.locales.map((l) => `"${l}"`).join(" | ")};
+  export type Locale = ${data.config.locales.map((l) => `"${l}"`).join(" | ")};
  
   export type LocalesMap<T = any> = Record<Locale, T>;
 

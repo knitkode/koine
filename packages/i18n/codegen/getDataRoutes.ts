@@ -5,9 +5,8 @@ import {
   objectFlat,
   objectSortByKeysMatching,
 } from "@koine/utils";
-import { formatRoutePathname, routeHasDynamicPortion } from "../index";
+import { formatRoutePathname } from "../index";
 // import { formatRoutePathname } from "../client/formatRoutePathname";
-// import { routeHasDynamicPortion } from "../client/routeHasDynamicPortion";
 import type { I18nCodegen } from "./types";
 
 /**
@@ -55,7 +54,7 @@ const routeIdToTypeName = (routeId: string) =>
  * Recursively replace `/^` references with the parent route value
  */
 const replaceRouteParentTokens = (
-  config: Pick<I18nCodegen.Config, "tokenParentRouteReference">,
+  config: I18nCodegen.Config,
   dataRoutes: I18nCodegen.DataRoutes,
   locale: I18nCodegen.Locale,
   id: I18nCodegen.RouteId,
@@ -64,8 +63,8 @@ const replaceRouteParentTokens = (
 
   // beginning slash is always present here as the route value is already
   // normalised at this point
-  if (pathname.startsWith(`/${config.tokenParentRouteReference}`)) {
-    const regex = new RegExp(`^\\/\\${config.tokenParentRouteReference}`);
+  if (pathname.startsWith(`/${config.routes.tokens.parentReference}`)) {
+    const regex = new RegExp(`^\\/\\${config.routes.tokens.parentReference}`);
     // removes the slash + token
     pathname = pathname.replace(regex, "");
     // grab the parent id
@@ -88,7 +87,7 @@ const replaceRouteParentTokens = (
  * NB: it mutates the data
  */
 const replaceRoutesPathnamesParentTokens = (
-  config: Pick<I18nCodegen.Config, "tokenParentRouteReference">,
+  config: I18nCodegen.Config,
   dataRoutes: I18nCodegen.DataRoutes,
 ) => {
   forin(dataRoutes, (id, routeData) => {
@@ -110,48 +109,50 @@ const replaceRoutesPathnamesParentTokens = (
 const extractRouteParamsFromRouteId = (routeId: string) => {
   const matches = routeId.match(/\[.*?\]/g);
   if (matches) {
-    const paramsNames = matches.map((match) => match.slice(1, -1).trim());
-    const params = paramsNames.reduce((map, paramName) => {
-      // TODO: maybe determine the more specific type with some kind of special
-      // token used in the route id `[dynamicParam]` portion
-      map[paramName] = "stringOrNumber";
-      return map;
-    }, {} as I18nCodegen.DataRoutesParams);
-    return { paramsNames, params };
+    return matches
+      .map((match) => match.slice(1, -1).trim())
+      .reduce((map, paramName) => {
+        // TODO: maybe determine the more specific type with some kind of special
+        // token used in the route id `[dynamicParam]` portion
+        map[paramName] = "stringOrNumber";
+        return map;
+      }, {} as I18nCodegen.DataParams);
   }
-  return {};
+  return;
 };
 
 /**
- * Optimize the route map by collapsing pathnames that are shared among all the
- * locales.
+ * Optimize the route map by collapsing pathnames that are equal to the one for
+ * the default locale
  *
  * NB: It mutates the data
  *
- * ```js
- * // from
- * "about": {
- *   "en": "/about",
- *   "nl": "/about"
- * },
- * "account.user.[id]": {
- *   "en": "/account/user/{{ id }}",
- *   "fi": "/account/user/{{ id }}",
- *   "nl": "/rekening/gebruiker/{{ id }}"
- * },
- * // to
- * "about": "/about",
- * "account.user.[id]": {
- *   "en": "/account/user/{{ id }}",
- *   "nl": "/rekening/gebruiker/{{ id }}"
- * },
+ * ```json
+ * {
+ *   // from
+ *   "about": {
+ *     "en": "/about",
+ *     "nl": "/about"
+ *   },
+ *   "account.user.[id]": {
+ *     "en": "/account/user/{{ id }}",
+ *     "fi": "/account/user/{{ id }}",
+ *     "nl": "/rekening/gebruiker/{{ id }}"
+ *   },
+ *   // to
+ *   "about": "/about",
+ *   "account.user.[id]": {
+ *     "en": "/account/user/{{ id }}",
+ *     "nl": "/rekening/gebruiker/{{ id }}"
+ *   }
+ * }
  * ```
  */
 const addRoutesOptimizedPathnames = (
-  config: Pick<I18nCodegen.Config, "defaultLocale">,
+  config: Pick<I18nCodegen.Config, "defaultLocale" | "locales">,
   dataRoutes: I18nCodegen.DataRoutes,
 ) => {
-  const { defaultLocale } = config;
+  const { defaultLocale, locales } = config;
 
   for (const routeId in dataRoutes) {
     const pathnamesPerLocale = dataRoutes[routeId].pathnames;
@@ -169,17 +170,25 @@ const addRoutesOptimizedPathnames = (
       }
     }
 
-    if (Object.keys(optimizedPathnames).length >= 1) {
+    if (Object.keys(optimizedPathnames).length === locales.length - 1) {
+      // if we have the same number of optimized/non-optimized pathnames we do
+      // not add the data
+    } else if (Object.keys(optimizedPathnames).length >= 1) {
+      // if we have more than one optimized pathnames we do add the default locale one
       optimizedPathnames[defaultLocale] = defaultLocalePathname;
-      dataRoutes[routeId].optimizedPathnames = optimizedPathnames;
+      dataRoutes[routeId].optimizedPathnames = objectSortByKeysMatching(
+        optimizedPathnames,
+        defaultLocale,
+      );
     } else {
+      // otherwise it means that the pathname is the same for all locales
       dataRoutes[routeId].optimizedPathnames = defaultLocalePathname;
     }
   }
 };
 
 /**
- * Get {@link I18nCodegen.DataRoutes} routes data
+ * Get routes data
  */
 export let getDataRoutes = (
   config: I18nCodegen.Config,
@@ -192,10 +201,10 @@ export let getDataRoutes = (
   for (let i = 0; i < files.length; i++) {
     const { path, locale, data } = files[i];
 
-    if (path === config.routesTranslationJsonFileName) {
+    if (path === config.routes.translationJsonFileName) {
       const routes = objectFlat<Record<I18nCodegen.RouteId, string>>(
         data,
-        config.tokenRouteIdDelimiter,
+        config.routes.tokens.idDelimiter,
       );
 
       for (const _key in routes) {
@@ -207,18 +216,17 @@ export let getDataRoutes = (
         if (!dataRoutes[routeId]) {
           dataRoutes[routeId] = dataRoutes[routeId] || {};
           const typeName = routeIdToTypeName(routeId);
-          const { paramsNames, params } =
-            extractRouteParamsFromRouteId(routeId);
+          const params = extractRouteParamsFromRouteId(routeId);
           const wildcard = routePathname.includes(
-            config.tokenRoutePathnameWildcard,
+            config.routes.tokens.pathnameWildcard,
           );
-          if (wildcard) wildcardRoutesIds.push(routeId);
           dataRoutes[routeId].id = routeId;
           dataRoutes[routeId].typeName = typeName;
-          dataRoutes[routeId].paramsNames = paramsNames;
-          dataRoutes[routeId].params = params;
-          dataRoutes[routeId].dynamic = routeHasDynamicPortion(routeId);
-          dataRoutes[routeId].wildcard = wildcard;
+          if (params) dataRoutes[routeId].params = params;
+          if (wildcard) {
+            dataRoutes[routeId].wildcard = true;
+            wildcardRoutesIds.push(routeId);
+          }
         }
 
         dataRoutes[routeId].pathnames = dataRoutes[routeId].pathnames || {};
@@ -228,7 +236,6 @@ export let getDataRoutes = (
           dataRoutes[routeId].pathnames,
           defaultLocale,
         );
-        // dataRoutes[routeId].optimizedPathnames
       }
     }
   }
@@ -239,10 +246,11 @@ export let getDataRoutes = (
   // add `inWildcard` flag
   if (wildcardRoutesIds.length) {
     for (const routeId in dataRoutes) {
-      dataRoutes[routeId].inWildcard = wildcardRoutesIds.some(
+      const inWildcard = wildcardRoutesIds.some(
         (wildcardRouteId) =>
           routeId.startsWith(wildcardRouteId) && wildcardRouteId !== routeId,
       );
+      if (inWildcard) dataRoutes[routeId].inWildcard = true;
     }
   }
 

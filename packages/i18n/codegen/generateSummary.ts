@@ -1,15 +1,6 @@
 import { arraySum, forin, objectSortByKeysMatching } from "@koine/utils";
 import type { I18nCodegen } from "./types";
 
-export type I18nCodegenSummaryConfig = Pick<
-  I18nCodegen.Config,
-  "defaultLocale"
-> & {
-  sourceUrl: string;
-};
-
-type I18nCodegenSummaryOptions = I18nCodegen.Data & I18nCodegenSummaryConfig;
-
 type I18nSummary = Record<
   I18nCodegen.Locale,
   {
@@ -74,42 +65,50 @@ function getSummaryDataEntry(
   };
 }
 
-function getSummaryData(options: I18nCodegenSummaryOptions) {
-  const { files, defaultLocale } = options;
-  let data: I18nSummary = {};
+function getSummaryData(
+  data: I18nCodegen.Data,
+  options: I18nCodegenSummaryOptions,
+) {
+  const {
+    files,
+    config: { defaultLocale },
+  } = data;
+  let dataSummary: I18nSummary = {};
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const { locale } = file;
     const entry = getSummaryDataEntry(options, file);
 
-    data[locale] = data[locale] || {};
-    data[locale].files = data[locale].files || [];
-    data[locale].files.push(entry);
+    dataSummary[locale] = dataSummary[locale] || {};
+    dataSummary[locale].files = dataSummary[locale].files || [];
+    dataSummary[locale].files.push(entry);
   }
 
   // sort by default locale
-  data = objectSortByKeysMatching(data, defaultLocale);
+  dataSummary = objectSortByKeysMatching(dataSummary, defaultLocale);
 
-  forin(data, (locale, dataPerLocale) => {
-    data[locale].characters = arraySum(
+  forin(dataSummary, (locale, dataPerLocale) => {
+    dataSummary[locale].characters = arraySum(
       dataPerLocale.files.map((f) => f.characters),
     );
 
     // sort files by path
-    data[locale].files = data[locale].files.sort((a, b) =>
+    dataSummary[locale].files = dataSummary[locale].files.sort((a, b) =>
       a.path.localeCompare(b.path),
     );
 
-    data[locale].words = arraySum(dataPerLocale.files.map((f) => f.words));
+    dataSummary[locale].words = arraySum(
+      dataPerLocale.files.map((f) => f.words),
+    );
 
     // sort object keys
-    data[locale] = Object.fromEntries(
-      Object.entries(data[locale]).sort(),
+    dataSummary[locale] = Object.fromEntries(
+      Object.entries(dataSummary[locale]).sort(),
     ) as I18nSummary[I18nCodegen.Locale];
   });
 
-  return data;
+  return dataSummary;
 }
 
 function getSummaryDataByPath(data: I18nSummary) {
@@ -132,10 +131,7 @@ function getSummaryDataByPath(data: I18nSummary) {
   return out;
 }
 
-function generateSummaryMarkdownByPath(
-  _options: I18nCodegenSummaryOptions,
-  data: I18nSummary,
-) {
+function generateSummaryMarkdownByPath(data: I18nSummary) {
   const dataByPath = getSummaryDataByPath(data);
   let output = "";
   let body = "";
@@ -170,8 +166,8 @@ function generateSummaryMarkdownByPath(
 }
 
 function generateSummaryMarkdownByLocale(
-  options: I18nCodegenSummaryOptions,
   data: I18nSummary,
+  options: I18nCodegenSummaryOptions,
 ) {
   let output = "";
   let body = "";
@@ -195,26 +191,33 @@ function generateSummaryMarkdownByLocale(
 }
 
 function generateSummaryMarkdown(
-  options: I18nCodegenSummaryOptions,
   data: I18nSummary,
+  options: I18nCodegenSummaryOptions,
 ) {
   let output = "# Summary\n";
 
   output += "\n### By locale\n\n";
-  output += generateSummaryMarkdownByLocale(options, data);
+  output += generateSummaryMarkdownByLocale(data, options);
   output += "\n### By file path\n\n";
-  output += generateSummaryMarkdownByPath(options, data);
+  output += generateSummaryMarkdownByPath(data);
 
   return output;
 }
 
-export async function generateSummary(options: I18nCodegenSummaryOptions) {
-  // const { defaultLocale, files } = options;
-  // const defaultLocaleFiles = files.filter((f) => f.locale === defaultLocale);
+export type I18nCodegenSummaryOptions = {
+  /**
+   * @default "/" Usually this should be an absolute URL
+   */
+  sourceUrl: string;
+};
 
-  const data = getSummaryData(options);
-  const md = generateSummaryMarkdown(options, data);
-
-  // console.log("generateSummary: outputDir", outputDir, "outputPath", outputPath);
+export let generateSummary = async (
+  data: I18nCodegen.Data,
+  options: I18nCodegenSummaryOptions = {
+    sourceUrl: "/",
+  },
+) => {
+  const summaryData = getSummaryData(data, options);
+  const md = generateSummaryMarkdown(summaryData, options);
   return { data, md };
-}
+};

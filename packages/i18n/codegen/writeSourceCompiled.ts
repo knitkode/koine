@@ -1,21 +1,14 @@
 import { join } from "node:path";
 import * as ts from "typescript";
-import { type I18nCodegenSourceConfig, generateSource } from "./generateSource";
+import type { I18nCodegen } from "./types";
 
-export type WriteSourceOptions = {
-  cwd: string;
-  output: string;
-  outputTs?: Partial<
-    Record<keyof Awaited<ReturnType<typeof generateSource>>, string>
-  >;
-} & I18nCodegenSourceConfig;
-
-export async function writeSourceCompiled(
-  options: WriteSourceOptions,
+export let writeSourceCompiled = (
+  data: I18nCodegen.Data,
+  output: string,
   relativePaths: string[], // Set<string>,
   tsOptions?: ts.CompilerOptions,
-) {
-  const { cwd, output } = options;
+) => {
+  const { cwd } = data.config.fs;
   const rootNames = Array.from(relativePaths)
     .filter((p) => p.endsWith(".ts") || p.endsWith(".tsx"))
     .map((relativePath) => join(cwd, output, relativePath));
@@ -33,7 +26,7 @@ export async function writeSourceCompiled(
     allowJs: false,
     esModuleInterop: true,
     jsx: ts.JsxEmit.ReactJSX,
-    outDir: join(cwd, output /* , "compiled" */),
+    outDir: join(cwd, output),
     skipLibCheck: true,
     noEmitHelpers: true,
     importHelpers: true,
@@ -84,4 +77,4 @@ export async function writeSourceCompiled(
   });
 
   return emitResult;
-}
+};

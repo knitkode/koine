@@ -1,9 +1,13 @@
 import type { I18nCodegen } from "../../codegen";
 
-export default (data: I18nCodegen.Data) => `
-import withTranslate from "next-translate-plugin";
-import defaultRedirects from "./next-redirects.js"
-import defaultRewrites from "./next-rewrites.js"
+export default (data: I18nCodegen.Data) => {
+  const { locales, defaultLocale, hideDefaultLocaleInUrl } = data.config;
+
+  return `
+const withTranslate = require("next-translate-plugin");
+const webpack = require("webpack");
+const defaultRedirects = require("./next-redirects");
+const defaultRewrites = require("./next-rewrites");
 
 /**
  * @typedef {import("next").NextConfig} NextConfig
@@ -18,15 +22,15 @@ import defaultRewrites from "./next-rewrites.js"
  * 
  * @param {WithI18nOptions} options
  */
-export const withI18n = ({ permanent, localeParam } = {}) =>
+const withI18n = ({ permanent, localeParam } = {}) =>
   /**
    * @param {Omit<NextConfig, "i18n">} nextConfig
    * @returns {Omit<NextConfig, "i18n"> & { i18n: Required<NextConfig["i18n"]> }
    */
   (nextConfig) => {
-    const locales = [${data.locales.map((l) => `"${l}"`).join(", ")}];
-    const defaultLocale = "${data.defaultLocale}";
-    // const hideDefaultLocaleInUrl = ${data.hideDefaultLocaleInUrl ? "true" : "false"};
+    const locales = [${locales.map((l) => `"${l}"`).join(", ")}];
+    const defaultLocale = "${defaultLocale}";
+    // const hideDefaultLocaleInUrl = ${hideDefaultLocaleInUrl ? "true" : "false"};
 
     if (localeParam) {
       // app router:
@@ -75,6 +79,28 @@ export const withI18n = ({ permanent, localeParam } = {}) =>
       },
     };
 
+    nextConfig.webpack = (config, options) => {
+      const webpackConfig =
+        typeof nextConfig.webpack === "function"
+          ? nextConfig.webpack(config, options)
+          : config;
+
+      // @see https://github.com/date-fns/date-fns/blob/main/docs/webpack.md#removing-unused-languages-from-dynamic-import
+      webpackConfig.plugins.push(
+        new webpack.ContextReplacementPlugin(
+          /^date-fns[/\\\\]locale$/,
+          /\\.[/\\\\](${locales.join("|")})[/\\\\]index\\.js$/
+          // new RegExp(\`\\\\.[/\\\\\\\\](${locales.join("|")})[/\\\\\\\\]index\\\\.js$\`)
+        )
+      );
+
+      return webpackConfig;
+    };
+
+    // TODO: move to next-translate adapter
     return withTranslate(newNextConfig);
   }
+
+module.exports = { withI18n };
 `;
+};

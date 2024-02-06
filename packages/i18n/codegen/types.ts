@@ -1,4 +1,5 @@
 import type { I18nCodegenConfig } from "./getConfig";
+import type { PluralSuffix } from "./pluralisation";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace I18nCodegen {
@@ -36,22 +37,19 @@ export namespace I18nCodegen {
   };
 
   /**
-   * Basic metadata of translation's root locales folders as read from the filesystem
+   * Dictionary where the key is the param _name_ and the value indicates
+   * the **type** of the accepted param _value_
    */
-  export type LocalesFolders = {
-    path: string;
-    code: Locale;
-  };
+  export type DataParams = Record<
+    string,
+    "string" | "number" | "stringOrNumber"
+  >;
 
   /**
    * The whole I18n data extracted from folder structure and given config
    */
   export type Data = {
     config: Config;
-    locales: Locale[];
-    defaultLocale: Locale;
-    hideDefaultLocaleInUrl: boolean;
-    localesFolders: LocalesFolders[];
     files: TranslationFile[];
     routes: DataRoutes;
     translations: DataTranslations;
@@ -79,37 +77,20 @@ export namespace I18nCodegen {
     /**
      * When URLs are the same there is no `Locale` index, just a plain string
      */
-    optimizedPathnames: string | Record<Locale, RoutePathname>;
+    optimizedPathnames?: string | Record<Locale, RoutePathname>;
     /**
-     * The route params dictionary {@link DataRoutesParams}}
+     * The route params dictionary {@link DataParams}}
      */
-    params: undefined | DataRoutesParams;
-    /**
-     * The route params name
-     */
-    paramsNames: undefined | string[];
-    /**
-     * Flag routes that have dynamic params
-     */
-    dynamic: boolean;
+    params?: DataParams;
     /**
      * Flag routes that behave as wildcard rewrites/redirects
      */
-    wildcard: boolean;
+    wildcard?: boolean;
     /**
      * Flags routes children of a wildcard route (in SPA applications subrouting)
      */
-    inWildcard: boolean;
+    inWildcard?: boolean;
   };
-
-  /**
-   * Dictionary where the key is the route param _name_ and the value indicates
-   * the **type** of the accepted param _value_
-   */
-  export type DataRoutesParams = Record<
-    string,
-    "string" | "number" | "stringOrNumber"
-  >;
 
   /**
    * {@link DataTranslation}
@@ -119,25 +100,27 @@ export namespace I18nCodegen {
   /**
    */
   export type DataTranslation = {
-    id: RouteId;
-    plural: boolean;
+    id: string;
     /**
-     * object keys path of a translation in the
+     * Translation type
+     */
+    typeValue: "Primitive" | "Array" | "Object";
+    /**
+     * Values by locale dictionary
      */
     values: Record<Locale, DataTranslationValue>;
-    typeValue: "Primitive" | "Array" | "Object";
-    // TODO:
-    typeName: string;
-
     /**
-     * The translation params dictionary {@link DataTranslationParams}}
+     * Plural versions of the values by locale dictionary
      */
-    params: undefined | DataTranslationParams;
+    pluralValues?: Record<Locale, Record<PluralSuffix, DataTranslationValue>>;
     /**
-     * The translation params name
+     * Is this a translation with plurals versions
      */
-    paramsNames: undefined | string[];
-    dynamic: boolean;
+    plural?: boolean;
+    /**
+     * The translation params dictionary {@link DataParams}}
+     */
+    params?: DataParams;
   };
 
   /**
@@ -149,15 +132,6 @@ export namespace I18nCodegen {
     | boolean
     | string[]
     | { [key: string]: DataTranslationValue };
-
-  /**
-   * Dictionary where the key is the route param _name_ and the value indicates
-   * the **type** of the accepted param _value_
-   */
-  export type DataTranslationParams = Record<
-    string,
-    "string" | "number" | "stringOrNumber"
-  >;
 
   /**
    * Built in adapters

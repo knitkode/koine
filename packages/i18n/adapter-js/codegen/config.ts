@@ -9,7 +9,7 @@ import { defaultLocale } from "./defaultLocale";
 export const config = {
   locales,
   defaultLocale,
-  hideDefaultLocaleInUrl: ${data.hideDefaultLocaleInUrl},
+  hideDefaultLocaleInUrl: ${data.config.hideDefaultLocaleInUrl},
 }
 
 export default config;

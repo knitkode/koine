@@ -8,6 +8,7 @@ import {
   isString,
 } from "@koine/utils";
 import type { I18nCodegen } from "../../codegen";
+import { dataParamsToTsInterfaceBody } from "../../codegen/helpers";
 
 const getTranslationValueOutput = (value: I18nCodegen.DataTranslationValue) => {
   if (isString(value) || isNumber(value)) {
@@ -29,17 +30,18 @@ const getFunctionBodyWithLocales = (
   data: I18nCodegen.Data,
   perLocaleValues: I18nCodegen.DataTranslation["values"],
 ) => {
+  const { defaultLocale } = data.config;
   let output = "";
   forin(perLocaleValues, (locale, value) => {
     if (
-      locale !== data.defaultLocale &&
-      !areEqualTranslationsValues(value, perLocaleValues[data.defaultLocale])
+      locale !== defaultLocale &&
+      !areEqualTranslationsValues(value, perLocaleValues[defaultLocale])
     ) {
       output += `locale === "${locale}" ? ${getTranslationValueOutput(value)} : `;
     }
   });
 
-  output += getTranslationValueOutput(perLocaleValues[data.defaultLocale]);
+  output += getTranslationValueOutput(perLocaleValues[defaultLocale]);
 
   return output;
 };
@@ -47,58 +49,53 @@ const getFunctionBodyWithLocales = (
 export default (data: I18nCodegen.Data) => {
   let output = `
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-const */
 import type { I18n } from "./types";
 import { tInterpolateParams } from "./tInterpolateParams";
 
 `;
 
-  forin(
-    data.translations,
-    (translationId, { typeName, dynamic, values, params, paramsNames }) => {
-      const name = `t_${translationId}`;
-      // TODO: maybe use `params` to determine the right type with some kind of
-      // special token used in the route id
-      const paramsType = paramsNames
-        ? `{ ${paramsNames.reduce((params, paramName) => {
-            params += `${paramName}: string | number; `;
-            return params;
-          }, "")}}`
-        : "never";
-      const argParam = dynamic ? `params: ${paramsType}` : "";
+  forin(data.translations, (translationId, { values, params, plural }) => {
+    const name = `${data.config.translations.fnsPrefix}${translationId}`;
+    if (params && plural) {
+      params["count"] = "number";
+    }
+    const argParam = params
+      ? `params: { ${dataParamsToTsInterfaceBody(params)} }`
+      : "";
 
-      // for ergonomy always allow the user to pass the locale
-      const argLocale = "locale?: I18n.Locale";
-      const args = [argParam, argLocale].filter(Boolean).join(", ");
-      // const formatArgParams = dynamic ? ", params" : "";
+    // for ergonomy always allow the user to pass the locale
+    const argLocale = "locale?: I18n.Locale";
+    const args = [argParam, argLocale].filter(Boolean).join(", ");
+    // const formatArgParams = params ? ", params" : "";
 
-      output += `export const ${name} = (${args}) => `;
-      let outputFnReturn = "";
+    output += `export let ${name} = (${args}) => `;
+    let outputFnReturn = "";
 
-      if (isPrimitive(values)) {
-        outputFnReturn += getTranslationValueOutput(values);
-      } else {
-        outputFnReturn += getFunctionBodyWithLocales(data, values);
-      }
-      if (dynamic) {
-        outputFnReturn = `tInterpolateParams(${outputFnReturn}, params);`;
-      } else {
-        outputFnReturn = `${outputFnReturn};`;
-      }
+    if (isPrimitive(values)) {
+      outputFnReturn += getTranslationValueOutput(values);
+    } else {
+      outputFnReturn += getFunctionBodyWithLocales(data, values);
+    }
+    if (params) {
+      outputFnReturn = `tInterpolateParams(${outputFnReturn}, params);`;
+    } else {
+      outputFnReturn = `${outputFnReturn};`;
+    }
 
-      output += outputFnReturn;
-      // TODO: t interpolation and pluralisation
-      // if (isString(values)) {
-      //   output += `toFormat(${formatArgLocale}, "${values}"${formatArgParams});`;
-      // } else {
-      //   output += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
-      //     data,
-      //     values,
-      //   )}${formatArgParams});`;
-      // }
+    output += outputFnReturn;
+    // TODO: t interpolation and pluralisation
+    // if (isString(values)) {
+    //   output += `toFormat(${formatArgLocale}, "${values}"${formatArgParams});`;
+    // } else {
+    //   output += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
+    //     data,
+    //     values,
+    //   )}${formatArgParams});`;
+    // }
 
-      output += `\n`;
-    },
-  );
+    output += `\n`;
+  });
 
   return output;
 };

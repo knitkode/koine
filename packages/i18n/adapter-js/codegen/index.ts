@@ -35,7 +35,7 @@ const adapter: I18nCodegen.Adpater = () => {
       },
       { name: "routes", fn: routes, ext: "ts", index: true },
       { name: "routesSlim", fn: routesSlim, ext: "ts", index: true },
-      { name: "tFns", fn: tFns, ext: "ts", index: false },
+      { name: "tFns", fn: tFns, ext: "ts" },
       {
         name: "tInterpolateParams",
         fn: tInterpolateParams,

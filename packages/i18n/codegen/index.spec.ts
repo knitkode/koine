@@ -1,22 +1,19 @@
 // import { jestCreateExpectedThrownError } from "@koine/node/jest";
-import { to } from "./__mocks__/multi-language/source/to";
-import * as multiToFns from "./__mocks__/multi-language/source/toFns";
-import * as singleToFns from "./__mocks__/single-language/source/toFns";
+import { join } from "path";
+import { to } from "./__mocks__/multi-language/.source/to";
+import * as multiToFns from "./__mocks__/multi-language/.source/toFns";
+import * as singleToFns from "./__mocks__/single-language/.source/toFns";
+import { i18nCodegen } from "./index";
 
 // const err = jestCreateExpectedThrownError("@koine/i18n", "to");
-
-// import {
-//   buildRoutePathnameUntil,
-//   buildRoutePathnameUntilParent,
-// } from "./routeHelpers";
 
 describe("generated sources: to", () => {
   test("all routes urls", () => {
     expect(singleToFns.to_about()).toEqual("/about");
     expect(multiToFns.to_about()).toEqual("/about");
     // expect(to("about")).toEqual("/about");
-    expect(multiToFns.to_about("it")).toEqual("/it/about");
-    expect(to("about", "it")).toEqual("/it/about");
+    expect(multiToFns.to_about("it")).toEqual("/it/chi-siamo");
+    expect(to("about", "it")).toEqual("/it/chi-siamo");
 
     // @ts-expect-error test wrong implementation
     singleToFns.to_about("it");
@@ -28,34 +25,67 @@ describe("generated sources: to", () => {
   });
 });
 
-describe("getDataRoutes", () => {
-  // test("buildRoutePathnameUntil", () => {
-  //   const routes = {
-  //     a: {
-  //       index: 1,
-  //       b: {
-  //         index: 2,
-  //         "[c]": 3,
-  //       },
-  //       b2: {
-  //         index: "1",
-  //         c: {
-  //           index: "2",
-  //           d: {
-  //             index: "3",
-  //             e: {
-  //               index: "4",
-  //               f: "f",
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   };
-  //   expect(buildRoutePathnameUntil(routes, "a.b")).toEqual("1.2");
-  //   expect(buildRoutePathnameUntilParent(routes, "a.b.[c]")).toEqual("1.2");
-  //   expect(buildRoutePathnameUntilParent(routes, "a.b2.c.d.e.f")).toEqual(
-  //     "1.1.2.3.4",
-  //   );
-  // });
+const mocksPath = join(process.cwd(), "/packages/i18n/codegen/__mocks__/");
+
+describe("test write", () => {
+  test("single-language setup", async () => {
+    await i18nCodegen({
+      defaultLocale: "en",
+      hideDefaultLocaleInUrl: true,
+      fs: {
+        cwd: join(mocksPath, "single-language"),
+      },
+    }).write.all({
+      source: {
+        adapter: "next-translate",
+        skipTsCompile: true,
+        skipGitignore: true,
+        skipTranslations: true,
+      },
+      summary: {
+        outputJson: "summary.json",
+        outputMarkdown: "summary.md",
+        sourceUrl: "https://github.com/your-network/translations/tree/dev",
+      },
+    });
+  });
+
+  test("multi-language setup", async () => {
+    await i18nCodegen({
+      defaultLocale: "en",
+      hideDefaultLocaleInUrl: true,
+      fs: {
+        cwd: join(mocksPath, "multi-language"),
+      },
+    }).write.all({
+      source: {
+        adapter: "next-translate",
+        skipTsCompile: true,
+        skipGitignore: true,
+        skipTranslations: true,
+      },
+      summary: {
+        outputJson: "summary.json",
+        outputMarkdown: "summary.md",
+        sourceUrl: "https://github.com/your-network/translations/tree/dev",
+      },
+    });
+  });
+});
+
+test("test your.io", async () => {
+  await i18nCodegen({
+    defaultLocale: "en",
+    hideDefaultLocaleInUrl: true,
+    fs: {
+      cwd: join(__dirname, "../../../../../Your/translations"),
+    },
+    translations: {
+      // fnsAsDataSources: false
+    },
+  }).write.source({
+    output: "../frontend/libs/i18n",
+    adapter: "next-translate",
+    skipTsCompile: true,
+  });
 });

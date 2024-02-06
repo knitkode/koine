@@ -2,31 +2,39 @@ import { rmSync } from "node:fs";
 import { cp } from "node:fs/promises";
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
-import { type I18nCodegenSourceConfig, generateSource } from "./generateSource";
-import { getData } from "./getData";
+import {
+  type I18nCodegenSourceOptions,
+  generateSource,
+} from "./generateSource";
 import type { I18nCodegen } from "./types";
 import { writeSourceCompiled } from "./writeSourceCompiled";
 
-export type WriteSourceOptions = {
-  cwd: string;
+export type WriteSourceOptions = Partial<WriteSourceOptionsRequired>;
+
+type WriteSourceOptionsRequired = {
+  /**
+   * This should be a _dot_ folder
+   * @default ".source"
+   */
   output: string;
   skipTsCompile?: boolean;
   skipGitignore?: boolean;
   skipTranslations?: boolean;
-} & I18nCodegenSourceConfig;
+} & I18nCodegenSourceOptions;
 
-export let writeSource = async (options: WriteSourceOptions) => {
-  const {
-    cwd,
-    output,
+export let writeSource = async (
+  data: I18nCodegen.Data,
+  {
+    output = ".source",
     skipTsCompile,
     skipGitignore,
     skipTranslations,
-    ...configSource
-  } = options;
+    ...restOptions
+  }: WriteSourceOptions = {},
+) => {
+  const { cwd } = data.config.fs;
 
-  const data = await getData({ ...options, ignore: [output + "/**"] });
-  const sources = await generateSource({ ...data, ...configSource });
+  const sources = await generateSource(data, restOptions);
 
   const prettifiablePaths: Set<string> = new Set();
   const writtenFiles: Set<string> = new Set();
@@ -47,7 +55,7 @@ export let writeSource = async (options: WriteSourceOptions) => {
     const tsFiles = Array.from(writtenFiles).filter(
       (source) => source.endsWith(".ts") || source.endsWith(".tsx"),
     );
-    await writeSourceCompiled(options, tsFiles);
+    await writeSourceCompiled(data, output, tsFiles);
 
     Array.from(tsFiles).forEach((relativePath) => {
       writtenFiles.add(relativePath.replace(/\.tsx?$/, ".js"));
@@ -60,7 +68,7 @@ export let writeSource = async (options: WriteSourceOptions) => {
   }
 
   if (!skipTranslations) {
-    (await copyTranslations(options, data)).forEach((relativePath) => {
+    (await copyTranslations(data.config, output)).forEach((relativePath) => {
       writtenFolders.add(relativePath);
     });
   }
@@ -79,14 +87,13 @@ export let writeSource = async (options: WriteSourceOptions) => {
 };
 
 async function copyTranslations(
-  options: WriteSourceOptions,
-  data: I18nCodegen.Data,
+  { fs: { cwd }, locales }: I18nCodegen.Config,
+  output: string,
 ) {
-  const { cwd, output } = options;
   return await Promise.all(
-    data.localesFolders.map(async ({ path, code }) => {
-      const relativePath = join("translations", code);
-      await cp(path, join(cwd, output, relativePath), {
+    locales.map(async (locale) => {
+      const relativePath = join("translations", locale);
+      await cp(join(cwd, locale), join(cwd, output, relativePath), {
         recursive: true,
         force: true,
         preserveTimestamps: true,

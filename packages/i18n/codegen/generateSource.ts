@@ -1,28 +1,5 @@
 import type { I18nCodegen } from "./types";
 
-export type I18nCodegenSourceConfig = Pick<
-  I18nCodegen.Config,
-  "defaultLocale" | "hideDefaultLocaleInUrl"
-> & {
-  adapter: I18nCodegen.BuiltinAdapters;
-  outputFiles?: Partial<{
-    // TODO: mkae thiw works with generics based on chosen adapter
-    // defaultLocale: string;
-    // index: string;
-    // isLocale: string;
-    // locales: string;
-    // routes: string;
-    // routesSlim: string;
-    // to: string;
-    // toFns: string;
-    // toFormat: string;
-    // types: string;
-  }>;
-};
-
-export type I18nCodegenSourceOptions = I18nCodegen.Data &
-  I18nCodegenSourceConfig;
-
 const getIndexFile = (sources: I18nCodegen.AdpaterFileWithContent[]) => {
   let output = "";
 
@@ -36,24 +13,22 @@ const getIndexFile = (sources: I18nCodegen.AdpaterFileWithContent[]) => {
 };
 
 const getAdapterFiles = async (
-  options: I18nCodegenSourceOptions,
+  data: I18nCodegen.Data,
   adapter: I18nCodegen.BuiltinAdapters,
   allFiles: I18nCodegen.AdpaterFile[] = [],
 ) => {
-  const creator = (await import(`../adapter-${adapter}/codegen`).then(
+  const adapterCreator = (await import(`../adapter-${adapter}/codegen`).then(
     (m) => m.default,
   )) as I18nCodegen.Adpater;
 
-  const { dependsOn, files } = creator(options);
+  const { dependsOn, files } = adapterCreator(data);
 
   allFiles = allFiles.concat(files);
 
   if (dependsOn) {
     await Promise.all(
       dependsOn.map(async (adapaterName) => {
-        allFiles = allFiles.concat(
-          await getAdapterFiles(options, adapaterName),
-        );
+        allFiles = allFiles.concat(await getAdapterFiles(data, adapaterName));
       }),
     );
   }
@@ -61,10 +36,30 @@ const getAdapterFiles = async (
   return allFiles;
 };
 
-export async function generateSource(options: I18nCodegenSourceOptions) {
-  const { adapter, outputFiles } = options;
+export type I18nCodegenSourceOptions = {
+  adapter: I18nCodegen.BuiltinAdapters;
+  outputFiles?: Partial<{
+    // TODO: mkae this works with generics based on chosen adapter
+    // defaultLocale: string;
+    // index: string;
+    // isLocale: string;
+    // locales: string;
+    // routes: string;
+    // routesSlim: string;
+    // to: string;
+    // toFns: string;
+    // toFormat: string;
+    // types: string;
+  }>;
+};
 
-  const files = await getAdapterFiles(options, adapter);
+export async function generateSource(
+  data: I18nCodegen.Data,
+  options: Partial<I18nCodegenSourceOptions> = {},
+) {
+  const { adapter = "js", outputFiles } = options;
+
+  const files = await getAdapterFiles(data, adapter);
 
   // TODO: prettier
   // // prettier breaks jest, @see https://jestjs.io/docs/ecmascript-modules
@@ -81,7 +76,7 @@ export async function generateSource(options: I18nCodegenSourceOptions) {
     const name =
       outputFiles?.[rest.name as keyof typeof outputFiles] || rest.name;
 
-    return { ...rest, name, content: fn(options) };
+    return { ...rest, name, content: fn(data) };
   });
 
   sources.push({

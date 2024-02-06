@@ -10,8 +10,8 @@ export default (data: I18nCodegen.Data) => `
  */
 module.exports = (config = { pages: {} }) => {
   return {
-    locales: [${data.locales.map((l) => `"${l}"`).join(", ")}],
-    defaultLocale: "${data.defaultLocale}",
+    locales: [${data.config.locales.map((l) => `"${l}"`).join(", ")}],
+    defaultLocale: "${data.config.defaultLocale}",
     logBuild: false,
     // logger: () => void 0,
     loadLocaleFrom: (locale, namespace) => import(\`./translations/\${locale}/\${namespace}.json\`).then((m) => m.default),

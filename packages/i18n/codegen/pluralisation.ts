@@ -1,11 +1,17 @@
-import { forin, isNumericLiteral, objectPick, split } from "@koine/utils";
+import {
+  forin,
+  isNumericLiteral,
+  objectPick,
+  split,
+  splitReverse,
+} from "@koine/utils";
 import { I18nCodegen } from "./types";
 
-type PluralKey = `${string}_${PluralSuffix}`;
+export type PluralKey = `${string}_${PluralSuffix}`;
 
-type PluralSuffix = `${number}` | PluralSuffixNamed;
+export type PluralSuffix = `${number}` | PluralSuffixNamed;
 
-type PluralSuffixNamed = (typeof pluralSuffixes)[number];
+export type PluralSuffixNamed = (typeof pluralSuffixes)[number];
 
 /**
  * @see https://github.com/aralroca/next-translate?tab=readme-ov-file#5-plurals
@@ -17,18 +23,26 @@ const requiredPluralSuffix: PluralSuffixNamed = "other";
 /**
  * Is the given string a valid plural suffix?
  */
-const isPluralSuffix = (suffix: string): suffix is PluralSuffix => {
-  return (
-    pluralSuffixes.includes(suffix as PluralSuffixNamed) ||
-    isNumericLiteral(suffix)
-  );
+export let isPluralSuffix = (suffix: string): suffix is PluralSuffix =>
+  pluralSuffixes.includes(suffix as PluralSuffixNamed) ||
+  isNumericLiteral(suffix);
+
+/**
+ * Remove plural suffix from string
+ */
+export let removePluralSuffix = (key: PluralKey) => {
+  const [suffix] = splitReverse(key as PluralKey, "_");
+  return suffix ? key.replace(`_${suffix}`, "") : key;
 };
 
 /**
  * Is the translation value object key a plural form?
+ *
+ * Using `splitReverse` ensures to get the last underscore prefixed suffix
+ * even in a string with multiple underscores.
  */
-const isPluralKey = (key: string): key is PluralKey => {
-  const [, suffix] = split(key as PluralKey, "_");
+export let isPluralKey = (key: string): key is PluralKey => {
+  const [suffix] = splitReverse(key as PluralKey, "_");
   return isPluralSuffix(suffix);
 };
 

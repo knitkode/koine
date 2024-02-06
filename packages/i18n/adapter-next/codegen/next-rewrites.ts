@@ -6,7 +6,10 @@ import { transformPathname } from "./transformPathname";
 /**
  */
 export function getRewrites(data: I18nCodegen.Data, localeParam = "") {
-  const { routes, defaultLocale, hideDefaultLocaleInUrl } = data;
+  const {
+    routes,
+    config: { defaultLocale, hideDefaultLocaleInUrl },
+  } = data;
   const rewrites: (Rewrite | undefined)[] = [];
 
   for (const routeId in routes) {
