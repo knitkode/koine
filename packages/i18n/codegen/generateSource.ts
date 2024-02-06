@@ -14,7 +14,7 @@ const getIndexFile = (sources: I18nCodegen.AdpaterFileWithContent[]) => {
 
 const getAdapterFiles = async (
   data: I18nCodegen.Data,
-  adapter: I18nCodegen.BuiltinAdapters,
+  adapter: I18nCodegen.AdapterBuiltin,
   allFiles: I18nCodegen.AdpaterFile[] = [],
 ) => {
   const adapterCreator = (await import(`../adapter-${adapter}/codegen`).then(
@@ -37,7 +37,7 @@ const getAdapterFiles = async (
 };
 
 export type I18nCodegenSourceOptions = {
-  adapter: I18nCodegen.BuiltinAdapters;
+  adapter: I18nCodegen.AdapterBuiltin;
   outputFiles?: Partial<{
     // TODO: mkae this works with generics based on chosen adapter
     // defaultLocale: string;

@@ -25,18 +25,6 @@ export namespace I18nCodegen {
   export type RoutePathname = string; // & { __routePathname: true };
 
   /**
-   * Basic metadata of a `.json` translation file as read from the filesystem
-   */
-  export type TranslationFile = {
-    /**
-     * The relative path from the given `${cwd}/${locale}`
-     */
-    path: string;
-    locale: Locale;
-    data: { [key: string]: I18nCodegen.DataTranslationValue };
-  };
-
-  /**
    * Dictionary where the key is the param _name_ and the value indicates
    * the **type** of the accepted param _value_
    */
@@ -50,9 +38,30 @@ export namespace I18nCodegen {
    */
   export type Data = {
     config: Config;
-    files: TranslationFile[];
+    fs: DataFs;
     routes: DataRoutes;
+    summary: DataSummary;
     translations: DataTranslations;
+  };
+
+  /**
+   * Data extracted from filesystem structure
+   */
+  export type DataFs = {
+    translationFiles: DataFsTranslationFile[];
+    localesFolders: string[];
+  };
+
+  /**
+   * Basic metadata of a `.json` translation file as read from the filesystem
+   */
+  export type DataFsTranslationFile = {
+    /**
+     * The relative path from the given `${cwd}/${locale}`
+     */
+    path: string;
+    locale: Locale;
+    data: { [key: string]: I18nCodegen.DataTranslationValue };
   };
 
   /**
@@ -90,6 +99,26 @@ export namespace I18nCodegen {
      * Flags routes children of a wildcard route (in SPA applications subrouting)
      */
     inWildcard?: boolean;
+  };
+
+  export type DataSummary = Record<
+    Locale,
+    {
+      words: number;
+      characters: number;
+      files: DataSummaryFile[];
+    }
+  >;
+
+  /**
+   * {@link DataSummary}
+   */
+  export type DataSummaryFile = {
+    locale: Locale;
+    path: string;
+    url: string;
+    words: number;
+    characters: number;
   };
 
   /**
@@ -136,13 +165,13 @@ export namespace I18nCodegen {
   /**
    * Built in adapters
    */
-  export type BuiltinAdapters = "js" | "next" | "next-translate";
+  export type AdapterBuiltin = "js" | "next" | "next-translate";
 
   /**
    * Adapter anatomy
    */
   export type Adpater = (data: Data) => {
-    dependsOn?: BuiltinAdapters[];
+    dependsOn?: AdapterBuiltin[];
     files: AdpaterFile[];
   };
 

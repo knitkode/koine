@@ -3,6 +3,42 @@ import { isArray, isPrimitive, isString } from "@koine/utils";
 import { PluralKey, isPluralKey, removePluralSuffix } from "./pluralisation";
 import type { I18nCodegen } from "./types";
 
+export const dataTranslationsConfig = {
+  dynamicDelimiters: {
+    start: "{{",
+    end: "}}",
+  },
+  // TODO: add pluralisation config
+  /**
+   * It creates `t_` functions that returns objects and arrays to use as
+   * data source.
+   *
+   * NB: this greatly increased the generated code, tree shaking will still
+   * apply though.
+   *
+   * @default true
+   */
+  fnsAsDataSources: true,
+  /**
+   * Generate `namespace_tKey()` function prefix, prepended to the automatically
+   * generated function names.
+   *
+   * @default ""
+   */
+  fnsPrefix: "",
+  /**
+   * Given a translation value as `"myKey": ["two", "words"]`:
+   * - when `true`: it outputs `t_myKey_0`  and `t_myKey_1` functions
+   * - when `false`: if `fnsAsDataSources` is `true` it outputs `t_myKey` otherwise
+   * it outputs nothing (TODO: maybe we could log this info in this case)
+   *
+   * NB: It is quite unlikely that you want to set this to `true`.
+   *
+   * @default false
+   */
+  createArrayIndexBasedFns: false,
+};
+
 const slashRegex = new RegExp(sep, "g");
 
 /**
@@ -210,7 +246,7 @@ const addDataTranslationEntry = (
  */
 const getDataTranslationsFromFile = (
   config: I18nCodegen.Config,
-  file: I18nCodegen.TranslationFile,
+  file: I18nCodegen.DataFsTranslationFile,
   dataTranslations: I18nCodegen.DataTranslations,
 ): I18nCodegen.DataTranslations => {
   const { locale, path } = file;
@@ -230,13 +266,17 @@ const getDataTranslationsFromFile = (
  */
 export let getDataTranslations = (
   config: I18nCodegen.Config,
-  files: I18nCodegen.TranslationFile[],
+  { translationFiles }: I18nCodegen.DataFs,
 ) => {
   let dataTranslations: I18nCodegen.DataTranslations = {};
 
-  for (let i = 0; i < files.length; i++) {
-    if (files[i].path !== config.routes.translationJsonFileName) {
-      getDataTranslationsFromFile(config, files[i], dataTranslations);
+  for (let i = 0; i < translationFiles.length; i++) {
+    if (translationFiles[i].path !== config.routes.translationJsonFileName) {
+      getDataTranslationsFromFile(
+        config,
+        translationFiles[i],
+        dataTranslations,
+      );
     }
   }
 

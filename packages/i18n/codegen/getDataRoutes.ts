@@ -9,6 +9,19 @@ import { formatRoutePathname } from "../index";
 // import { formatRoutePathname } from "../client/formatRoutePathname";
 import type { I18nCodegen } from "./types";
 
+export const dataRoutesConfig = {
+  /** @default  "~.json" */
+  translationJsonFileName: "~.json",
+  tokens: {
+    /** @default  "^" */
+    parentReference: "^",
+    /** @default  "." */
+    idDelimiter: ".",
+    /** @default  "*" */
+    pathnameWildcard: "*",
+  },
+};
+
 /**
  * Normalise user defined route id
  *
@@ -192,14 +205,14 @@ const addRoutesOptimizedPathnames = (
  */
 export let getDataRoutes = (
   config: I18nCodegen.Config,
-  files: I18nCodegen.TranslationFile[],
+  { translationFiles }: I18nCodegen.DataFs,
 ) => {
   const { defaultLocale } = config;
   const wildcardRoutesIds: string[] = [];
   let dataRoutes: I18nCodegen.DataRoutes = {};
 
-  for (let i = 0; i < files.length; i++) {
-    const { path, locale, data } = files[i];
+  for (let i = 0; i < translationFiles.length; i++) {
+    const { path, locale, data } = translationFiles[i];
 
     if (path === config.routes.translationJsonFileName) {
       const routes = objectFlat<Record<I18nCodegen.RouteId, string>>(

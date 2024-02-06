@@ -1,0 +1,84 @@
+{
+  "en": {
+    "characters": 453,
+    "files": [
+      {
+        "characters": 277,
+        "locale": "en",
+        "path": "~.json",
+        "url": "//en/~.json",
+        "words": 35
+      },
+      {
+        "characters": 129,
+        "locale": "en",
+        "path": "~account/~user~profile.json",
+        "url": "//en/~account/~user~profile.json",
+        "words": 40
+      },
+      {
+        "characters": 8,
+        "locale": "en",
+        "path": "~account/FormUserLanguages.json",
+        "url": "//en/~account/FormUserLanguages.json",
+        "words": 2
+      },
+      {
+        "characters": 11,
+        "locale": "en",
+        "path": "$faq.json",
+        "url": "//en/$faq.json",
+        "words": 3
+      },
+      {
+        "characters": 28,
+        "locale": "en",
+        "path": "404.json",
+        "url": "//en/404.json",
+        "words": 8
+      }
+    ],
+    "words": 88
+  },
+  "it": {
+    "characters": 518,
+    "files": [
+      {
+        "characters": 336,
+        "locale": "it",
+        "path": "~.json",
+        "url": "//it/~.json",
+        "words": 38
+      },
+      {
+        "characters": 127,
+        "locale": "it",
+        "path": "~account/~user~profile.json",
+        "url": "//it/~account/~user~profile.json",
+        "words": 40
+      },
+      {
+        "characters": 8,
+        "locale": "it",
+        "path": "~account/FormUserLanguages.json",
+        "url": "//it/~account/FormUserLanguages.json",
+        "words": 2
+      },
+      {
+        "characters": 12,
+        "locale": "it",
+        "path": "$faq.json",
+        "url": "//it/$faq.json",
+        "words": 2
+      },
+      {
+        "characters": 35,
+        "locale": "it",
+        "path": "404.json",
+        "url": "//it/404.json",
+        "words": 7
+      }
+    ],
+    "words": 89
+  }
+}

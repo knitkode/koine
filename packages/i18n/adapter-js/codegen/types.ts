@@ -73,9 +73,11 @@ const buildTypeForValue = (value: I18nCodegen.DataTranslationValue) => {
 const buildTranslationsTypes = (data: I18nCodegen.Data) => {
   const {
     config: { defaultLocale },
-    files,
+    fs: { translationFiles },
   } = data;
-  const defaultLocaleFiles = files.filter((f) => f.locale === defaultLocale);
+  const defaultLocaleFiles = translationFiles.filter(
+    (f) => f.locale === defaultLocale,
+  );
   let out = `
   export interface Translations {
 `;

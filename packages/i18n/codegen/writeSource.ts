@@ -9,11 +9,11 @@ import {
 import type { I18nCodegen } from "./types";
 import { writeSourceCompiled } from "./writeSourceCompiled";
 
-export type WriteSourceOptions = Partial<WriteSourceOptionsRequired>;
-
-type WriteSourceOptionsRequired = {
+type WriteSourceConfig = {
   /**
-   * This should be a _dot_ folder
+   * This should be a _dot_ folder in order to be automatically ignored by
+   * {@link ./getDataFs.ts}
+   *
    * @default ".source"
    */
   output: string;
@@ -21,6 +21,8 @@ type WriteSourceOptionsRequired = {
   skipGitignore?: boolean;
   skipTranslations?: boolean;
 } & I18nCodegenSourceOptions;
+
+export type WriteSourceOptions = Partial<WriteSourceConfig>;
 
 export let writeSource = async (
   data: I18nCodegen.Data,

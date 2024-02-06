@@ -3,7 +3,7 @@ import { join } from "path";
 import { to } from "./__mocks__/multi-language/.source/to";
 import * as multiToFns from "./__mocks__/multi-language/.source/toFns";
 import * as singleToFns from "./__mocks__/single-language/.source/toFns";
-import { i18nCodegen } from "./index";
+import { i18nCodegen } from "./codegen";
 
 // const err = jestCreateExpectedThrownError("@koine/i18n", "to");
 
@@ -25,7 +25,7 @@ describe("generated sources: to", () => {
   });
 });
 
-const mocksPath = join(process.cwd(), "/packages/i18n/codegen/__mocks__/");
+const mocksPath = join(process.cwd(), "/packages/i18n/__mocks__/");
 
 describe("test write", () => {
   test("single-language setup", async () => {
@@ -36,6 +36,9 @@ describe("test write", () => {
         cwd: join(mocksPath, "single-language"),
       },
     }).write.all({
+      data: {
+        output: "data.json",
+      },
       source: {
         adapter: "next-translate",
         skipTsCompile: true,
@@ -45,7 +48,7 @@ describe("test write", () => {
       summary: {
         outputJson: "summary.json",
         outputMarkdown: "summary.md",
-        sourceUrl: "https://github.com/your-network/translations/tree/dev",
+        sourceUrl: "https://github.com/knitkode/koine/translations/tree/dev",
       },
     });
   });
@@ -58,6 +61,9 @@ describe("test write", () => {
         cwd: join(mocksPath, "multi-language"),
       },
     }).write.all({
+      data: {
+        output: "data.json",
+      },
       source: {
         adapter: "next-translate",
         skipTsCompile: true,
@@ -67,14 +73,14 @@ describe("test write", () => {
       summary: {
         outputJson: "summary.json",
         outputMarkdown: "summary.md",
-        sourceUrl: "https://github.com/your-network/translations/tree/dev",
+        sourceUrl: "https://github.com/knitkode/koine/translations/tree/dev",
       },
     });
   });
 });
 
 test("test your.io", async () => {
-  await i18nCodegen({
+  const i18n = i18nCodegen({
     defaultLocale: "en",
     hideDefaultLocaleInUrl: true,
     fs: {
@@ -83,9 +89,26 @@ test("test your.io", async () => {
     translations: {
       // fnsAsDataSources: false
     },
-  }).write.source({
-    output: "../frontend/libs/i18n",
-    adapter: "next-translate",
-    skipTsCompile: true,
   });
+
+  await i18n.write.all({
+    data: {
+      output: ".github/data.json",
+    },
+    source: {
+      output: "../frontend/libs/i18n",
+      adapter: "next-translate",
+      skipTsCompile: true,
+    },
+    summary: {
+      outputJson: ".github/summary.json",
+      outputMarkdown: ".github/summary.md",
+      sourceUrl: "https://github.com/your-network/translations/tree/dev",
+    },
+  });
+
+  // await i18n.write.source({
+  // });
+  // await i18n.write.data({
+  // })
 });
