@@ -1,6 +1,6 @@
 // import type { I18nCodegen } from "../../types";
 
-export default (/* data: I18nCodegen.Data, */) => `
+export default (/* {}: I18nCodegen.AdapterArg, */) => `
 "use client";
 
 import _TransText from "next-translate/TransText";

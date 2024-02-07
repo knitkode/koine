@@ -2,10 +2,10 @@ import { changeCaseCamel, forin, isString } from "@koine/utils";
 import type { I18nCodegen } from "../../codegen";
 
 const getFunctionBodyWithLocales = (
-  data: I18nCodegen.Data,
+  config: I18nCodegen.Config,
   perLocaleValues: Record<string, string>,
 ) => {
-  const { defaultLocale } = data.config;
+  const { defaultLocale } = config;
   let output = "";
   forin(perLocaleValues, (locale, value) => {
     if (locale !== defaultLocale && value !== perLocaleValues[defaultLocale]) {
@@ -18,15 +18,15 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-export default (data: I18nCodegen.Data) => {
-  const hasOneLocale = data.config.locales.length === 1;
+export default ({ config, data }: I18nCodegen.AdapterArg) => {
+  const hasOneLocale = config.locales.length === 1;
   let output = `
 import { toFormat } from "./toFormat";
 import type { I18n } from "./types";
 
 `;
 
-  forin(data.routes, (routeId, { typeName, pathnames, params }) => {
+  forin(data.source.routes, (routeId, { typeName, pathnames, params }) => {
     const name = `to_${changeCaseCamel(routeId)}`;
     const paramsType = `I18n.RouteParams.${typeName}`;
 
@@ -42,7 +42,7 @@ import type { I18n } from "./types";
       output += `toFormat(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
     } else {
       output += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
-        data,
+        config,
         pathnames,
       )}${formatArgParams});`;
     }

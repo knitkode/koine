@@ -6,14 +6,12 @@ import { transformPathname } from "./transformPathname";
 /**
  */
 export function getRedirects(
-  data: I18nCodegen.Data,
+  config: I18nCodegen.Config,
+  routes: I18nCodegen.DataRoutes,
   localeParam = "",
   permanent = false,
 ) {
-  const {
-    routes,
-    config: { defaultLocale, hideDefaultLocaleInUrl },
-  } = data;
+  const { defaultLocale, hideDefaultLocaleInUrl } = config;
   const redirects: (Redirect | undefined)[] = [];
 
   for (const routeId in routes) {
@@ -103,7 +101,11 @@ export function getRedirects(
   return cleaned;
 }
 
-export default (data: I18nCodegen.Data) => {
-  const value = JSON.stringify(getRedirects(data), null, 2);
+export default ({ config, data }: I18nCodegen.AdapterArg) => {
+  const value = JSON.stringify(
+    getRedirects(config, data.source.routes),
+    null,
+    2,
+  );
   return `module.exports = ${value}`;
 };

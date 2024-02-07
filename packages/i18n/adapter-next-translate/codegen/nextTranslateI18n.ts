@@ -1,6 +1,6 @@
 import type { I18nCodegen } from "../../codegen";
 
-export default (data: I18nCodegen.Data) => `
+export default ({ config }: I18nCodegen.AdapterArg) => `
 /**
  * Get 'next-translate' configuration
  *
@@ -10,8 +10,8 @@ export default (data: I18nCodegen.Data) => `
  */
 module.exports = (config = { pages: {} }) => {
   return {
-    locales: [${data.config.locales.map((l) => `"${l}"`).join(", ")}],
-    defaultLocale: "${data.config.defaultLocale}",
+    locales: [${config.locales.map((l) => `"${l}"`).join(", ")}],
+    defaultLocale: "${config.defaultLocale}",
     logBuild: false,
     // logger: () => void 0,
     loadLocaleFrom: (locale, namespace) => import(\`./translations/\${locale}/\${namespace}.json\`).then((m) => m.default),

@@ -101,12 +101,12 @@ const generateSummaryMarkdown = (
 export type I18nCodegenSummaryOptions = I18nCodegen.Config["summary"];
 
 export let generateSummary = async (
-  data: I18nCodegen.Data,
+  data: I18nCodegen.DataSummary,
   options?: Partial<I18nCodegenSummaryOptions>,
 ) => {
   const md = generateSummaryMarkdown(
-    data.summary,
+    data,
     mergeObjects({ ...configDefaults.summary }, options || {}),
   );
-  return { data: data.summary, md };
+  return { data: data, md };
 };

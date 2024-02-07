@@ -6,10 +6,13 @@ import {
   type I18nCodegenSourceOptions,
   generateSource,
 } from "./generateSource";
+import { getDataFs } from "./getDataFs";
+import { getDataSource } from "./getDataSource";
 import type { I18nCodegen } from "./types";
 import { writeSourceCompiled } from "./writeSourceCompiled";
 
 type WriteSourceConfig = {
+  cwd: string;
   /**
    * This should be a _dot_ folder in order to be automatically ignored by
    * {@link ./getDataFs.ts}
@@ -25,18 +28,30 @@ type WriteSourceConfig = {
 export type WriteSourceOptions = Partial<WriteSourceConfig>;
 
 export let writeSource = async (
-  data: I18nCodegen.Data,
   {
+    cwd = process.cwd(),
     output = ".source",
     skipTsCompile,
     skipGitignore,
     skipTranslations,
     ...restOptions
   }: WriteSourceOptions = {},
+  config: I18nCodegen.Config,
+  dataFs?: I18nCodegen.DataFs,
+  dataSource?: I18nCodegen.DataSource,
 ) => {
-  const { cwd } = data.config.fs;
-
-  const sources = await generateSource(data, restOptions);
+  dataFs = dataFs || (await getDataFs({ cwd }));
+  dataSource = dataSource || (await getDataSource(config, dataFs));
+  const sources = await generateSource(
+    {
+      config,
+      data: {
+        fs: dataFs,
+        source: dataSource,
+      },
+    },
+    restOptions,
+  );
 
   const prettifiablePaths: Set<string> = new Set();
   const writtenFiles: Set<string> = new Set();
@@ -57,7 +72,7 @@ export let writeSource = async (
     const tsFiles = Array.from(writtenFiles).filter(
       (source) => source.endsWith(".ts") || source.endsWith(".tsx"),
     );
-    await writeSourceCompiled(data, output, tsFiles);
+    await writeSourceCompiled(cwd, output, tsFiles);
 
     Array.from(tsFiles).forEach((relativePath) => {
       writtenFiles.add(relativePath.replace(/\.tsx?$/, ".js"));
@@ -70,7 +85,7 @@ export let writeSource = async (
   }
 
   if (!skipTranslations) {
-    (await copyTranslations(data.config, output)).forEach((relativePath) => {
+    (await copyTranslations(cwd, config, output)).forEach((relativePath) => {
       writtenFolders.add(relativePath);
     });
   }
@@ -85,11 +100,13 @@ export let writeSource = async (
     );
   }
 
-  return data;
+  // TODO: maybe return written paths?
+  return;
 };
 
 async function copyTranslations(
-  { fs: { cwd }, locales }: I18nCodegen.Config,
+  cwd: string,
+  { locales }: I18nCodegen.Config,
   output: string,
 ) {
   return await Promise.all(

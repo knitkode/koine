@@ -9,7 +9,7 @@ import { formatRoutePathname } from "../index";
 // import { formatRoutePathname } from "../client/formatRoutePathname";
 import type { I18nCodegen } from "./types";
 
-export const dataRoutesConfig = {
+export const dataSourceRoutesConfig = {
   /** @default  "~.json" */
   translationJsonFileName: "~.json",
   tokens: {
@@ -76,8 +76,10 @@ const replaceRouteParentTokens = (
 
   // beginning slash is always present here as the route value is already
   // normalised at this point
-  if (pathname.startsWith(`/${config.routes.tokens.parentReference}`)) {
-    const regex = new RegExp(`^\\/\\${config.routes.tokens.parentReference}`);
+  if (pathname.startsWith(`/${config.source.routes.tokens.parentReference}`)) {
+    const regex = new RegExp(
+      `^\\/\\${config.source.routes.tokens.parentReference}`,
+    );
     // removes the slash + token
     pathname = pathname.replace(regex, "");
     // grab the parent id
@@ -201,9 +203,9 @@ const addRoutesOptimizedPathnames = (
 };
 
 /**
- * Get routes data
+ * Get source routes data
  */
-export let getDataRoutes = (
+export let getDataSourceRoutes = (
   config: I18nCodegen.Config,
   { translationFiles }: I18nCodegen.DataFs,
 ) => {
@@ -214,10 +216,10 @@ export let getDataRoutes = (
   for (let i = 0; i < translationFiles.length; i++) {
     const { path, locale, data } = translationFiles[i];
 
-    if (path === config.routes.translationJsonFileName) {
+    if (path === config.source.routes.translationJsonFileName) {
       const routes = objectFlat<Record<I18nCodegen.RouteId, string>>(
         data,
-        config.routes.tokens.idDelimiter,
+        config.source.routes.tokens.idDelimiter,
       );
 
       for (const _key in routes) {
@@ -231,7 +233,7 @@ export let getDataRoutes = (
           const typeName = routeIdToTypeName(routeId);
           const params = extractRouteParamsFromRouteId(routeId);
           const wildcard = routePathname.includes(
-            config.routes.tokens.pathnameWildcard,
+            config.source.routes.tokens.pathnameWildcard,
           );
           dataRoutes[routeId].id = routeId;
           dataRoutes[routeId].typeName = typeName;

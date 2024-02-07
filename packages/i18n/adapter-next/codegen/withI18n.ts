@@ -1,7 +1,7 @@
 import type { I18nCodegen } from "../../codegen";
 
-export default (data: I18nCodegen.Data) => {
-  const { locales, defaultLocale, hideDefaultLocaleInUrl } = data.config;
+export default ({ config }: I18nCodegen.AdapterArg) => {
+  const { locales, defaultLocale, hideDefaultLocaleInUrl } = config;
 
   return `
 const withTranslate = require("next-translate-plugin");

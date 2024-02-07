@@ -1,9 +1,13 @@
 import { basename, dirname, extname, join, sep } from "node:path";
 import { isArray, isPrimitive, isString } from "@koine/utils";
-import { PluralKey, isPluralKey, removePluralSuffix } from "./pluralisation";
+import {
+  type PluralKey,
+  isPluralKey,
+  removePluralSuffix,
+} from "./pluralisation";
 import type { I18nCodegen } from "./types";
 
-export const dataTranslationsConfig = {
+export const dataSourceTranslationsConfig = {
   dynamicDelimiters: {
     start: "{{",
     end: "}}",
@@ -65,7 +69,7 @@ const extractTranslationParamsFromPrimitive = (
   value: Extract<I18nCodegen.DataTranslationValue, string | number | boolean>,
 ) => {
   if (isString(value)) {
-    const { start, end } = config.translations.dynamicDelimiters;
+    const { start, end } = config.source.translations.dynamicDelimiters;
     const regex = new RegExp(`${start}(.*?)${end}`, "gm");
     const matches = value.match(regex);
     if (matches) {
@@ -200,7 +204,7 @@ const addDataTranslationEntry = (
     dataTranslations[id].typeValue = "Primitive";
     if (params) dataTranslations[id].params = params;
   } else {
-    if (config.translations.fnsAsDataSources) {
+    if (config.source.translations.fnsAsDataSources) {
       // const params = extractTranslationParamsFromValue(
       //   config,
       //   value,
@@ -214,7 +218,7 @@ const addDataTranslationEntry = (
     }
 
     if (isArray(value)) {
-      if (config.translations.createArrayIndexBasedFns) {
+      if (config.source.translations.createArrayIndexBasedFns) {
         for (let i = 0; i < value.length; i++) {
           addDataTranslationEntry(
             config,
@@ -262,16 +266,18 @@ const getDataTranslationsFromFile = (
 };
 
 /**
- * Get translations data
+ * Get source translations data
  */
-export let getDataTranslations = (
+export let getDataSourceTranslations = (
   config: I18nCodegen.Config,
   { translationFiles }: I18nCodegen.DataFs,
 ) => {
   let dataTranslations: I18nCodegen.DataTranslations = {};
 
   for (let i = 0; i < translationFiles.length; i++) {
-    if (translationFiles[i].path !== config.routes.translationJsonFileName) {
+    if (
+      translationFiles[i].path !== config.source.routes.translationJsonFileName
+    ) {
       getDataTranslationsFromFile(
         config,
         translationFiles[i],

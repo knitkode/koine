@@ -5,11 +5,12 @@ import { transformPathname } from "./transformPathname";
 
 /**
  */
-export function getRewrites(data: I18nCodegen.Data, localeParam = "") {
-  const {
-    routes,
-    config: { defaultLocale, hideDefaultLocaleInUrl },
-  } = data;
+export function getRewrites(
+  config: I18nCodegen.Config,
+  routes: I18nCodegen.DataRoutes,
+  localeParam = "",
+) {
+  const { defaultLocale, hideDefaultLocaleInUrl } = config;
   const rewrites: (Rewrite | undefined)[] = [];
 
   for (const routeId in routes) {
@@ -81,7 +82,11 @@ export function getRewrites(data: I18nCodegen.Data, localeParam = "") {
   return cleaned;
 }
 
-export default (data: I18nCodegen.Data) => {
-  const value = JSON.stringify(getRewrites(data), null, 2);
+export default ({ config, data }: I18nCodegen.AdapterArg) => {
+  const value = JSON.stringify(
+    getRewrites(config, data.source.routes),
+    null,
+    2,
+  );
   return `module.exports = ${value}`;
 };

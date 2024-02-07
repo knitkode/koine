@@ -3,6 +3,7 @@ import { fsWrite } from "@koine/node";
 import type { I18nCodegen } from "./types";
 
 export type WriteDataOptions = {
+  cwd: string;
   output: string;
   /**
    * @default undefined
@@ -11,11 +12,10 @@ export type WriteDataOptions = {
 };
 
 export let writeData = async (
-  data: I18nCodegen.Data,
   options: WriteDataOptions,
+  data: I18nCodegen.Data,
 ) => {
-  const { cwd } = data.config.fs;
-  const { output, pretty } = options;
+  const { cwd, output, pretty } = options;
 
   await fsWrite(
     join(cwd, output),

@@ -1,8 +1,7 @@
 import { type PartialDeep, mergeObjects } from "@koine/utils";
 import { dataFsConfig } from "./getDataFs";
-import { dataRoutesConfig } from "./getDataRoutes";
+import { dataSourceConfig } from "./getDataSource";
 import { dataSummaryConfig } from "./getDataSummary";
-import { dataTranslationsConfig } from "./getDataTranslations";
 import type { I18nCodegen } from "./types";
 
 export type I18nCodegenConfig = typeof configDefaults;
@@ -18,17 +17,13 @@ export const configDefaults = {
    */
   fs: dataFsConfig,
   /**
-   * Config _routes_
+   * Config _source_
    */
-  routes: dataRoutesConfig,
+  source: dataSourceConfig,
   /**
    * Config _summary_
    */
   summary: dataSummaryConfig,
-  /**
-   * Config _translations_
-   */
-  translations: dataTranslationsConfig,
 };
 
 /**

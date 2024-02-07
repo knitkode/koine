@@ -27,10 +27,10 @@ const areEqualTranslationsValues = (
 ) => areEqual(a, b);
 
 const getFunctionBodyWithLocales = (
-  data: I18nCodegen.Data,
+  config: I18nCodegen.Config,
   perLocaleValues: I18nCodegen.DataTranslation["values"],
 ) => {
-  const { defaultLocale } = data.config;
+  const { defaultLocale } = config;
   let output = "";
   forin(perLocaleValues, (locale, value) => {
     if (
@@ -46,7 +46,7 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-export default (data: I18nCodegen.Data) => {
+export default ({ config, data }: I18nCodegen.AdapterArg) => {
   let output = `
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-const */
@@ -55,47 +55,50 @@ import { tInterpolateParams } from "./tInterpolateParams";
 
 `;
 
-  forin(data.translations, (translationId, { values, params, plural }) => {
-    const name = `${data.config.translations.fnsPrefix}${translationId}`;
-    if (params && plural) {
-      params["count"] = "number";
-    }
-    const argParam = params
-      ? `params: { ${dataParamsToTsInterfaceBody(params)} }`
-      : "";
+  forin(
+    data.source.translations,
+    (translationId, { values, params, plural }) => {
+      const name = `${config.source.translations.fnsPrefix}${translationId}`;
+      if (params && plural) {
+        params["count"] = "number";
+      }
+      const argParam = params
+        ? `params: { ${dataParamsToTsInterfaceBody(params)} }`
+        : "";
 
-    // for ergonomy always allow the user to pass the locale
-    const argLocale = "locale?: I18n.Locale";
-    const args = [argParam, argLocale].filter(Boolean).join(", ");
-    // const formatArgParams = params ? ", params" : "";
+      // for ergonomy always allow the user to pass the locale
+      const argLocale = "locale?: I18n.Locale";
+      const args = [argParam, argLocale].filter(Boolean).join(", ");
+      // const formatArgParams = params ? ", params" : "";
 
-    output += `export let ${name} = (${args}) => `;
-    let outputFnReturn = "";
+      output += `export let ${name} = (${args}) => `;
+      let outputFnReturn = "";
 
-    if (isPrimitive(values)) {
-      outputFnReturn += getTranslationValueOutput(values);
-    } else {
-      outputFnReturn += getFunctionBodyWithLocales(data, values);
-    }
-    if (params) {
-      outputFnReturn = `tInterpolateParams(${outputFnReturn}, params);`;
-    } else {
-      outputFnReturn = `${outputFnReturn};`;
-    }
+      if (isPrimitive(values)) {
+        outputFnReturn += getTranslationValueOutput(values);
+      } else {
+        outputFnReturn += getFunctionBodyWithLocales(config, values);
+      }
+      if (params) {
+        outputFnReturn = `tInterpolateParams(${outputFnReturn}, params);`;
+      } else {
+        outputFnReturn = `${outputFnReturn};`;
+      }
 
-    output += outputFnReturn;
-    // TODO: t interpolation and pluralisation
-    // if (isString(values)) {
-    //   output += `toFormat(${formatArgLocale}, "${values}"${formatArgParams});`;
-    // } else {
-    //   output += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
-    //     data,
-    //     values,
-    //   )}${formatArgParams});`;
-    // }
+      output += outputFnReturn;
+      // TODO: t interpolation and pluralisation
+      // if (isString(values)) {
+      //   output += `toFormat(${formatArgLocale}, "${values}"${formatArgParams});`;
+      // } else {
+      //   output += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
+      //     data,
+      //     values,
+      //   )}${formatArgParams});`;
+      // }
 
-    output += `\n`;
-  });
+      output += `\n`;
+    },
+  );
 
   return output;
 };

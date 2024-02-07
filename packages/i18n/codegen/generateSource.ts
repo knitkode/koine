@@ -13,22 +13,24 @@ const getIndexFile = (sources: I18nCodegen.AdpaterFileWithContent[]) => {
 };
 
 const getAdapterFiles = async (
-  data: I18nCodegen.Data,
-  adapter: I18nCodegen.AdapterBuiltin,
+  adapterArg: I18nCodegen.AdapterArg,
+  adapterName: I18nCodegen.AdapterBuiltin,
   allFiles: I18nCodegen.AdpaterFile[] = [],
 ) => {
-  const adapterCreator = (await import(`../adapter-${adapter}/codegen`).then(
-    (m) => m.default,
-  )) as I18nCodegen.Adpater;
+  const adapterCreator = (await import(
+    `../adapter-${adapterName}/codegen`
+  ).then((m) => m.default)) as I18nCodegen.Adpater;
 
-  const { dependsOn, files } = adapterCreator(data);
+  const { dependsOn, files } = adapterCreator(adapterArg);
 
   allFiles = allFiles.concat(files);
 
   if (dependsOn) {
     await Promise.all(
       dependsOn.map(async (adapaterName) => {
-        allFiles = allFiles.concat(await getAdapterFiles(data, adapaterName));
+        allFiles = allFiles.concat(
+          await getAdapterFiles(adapterArg, adapaterName),
+        );
       }),
     );
   }
@@ -54,12 +56,11 @@ export type I18nCodegenSourceOptions = {
 };
 
 export async function generateSource(
-  data: I18nCodegen.Data,
+  adapterArg: I18nCodegen.AdapterArg,
   options: Partial<I18nCodegenSourceOptions> = {},
 ) {
   const { adapter = "js", outputFiles } = options;
-
-  const files = await getAdapterFiles(data, adapter);
+  const files = await getAdapterFiles(adapterArg, adapter);
 
   // TODO: prettier
   // // prettier breaks jest, @see https://jestjs.io/docs/ecmascript-modules
@@ -76,7 +77,7 @@ export async function generateSource(
     const name =
       outputFiles?.[rest.name as keyof typeof outputFiles] || rest.name;
 
-    return { ...rest, name, content: fn(data) };
+    return { ...rest, name, content: fn(adapterArg) };
   });
 
   sources.push({

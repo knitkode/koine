@@ -275,7 +275,7 @@ export function getRedirects(arg: GetRedirectsOptions) {
     ["source", "destination"],
   ).map((rewrite) => (localeParam ? rewrite : { ...rewrite, locale: false }));
 
-  if (debug) console.info("[@koine/next/config:getRedirects]", cleaned);
+  if (debug) console.info("[@koine/next/plugin-legacy:getRedirects]", cleaned);
 
   return cleaned;
 }
@@ -363,7 +363,7 @@ export function getRewrites(arg: GetRewritesOptions) {
     ["source", "destination"],
   );
 
-  if (debug) console.info("[@koine/next/config:getRewrites]", cleaned);
+  if (debug) console.info("[@koine/next/plugin-legacy:getRewrites]", cleaned);
 
   return cleaned;
 }
@@ -391,7 +391,7 @@ export function getRewrites(arg: GetRewritesOptions) {
 //   return routes as Routes;
 // }
 
-export type WithI18nNextConfig = {
+export type WithI18nLegacy = {
   /**
    * A JSON file containing the routes definition mapping template folders
    * to localised slugs. It supports slugs's dynamic portions.
@@ -465,9 +465,9 @@ export type WithI18nNextConfig = {
 /**
  * @deprecated Better use solely the compiled `withI18n`
  */
-export let withI18nNext =
+export let withI18nLegacy =
   (
-    { routes, permanent, i18n, debug }: WithI18nNextConfig = {
+    { routes, permanent, i18n, debug }: WithI18nLegacy = {
       i18n: {
         locales: ["en"],
         defaultLocale: "en",

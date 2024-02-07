@@ -1,6 +1,6 @@
 // import type { I18nCodegen } from "../../types";
 
-export default (/* data: I18nCodegen.Data, */) => `
+export default (/* {}: I18nCodegen.AdapterArg, */) => `
 import { locales } from "./locales";
 import { to } from "./to";
 import type { I18n } from "./types";

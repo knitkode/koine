@@ -70,11 +70,12 @@ const buildTypeForValue = (value: I18nCodegen.DataTranslationValue) => {
   return out;
 };
 
-const buildTranslationsTypes = (data: I18nCodegen.Data) => {
-  const {
-    config: { defaultLocale },
-    fs: { translationFiles },
-  } = data;
+const buildTranslationsTypes = (
+  config: I18nCodegen.Config,
+  dataFs: I18nCodegen.DataFs,
+) => {
+  const { translationFiles } = dataFs;
+  const { defaultLocale } = config;
   const defaultLocaleFiles = translationFiles.filter(
     (f) => f.locale === defaultLocale,
   );
@@ -97,10 +98,10 @@ const buildTranslationsTypes = (data: I18nCodegen.Data) => {
   return out;
 };
 
-const buildRouteParamsInterfaces = (data: I18nCodegen.Data) => {
+const buildRouteParamsInterfaces = (routes: I18nCodegen.DataRoutes) => {
   let output = "\n";
 
-  forin(data.routes, (_routeId, { typeName, params }) => {
+  forin(routes, (_routeId, { typeName, params }) => {
     if (params) {
       output += `  export interface ${typeName} { ${dataParamsToTsInterfaceBody(params)} }\n`;
     }
@@ -110,33 +111,33 @@ const buildRouteParamsInterfaces = (data: I18nCodegen.Data) => {
 };
 
 const buildRoutesUnion = (
-  data: I18nCodegen.Data,
+  routes: I18nCodegen.DataRoutes,
   filterFn: (
-    routeId: keyof I18nCodegen.Data["routes"],
+    routeId: keyof I18nCodegen.DataSource["routes"],
     routeData: I18nCodegen.DataRoutes[string],
   ) => undefined | boolean,
 ) =>
-  Object.keys(data.routes)
+  Object.keys(routes)
     .filter((routeId) =>
-      filterFn(routeId, data.routes[routeId as keyof typeof data.routes]),
+      filterFn(routeId, routes[routeId as keyof typeof routes]),
     )
     .sort()
     .map((routeId) => `"${routeId}"`)
     .join(" | ");
 
-export default (data: I18nCodegen.Data) => {
-  const routeParamsInterfaces = buildRouteParamsInterfaces(data);
+export default ({ config, data }: I18nCodegen.AdapterArg) => {
+  const routeParamsInterfaces = buildRouteParamsInterfaces(data.source.routes);
   const file_types = readFileSync(join(__dirname, "../../types.ts"), "utf-8");
   const file_typesUtils = readFileSync(
     join(__dirname, "../../types-utils.ts"),
     "utf-8",
   );
   const RouteIdStatic = buildRoutesUnion(
-    data,
+    data.source.routes,
     (_, routeData) => !routeData.params,
   );
   const RouteIdDynamic = buildRoutesUnion(
-    data,
+    data.source.routes,
     (_, routeData) => !!routeData.params,
   );
 
@@ -146,11 +147,11 @@ export default (data: I18nCodegen.Data) => {
 /* eslint-disable @typescript-eslint/ban-types */
 
 export namespace I18n {
-  export type Locale = ${data.config.locales.map((l) => `"${l}"`).join(" | ")};
+  export type Locale = ${config.locales.map((l) => `"${l}"`).join(" | ")};
  
   export type LocalesMap<T = any> = Record<Locale, T>;
 
-  ${buildTranslationsTypes(data)}
+  ${buildTranslationsTypes(config, data.fs)}
 ${file_types}
   
   // export type RouteId = keyof typeof routesSlim;

@@ -16,7 +16,7 @@
         "assets": [
           {
             "input": "packages/i18n",
-            "glob": "/**/*.{md,.d.ts}",
+            "glob": "/*.{md,d.ts}",
             "output": "./"
           }
         ],
@@ -26,7 +26,18 @@
         "format": ["cjs", "esm"],
         "compiler": "swc",
         "deleteOutputPath": true,
-        "additionalEntryPoints": ["packages/i18n/{codegen,next-config}.ts"]
+        "additionalEntryPoints": [
+          "packages/i18n/codegen.ts",
+          "packages/i18n/next.ts"
+        ]
+      }
+    },
+    "build-next": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "ncc build ./packages/i18n/ncc/next.ts -t -o ./dist/packages/ncc --minify --no-source-map-register"
+        ]
       }
     },
     "lint": {

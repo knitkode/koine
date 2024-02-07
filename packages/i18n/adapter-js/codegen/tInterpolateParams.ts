@@ -6,8 +6,8 @@ const escapeEachChar = (input: string) =>
     .map((v) => `\\${v}`)
     .join("");
 
-export default (data: I18nCodegen.Data) => {
-  const { start, end } = data.config.translations.dynamicDelimiters;
+export default ({ config }: I18nCodegen.AdapterArg) => {
+  const { start, end } = config.source.translations.dynamicDelimiters;
   return `
 export let tInterpolateParams = (
   value: string,

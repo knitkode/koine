@@ -4,7 +4,7 @@ import {
   type Rewrite,
   getRedirects,
   getRewrites,
-} from "./config";
+} from "./plugin-legacy";
 
 // prettier-ignore
 const DATA = {

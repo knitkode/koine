@@ -5,7 +5,7 @@ import {
   split,
   splitReverse,
 } from "@koine/utils";
-import { I18nCodegen } from "./types";
+import type { I18nCodegen } from "./types";
 
 export type PluralKey = `${string}_${PluralSuffix}`;
 

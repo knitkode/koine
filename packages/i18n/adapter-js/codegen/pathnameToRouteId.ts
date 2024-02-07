@@ -1,6 +1,6 @@
 // import type { I18nCodegen } from "../../types";
 
-export default (/* _data: I18nCodegen.Data */) => `
+export default (/* {}: I18nCodegen.AdapterArg */) => `
 /**
  * Convert a URL like pathname to a "named route"
  * E.g. it transforms:

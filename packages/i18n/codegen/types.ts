@@ -1,4 +1,4 @@
-import type { I18nCodegenConfig } from "./getConfig";
+import type { I18nCodegenConfig, I18nCodegenConfigOptions } from "./getConfig";
 import type { PluralSuffix } from "./pluralisation";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -8,6 +8,11 @@ export namespace I18nCodegen {
    * need to provide the defaults.
    */
   export type Config = I18nCodegenConfig;
+
+  /**
+   * User defined config {@link Config}
+   */
+  export type OptionalConfig = I18nCodegenConfigOptions;
 
   /**
    * Branded `string`
@@ -39,9 +44,8 @@ export namespace I18nCodegen {
   export type Data = {
     config: Config;
     fs: DataFs;
-    routes: DataRoutes;
     summary: DataSummary;
-    translations: DataTranslations;
+    source: DataSource;
   };
 
   /**
@@ -62,6 +66,14 @@ export namespace I18nCodegen {
     path: string;
     locale: Locale;
     data: { [key: string]: I18nCodegen.DataTranslationValue };
+  };
+
+  /**
+   * {@link DataRoute} - {@link DataTranslations}
+   */
+  export type DataSource = {
+    routes: DataRoutes;
+    translations: DataTranslations;
   };
 
   /**
@@ -170,9 +182,14 @@ export namespace I18nCodegen {
   /**
    * Adapter anatomy
    */
-  export type Adpater = (data: Data) => {
+  export type Adpater = (arg: AdapterArg) => {
     dependsOn?: AdapterBuiltin[];
     files: AdpaterFile[];
+  };
+
+  export type AdapterArg = {
+    config: Config;
+    data: Pick<Data, "fs" | "source">;
   };
 
   /**
@@ -187,7 +204,7 @@ export namespace I18nCodegen {
     /**
      * Function that generates the file content
      */
-    fn: (data: Data) => string;
+    fn: (arg: AdapterArg) => string;
     /**
      * Whether the generated file should be added to the automatically generated
      * `index.ts` barrel file

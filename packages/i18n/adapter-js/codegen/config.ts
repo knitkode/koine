@@ -1,6 +1,6 @@
 import type { I18nCodegen } from "../../codegen";
 
-export default (data: I18nCodegen.Data) => `
+export default ({ config }: I18nCodegen.AdapterArg) => `
 import { locales } from "./locales";
 import { defaultLocale } from "./defaultLocale";
 
@@ -9,7 +9,7 @@ import { defaultLocale } from "./defaultLocale";
 export const config = {
   locales,
   defaultLocale,
-  hideDefaultLocaleInUrl: ${data.config.hideDefaultLocaleInUrl},
+  hideDefaultLocaleInUrl: ${config.hideDefaultLocaleInUrl},
 }
 
 export default config;

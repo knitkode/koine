@@ -1,13 +1,13 @@
 import type { I18nCodegen } from "../../codegen";
 
-export default (data: I18nCodegen.Data) =>
+export default ({ config }: I18nCodegen.AdapterArg) =>
   `
 export function toFormat(
   locale: string | undefined,
   pathname: string,
   params?: object,
 ) {
-  locale = locale || "${data.config.defaultLocale}";
+  locale = locale || "${config.defaultLocale}";
   if (process.env["NODE_ENV"] === "development") {
     if (params) {
       pathname.replace(/\\[(.*?)\\]/g, (_, dynamicKey) => {
@@ -48,9 +48,9 @@ export function toFormat(
       )
   }
   ${
-    data.config.hideDefaultLocaleInUrl
+    config.hideDefaultLocaleInUrl
       ? `
-  if (locale !== "${data.config.defaultLocale}") {
+  if (locale !== "${config.defaultLocale}") {
     return "/" + locale + pathname;
   }
   `

@@ -1,14 +1,12 @@
 import { join } from "node:path";
 import * as ts from "typescript";
-import type { I18nCodegen } from "./types";
 
 export let writeSourceCompiled = (
-  data: I18nCodegen.Data,
+  cwd: string,
   output: string,
   relativePaths: string[], // Set<string>,
   tsOptions?: ts.CompilerOptions,
 ) => {
-  const { cwd } = data.config.fs;
   const rootNames = Array.from(relativePaths)
     .filter((p) => p.endsWith(".ts") || p.endsWith(".tsx"))
     .map((relativePath) => join(cwd, output, relativePath));

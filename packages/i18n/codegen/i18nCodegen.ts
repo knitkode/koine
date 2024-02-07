@@ -13,14 +13,14 @@ import { type WriteSummaryOptions, writeSummary } from "./writeSummary";
 export let i18nCodegen = (config: GetDataOptions) => {
   let genData: I18nCodegen.Data | undefined;
 
-  const instance = {
+  return {
     data: genData,
     getData,
     write: {
       all: async ({
-        data,
-        source,
-        summary,
+        data: dataOpts,
+        source: sourceOpts,
+        summary: summaryOpts,
       }: {
         data: WriteDataOptions;
         source: WriteSourceOptions;
@@ -28,29 +28,23 @@ export let i18nCodegen = (config: GetDataOptions) => {
       }) => {
         genData = genData || (await getData(config));
         await Promise.all([
-          writeData(genData, data),
-          writeSource(genData, source),
-          writeSummary(genData, summary),
+          writeData(dataOpts, genData),
+          writeSource(sourceOpts, genData.config, genData.fs, genData.source),
+          writeSummary({ ...summaryOpts, data: genData.summary }),
         ]);
-        return instance;
       },
       data: async (options: WriteDataOptions) => {
         genData = genData || (await getData(config));
-        await writeData(genData, options);
-        return instance;
+        await writeData(options, genData);
       },
       source: async (options: WriteSourceOptions) => {
         genData = genData || (await getData(config));
-        await writeSource(genData, options);
-        return instance;
+        await writeSource(options, genData.config, genData.fs, genData.source);
       },
       summary: async (options: WriteSummaryOptions) => {
         genData = genData || (await getData(config));
-        await writeSummary(genData, options);
-        return instance;
+        await writeSummary({ ...options, data: genData.summary });
       },
     },
   };
-
-  return instance;
 };

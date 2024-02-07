@@ -1,10 +1,10 @@
 import type { I18nCodegen } from "../../codegen";
 
-export default (data: I18nCodegen.Data) =>
+export default ({ config }: I18nCodegen.AdapterArg) =>
   `
 import type { I18n } from "./types";
 
-export const defaultLocale: I18n.Locale = "${data.config.defaultLocale}";
+export const defaultLocale: I18n.Locale = "${config.defaultLocale}";
 
 export default defaultLocale;
 `;
