@@ -1,12 +1,12 @@
 import type { Compilation, Compiler } from "webpack";
-import { type I18nCompiler, i18nCompiler } from "../compiler";
+import { type I18nCompilerOptions, i18nCompiler } from "../compiler";
 
 const PLUGIN_NAME = "I18nWebpackPlugin";
 
 export class I18nWebpackPlugin {
-  opts: I18nCompiler.OptionalConfig;
+  opts: I18nCompilerOptions;
 
-  constructor(opts: I18nCompiler.OptionalConfig) {
+  constructor(opts: I18nCompilerOptions) {
     this.opts = opts;
     // console.log("plugin init");
   }

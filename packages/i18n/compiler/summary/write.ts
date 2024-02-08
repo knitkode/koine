@@ -1,7 +1,8 @@
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
 import type { I18nCompiler } from "../types";
-import { type GenerateSummaryOptions, generateSummary } from "./generate";
+import type { SummaryDataOptions } from "./data";
+import { generateSummary } from "./generate";
 
 export type SummaryWriteOptions = {
   /**
@@ -21,7 +22,7 @@ export type SummaryWriteOptions = {
    */
   pretty?: boolean;
   data: I18nCompiler.DataSummary;
-} & GenerateSummaryOptions;
+} & SummaryDataOptions;
 
 export let writeSummary = async (options: SummaryWriteOptions) => {
   const {

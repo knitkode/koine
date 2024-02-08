@@ -53,7 +53,7 @@ const getSummaryDataEntry = (
 };
 
 export let getSummaryData = (
-  config: I18nCompiler.SharedConfig,
+  config: Pick<I18nCompiler.Config, "locales" | "defaultLocale">,
   options: SummaryDataOptions,
   { translationFiles }: I18nCompiler.DataInput,
 ) => {

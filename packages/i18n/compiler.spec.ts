@@ -6,8 +6,10 @@ const mocksPath = join(process.cwd(), "/packages/i18n/__mocks__/");
 describe("test write", () => {
   test("single-language setup", async () => {
     await i18nCompiler({
-      defaultLocale: "en",
-      hideDefaultLocaleInUrl: true,
+      config: {
+        defaultLocale: "en",
+        hideDefaultLocaleInUrl: true,
+      },
       input: {
         cwd: join(mocksPath, "single-language"),
       },
@@ -36,8 +38,10 @@ describe("test write", () => {
 
   test("multi-language setup", async () => {
     await i18nCompiler({
-      defaultLocale: "en",
-      hideDefaultLocaleInUrl: true,
+      config: {
+        defaultLocale: "en",
+        hideDefaultLocaleInUrl: true,
+      },
       input: {
         cwd: join(mocksPath, "multi-language"),
       },
@@ -89,8 +93,10 @@ describe("test your.io", () => {
 
   test("mimic next plugin build", async () => {
     await i18nCompiler({
-      defaultLocale: "en",
-      hideDefaultLocaleInUrl: true,
+      config: {
+        defaultLocale: "en",
+        hideDefaultLocaleInUrl: true,
+      },
       input: {
         cwd: join(__dirname, "../../../../../Your/translations"),
       },

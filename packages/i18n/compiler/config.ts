@@ -1,37 +1,24 @@
-import { type PartialDeep, mergeObjects } from "@koine/utils";
-import { codeDataOptions } from "./code";
-import { inputDataOptions } from "./input";
-import { summaryDataOptions } from "./summary";
+import { mergeObjects } from "@koine/utils";
 import type { I18nCompiler } from "./types";
 
 export type I18nCompilerConfig = typeof configDefaults;
 
-export type I18nCompilerConfigOptions = PartialDeep<I18nCompilerConfig>;
-
-export type I18nCompilerSharedConfig = typeof sharedConfig;
-
-export const sharedConfig = {
+export const configDefaults = {
   locales: ["en"] as I18nCompiler.Locale[],
   defaultLocale: "en" as I18nCompiler.Locale,
   hideDefaultLocaleInUrl: true,
 };
 
-export const configDefaults = {
-  ...sharedConfig,
-  input: inputDataOptions,
-  code: codeDataOptions,
-  summary: summaryDataOptions,
-};
-
 /**
- * Get I18n compiler config with defaults
+ * Get basic i18n compiler config with defaults and automatic inference from
+ * input data
  */
 export let getConfig = (
-  options: I18nCompilerConfigOptions,
-  dataInput: I18nCompiler.DataInput | false,
+  dataInput: I18nCompiler.DataInput,
+  options: Partial<I18nCompilerConfig> = {},
 ) => {
   // dynamically define locales
-  if (dataInput) options.locales = options.locales || dataInput.localesFolders;
+  options.locales = options.locales || dataInput.localesFolders;
 
   // ensure defaultLocale
   options.defaultLocale = options.defaultLocale || options.locales?.[0];

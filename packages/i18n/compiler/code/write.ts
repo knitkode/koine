@@ -3,6 +3,7 @@ import { cp } from "node:fs/promises";
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
 import type { I18nCompiler } from "../types";
+import type { CodeDataOptions } from "./data";
 import { type GenerateCodeOptions, generateCode } from "./generate";
 import { tsCompile } from "./tsCompile";
 
@@ -21,7 +22,9 @@ export type CodeWriteOptions = {
   skipTsCompile?: boolean;
   skipGitignore?: boolean;
   skipTranslations?: boolean;
-  config: I18nCompiler.Config;
+  config: I18nCompiler.Config & {
+    code: CodeDataOptions;
+  };
   data: {
     input: I18nCompiler.DataInput;
     code: I18nCompiler.DataCode;
@@ -100,7 +103,7 @@ export let writeCode = async (options: CodeWriteOptions) => {
 
 async function copyTranslations(
   cwd: string,
-  { locales }: I18nCompiler.SharedConfig,
+  { locales }: I18nCompiler.Config,
   output: string,
 ) {
   return await Promise.all(

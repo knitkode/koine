@@ -27,6 +27,7 @@
         "compiler": "swc",
         "deleteOutputPath": true,
         "additionalEntryPoints": [
+          "packages/i18n/action.ts",
           "packages/i18n/compiler.ts",
           "packages/i18n/next.ts"
         ]

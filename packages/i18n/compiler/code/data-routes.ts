@@ -138,7 +138,7 @@ const extractRouteParamsFromRouteId = (routeId: string) => {
  * ```
  */
 const addRoutesOptimizedPathnames = (
-  config: I18nCompiler.SharedConfig,
+  config: I18nCompiler.Config,
   dataRoutes: I18nCompiler.DataRoutes,
 ) => {
   const { defaultLocale, locales } = config;
@@ -180,7 +180,7 @@ const addRoutesOptimizedPathnames = (
  * Get routes data
  */
 export let getCodeDataRoutes = (
-  config: I18nCompiler.SharedConfig,
+  config: I18nCompiler.Config,
   options: CodeDataRoutesOptions,
   { translationFiles }: I18nCompiler.DataInput,
 ) => {

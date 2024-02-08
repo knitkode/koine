@@ -59,6 +59,18 @@
       "locale": "en"
     },
     {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
+      },
+      "locale": "en"
+    },
+    {
       "path": "~account/~user~profile.json",
       "data": {
         "boolShouldntBeHereBut": true,
@@ -110,18 +122,6 @@
             }
           }
         }
-      },
-      "locale": "en"
-    },
-    {
-      "path": "$faq.json",
-      "data": {
-        "home": [
-          {
-            "question": "What is?",
-            "answer": "That"
-          }
-        ]
       },
       "locale": "en"
     },

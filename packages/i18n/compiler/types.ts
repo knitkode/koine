@@ -1,8 +1,5 @@
-import type {
-  I18nCompilerConfig,
-  I18nCompilerConfigOptions,
-  I18nCompilerSharedConfig,
-} from "./config";
+import type { CodeDataOptions } from "./code";
+import type { I18nCompilerConfig } from "./config";
 import type { PluralSuffix } from "./pluralisation";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -12,13 +9,6 @@ export namespace I18nCompiler {
    * need to provide the defaults.
    */
   export type Config = I18nCompilerConfig;
-
-  export type SharedConfig = I18nCompilerSharedConfig;
-
-  /**
-   * User defined config {@link Config}
-   */
-  export type OptionalConfig = I18nCompilerConfigOptions;
 
   /**
    * Branded `string`
@@ -184,7 +174,9 @@ export namespace I18nCompiler {
   };
 
   export type AdapterArg = {
-    config: Config;
+    config: Config & {
+      code: CodeDataOptions;
+    };
     data: {
       input: DataInput;
       code: DataCode;

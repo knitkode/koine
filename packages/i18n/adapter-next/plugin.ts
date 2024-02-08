@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
-import type { I18nCompiler } from "../compiler";
+import type { I18nCompilerOptions } from "../compiler";
 import { I18nWebpackPlugin } from "./webpackPluginI18n";
 
-export type WithI18n = I18nCompiler.OptionalConfig;
+export type WithI18n = I18nCompilerOptions;
 
 /**
  * TODO: automatically load the compiler generated plugin `withI18n.js`

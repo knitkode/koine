@@ -71,21 +71,18 @@ export const codeDataOptions = {
 export type CodeDataOptions = typeof codeDataOptions;
 
 export let getCodeData = (
-  sharedConfig: I18nCompiler.SharedConfig,
+  config: I18nCompiler.Config,
   options: PartialDeep<CodeDataOptions>,
   dataInput: I18nCompiler.DataInput,
 ) => {
-  const config = mergeObjects(
+  const { routes, translations } = mergeObjects(
     { ...codeDataOptions },
     options as CodeDataOptions,
   );
-  config.translations.ignorePaths.push(config.routes.translationJsonFileName);
+  translations.ignorePaths.push(routes.translationJsonFileName);
+
   return {
-    routes: getCodeDataRoutes(sharedConfig, config.routes, dataInput),
-    translations: getCodeDataTranslations(
-      sharedConfig,
-      config.translations,
-      dataInput,
-    ),
+    routes: getCodeDataRoutes(config, routes, dataInput),
+    translations: getCodeDataTranslations(config, translations, dataInput),
   };
 };

@@ -238,7 +238,7 @@ const getCodeDataTranslationsFromFile = (
  * Get translations data
  */
 export let getCodeDataTranslations = (
-  _config: I18nCompiler.SharedConfig,
+  _config: I18nCompiler.Config,
   options: CodeDataTranslationsOptions,
   { translationFiles }: I18nCompiler.DataInput,
 ) => {

@@ -1,6 +1,6 @@
 import { forin, mergeObjects } from "@koine/utils";
 import type { I18nCompiler } from "../types";
-import { summaryDataOptions } from "./data";
+import { type SummaryDataOptions, summaryDataOptions } from "./data";
 
 const getSummaryDataByPath = (data: I18nCompiler.DataSummary) => {
   let out: Record<
@@ -61,7 +61,7 @@ const generateSummaryMarkdownByPath = (data: I18nCompiler.DataSummary) => {
 
 const generateSummaryMarkdownByLocale = (
   data: I18nCompiler.DataSummary,
-  options: GenerateSummaryOptions,
+  options: SummaryDataOptions,
 ) => {
   let output = "";
   let body = "";
@@ -86,7 +86,7 @@ const generateSummaryMarkdownByLocale = (
 
 const generateSummaryMarkdown = (
   data: I18nCompiler.DataSummary,
-  options: GenerateSummaryOptions,
+  options: SummaryDataOptions,
 ) => {
   let output = "# Summary\n";
 
@@ -98,11 +98,9 @@ const generateSummaryMarkdown = (
   return output;
 };
 
-export type GenerateSummaryOptions = I18nCompiler.Config["summary"];
-
 export let generateSummary = async (
   data: I18nCompiler.DataSummary,
-  options?: Partial<GenerateSummaryOptions>,
+  options?: Partial<SummaryDataOptions>,
 ) => {
   const md = generateSummaryMarkdown(
     data,
