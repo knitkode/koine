@@ -1,5 +1,5 @@
 import { join } from "path";
-import { i18nCompiler } from "./compiler";
+import { i18nCompiler, i18nStandalone } from "./compiler";
 
 const mocksPath = join(process.cwd(), "/packages/i18n/__mocks__/");
 
@@ -92,37 +92,41 @@ describe("test your.io", () => {
   });
 
   test("mimic next plugin build", async () => {
-    await i18nCompiler({
-      config: {
-        defaultLocale: "en",
-        hideDefaultLocaleInUrl: true,
-      },
+    await i18nStandalone({
+      defaultLocale: "en",
+      hideDefaultLocaleInUrl: true,
       input: {
-        cwd: join(__dirname, "../../../../../Your/translations"),
+        // cwd: join(process.cwd(), "../../Your/translations")
+        url: "https://raw.githubusercontent.com/your-network/translations/dev/.github/input.json",
       },
-      // code: { translations: { fnsAsDataCodes: false } },
-    }).writeCode({
-      cwd: join(__dirname, "../../../../../Your/frontend"),
-      output: "/libs/i18n",
-      adapter: "next-translate",
-      skipTsCompile: true,
-    });
+      code: {
+        write: {
+          cwd: join(process.cwd(), "../../Your/frontend"),
+          output: "/libs/i18n",
+          // cwd: join(__dirname, "__mocks__"),
+          // output: "xxxx",
+          adapter: "next-translate",
+          skipTsCompile: true,
+        },
+      },
+    })();
+    // await i18nCompiler({
+    //   config: {
+    //     defaultLocale: "en",
+    //     hideDefaultLocaleInUrl: true,
+    //   },
+    //   input: {
+    //     // cwd: join(process.cwd(), "../../Your/translations")
+    //     // url: "https://raw.githubusercontent.com/your-network/translations/dev/.github/input.json",
+    //   },
+    //   // code: { translations: { fnsAsDataCodes: false } },
+    // }).writeCode({
+    //   cwd: join(process.cwd(), "../../Your/frontend"),
+    //   output: "/libs/i18n",
+    //   // cwd: join(__dirname, "__mocks__"),
+    //   // output: "xxxx",
+    //   adapter: "next-translate",
+    //   skipTsCompile: true,
+    // });
   });
-
-  // await i18n.write.all({
-  //   data: {
-  //     cwd: join(__dirname, "../../../../../Your/translations")
-  //     output: ".github/data.json",
-  //   },
-  //   code: {
-  //     output: "../frontend/libs/i18n",
-  //     adapter: "next-translate",
-  //     skipTsCompile: true,
-  //   },
-  //   summary: {
-  //     outputJson: ".github/summary.json",
-  //     outputMarkdown: ".github/summary.md",
-  //     sourceUrl: "https://github.com/your-network/translations/tree/dev",
-  //   },
-  // });
 });

@@ -4,20 +4,17 @@
   "dependencies": {
     "@koine/node": "*",
     "@koine/utils": "*",
-    "next-translate": "^2.6.2",
-    "react": "^18.2.0",
-    "webpack": "^5.90.1",
-    "minimatch": "^9.0.3"
-  },
-  "peerDependencies": {
     "glob": "^10.3.10",
-    "next": "^14.0.4",
+    "webpack": "^5.90.1",
+    "minimatch": "^9.0.3",
     "typescript": "^5.3.3"
   },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "next": "^14.0.4",
+    "next-translate": "^2.6.2"
+  },
   "peerDependenciesMeta": {
-    "glob": {
-      "optional": true
-    },
     "next-translate": {
       "optional": true
     },
@@ -25,9 +22,6 @@
       "optional": true
     },
     "react": {
-      "optional": true
-    },
-    "typescript": {
       "optional": true
     }
   }

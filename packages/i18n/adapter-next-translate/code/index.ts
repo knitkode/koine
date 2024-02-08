@@ -6,7 +6,7 @@ import getT from "./getT";
 import nextTranslateI18n from "./nextTranslateI18n";
 import useT from "./useT";
 
-const adapter: I18nCompiler.Adpater = () => {
+const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
     dependsOn: ["next"],
     needsTranslationsFiles: true,

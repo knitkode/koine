@@ -14,7 +14,7 @@ import toFns from "./toFns";
 import toFormat from "./toFormat";
 import types from "./types";
 
-const adapter: I18nCompiler.Adpater = () => {
+const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
     files: [
       { name: "config", fn: config, ext: "ts", index: true },

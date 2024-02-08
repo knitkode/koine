@@ -1,4 +1,8 @@
-import { type PartialDeep, type SetOptional, mergeObjects } from "@koine/utils";
+import {
+  type PartialDeep,
+  type SetOptional,
+  objectMergeWithDefaults,
+} from "@koine/utils";
 import {
   type CodeDataOptions,
   type CodeWriteOptions,
@@ -36,9 +40,9 @@ const getOptions = (
   },
 ) => ({
   config,
-  input: mergeObjects({ ...inputDataOptions }, input || {}),
-  code: mergeObjects({ ...codeDataOptions }, (code as CodeDataOptions) || {}),
-  summary: mergeObjects({ ...summaryDataOptions }, summary || {}),
+  input: objectMergeWithDefaults(inputDataOptions, input),
+  code: objectMergeWithDefaults(codeDataOptions, code),
+  summary: objectMergeWithDefaults(summaryDataOptions, summary),
 });
 
 export type I18nCompilerOptions = PartialDeep<ReturnType<typeof getOptions>>;

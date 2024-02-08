@@ -3,7 +3,10 @@ import nextTranslate from "../../adapter-next-translate/code";
 import next from "../../adapter-next/code";
 import type { I18nCompiler } from "../types";
 
-const adaptersMap: Record<I18nCompiler.AdapterBuiltin, I18nCompiler.Adpater> = {
+const adaptersMap: Record<
+  I18nCompiler.AdapterBuiltin,
+  I18nCompiler.AdpaterCreator
+> = {
   js: js,
   next: next,
   "next-translate": nextTranslate,
@@ -21,34 +24,36 @@ const getIndexFile = (generatedFiles: I18nCompiler.AdpaterGeneratedFile[]) => {
   return output;
 };
 
-const getAdapterFiles = async (
+/**
+ * Recursively builds a list of adapters to use based on the `dependsOn` array
+ * of the choosen adapter
+ */
+const getAdapters = async (
   adapterArg: I18nCompiler.AdapterArg,
   adapterName: I18nCompiler.AdapterBuiltin,
-  allFiles: I18nCompiler.AdpaterFile[] = [],
+  adapters: I18nCompiler.Adpater[] = [],
 ) => {
   const adapterCreator = adaptersMap[adapterName];
 
-  const { dependsOn, files } = adapterCreator(adapterArg);
+  const adapter = adapterCreator(adapterArg);
 
-  allFiles = allFiles.concat(files);
+  adapters = adapters.concat(adapter);
 
-  if (dependsOn) {
+  if (adapter.dependsOn) {
     await Promise.all(
-      dependsOn.map(async (adapaterName) => {
-        allFiles = allFiles.concat(
-          await getAdapterFiles(adapterArg, adapaterName),
-        );
+      adapter.dependsOn.map(async (adapaterName) => {
+        adapters = adapters.concat(await getAdapters(adapterArg, adapaterName));
       }),
     );
   }
 
-  return allFiles;
+  return adapters;
 };
 
 export type GenerateCodeOptions = {
   adapter: I18nCompiler.AdapterBuiltin;
   outputFiles?: Partial<{
-    // TODO: mkae this works with generics based on chosen adapter
+    // TODO: make this works with generics based on chosen adapter?
     // defaultLocale: string;
     // index: string;
     // isLocale: string;
@@ -67,9 +72,14 @@ export async function generateCode(
   options: GenerateCodeOptions,
 ) {
   const { adapter, outputFiles } = options;
-  const files = await getAdapterFiles(adapterArg, adapter);
+  const adapters = await getAdapters(adapterArg, adapter);
+  const files = adapters.reduce(
+    (allFiles, adapter) => [...allFiles, ...adapter.files],
+    [] as I18nCompiler.AdpaterFile[],
+  );
 
-  // TODO: prettier
+  // TODO: prettier does probably not make sense unless one wants to keep the
+  // auto-generated files on git, maybe allow this as an option?
   // // prettier breaks jest, @see https://jestjs.io/docs/ecmascript-modules
   // // https://github.com/jestjs/jest/issues/14305
   // if (!process.env["JEST_WORKER_ID"]) {
@@ -89,11 +99,22 @@ export async function generateCode(
     },
   );
 
-  generatedFiles.push({
-    name: "index",
-    ext: "ts",
-    content: getIndexFile(generatedFiles),
-  });
+  // automatically create an index file if the adapters want it
+  const indexFileContent = getIndexFile(generatedFiles);
 
-  return generatedFiles;
+  if (indexFileContent) {
+    generatedFiles.push({
+      name: "index",
+      ext: "ts",
+      content: getIndexFile(generatedFiles),
+    });
+  }
+
+  return {
+    files: generatedFiles,
+    // it is enough that just one adapter requires this
+    needsTranslationsFiles: adapters.some(
+      (adapter) => adapter.needsTranslationsFiles,
+    ),
+  };
 }

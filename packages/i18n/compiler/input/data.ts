@@ -3,8 +3,19 @@ import type { I18nCompiler } from "../types";
 import { getInputDataFs } from "./data-fs";
 import { getInputDataRemote } from "./data-remote";
 
+type InputDataMode = "fs" | "url" | "github";
+
 export const inputDataOptions = {
+  // TODO: github mode and mode handling in general
+  mode: "fs" as InputDataMode,
+  /**
+   * When `mode` is `"fs"` this should point to the folder containing the
+   * i18n input files divided by locale.
+   */
   cwd: process.cwd(),
+  /**
+   * This only works when `"fs"`
+   */
   ignore: [] as string[],
   url: "",
 };

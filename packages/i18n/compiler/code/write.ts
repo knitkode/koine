@@ -42,7 +42,8 @@ export let writeCode = async (options: CodeWriteOptions) => {
     data,
     ...restOptions
   } = options;
-  const generatedFiles = await generateCode(
+
+  const { files, needsTranslationsFiles } = await generateCode(
     {
       config,
       data,
@@ -55,7 +56,7 @@ export let writeCode = async (options: CodeWriteOptions) => {
   const writtenFolders: Set<string> = new Set();
 
   await Promise.all(
-    generatedFiles.map(async ({ name, ext, content }) => {
+    files.map(async ({ name, ext, content }) => {
       const relativePath = `${name}.${ext}`;
       const filepath = join(cwd, output, relativePath);
 
@@ -81,10 +82,12 @@ export let writeCode = async (options: CodeWriteOptions) => {
     });
   }
 
-  if (!skipTranslations) {
-    (await copyTranslations(cwd, config, output)).forEach((relativePath) => {
-      writtenFolders.add(relativePath);
-    });
+  if (needsTranslationsFiles && !skipTranslations) {
+    (await copyTranslations(cwd, output, data.input)).forEach(
+      (relativePath) => {
+        writtenFolders.add(relativePath);
+      },
+    );
   }
 
   if (!skipGitignore) {
@@ -103,17 +106,16 @@ export let writeCode = async (options: CodeWriteOptions) => {
 
 async function copyTranslations(
   cwd: string,
-  { locales }: I18nCompiler.Config,
   output: string,
+  { translationFiles }: I18nCompiler.DataInput,
 ) {
   return await Promise.all(
-    locales.map(async (locale) => {
+    translationFiles.map(async ({ data, locale, path }) => {
       const relativePath = join("translations", locale);
-      await cp(join(cwd, locale), join(cwd, output, relativePath), {
-        recursive: true,
-        force: true,
-        preserveTimestamps: true,
-      });
+      await fsWrite(
+        join(cwd, output, relativePath, path),
+        JSON.stringify(data),
+      );
       return relativePath;
     }),
   );

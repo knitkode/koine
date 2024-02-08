@@ -162,9 +162,14 @@ export namespace I18nCompiler {
   export type AdapterBuiltin = "js" | "next" | "next-translate";
 
   /**
+   * Adapter creator function
+   */
+  export type AdpaterCreator = (arg: AdapterArg) => Adpater;
+
+  /**
    * Adapter anatomy
    */
-  export type Adpater = (arg: AdapterArg) => {
+  export type Adpater = {
     dependsOn?: AdapterBuiltin[];
     files: AdpaterFile[];
     /**

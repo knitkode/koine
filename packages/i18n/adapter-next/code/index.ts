@@ -7,7 +7,7 @@ import useRouteId from "./useRouteId";
 import useTo from "./useTo";
 import withI18n from "./withI18n";
 
-const adapter: I18nCompiler.Adpater = () => {
+const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
     dependsOn: ["js"],
     files: [

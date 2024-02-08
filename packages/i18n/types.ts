@@ -1,4 +1,4 @@
-import type { Split } from "@koine/utils";
+import type { JsonObject, Split } from "@koine/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace I18nUtils {
@@ -51,21 +51,6 @@ export namespace I18nUtils {
   > = GetWithPath<BaseType, Path extends string ? Split<Path, "."> : Path>;
 
   /**
-   * A JSON like dictionary
-   */
-  type Dictionary = {
-    [key: string]:
-      | string
-      | boolean
-      | number
-      | string[]
-      | boolean[]
-      | number[]
-      | Dictionary
-      | Dictionary[];
-  };
-
-  /**
    * Recursive mapped type to extract all usable string paths from a translation
    * definition object (usually from a JSON file).
    * It uses the `infer` "trick" to store the object in memory and prevent
@@ -101,7 +86,7 @@ export namespace I18nUtils {
    * It uses the `infer` "trick" to store the object in memory and prevent
    * [infinite instantiation errors](https://stackoverflow.com/q/75531366/1938970)
    */
-  export type AllPaths<TDictionary extends Dictionary> = {
+  export type AllPaths<TDictionary extends JsonObject> = {
     [N in Extract<keyof TDictionary, string>]: {
       [K in Extract<keyof TDictionary[N], string>]: TDictionary[N][K] extends  // exclude empty objects, empty arrays, empty strings
         | Record<string, never>
