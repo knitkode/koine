@@ -22,7 +22,7 @@ export class I18nWebpackPlugin {
 
           const compiler = i18nCompiler(this.opts);
 
-          await compiler.write.code({
+          await compiler.writeCode({
             adapter: "next",
             output: "i18n",
             skipTsCompile: true,
