@@ -1,0 +1,270 @@
+{
+  "localesFolders": ["it", "en"],
+  "translationFiles": [
+    {
+      "path": "~.json",
+      "data": {
+        "home": "/",
+        "about": "/about",
+        "account": {
+          "user": {
+            "profile": "/account/user",
+            "[id]": "/account/user/{{ id }}",
+            "settings": {
+              "index": "/account/user/settings",
+              "personal": "/account/user/settings/personal"
+            }
+          }
+        },
+        "products": {
+          "index": "/products",
+          "[id]": {
+            "index": "^/{{ id }}",
+            "edit": {
+              "index": "^/edit",
+              "details": "^/details"
+            }
+          }
+        },
+        "apps": {
+          "tool": {
+            "index": "/apps/tool/*",
+            "things": {
+              "index": "/things",
+              "[id]": {
+                "index": "/things/{{ id }}",
+                "detail": {
+                  "index": "/things/{{ id }}/detail",
+                  "new": "/things/{{ id }}/detail/new",
+                  "[detailId]": {
+                    "index": "/things/{{ id }}/detail/{{ detailId }}",
+                    "edit": "/things/{{ id }}/detail/{{ detailId }}/edit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "locale": "en"
+    },
+    {
+      "path": "404.json",
+      "data": {
+        "seo": {
+          "title": "404 - Not found"
+        },
+        "title": "404, page not found"
+      },
+      "locale": "en"
+    },
+    {
+      "path": "~account/~user~profile.json",
+      "data": {
+        "boolShouldntBeHereBut": true,
+        "title": "Title {{ varName }}",
+        "plural": "Plural",
+        "plural_one": "One",
+        "plural_other": "Some",
+        "plural_zero": "Zero",
+        "pluralNoDefault_one": "One",
+        "pluralNoDefault_other": "Some",
+        "pluralAsObject": {
+          "one": "One",
+          "other": "Others"
+        },
+        "pluralAsObjectWithExtraKeys": {
+          "one": "One",
+          "other": "Others",
+          "noPluralRelated": "Yes"
+        },
+        "listFlat": ["v1", "v2"],
+        "listComplex": [
+          {
+            "k1": "v1",
+            "k2": "v2"
+          }
+        ],
+        "obj": {
+          "objNested": {
+            "str": "v",
+            "listFlatNested": ["v1", "v2"],
+            "listComplexNested": [
+              {
+                "k1": "v1 en {{ nestedVarName1 }}",
+                "k2": "v2 {{ nestedVarName2 }}"
+              }
+            ],
+            "objNested2": {
+              "objNested21": {
+                "k": "v"
+              },
+              "listFlatNested22": ["v1", "v2"],
+              "str3": "v"
+            },
+            "objNested2b": {
+              "str2b1": "v",
+              "str2b2": "v",
+              "listFlatNested2b3": ["v1", "v2"],
+              "str2b4": "v"
+            }
+          }
+        }
+      },
+      "locale": "en"
+    },
+    {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
+      },
+      "locale": "en"
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "data": {
+        "empty": {},
+        "msg": "Some text"
+      },
+      "locale": "en"
+    },
+    {
+      "path": "~.json",
+      "data": {
+        "home": "/",
+        "about": "/chi-siamo",
+        "account": {
+          "user": {
+            "profile": "/account/profilo",
+            "[id]": "/account/profilo/{{ id }}",
+            "settings": {
+              "index": "/account/profilo/impostazioni",
+              "personal": "/account/profilo/impostazioni/personali"
+            }
+          }
+        },
+        "products": {
+          "index": "/prodotti",
+          "[id]": {
+            "index": "^/{{ id }}",
+            "edit": {
+              "index": "^/modifica",
+              "details": "^/dettagli"
+            }
+          }
+        },
+        "apps": {
+          "tool": {
+            "index": "/apps/tool",
+            "[spa]": "/apps/tool/{{ spa }}*",
+            "things": {
+              "index": "/things",
+              "[id]": {
+                "index": "/things/{{ id }}",
+                "detail": {
+                  "index": "/things/{{ id }}/dettaglio",
+                  "new": "/things/{{ id }}/dettaglio/new",
+                  "[detailId]": {
+                    "index": "/things/{{ id }}/dettaglio/{{ detailId }}",
+                    "edit": "/things/{{ id }}/dettaglio/{{ detailId }}/edit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "locale": "it"
+    },
+    {
+      "path": "404.json",
+      "data": {
+        "seo": {
+          "title": "404 - Introvabile"
+        },
+        "title": "404, pagina non trovata"
+      },
+      "locale": "it"
+    },
+    {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "Cos'è?",
+            "answer": "Quello"
+          }
+        ]
+      },
+      "locale": "it"
+    },
+    {
+      "path": "~account/~user~profile.json",
+      "data": {
+        "boolShouldntBeHereBut": true,
+        "title": "Title {{ varName }}",
+        "plural": "Plural",
+        "plural_one": "Uno",
+        "plural_other": "Some",
+        "plural_zero": "Zero",
+        "pluralNoDefault_one": "Uno",
+        "pluralNoDefault_other": "Some",
+        "pluralAsObject": {
+          "one": "Uno",
+          "other": "Molti"
+        },
+        "pluralAsObjectWithExtraKeys": {
+          "one": "Uno",
+          "other": "Molti",
+          "noPluralRelated": "Sì"
+        },
+        "listFlat": ["v1", "v2"],
+        "listComplex": [
+          {
+            "k1": "v1",
+            "k2": "v2"
+          }
+        ],
+        "obj": {
+          "objNested": {
+            "str": "v",
+            "listFlatNested": ["v1", "v2"],
+            "listComplexNested": [
+              {
+                "k1": "v1 ita {{ nestedVarName1 }}",
+                "k2": "v2 {{ nestedVarName2 }}"
+              }
+            ],
+            "objNested2": {
+              "objNested21": {
+                "k": "v"
+              },
+              "listFlatNested22": ["v1", "v2"],
+              "str3": "v"
+            },
+            "objNested2b": {
+              "str2b1": "v",
+              "str2b2": "v",
+              "listFlatNested2b3": ["v1", "v2"],
+              "str2b4": "v"
+            }
+          }
+        }
+      },
+      "locale": "it"
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "data": {
+        "empty": {},
+        "msg": "Del testo"
+      },
+      "locale": "it"
+    }
+  ]
+}

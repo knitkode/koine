@@ -1,6 +1,6 @@
 import type { Rewrite as _Rewrite } from "next/dist/lib/load-custom-routes";
 import { formatRoutePathname } from "../client";
-import type { I18nCodegen } from "../codegen";
+import type { I18nCompiler } from "../compiler";
 
 export type Rewrite = Omit<_Rewrite, "locale"> & { locale?: boolean };
 
@@ -8,9 +8,9 @@ export type Rewrite = Omit<_Rewrite, "locale"> & { locale?: boolean };
  * Get path rewrite
  */
 export function getPathRewrite(arg: {
-  localeSource?: I18nCodegen.Locale;
-  localeDestination?: I18nCodegen.Locale;
-  route: I18nCodegen.DataRoute;
+  localeSource?: I18nCompiler.Locale;
+  localeDestination?: I18nCompiler.Locale;
+  route: I18nCompiler.DataRoute;
   template: string;
   pathname: string;
   localeParam?: string;

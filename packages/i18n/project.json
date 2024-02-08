@@ -27,12 +27,12 @@
         "compiler": "swc",
         "deleteOutputPath": true,
         "additionalEntryPoints": [
-          "packages/i18n/codegen.ts",
+          "packages/i18n/compiler.ts",
           "packages/i18n/next.ts"
         ]
       }
     },
-    "build-next": {
+    "build-ncc": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [

@@ -1,11 +1,11 @@
 import type { NextConfig } from "next";
-import type { I18nCodegen } from "../codegen";
+import type { I18nCompiler } from "../compiler";
 import { I18nWebpackPlugin } from "./webpackPluginI18n";
 
-export type WithI18n = I18nCodegen.OptionalConfig;
+export type WithI18n = I18nCompiler.OptionalConfig;
 
 /**
- * TODO: automatically load the codegen generated plugin `withI18n.js`
+ * TODO: automatically load the compiler generated plugin `withI18n.js`
  */
 export let withI18n =
   (config: WithI18n = {}) =>

@@ -1,6 +1,6 @@
 import type { Redirect as _Redirect } from "next/dist/lib/load-custom-routes";
 import { formatRoutePathname } from "../client";
-import type { I18nCodegen } from "../codegen";
+import type { I18nCompiler } from "../compiler";
 
 export type Redirect = Omit<_Redirect, "locale"> & { locale?: boolean };
 
@@ -8,8 +8,8 @@ export type Redirect = Omit<_Redirect, "locale"> & { locale?: boolean };
  * Get path redirect
  */
 export function getPathRedirect(arg: {
-  localeSource?: I18nCodegen.Locale;
-  localeDestination?: I18nCodegen.Locale;
+  localeSource?: I18nCompiler.Locale;
+  localeDestination?: I18nCompiler.Locale;
   template: string;
   pathname: string;
   localeParam?: string;

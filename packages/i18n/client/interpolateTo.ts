@@ -1,5 +1,5 @@
 import { getType } from "@koine/utils";
-import type { DynamicParams } from "../types-utils";
+import type { I18nUtils } from "../types";
 import { formatRoutePathname } from "./formatRoutePathname";
 
 // import type { I18n } from "./types";
@@ -32,14 +32,14 @@ export function interpolateTo<
   // TRouteParams extends DynamicParams<TRouteId>,
 >(
   value: TRouteId, // RouteStrictIdDynamic<TRouteId>,
-  params: DynamicParams<TRouteId>,
+  params: I18nUtils.DynamicParams<TRouteId>,
 ): string;
 export function interpolateTo<
   TRouteId extends string,
   // TRouteParams extends DynamicParams<TRouteId>,
 >(
   value: TRouteId, // RouteStrictId<TRouteId>,
-  params?: DynamicParams<TRouteId>,
+  params?: I18nUtils.DynamicParams<TRouteId>,
 ) {
   let pathname = value.replace(/\./g, "/");
   if (process.env["NODE_ENV"] === "development") {
