@@ -1,4 +1,4 @@
-import { forin, mergeObjects } from "@koine/utils";
+import { forin, objectMergeWithDefaults } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import { type SummaryDataOptions, summaryDataOptions } from "./data";
 
@@ -104,7 +104,7 @@ export let generateSummary = async (
 ) => {
   const md = generateSummaryMarkdown(
     data,
-    mergeObjects({ ...summaryDataOptions }, options || {}),
+    objectMergeWithDefaults(summaryDataOptions, options),
   );
   return { data: data, md };
 };

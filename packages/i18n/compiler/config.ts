@@ -1,4 +1,4 @@
-import { mergeObjects } from "@koine/utils";
+import { objectMergeWithDefaults } from "@koine/utils";
 import type { I18nCompiler } from "./types";
 
 export type I18nCompilerConfig = typeof configDefaults;
@@ -26,10 +26,7 @@ export let getConfig = (
   // ensure boolean value
   options.hideDefaultLocaleInUrl = !!options.hideDefaultLocaleInUrl;
 
-  const merged = mergeObjects(
-    { ...configDefaults },
-    options as I18nCompilerConfig,
-  );
+  const merged = objectMergeWithDefaults(configDefaults, options);
 
   // ensure sorted locales
   merged.locales = merged.locales.sort((a, b) =>

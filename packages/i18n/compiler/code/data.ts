@@ -1,4 +1,4 @@
-import { type PartialDeep, mergeObjects } from "@koine/utils";
+import { type PartialDeep, objectMergeWithDefaults } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import { getCodeDataRoutes } from "./data-routes";
 import { getCodeDataTranslations } from "./data-translations";
@@ -75,9 +75,9 @@ export let getCodeData = (
   options: PartialDeep<CodeDataOptions>,
   dataInput: I18nCompiler.DataInput,
 ) => {
-  const { routes, translations } = mergeObjects(
-    { ...codeDataOptions },
-    options as CodeDataOptions,
+  const { routes, translations } = objectMergeWithDefaults(
+    codeDataOptions,
+    options,
   );
   translations.ignorePaths.push(routes.translationJsonFileName);
 
