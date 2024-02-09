@@ -3,7 +3,6 @@ import {
   type CodeDataOptions,
   type CodeGenerateOptions,
   type CodeWriteOptions,
-  codeDataOptions,
   getCodeData,
   writeCode,
 } from "./code";
@@ -23,14 +22,14 @@ import {
 } from "./summary";
 import type { I18nCompiler } from "./types";
 
+type InputOptions = InputDataOptions & {
+  write?: InputWriteOptions;
+};
+
 type CodeOptions = PartialDeep<CodeDataOptions> &
   CodeGenerateOptions & {
     write?: CodeWriteOptions;
   };
-
-type InputOptions = PartialDeep<InputDataOptions> & {
-  write?: InputWriteOptions;
-};
 
 type SummaryOptions = SummaryDataOptions &
   SummaryGenerateOptions & {
@@ -38,8 +37,8 @@ type SummaryOptions = SummaryDataOptions &
   };
 
 export type I18nCompilerOptions = Partial<I18nCompiler.Config> & {
-  code?: CodeOptions;
-  input?: InputOptions;
+  input: InputOptions;
+  code: CodeOptions;
   summary?: SummaryOptions;
 };
 
@@ -49,40 +48,35 @@ export type I18nCompilerOptions = Partial<I18nCompiler.Config> & {
  * @public
  */
 export let i18nCompiler = async (options: I18nCompilerOptions) => {
-  const writables = [] as Promise<unknown>[];
-  const dataInput = await getInputData(options.input);
-  const config = getConfig(dataInput, options);
   const {
-    code: codeOptions,
-    input: inputOptions,
-    summary: summaryOptions,
+    input: optsInput,
+    code: optsCode,
+    summary: optsSummary,
+    ...configOptions
   } = options;
+  const writables = [] as Promise<any>[];
+  const input = await getInputData(optsInput);
+  const config = getConfig(input, configOptions);
+  // it would be easy to make this optional but it's nice to be able to always
+  // predictably return data
+  const code = await getCodeData(config, optsCode, input);
 
-  if (codeOptions?.write) {
-    const dataCode = await getCodeData(config, codeDataOptions, dataInput);
-    writables.push(
-      writeCode(
-        { ...codeOptions, ...codeOptions.write },
-        { ...config, code: codeDataOptions },
-        { code: dataCode, input: dataInput },
-      ),
-    );
+  if (optsInput?.write) {
+    writables.push(writeInput(optsInput.write, input));
   }
-  if (inputOptions?.write) {
-    writables.push(writeInput(inputOptions.write, dataInput));
+
+  if (optsCode?.write) {
+    writables.push(writeCode({ ...optsCode, ...optsCode.write }, code));
   }
-  if (summaryOptions?.write) {
-    const dataSummary = await getSummaryData(config, summaryOptions, dataInput);
+
+  if (optsSummary?.write) {
+    const summary = await getSummaryData(config, optsSummary, input);
     writables.push(
-      writeSummary(
-        {
-          ...summaryOptions.write,
-          sourceUrl: summaryOptions.sourceUrl,
-        },
-        dataSummary,
-      ),
+      writeSummary({ ...optsSummary, ...optsSummary.write }, summary),
     );
   }
 
-  return await Promise.all(writables);
+  await Promise.all(writables);
+
+  return { config, input, code };
 };

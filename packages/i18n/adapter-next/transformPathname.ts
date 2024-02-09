@@ -1,4 +1,4 @@
-import type { I18nCompiler } from "../../compiler";
+import type { I18nCompiler } from "../compiler";
 
 /**
  * Transform the route translated defintion into a `pathname` and a `template`.

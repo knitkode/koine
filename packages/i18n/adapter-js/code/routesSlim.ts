@@ -1,9 +1,9 @@
 import type { I18nCompiler } from "../../compiler";
 
-export default ({ data }: I18nCompiler.AdapterArg) => {
+export default ({ routes }: I18nCompiler.AdapterArg) => {
   const value = JSON.stringify(
     Object.fromEntries(
-      Object.entries(data.code.routes).map(
+      Object.entries(routes).map(
         ([routeId, { optimizedPathnames, pathnames }]) => [
           routeId,
           optimizedPathnames || pathnames,

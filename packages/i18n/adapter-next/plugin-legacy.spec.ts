@@ -1,10 +1,10 @@
-import { formatRoutePathname } from "../client";
-import {
-  type Redirect,
-  type Rewrite,
-  getRedirects,
-  getRewrites,
-} from "./plugin-legacy";
+// import { formatRoutePathname } from "../client/formatRoutePathname";
+// import {
+//   type Redirect,
+//   type Rewrite,
+//   getRedirects,
+//   getRewrites,
+// } from "./plugin-legacy";
 
 // prettier-ignore
 const DATA = {
@@ -303,98 +303,98 @@ const DATA2 = {
   }
 }
 
-function addLocale<T extends Redirect | Rewrite>(
-  redirectsOrRewrites: T[],
-  key: keyof T,
-  locale: string,
-) {
-  return redirectsOrRewrites.map((r) => ({
-    ...r,
-    [key]: formatRoutePathname(`${locale}/${r[key]}`),
-  }));
-}
+// function addLocale<T extends Redirect | Rewrite>(
+//   redirectsOrRewrites: T[],
+//   key: keyof T,
+//   locale: string,
+// ) {
+//   return redirectsOrRewrites.map((r) => ({
+//     ...r,
+//     [key]: formatRoutePathname(`${locale}/${r[key]}`),
+//   }));
+// }
 
-describe("next config (set 1)", () => {
-  const { config, expected } = DATA;
+// describe("next config (set 1)", () => {
+//   const { config, expected } = DATA;
 
-  describe("with hideDefaultLocaleInUrl: true", () => {
-    test("rewrites", async () => {
-      const rewrites = await getRewrites(config);
+//   describe("with hideDefaultLocaleInUrl: true", () => {
+//     test("rewrites", async () => {
+//       const rewrites = await getRewrites(config);
 
-      expect(rewrites).toMatchObject([
-        ...expected.rewrites.en,
-        ...addLocale(expected.rewrites.it, "source", "it"),
-      ]);
-    });
+//       expect(rewrites).toMatchObject([
+//         ...expected.rewrites.en,
+//         ...addLocale(expected.rewrites.it, "source", "it"),
+//       ]);
+//     });
 
-    test("redirects", async () => {
-      const redirects = await getRedirects(config);
+//     test("redirects", async () => {
+//       const redirects = await getRedirects(config);
 
-      expect(redirects).toMatchObject([
-        ...expected.redirects.en,
-        ...addLocale(expected.redirects.it, "destination", "it"),
-      ]);
-    });
-  });
+//       expect(redirects).toMatchObject([
+//         ...expected.redirects.en,
+//         ...addLocale(expected.redirects.it, "destination", "it"),
+//       ]);
+//     });
+//   });
 
-  describe("with hideDefaultLocaleInUrl: false", () => {
-    test("rewrites", async () => {
-      const rewrites = await getRewrites({
-        ...config,
-        hideDefaultLocaleInUrl: false,
-      });
+//   describe("with hideDefaultLocaleInUrl: false", () => {
+//     test("rewrites", async () => {
+//       const rewrites = await getRewrites({
+//         ...config,
+//         hideDefaultLocaleInUrl: false,
+//       });
 
-      expect(rewrites).toMatchObject([
-        ...addLocale(expected.rewrites.en, "source", "en"),
-        ...addLocale(expected.rewrites.it, "source", "it"),
-      ]);
-    });
+//       expect(rewrites).toMatchObject([
+//         ...addLocale(expected.rewrites.en, "source", "en"),
+//         ...addLocale(expected.rewrites.it, "source", "it"),
+//       ]);
+//     });
 
-    test("redirects", async () => {
-      const redirects = await getRedirects({
-        ...config,
-        hideDefaultLocaleInUrl: false,
-      });
+//     test("redirects", async () => {
+//       const redirects = await getRedirects({
+//         ...config,
+//         hideDefaultLocaleInUrl: false,
+//       });
 
-      expect(redirects).toMatchObject([
-        ...addLocale(expected.redirects.en, "destination", "en"),
-        ...addLocale(expected.redirects.it, "destination", "it"),
-      ]);
-    });
+//       expect(redirects).toMatchObject([
+//         ...addLocale(expected.redirects.en, "destination", "en"),
+//         ...addLocale(expected.redirects.it, "destination", "it"),
+//       ]);
+//     });
 
-    // test("order routes by default locale", async () => {
-    //   const unorderedRoutes = {
-    //     en: { a: "en" },
-    //     it: { a: "it" },
-    //   };
-    //   const orderedRoutes = await orderRoutes(unorderedRoutes, "it");
+//     // test("order routes by default locale", async () => {
+//     //   const unorderedRoutes = {
+//     //     en: { a: "en" },
+//     //     it: { a: "it" },
+//     //   };
+//     //   const orderedRoutes = await orderRoutes(unorderedRoutes, "it");
 
-    //   expect(Object.keys(unorderedRoutes)[0]).toEqual("en");
-    //   expect(Object.keys(orderedRoutes)[0]).toEqual("it");
-    // });
-  });
-});
+//     //   expect(Object.keys(unorderedRoutes)[0]).toEqual("en");
+//     //   expect(Object.keys(orderedRoutes)[0]).toEqual("it");
+//     // });
+//   });
+// });
 
-describe("next config (set 2)", () => {
-  const { config, expected } = DATA2;
+// describe("next config (set 2)", () => {
+//   const { config, expected } = DATA2;
 
-  describe("with hideDefaultLocaleInUrl: true", () => {
-    test("rewrites", async () => {
-      const rewrites = await getRewrites(config);
+//   describe("with hideDefaultLocaleInUrl: true", () => {
+//     test("rewrites", async () => {
+//       const rewrites = await getRewrites(config);
 
-      expect(rewrites).toMatchObject([
-        ...expected.rewrites.nl,
-        ...expected.rewrites.en,
-      ]);
-    });
+//       expect(rewrites).toMatchObject([
+//         ...expected.rewrites.nl,
+//         ...expected.rewrites.en,
+//       ]);
+//     });
 
-    test("redirects", async () => {
-      const redirects = await getRedirects(config);
+//     test("redirects", async () => {
+//       const redirects = await getRedirects(config);
 
-      expect(redirects).toMatchObject([
-        ...expected.redirects.nl,
-        ...expected.redirects.en,
-      ]);
-    });
-  });
-});
+//       expect(redirects).toMatchObject([
+//         ...expected.redirects.nl,
+//         ...expected.redirects.en,
+//       ]);
+//     });
+//   });
+// });

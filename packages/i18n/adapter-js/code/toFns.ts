@@ -18,7 +18,7 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-export default ({ config, data }: I18nCompiler.AdapterArg) => {
+export default ({ config, routes }: I18nCompiler.AdapterArg) => {
   const hasOneLocale = config.locales.length === 1;
   let output = `
 import { toFormat } from "./toFormat";
@@ -26,7 +26,7 @@ import type { I18n } from "./types";
 
 `;
 
-  forin(data.code.routes, (routeId, { pathnames, params }) => {
+  forin(routes, (routeId, { pathnames, params }) => {
     const name = `to_${changeCaseCamel(routeId)}`;
     const paramsType = `I18n.RouteParams["${routeId}"]`;
 

@@ -2,10 +2,25 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { glob } from "glob";
 import type { I18nCompiler } from "../types";
-import type { InputDataOptions } from "./data";
+import type { InputDataSharedOptions } from "./data";
 
-const getInputDataFsLocalesFolders = (config: InputDataOptions) => {
-  const { cwd, ignore } = config;
+export type InputDataLocalSource = `.${string}` | `/${string}`;
+
+export type InputDataLocalOptions = {
+  /**
+   * When `source` is a filesystem path that is resolved from this value
+   *
+   * @default process.cwd()
+   */
+  cwd?: string;
+  /**
+   * Optionally pass a list of glob patterns to ignore (checked with `minimatch`)
+   */
+  ignore?: string[];
+};
+
+const getLocalesFolders = (options: Required<InputDataLocalOptions>) => {
+  const { cwd, ignore } = options;
   const folders = glob
     .sync("*", {
       cwd,
@@ -21,22 +36,24 @@ const getInputDataFsLocalesFolders = (config: InputDataOptions) => {
   return folders.sort((a, b) => a.localeCompare(b));
 };
 
-export let getInputDataFs = async (
-  config: InputDataOptions,
+export let getInputDataLocal = async (
+  options: InputDataSharedOptions & InputDataLocalOptions,
 ): Promise<I18nCompiler.DataInput> => {
-  const localesFolders = getInputDataFsLocalesFolders(config);
+  const { cwd = process.cwd(), ignore = [], source } = options;
+  const path = join(cwd, source);
+  const localesFolders = getLocalesFolders({ cwd: path, ignore });
   const translationFiles: I18nCompiler.DataInputTranslationFile[] = [];
 
   await Promise.all(
     localesFolders.map(async (locale) => {
       const jsonFiles = await glob("**/*.json", {
-        cwd: join(config.cwd, locale),
-        ignore: config.ignore,
+        cwd: join(path, locale),
+        ignore: options.ignore,
       });
 
       await Promise.all(
         jsonFiles.map(async (relativePath) => {
-          const fullPath = join(config.cwd, locale, relativePath);
+          const fullPath = join(path, locale, relativePath);
           const rawContent = await readFile(fullPath, "utf8");
 
           if (rawContent) {

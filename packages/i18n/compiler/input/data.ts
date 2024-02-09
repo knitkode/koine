@@ -1,43 +1,42 @@
-import { objectMergeWithDefaults } from "@koine/utils";
+import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
 import type { I18nCompiler } from "../types";
-import { getInputDataFs } from "./data-fs";
-import { getInputDataRemote } from "./data-remote";
+import {
+  type InputDataLocalOptions,
+  type InputDataLocalSource,
+  getInputDataLocal,
+} from "./data-local";
+import {
+  type InputDataRemoteOptions,
+  type InputDataRemoteSource,
+  getInputDataRemote,
+} from "./data-remote";
 
-type InputDataMode = "fs" | "url" | "github";
-
-export const inputDataOptions = {
+export type InputDataSharedOptions = {
   /**
-   * TODO: github mode and mode handling in general
+   * It should point to the folder or to JSON file url containing the i18n input
+   * files divided by locale.
    *
-   * @default "fs"
+   * Usually this is based on the current environment, it can be one of:
+   *
+   * - relative filesystem path (resolved according to `cwd` option)
+   * - absolute filesystem path
+   * - absolute URL
+   * - github absolute URL (when data is on a separated repo that implements our `knitkode/koine/actions/i18n`)
    */
-  mode: "fs" as InputDataMode,
-  /**
-   * When `mode` is `"fs"` this should point to the folder containing the
-   * i18n input files divided by locale.
-   */
-  cwd: process.cwd(),
-  /**
-   * This only works when `"fs"`
-   */
-  ignore: [] as string[],
-  url: "",
+  source: InputDataLocalSource | InputDataRemoteSource;
 };
 
-export type InputDataOptions = typeof inputDataOptions;
+export type InputDataOptions = InputDataSharedOptions &
+  InputDataLocalOptions &
+  InputDataRemoteOptions;
 
 export let getInputData = async (
-  options?: Partial<InputDataOptions>,
+  options: InputDataOptions,
 ): Promise<I18nCompiler.DataInput> => {
-  const config = objectMergeWithDefaults(inputDataOptions, options);
-  const { mode, url, cwd } = options || {};
-  const computedMode = mode || url ? "url" : cwd ? "fs" : "";
+  const { source } = options;
 
-  if (!computedMode) {
-    throw new Error("Could not determine how to get input data");
+  if (isAbsoluteUrl(source)) {
+    return await getInputDataRemote(options);
   }
-  if (url) {
-    return await getInputDataRemote(config);
-  }
-  return await getInputDataFs(config);
+  return await getInputDataLocal(options);
 };

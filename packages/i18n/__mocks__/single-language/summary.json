@@ -6,35 +6,35 @@
         "characters": 277,
         "locale": "en",
         "path": "~.json",
-        "url": "//en/~.json",
+        "url": "https://github.com/knitkode/koine/translations/tree/dev/en/~.json",
         "words": 35
       },
       {
         "characters": 127,
         "locale": "en",
         "path": "~account/~user~profile.json",
-        "url": "//en/~account/~user~profile.json",
+        "url": "https://github.com/knitkode/koine/translations/tree/dev/en/~account/~user~profile.json",
         "words": 39
       },
       {
         "characters": 8,
         "locale": "en",
         "path": "~account/FormUserLanguages.json",
-        "url": "//en/~account/FormUserLanguages.json",
+        "url": "https://github.com/knitkode/koine/translations/tree/dev/en/~account/FormUserLanguages.json",
         "words": 2
       },
       {
         "characters": 11,
         "locale": "en",
         "path": "$faq.json",
-        "url": "//en/$faq.json",
+        "url": "https://github.com/knitkode/koine/translations/tree/dev/en/$faq.json",
         "words": 3
       },
       {
         "characters": 28,
         "locale": "en",
         "path": "404.json",
-        "url": "//en/404.json",
+        "url": "https://github.com/knitkode/koine/translations/tree/dev/en/404.json",
         "words": 8
       }
     ],

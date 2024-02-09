@@ -1,6 +1,5 @@
 import { forin, objectFlat, objectSortByKeysMatching } from "@koine/utils";
-import { formatRoutePathname } from "../../index";
-// import { formatRoutePathname } from "../client/formatRoutePathname";
+import { formatRoutePathname } from "../../client/formatRoutePathname";
 import type { I18nCompiler } from "../types";
 import type { CodeDataRoutesOptions } from "./data";
 

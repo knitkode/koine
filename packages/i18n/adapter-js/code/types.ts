@@ -110,13 +110,7 @@ const buildRoutesUnion = (
 
 // TODO: probably move the  Translate types into the adapter-next-translate
 // unless we will use the same api for other adapters
-export default ({
-  config,
-  data: {
-    input,
-    code: { routes },
-  },
-}: I18nCompiler.AdapterArg) => {
+export default ({ config, input, routes }: I18nCompiler.AdapterArg) => {
   const routeIdStatic = buildRoutesUnion(routes, (_, { params }) => !params);
   const routeIdDynamic = buildRoutesUnion(routes, (_, { params }) => !!params);
 

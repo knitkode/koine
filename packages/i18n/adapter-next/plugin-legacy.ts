@@ -5,9 +5,9 @@ import type {
 } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, normaliseUrlPathname } from "@koine/utils";
 
-export type Redirect = Omit<_Redirect, "locale"> & { locale?: boolean };
+type Redirect = Omit<_Redirect, "locale"> & { locale?: boolean };
 
-export type Rewrite = Omit<_Rewrite, "locale"> & { locale?: boolean };
+type Rewrite = Omit<_Rewrite, "locale"> & { locale?: boolean };
 
 type Route =
   | string
@@ -200,7 +200,7 @@ function getPathRedirect(
 
 type GetRedirectsOptions = Options;
 
-export function getRedirects(arg: GetRedirectsOptions) {
+function getRedirects(arg: GetRedirectsOptions) {
   const {
     routes,
     defaultLocale,
@@ -318,7 +318,7 @@ function getPathRewrite(
 
 type GetRewritesOptions = Options;
 
-export function getRewrites(arg: GetRewritesOptions) {
+function getRewrites(arg: GetRewritesOptions) {
   const { routes, defaultLocale, hideDefaultLocaleInUrl, localeParam, debug } =
     arg;
   const orderedRoutes = orderRoutes(routes, defaultLocale);
@@ -391,7 +391,7 @@ export function getRewrites(arg: GetRewritesOptions) {
 //   return routes as Routes;
 // }
 
-export type WithI18nLegacy = {
+export type WithI18nLegacyOptions = {
   /**
    * A JSON file containing the routes definition mapping template folders
    * to localised slugs. It supports slugs's dynamic portions.
@@ -463,11 +463,11 @@ export type WithI18nLegacy = {
 };
 
 /**
- * @deprecated Better use solely the compiled `withI18n`
+ * @deprecated Better use the new `withI18n`
  */
 export let withI18nLegacy =
   (
-    { routes, permanent, i18n, debug }: WithI18nLegacy = {
+    { routes, permanent, i18n, debug }: WithI18nLegacyOptions = {
       i18n: {
         locales: ["en"],
         defaultLocale: "en",

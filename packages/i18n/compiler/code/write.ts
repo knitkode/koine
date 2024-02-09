@@ -2,7 +2,6 @@ import { rmSync } from "node:fs";
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
 import type { I18nCompiler } from "../types";
-import type { CodeDataOptions } from "./data";
 import { type CodeGenerateOptions, generateCode } from "./generate";
 import { tsCompile } from "./tsCompile";
 
@@ -25,13 +24,7 @@ export type CodeWriteOptions = {
 
 export let writeCode = async (
   options: CodeWriteOptions & CodeGenerateOptions,
-  config: I18nCompiler.Config & {
-    code: CodeDataOptions;
-  },
-  data: {
-    input: I18nCompiler.DataInput;
-    code: I18nCompiler.DataCode;
-  },
+  data: I18nCompiler.DataCode,
 ) => {
   const {
     cwd = process.cwd(),
@@ -43,10 +36,7 @@ export let writeCode = async (
   } = options;
 
   const { files, needsTranslationsFiles } = await generateCode(
-    {
-      config,
-      data,
-    },
+    data,
     generateOptions,
   );
 

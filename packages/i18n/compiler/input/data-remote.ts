@@ -1,18 +1,42 @@
 import { request } from "node:https";
-import type { I18nCompiler } from "../types.js";
-import type { InputDataOptions } from "./data";
+import { minimatch } from "minimatch";
+import type { I18nCompiler } from "../types";
+import type { InputDataSharedOptions } from "./data";
 
-export let getInputDataRemote = async (config: InputDataOptions) =>
+const GITHUB_RAW_URL = "https://raw.githubusercontent.com";
+
+export type InputDataRemoteSource =
+  | `http${string}`
+  | `${typeof GITHUB_RAW_URL}${string}`;
+
+export type InputDataRemoteOptions = {
+  /**
+   * Optionally pass a list of glob patterns to ignore (checked with `minimatch`)
+   */
+  ignore?: string[];
+};
+
+/**
+ * Our github action `knitkode/koine/actions/i18n` creates a JSON file we can
+ * read here, github serves it as text
+ */
+export let getInputDataRemote = async (
+  options: InputDataSharedOptions & InputDataRemoteOptions,
+) =>
   new Promise<I18nCompiler.DataInput>((resolve, reject) => {
+    const { ignore = [], source } = options;
+    const isGithubUrl = source.startsWith(GITHUB_RAW_URL);
     let result = "";
+
     const req = request(
-      config.url,
-      // `${BASE}${path}`,
-      {
-        // headers: {
-        //   Accept: "application/json",
-        // },
-      },
+      source,
+      isGithubUrl
+        ? {}
+        : {
+            headers: {
+              Accept: "application/json",
+            },
+          },
       (res) => {
         res.setEncoding("utf8");
 
@@ -22,10 +46,24 @@ export let getInputDataRemote = async (config: InputDataOptions) =>
 
         res.on("end", () => {
           try {
-            const dataInput = JSON.parse(result);
-            resolve(dataInput);
+            const dataInput = (
+              isGithubUrl ? JSON.parse(result) : result
+            ) as I18nCompiler.DataInput;
+            resolve({
+              ...dataInput,
+              localesFolders: ignore.length
+                ? dataInput.localesFolders.filter((folder) =>
+                    ignore.every((glob) => !minimatch(folder, glob)),
+                  )
+                : dataInput.localesFolders,
+              translationFiles: ignore.length
+                ? dataInput.translationFiles.filter((file) =>
+                    ignore.every((glob) => !minimatch(file.path, glob)),
+                  )
+                : dataInput.translationFiles,
+            });
           } catch (e) {
-            throw Error(`Failed to parse JSON from ${config.url}`);
+            throw Error(`Failed to parse JSON from ${source}`);
           }
         });
       },

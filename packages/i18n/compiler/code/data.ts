@@ -73,16 +73,22 @@ export type CodeDataOptions = typeof codeDataOptions;
 export let getCodeData = (
   config: I18nCompiler.Config,
   options: PartialDeep<CodeDataOptions>,
-  dataInput: I18nCompiler.DataInput,
-) => {
-  const { routes, translations } = objectMergeWithDefaults(
-    codeDataOptions,
-    options,
+  input: I18nCompiler.DataInput,
+): I18nCompiler.DataCode => {
+  const optionsSafe = objectMergeWithDefaults(codeDataOptions, options);
+  optionsSafe.translations.ignorePaths.push(
+    optionsSafe.routes.translationJsonFileName,
   );
-  translations.ignorePaths.push(routes.translationJsonFileName);
 
   return {
-    routes: getCodeDataRoutes(config, routes, dataInput),
-    translations: getCodeDataTranslations(config, translations, dataInput),
+    config,
+    options: optionsSafe,
+    input,
+    routes: getCodeDataRoutes(config, optionsSafe.routes, input),
+    translations: getCodeDataTranslations(
+      config,
+      optionsSafe.translations,
+      input,
+    ),
   };
 };

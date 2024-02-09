@@ -48,7 +48,7 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-export default ({ config, data }: I18nCompiler.AdapterArg) => {
+export default ({ config, options, translations }: I18nCompiler.AdapterArg) => {
   let output = `
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-const */
@@ -57,8 +57,8 @@ import { tInterpolateParams } from "./tInterpolateParams";
 
 `;
 
-  forin(data.code.translations, (translationId, { values, params, plural }) => {
-    const name = `${config.code.translations.fnsPrefix}${translationId}`;
+  forin(translations, (translationId, { values, params, plural }) => {
+    const name = `${options.translations.fnsPrefix}${translationId}`;
     if (params && plural) {
       params["count"] = "number";
     }

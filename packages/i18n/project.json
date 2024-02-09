@@ -33,12 +33,14 @@
         ]
       }
     },
-    "build-ncc": {
-      "executor": "nx:run-commands",
+    "_build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "commands": [
-          "ncc build ./packages/i18n/ncc/next.ts -t -o ./dist/packages/ncc --minify --no-source-map-register"
-        ]
+        "outputPath": "dist/packages/i18n",
+        "tsConfig": "packages/i18n/tsconfig.lib.json",
+        "project": "packages/i18n/package.json",
+        "main": "packages/i18n/index.ts"
       }
     },
     "lint": {

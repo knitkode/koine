@@ -68,11 +68,11 @@ export type CodeGenerateOptions = {
 };
 
 export async function generateCode(
-  adapterArg: I18nCompiler.AdapterArg,
+  data: I18nCompiler.DataCode,
   options: CodeGenerateOptions,
 ) {
   const { adapter, outputFiles } = options;
-  const adapters = await getAdapters(adapterArg, adapter);
+  const adapters = await getAdapters(data, adapter);
   const files = adapters.reduce(
     (allFiles, adapter) => [...allFiles, ...adapter.files],
     [] as I18nCompiler.AdpaterFile[],
@@ -95,7 +95,7 @@ export async function generateCode(
       const name =
         outputFiles?.[rest.name as keyof typeof outputFiles] || rest.name;
 
-      return { ...rest, name, content: fn(adapterArg) };
+      return { ...rest, name, content: fn(data) };
     },
   );
 

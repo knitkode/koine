@@ -47,7 +47,7 @@ export const summaryDataOptions = {};
 
 export type SummaryDataOptions = typeof summaryDataOptions & {
   /**
-   * @default "" Usually this should be an absolute URL
+   * Usually this is an absolute URL where to view the translation file
    */
   sourceUrl: string;
 };

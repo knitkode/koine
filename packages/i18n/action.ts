@@ -1,14 +1,18 @@
 import { getConfig } from "./compiler/config";
-import { inputDataOptions, writeInput } from "./compiler/input";
-import { getInputDataFs } from "./compiler/input/data-fs";
+import {
+  type InputDataOptions,
+  getInputDataLocal,
+  writeInput,
+} from "./compiler/input";
+// import { type InputDataOptions, writeInput } from "./compiler/input";
+// import { getInputDataLocal } from "./compiler/input/data-local";
 import {
   type SummaryDataOptions,
   getSummaryData,
   writeSummary,
 } from "./compiler/summary";
 
-type I18nActionOptions = {
-  cwd: string;
+type I18nActionOptions = Partial<InputDataOptions> & {
   /**
    * Typically the current repo URL read on the `process.env` variables
    *
@@ -28,10 +32,17 @@ type I18nActionOptions = {
 export let i18nAction = async (options: I18nActionOptions) => {
   const {
     cwd,
+    // defaults for github action where locales folders are at the root
+    source = ".",
     url,
     output: { input, summaryJson, summaryMarkdown },
+    ...inputDataOptions
   } = options;
-  const dataInput = await getInputDataFs({ ...inputDataOptions, cwd });
+  const dataInput = await getInputDataLocal({
+    cwd,
+    source,
+    ...inputDataOptions,
+  });
   const writables: Promise<any>[] = [];
 
   if (input) {

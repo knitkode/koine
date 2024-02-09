@@ -3,8 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
-    "esModuleInterop": true,
-    "module": "ESNext"
+    "esModuleInterop": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/*.spec.ts", "__mocks__"]

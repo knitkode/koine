@@ -58,6 +58,9 @@ export namespace I18nCompiler {
    * {@link DataRoute} - {@link DataTranslations}
    */
   export type DataCode = {
+    config: Config;
+    options: CodeDataOptions;
+    input: DataInput;
     routes: DataRoutes;
     translations: DataTranslations;
   };
@@ -178,15 +181,10 @@ export namespace I18nCompiler {
     needsTranslationsFiles?: boolean;
   };
 
-  export type AdapterArg = {
-    config: Config & {
-      code: CodeDataOptions;
-    };
-    data: {
-      input: DataInput;
-      code: DataCode;
-    };
-  };
+  /**
+   * {@link DataCode}
+   */
+  export type AdapterArg = DataCode;
 
   /**
    * Adapter file anatomy
