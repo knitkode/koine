@@ -23,13 +23,15 @@ export type WithI18nAsyncOptions = NextConfig & {
  * About next.config phases see https://github.com/vercel/next.js/discussions/48736
  */
 export let withI18nAsync =
-  (nextConfig: WithI18nAsyncOptions = {}): NextConfigFn =>
+  (config: WithI18nAsyncOptions = {}): NextConfigFn =>
   async (/* phase: string */) => {
     const {
-      i18nCompiler: options,
-      redirects: prevRedirects,
-      rewrites: prevRewrites,
-    } = nextConfig;
+      i18nCompiler: i18nConfig,
+      redirects,
+      rewrites,
+      ...restNextConfig
+    } = config;
+    let nextConfig: NextConfig = restNextConfig;
     // const { PHASE_PRODUCTION_BUILD, PHASE_DEVELOPMENT_SERVER } = await import(
     //   "next/constants"
     // );
@@ -39,14 +41,27 @@ export let withI18nAsync =
     // }
 
     // bail if user has not defined the compiler options object
-    if (!options) return nextConfig;
+    if (!i18nConfig) return nextConfig;
 
-    const i18nResult = await i18nCompiler(options);
+    const i18nResult = await i18nCompiler(i18nConfig);
+
+    nextConfig = tweakNextConfig(i18nResult.config, nextConfig);
 
     nextConfig.redirects = () =>
-      getRedirects(prevRedirects, options, i18nResult);
+      getRedirects(redirects, i18nConfig, i18nResult);
 
-    nextConfig.rewrites = () => getRewrites(prevRewrites, options, i18nResult);
+    nextConfig.rewrites = () => getRewrites(rewrites, i18nConfig, i18nResult);
 
-    return tweakNextConfig(i18nResult.config, nextConfig);
+    if (i18nConfig.code.adapter === "next-translate") {
+      try {
+        const withNextTranslate = await import("next-translate-plugin").then(
+          (m) => m.default,
+        );
+        nextConfig = withNextTranslate(nextConfig);
+      } catch (e) {
+        // console.log()
+      }
+    }
+
+    return nextConfig;
   };

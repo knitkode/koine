@@ -17,29 +17,31 @@ export type WithI18nOptions = NextConfig & {
     I18nCompilerNextOptions;
 };
 
-export let withI18n = (nextConfig: WithI18nOptions = {}): NextConfig => {
+export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
   const {
-    i18nCompiler: options,
-    redirects: prevRedirects,
-    rewrites: prevRewrites,
-  } = nextConfig;
+    i18nCompiler: i18nConfig,
+    redirects,
+    rewrites,
+    ...restNextConfig
+  } = config;
+  const nextConfig: NextConfig = restNextConfig;
 
   // bail if user has not defined the compiler options object
-  if (!options) return nextConfig;
+  if (!i18nConfig) return nextConfig;
 
   let i18nResult: I18nCompilerReturn | undefined;
 
   nextConfig.redirects = async () => {
-    i18nResult = i18nResult || (await i18nCompiler(options));
-    return await getRedirects(prevRedirects, options, i18nResult);
+    i18nResult = i18nResult || (await i18nCompiler(i18nConfig));
+    return await getRedirects(redirects, i18nConfig, i18nResult);
   };
 
   nextConfig.rewrites = async () => {
-    i18nResult = i18nResult || (await i18nCompiler(options));
-    return await getRewrites(prevRewrites, options, i18nResult);
+    i18nResult = i18nResult || (await i18nCompiler(i18nConfig));
+    return await getRewrites(rewrites, i18nConfig, i18nResult);
   };
 
-  return tweakNextConfig(options, nextConfig);
+  return tweakNextConfig(i18nConfig, nextConfig);
 };
 
 // import { I18nWebpackPlugin } from "./webpackPluginI18n";

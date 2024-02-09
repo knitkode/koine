@@ -10,13 +10,17 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "next": "^14.0.4"
+    "next": "^14.0.4",
+    "next-translate-plugin": "^2.6.2"
   },
   "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
     "next-translate": {
       "optional": true
     },
-    "next": {
+    "next-translate-plugin": {
       "optional": true
     },
     "react": {
