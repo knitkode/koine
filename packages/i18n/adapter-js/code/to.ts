@@ -19,12 +19,13 @@ export function to<TRoute extends I18n.RouteId>(
         | [I18n.RouteParams[TRoute], I18n.Locale]
     : [] | [I18n.Locale]
 ) {
-  const params = isLocale(args[0]) ? undefined : args[0];
   const locale = (isLocale(args[0]) ? args[0] : args[1]) || "${config.defaultLocale}";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const pathname = ((routesSlim as any)[id]?.[locale] ?? routesSlim[id]) as string;
 
-  return toFormat(locale, pathname, params);
+  return toFormat(
+    locale,
+    routesSlim[id][locale] ?? routesSlim[id]["${config.defaultLocale}"] ?? routesSlim[id],
+    isLocale(args[0]) ? undefined : args[0]
+  );
 }
 
 export default to;

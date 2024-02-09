@@ -42,6 +42,8 @@ export type I18nCompilerOptions = Partial<I18nCompiler.Config> & {
   summary?: SummaryOptions;
 };
 
+export type I18nCompilerReturn = Awaited<ReturnType<typeof i18nCompiler>>;
+
 /**
  * i18nCompiler public api
  *

@@ -7,10 +7,7 @@ import { transformPathname } from "./transformPathname";
 // type Rewrite = Omit<_Rewrite, "locale"> & { locale?: boolean };
 type Rewrite = _Rewrite;
 
-/**
- * Get path rewrite
- */
-function getPathRewrite(arg: {
+function generatePathRewrite(arg: {
   localeSource?: I18nCompiler.Locale;
   localeDestination?: I18nCompiler.Locale;
   route: I18nCompiler.DataRoute;
@@ -42,9 +39,7 @@ function getPathRewrite(arg: {
   } as Rewrite;
 }
 
-/**
- */
-export let getRewrites = (
+export let generateRewrites = (
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes,
   localeParam = "",
@@ -71,7 +66,7 @@ export let getRewrites = (
         // app router:
         if (isHiddenDefaultLocale) {
           rewrites.push(
-            getPathRewrite({
+            generatePathRewrite({
               localeDestination: locale,
               route,
               template,
@@ -80,7 +75,7 @@ export let getRewrites = (
           );
         } else {
           rewrites.push(
-            getPathRewrite({
+            generatePathRewrite({
               localeDestination: locale,
               localeSource: locale,
               // localeParam,
@@ -98,7 +93,7 @@ export let getRewrites = (
         if (pathname !== template) {
           if (locale !== defaultLocale || isVisibleDefaultLocale) {
             rewrites.push(
-              getPathRewrite({
+              generatePathRewrite({
                 localeSource: locale,
                 route,
                 template,
@@ -106,7 +101,7 @@ export let getRewrites = (
               }),
             );
           } else {
-            rewrites.push(getPathRewrite({ route, template, pathname }));
+            rewrites.push(generatePathRewrite({ route, template, pathname }));
           }
         }
       }

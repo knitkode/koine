@@ -7,10 +7,7 @@ import { transformPathname } from "./transformPathname";
 // type Redirect = Omit<_Redirect, "locale"> & { locale?: boolean };
 type Redirect = _Redirect;
 
-/**
- * Get path redirect
- */
-function getPathRedirect(arg: {
+function generatePathRedirect(arg: {
   localeSource?: I18nCompiler.Locale;
   localeDestination?: I18nCompiler.Locale;
   template: string;
@@ -39,9 +36,7 @@ function getPathRedirect(arg: {
   return redirect;
 }
 
-/**
- */
-export let getRedirects = (
+export let generateRedirects = (
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes,
   localeParam = "",
@@ -70,7 +65,7 @@ export let getRedirects = (
         // app router:
         if (isVisibleDefaultLocale) {
           redirects.push(
-            getPathRedirect({
+            generatePathRedirect({
               localeDestination: locale,
               permanent,
               template,
@@ -79,7 +74,7 @@ export let getRedirects = (
           );
         } else if (isHiddenDefaultLocale) {
           redirects.push(
-            getPathRedirect({
+            generatePathRedirect({
               localeSource: locale,
               permanent,
               template,
@@ -88,7 +83,7 @@ export let getRedirects = (
           );
         } else if (locale !== defaultLocale) {
           redirects.push(
-            getPathRedirect({
+            generatePathRedirect({
               localeSource: locale,
               localeDestination: locale,
               permanent,
@@ -97,14 +92,16 @@ export let getRedirects = (
             }),
           );
         } else {
-          redirects.push(getPathRedirect({ permanent, template, pathname }));
+          redirects.push(
+            generatePathRedirect({ permanent, template, pathname }),
+          );
         }
       } else {
         // pages router:
         if (pathname !== template) {
           if (isVisibleDefaultLocale) {
             redirects.push(
-              getPathRedirect({
+              generatePathRedirect({
                 localeDestination: locale,
                 permanent,
                 template,
@@ -113,7 +110,7 @@ export let getRedirects = (
             );
           } else if (locale !== defaultLocale) {
             redirects.push(
-              getPathRedirect({
+              generatePathRedirect({
                 localeSource: locale,
                 localeDestination: locale,
                 permanent,
@@ -122,7 +119,9 @@ export let getRedirects = (
               }),
             );
           } else {
-            redirects.push(getPathRedirect({ permanent, template, pathname }));
+            redirects.push(
+              generatePathRedirect({ permanent, template, pathname }),
+            );
           }
         }
       }
