@@ -1,15 +1,6 @@
 import { arraySum, forin, objectSortByKeysMatching } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 
-export const summaryDataOptions = {
-  /**
-   * @default "/" Usually this should be an absolute URL
-   */
-  sourceUrl: "/",
-};
-
-export type SummaryDataOptions = typeof summaryDataOptions;
-
 const getWords = (
   value: string | string[] | object | object[],
   options: {} = {},
@@ -50,6 +41,15 @@ const getSummaryDataEntry = (
     url,
     words: wordsCount,
   };
+};
+
+export const summaryDataOptions = {};
+
+export type SummaryDataOptions = typeof summaryDataOptions & {
+  /**
+   * @default "" Usually this should be an absolute URL
+   */
+  sourceUrl: string;
 };
 
 export let getSummaryData = (

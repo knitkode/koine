@@ -1,10 +1,7 @@
-import {
-  type PartialDeep,
-  type SetOptional,
-  objectMergeWithDefaults,
-} from "@koine/utils";
+import { type PartialDeep } from "@koine/utils";
 import {
   type CodeDataOptions,
+  type CodeGenerateOptions,
   type CodeWriteOptions,
   codeDataOptions,
   getCodeData,
@@ -15,108 +12,77 @@ import {
   type InputDataOptions,
   type InputWriteOptions,
   getInputData,
-  inputDataOptions,
   writeInput,
 } from "./input";
 import {
   type SummaryDataOptions,
+  type SummaryGenerateOptions,
   type SummaryWriteOptions,
   getSummaryData,
-  summaryDataOptions,
   writeSummary,
 } from "./summary";
 import type { I18nCompiler } from "./types";
 
-const getOptions = (
-  config: I18nCompiler.Config,
-  {
-    input,
-    code,
-    summary,
-  }: {
-    input?: PartialDeep<InputDataOptions>;
-    code?: PartialDeep<CodeDataOptions>;
-    summary?: PartialDeep<SummaryDataOptions>;
-  },
-) => ({
-  config,
-  input: objectMergeWithDefaults(inputDataOptions, input),
-  code: objectMergeWithDefaults(codeDataOptions, code),
-  summary: objectMergeWithDefaults(summaryDataOptions, summary),
-});
+type CodeOptions = PartialDeep<CodeDataOptions> &
+  CodeGenerateOptions & {
+    write?: CodeWriteOptions;
+  };
 
-export type I18nCompilerOptions = PartialDeep<ReturnType<typeof getOptions>>;
+type InputOptions = PartialDeep<InputDataOptions> & {
+  write?: InputWriteOptions;
+};
+
+type SummaryOptions = SummaryDataOptions &
+  SummaryGenerateOptions & {
+    write?: SummaryWriteOptions;
+  };
+
+export type I18nCompilerOptions = Partial<I18nCompiler.Config> & {
+  code?: CodeOptions;
+  input?: InputOptions;
+  summary?: SummaryOptions;
+};
 
 /**
  * i18nCompiler public api
  *
  * @public
  */
-export let i18nCompiler = (compilerOptions: I18nCompilerOptions) => {
-  return {
-    writeAll: async ({
-      code: codeWriteOptions,
-      input: inputWriteOptions,
-      summary: summaryWriteOptions,
-    }: {
-      code?: SetOptional<CodeWriteOptions, "config" | "data">;
-      input?: SetOptional<InputWriteOptions, "data">;
-      summary?: SetOptional<SummaryWriteOptions, "data">;
-    }) => {
-      const writables = [] as Promise<unknown>[];
-      const input = await getInputData(compilerOptions.input);
-      const config = getConfig(input, compilerOptions.config);
-      const opts = getOptions(config, compilerOptions);
+export let i18nCompiler = async (options: I18nCompilerOptions) => {
+  const writables = [] as Promise<unknown>[];
+  const dataInput = await getInputData(options.input);
+  const config = getConfig(dataInput, options);
+  const {
+    code: codeOptions,
+    input: inputOptions,
+    summary: summaryOptions,
+  } = options;
 
-      if (codeWriteOptions) {
-        const code = await getCodeData(config, opts.code, input);
-        writables.push(
-          writeCode({
-            config: { ...config, code: opts.code },
-            data: { code, input },
-            ...codeWriteOptions,
-          }),
-        );
-      }
-      if (inputWriteOptions) {
-        writables.push(writeInput({ data: input, ...inputWriteOptions }));
-      }
-      if (summaryWriteOptions) {
-        const summary = await getSummaryData(config, opts.summary, input);
-        writables.push(writeSummary({ data: summary, ...summaryWriteOptions }));
-      }
-
-      return await Promise.all(writables);
-    },
-    writeCode: async (
-      options: SetOptional<CodeWriteOptions, "config" | "data">,
-    ) => {
-      const input = await getInputData(compilerOptions.input);
-      const config = getConfig(input, compilerOptions.config);
-      const opts = getOptions(config, compilerOptions);
-      const code = await getCodeData(config, opts.code, input);
-
-      return await writeCode({
-        config: {
-          ...config,
-          code: opts.code,
+  if (codeOptions?.write) {
+    const dataCode = await getCodeData(config, codeDataOptions, dataInput);
+    writables.push(
+      writeCode(
+        { ...codeOptions, ...codeOptions.write },
+        { ...config, code: codeDataOptions },
+        { code: dataCode, input: dataInput },
+      ),
+    );
+  }
+  if (inputOptions?.write) {
+    writables.push(writeInput(inputOptions.write, dataInput));
+  }
+  if (summaryOptions?.write) {
+    const dataSummary = await getSummaryData(config, summaryOptions, dataInput);
+    writables.push(
+      writeSummary(
+        {
+          ...summaryOptions.write,
+          sourceUrl: summaryOptions.sourceUrl,
         },
-        data: { input, code },
-        ...options,
-      });
-    },
-    writeInput: async (options: SetOptional<InputWriteOptions, "data">) => {
-      const input = await getInputData(compilerOptions.input);
+        dataSummary,
+      ),
+    );
+  }
 
-      return await writeInput({ data: input, ...options });
-    },
-    writeSummary: async (options: SetOptional<SummaryWriteOptions, "data">) => {
-      const input = await getInputData(compilerOptions.input);
-      const config = getConfig(input, compilerOptions.config);
-      const opts = getOptions(config, compilerOptions);
-      const summary = await getSummaryData(config, opts.summary, input);
-
-      return await writeSummary({ data: summary, ...options });
-    },
-  };
+  return await Promise.all(writables);
 };

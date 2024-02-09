@@ -61,7 +61,7 @@ const generateSummaryMarkdownByPath = (data: I18nCompiler.DataSummary) => {
 
 const generateSummaryMarkdownByLocale = (
   data: I18nCompiler.DataSummary,
-  options: SummaryDataOptions,
+  options: SummaryGenerateOptions,
 ) => {
   let output = "";
   let body = "";
@@ -86,7 +86,7 @@ const generateSummaryMarkdownByLocale = (
 
 const generateSummaryMarkdown = (
   data: I18nCompiler.DataSummary,
-  options: SummaryDataOptions,
+  options: SummaryGenerateOptions,
 ) => {
   let output = "# Summary\n";
 
@@ -98,13 +98,15 @@ const generateSummaryMarkdown = (
   return output;
 };
 
+export type SummaryGenerateOptions = SummaryDataOptions;
+
 export let generateSummary = async (
   data: I18nCompiler.DataSummary,
-  options?: Partial<SummaryDataOptions>,
+  options: SummaryGenerateOptions,
 ) => {
-  const md = generateSummaryMarkdown(
+  const markdown = generateSummaryMarkdown(
     data,
     objectMergeWithDefaults(summaryDataOptions, options),
   );
-  return { data: data, md };
+  return markdown;
 };

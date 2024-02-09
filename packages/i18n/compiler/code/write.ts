@@ -1,10 +1,9 @@
 import { rmSync } from "node:fs";
-import { cp } from "node:fs/promises";
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
 import type { I18nCompiler } from "../types";
 import type { CodeDataOptions } from "./data";
-import { type GenerateCodeOptions, generateCode } from "./generate";
+import { type CodeGenerateOptions, generateCode } from "./generate";
 import { tsCompile } from "./tsCompile";
 
 export type CodeWriteOptions = {
@@ -22,25 +21,25 @@ export type CodeWriteOptions = {
   skipTsCompile?: boolean;
   skipGitignore?: boolean;
   skipTranslations?: boolean;
+};
+
+export let writeCode = async (
+  options: CodeWriteOptions & CodeGenerateOptions,
   config: I18nCompiler.Config & {
     code: CodeDataOptions;
-  };
+  },
   data: {
     input: I18nCompiler.DataInput;
     code: I18nCompiler.DataCode;
-  };
-} & GenerateCodeOptions;
-
-export let writeCode = async (options: CodeWriteOptions) => {
+  },
+) => {
   const {
     cwd = process.cwd(),
     output,
     skipTsCompile,
     skipGitignore,
     skipTranslations,
-    config,
-    data,
-    ...restOptions
+    ...generateOptions
   } = options;
 
   const { files, needsTranslationsFiles } = await generateCode(
@@ -48,7 +47,7 @@ export let writeCode = async (options: CodeWriteOptions) => {
       config,
       data,
     },
-    restOptions,
+    generateOptions,
   );
 
   const prettifiablePaths: Set<string> = new Set();

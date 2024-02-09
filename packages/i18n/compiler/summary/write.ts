@@ -1,8 +1,7 @@
 import { join } from "node:path";
 import { fsWrite } from "@koine/node";
 import type { I18nCompiler } from "../types";
-import type { SummaryDataOptions } from "./data";
-import { generateSummary } from "./generate";
+import { type SummaryGenerateOptions, generateSummary } from "./generate";
 
 export type SummaryWriteOptions = {
   /**
@@ -12,34 +11,40 @@ export type SummaryWriteOptions = {
   /**
    * Relative to the given `cwd`.
    */
-  outputJson: string;
+  outputJson?: string;
   /**
    * Relative to the given `cwd`.
    */
-  outputMarkdown: string;
+  outputMarkdown?: string;
   /**
    * @default undefined
    */
   pretty?: boolean;
-  data: I18nCompiler.DataSummary;
-} & SummaryDataOptions;
+};
 
-export let writeSummary = async (options: SummaryWriteOptions) => {
+export let writeSummary = async (
+  options: SummaryWriteOptions & SummaryGenerateOptions,
+  data: I18nCompiler.DataSummary,
+) => {
   const {
     cwd = process.cwd(),
     outputJson,
     outputMarkdown,
     pretty,
-    data,
-    ...restOptions
+    ...generateOptions
   } = options;
-  const summary = await generateSummary(data, restOptions);
-
-  await fsWrite(
-    join(cwd, outputJson),
-    pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data),
-  );
-  await fsWrite(join(cwd, outputMarkdown), summary.md);
+  if (outputJson || outputMarkdown) {
+    if (outputJson) {
+      await fsWrite(
+        join(cwd, outputJson),
+        pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data),
+      );
+    }
+    if (outputMarkdown) {
+      const markdown = await generateSummary(data, generateOptions);
+      await fsWrite(join(cwd, outputMarkdown), markdown);
+    }
+  }
 
   return data;
 };

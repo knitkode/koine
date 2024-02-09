@@ -50,7 +50,7 @@ const getAdapters = async (
   return adapters;
 };
 
-export type GenerateCodeOptions = {
+export type CodeGenerateOptions = {
   adapter: I18nCompiler.AdapterBuiltin;
   outputFiles?: Partial<{
     // TODO: make this works with generics based on chosen adapter?
@@ -69,7 +69,7 @@ export type GenerateCodeOptions = {
 
 export async function generateCode(
   adapterArg: I18nCompiler.AdapterArg,
-  options: GenerateCodeOptions,
+  options: CodeGenerateOptions,
 ) {
   const { adapter, outputFiles } = options;
   const adapters = await getAdapters(adapterArg, adapter);

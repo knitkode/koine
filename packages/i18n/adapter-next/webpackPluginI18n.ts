@@ -20,14 +20,7 @@ export class I18nWebpackPlugin {
         async (compilation: Compilation, callback: () => void) => {
           // console.log("This is an example plugin!");
 
-          const compiler = i18nCompiler(this.opts);
-
-          await compiler.writeCode({
-            adapter: "next",
-            output: "i18n",
-            skipTsCompile: true,
-            skipTranslations: true,
-          });
+          await i18nCompiler(this.opts);
 
           // await new Promise();
           console.log("done async!!!!!!!!!!!!!!!!!!!!!!!", this.opts);
