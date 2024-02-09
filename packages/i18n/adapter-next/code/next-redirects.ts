@@ -1,7 +1,7 @@
 import type { I18nCompiler } from "../../compiler";
-import { getRewrites } from "../rewrites";
+import { generateRedirects } from "../redirects";
 
 export default ({ config, routes }: I18nCompiler.AdapterArg) => {
-  const value = JSON.stringify(getRewrites(config, routes), null, 2);
+  const value = JSON.stringify(generateRedirects(config, routes), null, 2);
   return `module.exports = ${value}`;
 };

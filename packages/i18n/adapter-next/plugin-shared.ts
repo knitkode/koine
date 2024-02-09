@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import { ContextReplacementPlugin } from "webpack";
-import { I18nCompilerOptions, I18nCompilerReturn } from "../compiler";
+import type { I18nCompilerOptions, I18nCompilerReturn } from "../compiler";
 import { generateRedirects } from "./redirects";
 import { generateRewrites } from "./rewrites";
 
