@@ -1,10 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { glob } from "glob";
+import type { LiteralUnion } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import type { InputDataSharedOptions } from "./data";
 
-export type InputDataLocalSource = `.${string}` | `/${string}`;
+export type InputDataLocalSource = LiteralUnion<
+  `.${string}` | `/${string}`,
+  string
+>;
 
 export type InputDataLocalOptions = {
   /**

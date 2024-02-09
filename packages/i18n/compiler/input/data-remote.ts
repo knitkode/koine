@@ -1,13 +1,15 @@
 import { request } from "node:https";
 import { minimatch } from "minimatch";
+import type { LiteralUnion } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import type { InputDataSharedOptions } from "./data";
 
 const GITHUB_RAW_URL = "https://raw.githubusercontent.com";
 
-export type InputDataRemoteSource =
-  | `http${string}`
-  | `${typeof GITHUB_RAW_URL}${string}`;
+export type InputDataRemoteSource = LiteralUnion<
+  `http${string}` | `${typeof GITHUB_RAW_URL}${string}`,
+  string
+>;
 
 export type InputDataRemoteOptions = {
   /**
