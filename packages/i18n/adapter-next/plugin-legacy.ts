@@ -462,7 +462,7 @@ export type WithI18nLegacyOptions = NextConfig & {
 /**
  * @deprecated Better use the new `withI18n`
  */
-export let withI18nLegacy = (options: WithI18nLegacyOptions) => {
+export let withI18nLegacy = (options: WithI18nLegacyOptions): NextConfig => {
   const {
     routes,
     permanent,

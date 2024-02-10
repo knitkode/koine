@@ -1,6 +1,6 @@
 import type { I18nCompiler } from "../../compiler";
-// import nextRedirects from "./next-redirects";
-// import nextRewrites from "./next-rewrites";
+import nextRedirects from "./next-redirects";
+import nextRewrites from "./next-rewrites";
 import useCurrentLocalisedPathnames from "./useCurrentLocalisedPathnames";
 import useLocale from "./useLocale";
 import useRouteId from "./useRouteId";
@@ -12,8 +12,10 @@ const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
     dependsOn: ["js"],
     files: [
-      // { name: "next-redirects", fn: nextRedirects, ext: "js" },
-      // { name: "next-rewrites", fn: nextRewrites, ext: "js" },
+      // TODO: maybe remoe these files, they are useful for debugging for now
+      // but probably will be useless
+      { name: "next-redirects", fn: nextRedirects, ext: "js" },
+      { name: "next-rewrites", fn: nextRewrites, ext: "js" },
       {
         name: "useCurrentLocalisedPathnames",
         fn: useCurrentLocalisedPathnames,
@@ -23,7 +25,8 @@ const adapter: I18nCompiler.AdpaterCreator = () => {
       { name: "useLocale", fn: useLocale, ext: "ts", index: true },
       { name: "useRouteId", fn: useRouteId, ext: "ts", index: true },
       { name: "useTo", fn: useTo, ext: "ts", index: true },
-      // // { name: "withI18n", fn: withI18n, ext: "js" },
+      // TODO: remove this file at some point?
+      // { name: "withI18n", fn: withI18n, ext: "js" },
     ],
   };
 };
