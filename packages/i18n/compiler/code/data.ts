@@ -63,7 +63,7 @@ export const codeDataTranslationsOptions = {
 
 export type CodeDataTranslationsOptions = typeof codeDataTranslationsOptions;
 
-export const codeDataOptions = {
+const codeDataOptions = {
   routes: codeDataRoutesOptions,
   translations: codeDataTranslationsOptions,
 };
@@ -79,6 +79,14 @@ export let getCodeData = (
   optionsSafe.translations.ignorePaths.push(
     optionsSafe.routes.translationJsonFileName,
   );
+
+  // order locales
+  input = {
+    ...input,
+    localesFolders: input.localesFolders.sort((a, b) =>
+      config.defaultLocale ? -1 : a.localeCompare(b),
+    ),
+  };
 
   return {
     config,
