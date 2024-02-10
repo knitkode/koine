@@ -1,13 +1,6 @@
 import type { NextConfig } from "next";
-import type {
-  Redirect as _Redirect,
-  Rewrite as _Rewrite,
-} from "next/dist/lib/load-custom-routes";
+import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, normaliseUrlPathname } from "@koine/utils";
-
-type Redirect = Omit<_Redirect, "locale"> & { locale?: boolean };
-
-type Rewrite = Omit<_Rewrite, "locale"> & { locale?: boolean };
 
 type Route =
   | string
@@ -200,7 +193,7 @@ function getPathRedirect(
 
 type GetRedirectsOptions = Options;
 
-function getRedirects(arg: GetRedirectsOptions) {
+function generateRedirects(arg: GetRedirectsOptions) {
   const {
     routes,
     defaultLocale,
@@ -273,9 +266,12 @@ function getRedirects(arg: GetRedirectsOptions) {
   const cleaned = arrayUniqueByProperties(
     redirects.filter(Boolean) as Redirect[],
     ["source", "destination"],
-  ).map((rewrite) => (localeParam ? rewrite : { ...rewrite, locale: false }));
+  ).map((rewrite) =>
+    localeParam ? rewrite : { ...rewrite, locale: false as const },
+  );
 
-  if (debug) console.info("[@koine/next/plugin-legacy:getRedirects]", cleaned);
+  if (debug)
+    console.info("[@koine/next/plugin-legacy:generateRedirects]", cleaned);
 
   return cleaned;
 }
@@ -318,7 +314,7 @@ function getPathRewrite(
 
 type GetRewritesOptions = Options;
 
-function getRewrites(arg: GetRewritesOptions) {
+function generateRewrites(arg: GetRewritesOptions) {
   const { routes, defaultLocale, hideDefaultLocaleInUrl, localeParam, debug } =
     arg;
   const orderedRoutes = orderRoutes(routes, defaultLocale);
@@ -363,7 +359,8 @@ function getRewrites(arg: GetRewritesOptions) {
     ["source", "destination"],
   );
 
-  if (debug) console.info("[@koine/next/plugin-legacy:getRewrites]", cleaned);
+  if (debug)
+    console.info("[@koine/next/plugin-legacy:generateRewrites]", cleaned);
 
   return cleaned;
 }
@@ -391,7 +388,7 @@ function getRewrites(arg: GetRewritesOptions) {
 //   return routes as Routes;
 // }
 
-export type WithI18nLegacyOptions = {
+export type WithI18nLegacyOptions = NextConfig & {
   /**
    * A JSON file containing the routes definition mapping template folders
    * to localised slugs. It supports slugs's dynamic portions.
@@ -465,79 +462,75 @@ export type WithI18nLegacyOptions = {
 /**
  * @deprecated Better use the new `withI18n`
  */
-export let withI18nLegacy =
-  (
-    { routes, permanent, i18n, debug }: WithI18nLegacyOptions = {
-      i18n: {
-        locales: ["en"],
-        defaultLocale: "en",
-        hideDefaultLocaleInUrl: true,
-        localeParam: "",
-      },
-    },
-  ) =>
-  (customNextConfig: NextConfig) => {
-    i18n = {
-      ...i18n,
-      ...(customNextConfig.i18n || {}),
+export let withI18nLegacy = (options: WithI18nLegacyOptions) => {
+  const {
+    routes,
+    permanent,
+    i18n: i18nOpts,
+    debug,
+    ...restNextConfig
+  } = options;
+  const i18n: ConfigI18nOptions = {
+    hideDefaultLocaleInUrl: true,
+    localeParam: "",
+    ...i18nOpts,
+    ...(restNextConfig["i18n"] || {}),
+  };
+  const nextConfig: NextConfig = { ...restNextConfig };
+
+  if (i18n.locales && i18n.defaultLocale) {
+    nextConfig.i18n = {
+      locales: i18n.locales,
+      defaultLocale: i18n.defaultLocale,
+      ...(restNextConfig["i18n"] || {}),
     };
-    const nextConfig: NextConfig = { ...customNextConfig };
+  }
 
-    if (i18n.locales && i18n.defaultLocale) {
-      nextConfig.i18n = {
-        locales: i18n.locales,
-        defaultLocale: i18n.defaultLocale,
-        ...(customNextConfig.i18n || {}),
-      };
-    }
+  if (routes) {
+    const { redirects, rewrites } = nextConfig;
+    nextConfig.redirects = async () => {
+      const defaults = generateRedirects({
+        routes,
+        permanent,
+        debug,
+        ...i18n,
+      });
+      if (redirects) {
+        const customs = await redirects();
+        return [...defaults, ...customs];
+      }
+      return defaults;
+    };
+    nextConfig.rewrites = async () => {
+      const defaults = generateRewrites({
+        routes,
+        debug,
+        ...i18n,
+      });
 
-    if (routes) {
-      return {
-        ...nextConfig,
-        async redirects() {
-          const defaults = getRedirects({
-            routes,
-            permanent,
-            debug,
-            ...i18n,
-          });
-          if (nextConfig.redirects) {
-            const customs = await nextConfig.redirects();
-            return [...defaults, ...customs];
-          }
-          return defaults;
-        },
-        async rewrites() {
-          const defaults = getRewrites({
-            routes,
-            debug,
-            ...i18n,
-          });
+      if (rewrites) {
+        const customs = await rewrites();
 
-          if (nextConfig.rewrites) {
-            const customs = await nextConfig.rewrites();
-
-            if (Array.isArray(customs)) {
-              return {
-                beforeFiles: defaults,
-                afterFiles: customs,
-                fallback: [],
-              };
-            }
-
-            return {
-              ...customs,
-              beforeFiles: [...defaults, ...(customs.beforeFiles || [])],
-            };
-          }
+        if (Array.isArray(customs)) {
           return {
             beforeFiles: defaults,
-            afterFiles: [],
+            afterFiles: customs,
             fallback: [],
           };
-        },
-      };
-    }
+        }
 
-    return nextConfig;
-  };
+        return {
+          ...customs,
+          beforeFiles: [...defaults, ...(customs.beforeFiles || [])],
+        };
+      }
+      return {
+        beforeFiles: defaults,
+        afterFiles: [],
+        fallback: [],
+      };
+    };
+  }
+
+  return nextConfig;
+};
