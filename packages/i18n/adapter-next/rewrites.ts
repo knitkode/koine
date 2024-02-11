@@ -8,9 +8,9 @@ import { transformPathname } from "./transformPathname";
 type Rewrite = _Rewrite;
 
 function generatePathRewrite(arg: {
+  config: I18nCompiler.Config;
   localeSource?: I18nCompiler.Locale;
   localeDestination?: I18nCompiler.Locale;
-  route: I18nCompiler.DataRoute;
   template: string;
   pathname: string;
   localeParam?: string;
@@ -33,12 +33,9 @@ function generatePathRewrite(arg: {
 
   if (source === destination) return;
 
-  return {
-    source,
-    destination,
-    // this must be false or the locale prefixed rewrite won't be applied
-    locale: false,
-  } as Rewrite;
+  const rewrite: Rewrite = { source, destination };
+
+  return rewrite;
 }
 
 export let generateRewrites = (
@@ -69,8 +66,8 @@ export let generateRewrites = (
         if (isHiddenDefaultLocale) {
           rewrites.push(
             generatePathRewrite({
+              config,
               localeDestination: locale,
-              route,
               template,
               pathname,
             }),
@@ -78,10 +75,10 @@ export let generateRewrites = (
         } else {
           rewrites.push(
             generatePathRewrite({
+              config,
               localeDestination: locale,
               localeSource: locale,
-              // localeParam,
-              route,
+              localeParam,
               template,
               pathname,
             }),
@@ -94,16 +91,18 @@ export let generateRewrites = (
         // as the localeParam is always needed in the rewrite destination
         if (pathname !== template) {
           if (locale !== defaultLocale || isVisibleDefaultLocale) {
-            rewrites.push(
-              generatePathRewrite({
+            rewrites.push({
+              ...generatePathRewrite({
+                config,
                 localeSource: locale,
-                route,
                 template,
                 pathname,
               }),
-            );
+              // this must be `false` or the locale prefixed rewrite won't be applied
+              locale: false,
+            } as Rewrite);
           } else {
-            rewrites.push(generatePathRewrite({ route, template, pathname }));
+            rewrites.push(generatePathRewrite({ config, template, pathname }));
           }
         }
       }
