@@ -36,6 +36,8 @@ function generatePathRewrite(arg: {
   return {
     source,
     destination,
+    // this must be false or the locale prefixed rewrite won't be applied
+    locale: false,
   } as Rewrite;
 }
 
