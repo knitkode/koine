@@ -1,6 +1,6 @@
 import { basename, dirname, extname, join, sep } from "node:path";
 import { minimatch } from "minimatch";
-import { isArray, isPrimitive, isString } from "@koine/utils";
+import { isArray, isPrimitive, isString, objectSort } from "@koine/utils";
 import {
   type PluralKey,
   isPluralKey,
@@ -262,9 +262,7 @@ export let getCodeDataTranslations = (
   dataTranslations = manageDataTranslationsPlurals(options, dataTranslations);
 
   // sort
-  dataTranslations = Object.fromEntries(
-    Object.entries(dataTranslations).sort(),
-  );
+  dataTranslations = objectSort(dataTranslations);
 
   // console.log("generateTypes: outputDir", outputDir, "outputPath", outputPath);
   return dataTranslations;

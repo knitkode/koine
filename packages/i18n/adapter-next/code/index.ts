@@ -6,8 +6,6 @@ import useLocale from "./useLocale";
 import useRouteId from "./useRouteId";
 import useTo from "./useTo";
 
-// import withI18n from "./withI18n";
-
 const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
     dependsOn: ["js"],
@@ -25,8 +23,6 @@ const adapter: I18nCompiler.AdpaterCreator = () => {
       { name: "useLocale", fn: useLocale, ext: "ts", index: true },
       { name: "useRouteId", fn: useRouteId, ext: "ts", index: true },
       { name: "useTo", fn: useTo, ext: "ts", index: true },
-      // TODO: remove this file at some point?
-      // { name: "withI18n", fn: withI18n, ext: "js" },
     ],
   };
 };

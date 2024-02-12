@@ -1,4 +1,9 @@
-import { forin, objectFlat, objectSortByKeysMatching } from "@koine/utils";
+import {
+  forin,
+  objectFlat,
+  objectSort,
+  objectSortByKeysMatching,
+} from "@koine/utils";
 import { formatRoutePathname } from "../../client/formatRoutePathname";
 import type { I18nCompiler } from "../types";
 import type { CodeDataRoutesOptions } from "./data";
@@ -242,7 +247,7 @@ export let getCodeDataRoutes = (
   }
 
   // sort by route name
-  dataRoutes = Object.fromEntries(Object.entries(dataRoutes).sort());
+  dataRoutes = objectSort(dataRoutes);
 
   return dataRoutes;
 };

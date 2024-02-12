@@ -64,25 +64,27 @@ const groupPluralsKeysByRoot = (pluralKeys: PluralKey[]) => {
  * from the generated types, e.g. the plural versions of the same string.
  */
 export let transformKeysForPlurals = (keys: string[]) => {
-  const pluralKeys = keys.filter(isPluralKey);
+  if (keys.includes(requiredPluralSuffix)) {
+    const pluralKeys = keys.filter(isPluralKey);
 
-  if (pluralKeys.length) {
-    let transformedKeys: string[] = [...keys];
-    const groupedPlurals = groupPluralsKeysByRoot(pluralKeys);
+    if (pluralKeys.length) {
+      let transformedKeys: string[] = [...keys];
+      const groupedPlurals = groupPluralsKeysByRoot(pluralKeys);
 
-    forin(groupedPlurals, (pluralRoot, pluralKeys) => {
-      // add the plural root
-      if (!keys.includes(pluralRoot)) {
-        transformedKeys.push(pluralRoot);
-      }
-      // remove the plurals variations
-      pluralKeys.forEach((pluralKey) => {
-        if (keys.includes(pluralKey)) {
-          transformedKeys = transformedKeys.filter((k) => k !== pluralKey);
+      forin(groupedPlurals, (pluralRoot, pluralKeys) => {
+        // add the plural root
+        if (!keys.includes(pluralRoot)) {
+          transformedKeys.push(pluralRoot);
         }
+        // remove the plurals variations
+        pluralKeys.forEach((pluralKey) => {
+          if (keys.includes(pluralKey)) {
+            transformedKeys = transformedKeys.filter((k) => k !== pluralKey);
+          }
+        });
       });
-    });
-    return transformedKeys;
+      return transformedKeys;
+    }
   }
 
   return keys;

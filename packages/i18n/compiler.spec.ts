@@ -99,9 +99,9 @@ describe("test your.io", () => {
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
       input: {
-        // source: "../../Your/translations",
-        source:
-          "https://raw.githubusercontent.com/your-network/translations/dev/.github/input.json",
+        source: "../../Your/translations",
+        // source:
+        //   "https://raw.githubusercontent.com/your-network/translations/dev/.github/input.json",
       },
       code: {
         adapter: "next-translate",

@@ -1,5 +1,5 @@
 {
-  "localesFolders": ["it", "en"],
+  "localesFolders": ["en", "it"],
   "translationFiles": [
     {
       "path": "~.json",
@@ -54,7 +54,12 @@
         "seo": {
           "title": "404 - Not found"
         },
-        "title": "404, page not found"
+        "title": "404, page not found",
+        "onlyNumberKeys": {
+          "1": "Once",
+          "2": "Twice",
+          "3": "Three times"
+        }
       },
       "locale": "en"
     },
@@ -187,7 +192,12 @@
         "seo": {
           "title": "404 - Introvabile"
         },
-        "title": "404, pagina non trovata"
+        "title": "404, pagina non trovata",
+        "onlyNumberKeys": {
+          "1": "Una volta",
+          "2": "Due volte",
+          "3": "Tre volte"
+        }
       },
       "locale": "it"
     },

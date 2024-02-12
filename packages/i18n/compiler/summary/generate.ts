@@ -1,4 +1,4 @@
-import { forin, objectMergeWithDefaults } from "@koine/utils";
+import { forin, objectMergeWithDefaults, objectSort } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import { type SummaryDataOptions, summaryDataOptions } from "./data";
 
@@ -20,7 +20,7 @@ const getSummaryDataByPath = (data: I18nCompiler.DataSummary) => {
     }
   });
 
-  out = Object.fromEntries(Object.entries(out).sort());
+  out = objectSort(out);
 
   return out;
 };

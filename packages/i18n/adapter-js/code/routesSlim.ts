@@ -3,12 +3,12 @@ import type { I18nCompiler } from "../../compiler";
 export default ({ routes }: I18nCompiler.AdapterArg) => {
   const value = JSON.stringify(
     Object.fromEntries(
-      Object.entries(routes).map(
-        ([routeId, { optimizedPathnames, pathnames }]) => [
+      Object.entries(routes)
+        .map(([routeId, { optimizedPathnames, pathnames }]) => [
           routeId,
           optimizedPathnames || pathnames,
-        ],
-      ),
+        ])
+        .sort(),
     ),
     null,
     2,

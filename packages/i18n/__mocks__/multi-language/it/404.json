@@ -2,5 +2,10 @@
   "seo": {
     "title": "404 - Introvabile"
   },
-  "title": "404, pagina non trovata"
+  "title": "404, pagina non trovata",
+  "onlyNumberKeys": {
+    "1": "Una volta",
+    "2": "Due volte",
+    "3": "Tre volte"
+  }
 }

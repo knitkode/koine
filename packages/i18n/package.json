@@ -11,7 +11,9 @@
   },
   "peerDependencies": {
     "next": "^14.0.4",
-    "next-translate-plugin": "^2.6.2"
+    "next-translate": "^2.6.2",
+    "next-translate-plugin": "^2.6.2",
+    "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
     "next": {

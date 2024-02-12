@@ -1,4 +1,9 @@
-import { arraySum, forin, objectSortByKeysMatching } from "@koine/utils";
+import {
+  arraySum,
+  forin,
+  objectSort,
+  objectSortByKeysMatching,
+} from "@koine/utils";
 import type { I18nCompiler } from "../types";
 
 const getWords = (
@@ -88,8 +93,8 @@ export let getSummaryData = (
     );
 
     // sort object keys
-    dataSummary[locale] = Object.fromEntries(
-      Object.entries(dataSummary[locale]).sort(),
+    dataSummary[locale] = objectSort(
+      dataSummary[locale],
     ) as I18nCompiler.DataSummary[I18nCompiler.Locale];
   });
 

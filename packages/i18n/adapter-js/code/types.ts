@@ -13,13 +13,13 @@ const buildTypeForObjectValue = (
   value: I18nCompiler.DataTranslationValue,
 ) => {
   if (!isArray(value) && isObject(value)) {
-    if (hasOnlyPluralKeys(value)) {
-      return `"${key}": string;`;
-    }
     if (hasPlurals(value)) {
-      return `"${key}": string | ${buildTypeForValue(pickNonPluralValue(value))}`;
+      return hasOnlyPluralKeys(value)
+        ? `"${key}": string;`
+        : `"${key}": string | ${buildTypeForValue(pickNonPluralValue(value))}`;
     }
   }
+
   return `"${key}": ${buildTypeForValue(value)}`;
 };
 
@@ -80,7 +80,7 @@ const buildTranslationsDictionary = (
   }
 
   // console.log("generateTypes: outputDir", outputDir, "outputPath", outputPath);
-  return out;
+  return out.sort();
 };
 
 const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {

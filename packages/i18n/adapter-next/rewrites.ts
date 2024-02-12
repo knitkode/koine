@@ -98,7 +98,11 @@ export let generateRewrites = (
                 template,
                 pathname,
               }),
-              // this must be `false` or the locale prefixed rewrite won't be applied
+              // this must be `false` or the locale prefixed rewrite won't be
+              // applied and does not forward the locale to the route context
+              // when the locale is included in the URL. In fact we explicitly
+              // add the locale to the rewrite rule in order to get the least
+              // amount of existing URLs which is a good SEO practice
               locale: false,
             } as Rewrite);
           } else {
