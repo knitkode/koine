@@ -23,7 +23,9 @@ export function to<TRoute extends I18n.RouteId>(
 
   return toFormat(
     locale,
-    routesSlim[id][locale] ?? routesSlim[id]["${config.defaultLocale}"] ?? routesSlim[id],
+    (routesSlim[id] as Record<string, string>)[locale] ??
+      (routesSlim[id] as Record<string, string>)["${config.defaultLocale}"] ??
+      routesSlim[id],
     isLocale(args[0]) ? undefined : args[0]
   );
 }
