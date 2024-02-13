@@ -1,5 +1,6 @@
 import type { I18nCompiler } from "../../compiler";
 import config from "./config";
+import configCjs from "./config.cjs";
 import defaultLocale from "./defaultLocale";
 import deriveLocalisedPathnames from "./deriveLocalisedPathnames";
 import isLocale from "./isLocale";
@@ -17,6 +18,7 @@ import types from "./types";
 const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
     files: [
+      { name: "config.cjs", fn: configCjs, ext: "js" },
       { name: "config", fn: config, ext: "ts", index: true },
       { name: "defaultLocale", fn: defaultLocale, ext: "ts", index: true },
       {
