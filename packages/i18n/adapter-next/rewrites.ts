@@ -38,6 +38,13 @@ function generatePathRewrite(arg: {
   return rewrite;
 }
 
+/**
+ * TODO: maybe write directly the vercel configuration?
+ *
+ * @see
+ * - https://nextjs.org/docs/pages/api-reference/next-config-js/rewrites
+ * - https://vercel.com/docs/projects/project-configuration#rewrites
+ */
 export let generateRewrites = (
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes,

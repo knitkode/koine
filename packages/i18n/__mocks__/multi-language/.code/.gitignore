@@ -1,6 +1,7 @@
 /DynamicNamespaces.tsx
 /T.tsx
 /TransText.tsx
+/config.cjs.js
 /config.ts
 /defaultLocale.ts
 /deriveLocalisedPathnames.ts

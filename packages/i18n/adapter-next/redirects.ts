@@ -36,6 +36,13 @@ function generatePathRedirect(arg: {
   return redirect;
 }
 
+/**
+ * TODO: maybe write directly the vercel configuration?
+ *
+ * @see
+ * - https://nextjs.org/docs/pages/api-reference/next-config-js/redirects
+ * - https://vercel.com/docs/projects/project-configuration#redirects
+ */
 export let generateRedirects = (
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes,
