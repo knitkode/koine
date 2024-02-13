@@ -1,4 +1,4 @@
-export { type InputWriteOptions, writeInput } from "./write";
-export { type InputDataOptions, getInputData } from "./data";
-export { getInputDataLocal } from "./data-local";
+export { type InputWriteOptions, writeInput, writeInputSync } from "./write";
+export { type InputDataOptions, getInputData, getInputDataSync } from "./data";
+export { getInputDataLocal, getInputDataLocalSync } from "./data-local";
 // export { getInputDataRemote } from "./data-remote";

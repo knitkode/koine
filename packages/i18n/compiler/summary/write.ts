@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { fsWrite } from "@koine/node";
+import { fsWrite, fsWriteSync } from "@koine/node";
 import type { I18nCompiler } from "../types";
 import { type SummaryGenerateOptions, generateSummary } from "./generate";
 
@@ -22,28 +22,49 @@ export type SummaryWriteOptions = {
   pretty?: boolean;
 };
 
+const getWriteSummaryJsonArgs = (
+  options: Pick<SummaryWriteOptions, "pretty">,
+  data: I18nCompiler.DataSummary,
+  cwd: string,
+  outputJson: string,
+) =>
+  [
+    join(cwd, outputJson),
+    options.pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data),
+  ] as const;
+
+const getWriteSummaryMdArgs = (
+  options: SummaryGenerateOptions,
+  data: I18nCompiler.DataSummary,
+  cwd: string,
+  outputMarkdown: string,
+) => [join(cwd, outputMarkdown), generateSummary(data, options)] as const;
+
 export let writeSummary = async (
   options: SummaryWriteOptions & SummaryGenerateOptions,
   data: I18nCompiler.DataSummary,
 ) => {
-  const {
-    cwd = process.cwd(),
-    outputJson,
-    outputMarkdown,
-    pretty,
-    ...generateOptions
-  } = options;
-  if (outputJson || outputMarkdown) {
-    if (outputJson) {
-      await fsWrite(
-        join(cwd, outputJson),
-        pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data),
-      );
-    }
-    if (outputMarkdown) {
-      const markdown = await generateSummary(data, generateOptions);
-      await fsWrite(join(cwd, outputMarkdown), markdown);
-    }
+  const { cwd = process.cwd(), outputJson, outputMarkdown, ...rest } = options;
+  if (outputJson) {
+    await fsWrite(...getWriteSummaryJsonArgs(options, data, cwd, outputJson));
+  }
+  if (outputMarkdown) {
+    await fsWrite(...getWriteSummaryMdArgs(rest, data, cwd, outputMarkdown));
+  }
+
+  return data;
+};
+
+export let writeSummarySync = (
+  options: SummaryWriteOptions & SummaryGenerateOptions,
+  data: I18nCompiler.DataSummary,
+) => {
+  const { cwd = process.cwd(), outputJson, outputMarkdown, ...rest } = options;
+  if (outputJson) {
+    fsWriteSync(...getWriteSummaryJsonArgs(options, data, cwd, outputJson));
+  }
+  if (outputMarkdown) {
+    fsWriteSync(...getWriteSummaryMdArgs(rest, data, cwd, outputMarkdown));
   }
 
   return data;

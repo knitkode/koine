@@ -1,6 +1,7 @@
 import { request } from "node:https";
 import { minimatch } from "minimatch";
-import type { LiteralUnion } from "@koine/utils";
+import requestSync from "sync-request-curl";
+import { type LiteralUnion, isString } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import type { InputDataSharedOptions } from "./data";
 
@@ -16,6 +17,36 @@ export type InputDataRemoteOptions = {
    * Optionally pass a list of glob patterns to ignore (checked with `minimatch`)
    */
   ignore?: string[];
+};
+
+/**
+ * Same for sync or async version
+ */
+const onResponseData = (
+  options: InputDataSharedOptions & InputDataRemoteOptions,
+  result: string,
+) => {
+  const { ignore = [], source } = options;
+
+  try {
+    const dataInput = JSON.parse(result) as I18nCompiler.DataInput;
+
+    return {
+      ...dataInput,
+      localesFolders: ignore.length
+        ? dataInput.localesFolders.filter((folder) =>
+            ignore.every((glob) => !minimatch(folder, glob)),
+          )
+        : dataInput.localesFolders,
+      translationFiles: ignore.length
+        ? dataInput.translationFiles.filter((file) =>
+            ignore.every((glob) => !minimatch(file.path, glob)),
+          )
+        : dataInput.translationFiles,
+    };
+  } catch (e) {
+    throw Error(`Failed to parse JSON from ${source}`);
+  }
 };
 
 /**
@@ -78,3 +109,27 @@ export let getInputDataRemote = async (
 
     req.end();
   });
+
+/**
+ * Our github action `knitkode/koine/actions/i18n` creates a JSON file we can
+ * read here, github serves it as text
+ */
+export let getInputDataRemoteSync = (
+  options: InputDataSharedOptions & InputDataRemoteOptions,
+) => {
+  const { source } = options;
+  const isGithubUrl = source.startsWith(GITHUB_RAW_URL);
+
+  const res = requestSync("GET", source, {
+    headers: isGithubUrl
+      ? {}
+      : {
+          "content-type": "application/json",
+        },
+  });
+  if (isString(res.body)) {
+    return onResponseData(options, res.body);
+  }
+
+  throw Error(`sync request body is not a string from ${source}`);
+};

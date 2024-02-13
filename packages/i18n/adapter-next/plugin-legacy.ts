@@ -21,29 +21,6 @@ type RoutesMapRoute = {
   wildcard?: boolean;
 };
 
-type ConfigI18nOptions = {
-  locales: Locale[];
-  defaultLocale: Locale;
-  hideDefaultLocaleInUrl?: boolean;
-  /**
-   * For app router
-   */
-  localeParam?: string;
-};
-
-/**
- * Shared options to generate Next.js `rewrites` and `redirects`
- */
-type Options = ConfigI18nOptions & {
-  routes: Routes;
-  debug?: boolean;
-  /**
-   * Set this to true once your URL structure is definitive, this will mark all
-   * the generated redirects as permanent 301 instead of the default 307
-   */
-  permanent?: boolean;
-};
-
 function orderRoutes(routes: Routes, defaultLocale: Locale) {
   const { [defaultLocale]: routesForDefaultLocale, ...restRoutes } = routes;
 
@@ -154,7 +131,7 @@ function getWithoutIndex(template: string) {
  * Get path redirect
  */
 function getPathRedirect(
-  arg: Pick<GetRedirectsOptions, "localeParam" | "permanent"> & {
+  arg: Pick<I18nRoutesOptions, "localeParam" | "permanent"> & {
     localeSource?: Locale;
     localeDestination?: Locale;
     route: RoutesMapRoute;
@@ -191,9 +168,7 @@ function getPathRedirect(
   return redirect;
 }
 
-type GetRedirectsOptions = Options;
-
-function generateRedirects(arg: GetRedirectsOptions) {
+function generateRedirects(arg: I18nRoutesOptions) {
   const {
     routes,
     defaultLocale,
@@ -280,7 +255,7 @@ function generateRedirects(arg: GetRedirectsOptions) {
  * Get path rewrite
  */
 function getPathRewrite(
-  arg: Pick<GetRewritesOptions, "localeParam"> & {
+  arg: Pick<I18nRoutesOptions, "localeParam"> & {
     localeSource?: Locale;
     localeDestination?: Locale;
     route: RoutesMapRoute;
@@ -312,9 +287,7 @@ function getPathRewrite(
   };
 }
 
-type GetRewritesOptions = Options;
-
-function generateRewrites(arg: GetRewritesOptions) {
+function generateRewrites(arg: I18nRoutesOptions) {
   const { routes, defaultLocale, hideDefaultLocaleInUrl, localeParam, debug } =
     arg;
   const orderedRoutes = orderRoutes(routes, defaultLocale);
@@ -388,7 +361,10 @@ function generateRewrites(arg: GetRewritesOptions) {
 //   return routes as Routes;
 // }
 
-export type WithI18nLegacyOptions = NextConfig & {
+/**
+ * Shared options to generate Next.js `rewrites` and `redirects`
+ */
+type I18nRoutesOptions = {
   /**
    * A JSON file containing the routes definition mapping template folders
    * to localised slugs. It supports slugs's dynamic portions.
@@ -435,66 +411,71 @@ export type WithI18nLegacyOptions = NextConfig & {
    *         |__/[[...page]].tsx
    * ```
    *
-   * NOTE1:
+   * NB:
    * When `routes` is used be sure to pass before than the `i18n.defaultLocale`
-   * configuration. That is used for localised routing. By default we set `i18n`
-   * as such:
-   * ```js
-   * {
-   *   i18n: {
-   *     defaultLocale: "en",
-   *     locales: ["en"],
-   *     hideDefaultLocaleInUrl: false
-   *   }
-   * }
-   * ```
+   * configuration. That is used for localised routing.
    */
-  routes?: Routes;
+  routes: Routes;
   /**
-   * Whether the routes redirecting should be permanent. Switch this on once you
-   * go live and the routes structure is stable.
+   * Set this to true once your URL structure is definitive, this will mark all
+   * the generated redirects as permanent 301 instead of the default 307
    */
   permanent?: boolean;
+  locales: Locale[];
+  defaultLocale: Locale;
+  /**
+   * @default true
+   */
+  hideDefaultLocaleInUrl?: boolean;
+  /**
+   * For app router
+   * 
+   @default ""
+   */
+  localeParam?: string;
   debug?: boolean;
-  i18n: ConfigI18nOptions;
+};
+
+type I18nRoutesNextOptions = Omit<
+  I18nRoutesOptions,
+  "locales" | "defaultLocale"
+>;
+
+export type WithI18nLegacyOptions = NextConfig & {
+  i18nRoutes?: I18nRoutesNextOptions;
 };
 
 /**
  * @deprecated Better use the new `withI18n`
  */
-export let withI18nLegacy = (options: WithI18nLegacyOptions): NextConfig => {
+export let withI18nLegacy = (config: WithI18nLegacyOptions): NextConfig => {
+  const { i18nRoutes, ...restNextConfig } = config;
+
+  if (!i18nRoutes) return restNextConfig;
+
+  // set i18n related defaults grabbing them from basic next config i18n object
   const {
-    routes,
-    permanent,
-    i18n: i18nOpts,
-    debug,
-    ...restNextConfig
-  } = options;
-  const i18n: ConfigI18nOptions = {
+    locales = ["en"],
+    defaultLocale = "en",
+    ...restI18n
+  } = config.i18n || {};
+
+  // ensure defaults are set on next config
+  restNextConfig.i18n = { ...restI18n, locales, defaultLocale };
+
+  const options = {
     hideDefaultLocaleInUrl: true,
     localeParam: "",
-    ...i18nOpts,
-    ...(restNextConfig["i18n"] || {}),
+    ...i18nRoutes,
+    locales,
+    defaultLocale,
   };
   const nextConfig: NextConfig = { ...restNextConfig };
 
-  if (i18n.locales && i18n.defaultLocale) {
-    nextConfig.i18n = {
-      locales: i18n.locales,
-      defaultLocale: i18n.defaultLocale,
-      ...(restNextConfig["i18n"] || {}),
-    };
-  }
-
-  if (routes) {
+  if (options.routes) {
     const { redirects, rewrites } = nextConfig;
     nextConfig.redirects = async () => {
-      const defaults = generateRedirects({
-        routes,
-        permanent,
-        debug,
-        ...i18n,
-      });
+      const defaults = generateRedirects(options);
       if (redirects) {
         const customs = await redirects();
         return [...defaults, ...customs];
@@ -502,11 +483,7 @@ export let withI18nLegacy = (options: WithI18nLegacyOptions): NextConfig => {
       return defaults;
     };
     nextConfig.rewrites = async () => {
-      const defaults = generateRewrites({
-        routes,
-        debug,
-        ...i18n,
-      });
+      const defaults = generateRewrites(options);
 
       if (rewrites) {
         const customs = await rewrites();

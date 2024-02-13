@@ -1,9 +1,107 @@
 import { rmSync } from "node:fs";
 import { join } from "node:path";
-import { fsWrite } from "@koine/node";
+import { fsWrite, fsWriteSync } from "@koine/node";
 import type { I18nCompiler } from "../types";
-import { type CodeGenerateOptions, generateCode } from "./generate";
+import {
+  type CodeGenerateOptions,
+  type CodeGenerateReturn,
+  generateCode,
+  generateCodeSync,
+} from "./generate";
 import { tsCompile } from "./tsCompile";
+
+const writeCodeFiles = async (
+  cwd: string,
+  output: string,
+  codeGenerated: CodeGenerateReturn,
+  files: Set<string>,
+) =>
+  Promise.all(
+    codeGenerated.files.map(async ({ name, ext, content }) => {
+      const relativePath = `${name}.${ext}`;
+      const filepath = join(cwd, output, relativePath);
+
+      await fsWrite(filepath, content);
+      files.add(relativePath);
+    }),
+  );
+
+const writeCodeFilesSync = (
+  cwd: string,
+  output: string,
+  codeGenerated: CodeGenerateReturn,
+  files: Set<string>,
+) =>
+  codeGenerated.files.map(({ name, ext, content }) => {
+    const relativePath = `${name}.${ext}`;
+    const filepath = join(cwd, output, relativePath);
+
+    fsWriteSync(filepath, content);
+    files.add(relativePath);
+  });
+
+const writeCompiledTypescriptFiles = (
+  cwd: string,
+  output: string,
+  files: Set<string>,
+) => {
+  const tsFiles = Array.from(files).filter(
+    (f) => f.endsWith(".ts") || f.endsWith(".tsx"),
+  );
+  tsCompile(cwd, output, tsFiles);
+
+  tsFiles.forEach((relativePath) => {
+    files.add(relativePath.replace(/\.tsx?$/, ".js"));
+    files.add(relativePath.replace(/\.tsx?$/, ".d.ts"));
+
+    // remove TypeScript files
+    files.delete(relativePath);
+    rmSync(join(cwd, output, relativePath), { force: true });
+  });
+};
+
+const writeTranslationsFiles = async (
+  cwd: string,
+  output: string,
+  { translationFiles }: I18nCompiler.DataInput,
+  folders: Set<string>,
+) =>
+  Promise.all(
+    translationFiles.map(async ({ data, locale, path }) => {
+      const relativePath = join("translations", locale);
+      await fsWrite(
+        join(cwd, output, relativePath, path),
+        JSON.stringify(data),
+      );
+      folders.add(relativePath);
+    }),
+  );
+
+const writeTranslationsFilesSync = (
+  cwd: string,
+  output: string,
+  { translationFiles }: I18nCompiler.DataInput,
+  folders: Set<string>,
+) =>
+  translationFiles.forEach(({ data, locale, path }) => {
+    const relativePath = join("translations", locale);
+    fsWriteSync(join(cwd, output, relativePath, path), JSON.stringify(data));
+    folders.add(relativePath);
+  });
+
+const getWriteGitgnoreArgs = (
+  cwd: string,
+  output: string,
+  folders: Set<string>,
+  files: Set<string>,
+) =>
+  [
+    join(cwd, output, ".gitignore"),
+    Array.from(new Set([...folders, ...files]))
+      .sort()
+      .map((relativePath) => `/${relativePath}`)
+      .join(`\n`),
+  ] as const;
 
 export type CodeWriteOptions = {
   /**
@@ -35,77 +133,59 @@ export let writeCode = async (
     ...generateOptions
   } = options;
 
-  const { files, needsTranslationsFiles } = await generateCode(
-    data,
-    generateOptions,
-  );
+  const code = await generateCode(data, generateOptions);
+  const files: Set<string> = new Set();
+  const folders: Set<string> = new Set();
 
-  const prettifiablePaths: Set<string> = new Set();
-  const writtenFiles: Set<string> = new Set();
-  const writtenFolders: Set<string> = new Set();
-
-  await Promise.all(
-    files.map(async ({ name, ext, content }) => {
-      const relativePath = `${name}.${ext}`;
-      const filepath = join(cwd, output, relativePath);
-
-      await fsWrite(filepath, content);
-      writtenFiles.add(relativePath);
-      prettifiablePaths.add(filepath);
-    }),
-  );
+  await writeCodeFiles(cwd, output, code, files);
 
   if (!skipTsCompile) {
-    const tsFiles = Array.from(writtenFiles).filter(
-      (f) => f.endsWith(".ts") || f.endsWith(".tsx"),
-    );
-    await tsCompile(cwd, output, tsFiles);
-
-    tsFiles.forEach((relativePath) => {
-      writtenFiles.add(relativePath.replace(/\.tsx?$/, ".js"));
-      writtenFiles.add(relativePath.replace(/\.tsx?$/, ".d.ts"));
-
-      // remove TypeScript files
-      writtenFiles.delete(relativePath);
-      rmSync(join(cwd, output, relativePath), { force: true });
-    });
+    writeCompiledTypescriptFiles(cwd, output, files);
   }
 
-  if (needsTranslationsFiles && !skipTranslations) {
-    (await copyTranslations(cwd, output, data.input)).forEach(
-      (relativePath) => {
-        writtenFolders.add(relativePath);
-      },
-    );
+  if (code.needsTranslationsFiles && !skipTranslations) {
+    await writeTranslationsFiles(cwd, output, data.input, folders);
   }
 
   if (!skipGitignore) {
-    await fsWrite(
-      join(cwd, output, ".gitignore"),
-      Array.from(new Set([...writtenFolders, ...writtenFiles]))
-        .sort()
-        .map((relativePath) => `/${relativePath}`)
-        .join(`\n`),
-    );
+    await fsWrite(...getWriteGitgnoreArgs(cwd, output, folders, files));
   }
 
   // TODO: maybe return written paths?
   return;
 };
 
-async function copyTranslations(
-  cwd: string,
-  output: string,
-  { translationFiles }: I18nCompiler.DataInput,
-) {
-  return await Promise.all(
-    translationFiles.map(async ({ data, locale, path }) => {
-      const relativePath = join("translations", locale);
-      await fsWrite(
-        join(cwd, output, relativePath, path),
-        JSON.stringify(data),
-      );
-      return relativePath;
-    }),
-  );
-}
+export let writeCodeSync = (
+  options: CodeWriteOptions & CodeGenerateOptions,
+  data: I18nCompiler.DataCode,
+) => {
+  const {
+    cwd = process.cwd(),
+    output,
+    skipTsCompile,
+    skipGitignore,
+    skipTranslations,
+    ...generateOptions
+  } = options;
+
+  const code = generateCodeSync(data, generateOptions);
+  const files: Set<string> = new Set();
+  const folders: Set<string> = new Set();
+
+  writeCodeFilesSync(cwd, output, code, files);
+
+  if (!skipTsCompile) {
+    writeCompiledTypescriptFiles(cwd, output, files);
+  }
+
+  if (code.needsTranslationsFiles && !skipTranslations) {
+    writeTranslationsFilesSync(cwd, output, data.input, folders);
+  }
+
+  if (!skipGitignore) {
+    fsWriteSync(...getWriteGitgnoreArgs(cwd, output, folders, files));
+  }
+
+  // TODO: maybe return written paths?
+  return;
+};

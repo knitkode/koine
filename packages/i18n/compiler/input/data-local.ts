@@ -1,6 +1,7 @@
+import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { glob } from "glob";
+import { glob, globSync } from "glob";
 import type { LiteralUnion } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import type { InputDataSharedOptions } from "./data";
@@ -71,6 +72,40 @@ export let getInputDataLocal = async (
       );
     }),
   );
+
+  return {
+    localesFolders,
+    translationFiles,
+  };
+};
+
+export let getInputDataLocalSync = (
+  options: InputDataSharedOptions & InputDataLocalOptions,
+): I18nCompiler.DataInput => {
+  const { cwd = process.cwd(), ignore = [], source } = options;
+  const path = join(cwd, source);
+  const localesFolders = getLocalesFolders({ cwd: path, ignore });
+  const translationFiles: I18nCompiler.DataInputTranslationFile[] = [];
+
+  localesFolders.forEach((locale) => {
+    const jsonFiles = globSync("**/*.json", {
+      cwd: join(path, locale),
+      ignore: options.ignore,
+    });
+
+    jsonFiles.forEach((relativePath) => {
+      const fullPath = join(path, locale, relativePath);
+      const rawContent = readFileSync(fullPath, "utf8");
+
+      if (rawContent) {
+        translationFiles.push({
+          path: relativePath,
+          data: JSON.parse(rawContent),
+          locale: locale,
+        });
+      }
+    });
+  });
 
   return {
     localesFolders,

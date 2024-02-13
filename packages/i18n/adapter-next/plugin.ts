@@ -1,10 +1,6 @@
+import { createRequire } from "module";
 import type { NextConfig } from "next";
-import type { SetRequired } from "@koine/utils";
-import {
-  type I18nCompilerOptions,
-  type I18nCompilerReturn,
-  i18nCompiler,
-} from "../compiler";
+import { type I18nCompilerOptions, i18nCompilerSync } from "../compiler";
 import {
   type I18nCompilerNextOptions,
   getRedirects,
@@ -12,9 +8,10 @@ import {
   tweakNextConfig,
 } from "./plugin-shared";
 
+const require = createRequire(import.meta.url);
+
 export type WithI18nOptions = NextConfig & {
-  i18nCompiler?: SetRequired<I18nCompilerOptions, "defaultLocale" | "locales"> &
-    I18nCompilerNextOptions;
+  i18nCompiler?: I18nCompilerOptions & I18nCompilerNextOptions;
 };
 
 export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
@@ -24,24 +21,29 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
     rewrites,
     ...restNextConfig
   } = config;
-  const nextConfig: NextConfig = restNextConfig;
+  let nextConfig: NextConfig = restNextConfig;
 
   // bail if user has not defined the compiler options object
   if (!i18nConfig) return nextConfig;
 
-  let i18nResult: I18nCompilerReturn | undefined;
+  const i18nResult = i18nCompilerSync(i18nConfig);
 
-  nextConfig.redirects = async () => {
-    i18nResult = i18nResult || (await i18nCompiler(i18nConfig));
-    return await getRedirects(redirects, i18nConfig, i18nResult);
-  };
+  nextConfig = tweakNextConfig(i18nResult.config, nextConfig);
 
-  nextConfig.rewrites = async () => {
-    i18nResult = i18nResult || (await i18nCompiler(i18nConfig));
-    return await getRewrites(rewrites, i18nConfig, i18nResult);
-  };
+  nextConfig.redirects = () => getRedirects(redirects, i18nConfig, i18nResult);
 
-  return tweakNextConfig(i18nConfig, nextConfig);
+  nextConfig.rewrites = () => getRewrites(rewrites, i18nConfig, i18nResult);
+
+  if (i18nConfig.code.adapter === "next-translate") {
+    try {
+      const withNextTranslate = require("next-translate-plugin");
+      nextConfig = withNextTranslate(nextConfig);
+    } catch (e) {
+      // console.log()
+    }
+  }
+
+  return nextConfig;
 };
 
 // import { I18nWebpackPlugin } from "./webpackPluginI18n";

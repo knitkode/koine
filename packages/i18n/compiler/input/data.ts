@@ -4,11 +4,13 @@ import {
   type InputDataLocalOptions,
   type InputDataLocalSource,
   getInputDataLocal,
+  getInputDataLocalSync,
 } from "./data-local";
 import {
   type InputDataRemoteOptions,
   type InputDataRemoteSource,
   getInputDataRemote,
+  getInputDataRemoteSync,
 } from "./data-remote";
 
 export type InputDataSharedOptions = {
@@ -39,4 +41,15 @@ export let getInputData = async (
     return await getInputDataRemote(options);
   }
   return await getInputDataLocal(options);
+};
+
+export let getInputDataSync = (
+  options: InputDataOptions,
+): I18nCompiler.DataInput => {
+  const { source } = options;
+
+  if (isAbsoluteUrl(source)) {
+    return getInputDataRemoteSync(options);
+  }
+  return getInputDataLocalSync(options);
 };

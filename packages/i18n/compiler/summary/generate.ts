@@ -100,7 +100,7 @@ const generateSummaryMarkdown = (
 
 export type SummaryGenerateOptions = SummaryDataOptions;
 
-export let generateSummary = async (
+export let generateSummary = (
   data: I18nCompiler.DataSummary,
   options: SummaryGenerateOptions,
 ) => {

@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { fsWrite } from "@koine/node";
+import { fsWrite, fsWriteSync } from "@koine/node";
 import type { I18nCompiler } from "../types";
 
 export type InputWriteOptions = {
@@ -14,13 +14,27 @@ export type InputWriteOptions = {
   pretty?: boolean;
 };
 
-export let writeInput = async (
+const getWriteInputArgs = (
   options: InputWriteOptions,
   data: I18nCompiler.DataInput,
 ) => {
   const { cwd = process.cwd(), output, pretty } = options;
-  await fsWrite(
+  return [
     join(cwd, output),
     pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data),
-  );
+  ] as const;
+};
+
+export let writeInput = async (
+  options: InputWriteOptions,
+  data: I18nCompiler.DataInput,
+) => {
+  await fsWrite(...getWriteInputArgs(options, data));
+};
+
+export let writeInputSync = (
+  options: InputWriteOptions,
+  data: I18nCompiler.DataInput,
+) => {
+  fsWriteSync(...getWriteInputArgs(options, data));
 };
