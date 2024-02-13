@@ -1,6 +1,7 @@
+import { execSync } from "node:child_process";
 import { request } from "node:https";
 import { minimatch } from "minimatch";
-import requestSync from "sync-request-curl";
+// import requestSync from "sync-request-curl";
 import { isString } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import type { InputDataRemoteOptions, InputDataSharedOptions } from "./types";
@@ -105,19 +106,23 @@ export let getInputDataRemote = async (
 export let getInputDataRemoteSync = (
   options: InputDataSharedOptions & InputDataRemoteOptions,
 ) => {
-  const { source } = options;
-  const isGithubUrl = source.startsWith(GITHUB_RAW_URL);
+  // const { source } = options;
+  // const isGithubUrl = source.startsWith(GITHUB_RAW_URL);
 
-  const res = requestSync("GET", source, {
-    headers: isGithubUrl
-      ? {}
-      : {
-          "content-type": "application/json",
-        },
-  });
-  if (isString(res.body)) {
-    return onResponseData(options, res.body);
-  }
+  // const { body } = requestSync("GET", source, {
+  //   headers: isGithubUrl
+  //     ? {}
+  //     : {
+  //         "content-type": "application/json",
+  //       },
+  // });
 
-  throw Error(`sync request body is not a string from ${source}`);
+  // if (isString(body)) {
+  //   return onResponseData(options, body);
+  // }
+
+  // throw Error(`sync request body is not a string from ${source}`);
+
+  // TODO: sync fetching?
+  return onResponseData(options, "{}");
 };

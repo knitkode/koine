@@ -1,6 +1,7 @@
 import { createRequire } from "module";
 import type { NextConfig } from "next";
-import { type I18nCompilerOptions, i18nCompilerSync } from "../compiler";
+import { type I18nCompilerOptions } from "../compiler";
+import { i18nCompilerSync } from "../compiler-sync";
 import {
   type I18nCompilerNextOptions,
   getRedirects,

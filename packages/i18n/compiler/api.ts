@@ -4,25 +4,21 @@ import {
   type CodeGenerateOptions,
   type CodeWriteOptions,
   getCodeData,
-  writeCode,
-  writeCodeSync,
+  writeCode, // writeCodeSync,
 } from "./code";
 import { getConfig } from "./config";
 import {
   type InputDataOptions,
   type InputWriteOptions,
-  getInputData,
-  getInputDataSync,
-  writeInput,
-  writeInputSync,
+  getInputData, // getInputDataSync,
+  writeInput, // writeInputSync,
 } from "./input";
 import {
   type SummaryDataOptions,
   type SummaryGenerateOptions,
   type SummaryWriteOptions,
   getSummaryData,
-  writeSummary,
-  writeSummarySync,
+  writeSummary, // writeSummarySync,
 } from "./summary";
 import type { I18nCompiler } from "./types";
 
@@ -89,38 +85,38 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
   return { config, input, code };
 };
 
-/**
- * i18nCompiler sync api
- *
- * @public
- */
-export let i18nCompilerSync = (options: I18nCompilerOptions) => {
-  const {
-    input: optsInput,
-    code: optsCode,
-    summary: optsSummary,
-    ...configOptions
-  } = options;
-  const input = getInputDataSync(optsInput);
-  const config = getConfig(input, configOptions);
-  // it would be easy to make this optional but it's nice to be able to always
-  // predictably return data
-  const code = getCodeData(config, optsCode, input);
+// /**
+//  * i18nCompiler sync api
+//  *
+//  * @public
+//  */
+// export let i18nCompilerSync = (options: I18nCompilerOptions) => {
+//   const {
+//     input: optsInput,
+//     code: optsCode,
+//     summary: optsSummary,
+//     ...configOptions
+//   } = options;
+//   const input = getInputDataSync(optsInput);
+//   const config = getConfig(input, configOptions);
+//   // it would be easy to make this optional but it's nice to be able to always
+//   // predictably return data
+//   const code = getCodeData(config, optsCode, input);
 
-  if (optsInput?.write) {
-    writeInputSync(optsInput.write, input);
-  }
+//   if (optsInput?.write) {
+//     writeInputSync(optsInput.write, input);
+//   }
 
-  if (optsCode?.write) {
-    writeCodeSync({ ...optsCode, ...optsCode.write }, code);
-  }
+//   if (optsCode?.write) {
+//     writeCodeSync({ ...optsCode, ...optsCode.write }, code);
+//   }
 
-  if (optsSummary?.write) {
-    writeSummarySync(
-      { ...optsSummary, ...optsSummary.write },
-      getSummaryData(config, optsSummary, input),
-    );
-  }
+//   if (optsSummary?.write) {
+//     writeSummarySync(
+//       { ...optsSummary, ...optsSummary.write },
+//       getSummaryData(config, optsSummary, input),
+//     );
+//   }
 
-  return { config, input, code };
-};
+//   return { config, input, code };
+// };

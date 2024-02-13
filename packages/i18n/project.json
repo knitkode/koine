@@ -28,6 +28,8 @@
         "deleteOutputPath": true,
         "additionalEntryPoints": [
           "packages/i18n/compiler.ts",
+          "packages/i18n/compiler-sync.ts",
+          "packages/i18n/compiler-worker.ts",
           "packages/i18n/next.ts"
         ]
       }
