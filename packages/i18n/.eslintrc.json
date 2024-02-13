@@ -15,7 +15,7 @@
       "rules": {}
     },
     {
-      "files": ["__mocks__/**/*.ts", "__mocks__/**/*.tsx"],
+      "files": ["actions/**/*.ts", "__mocks__/**/*.ts", "__mocks__/**/*.tsx"],
       "rules": {
         "@nx/enforce-module-boundaries": "off"
       }

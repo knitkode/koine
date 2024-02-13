@@ -1,8 +1,8 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc",
+    "outDir": "../../../dist/out-tsc",
     "types": ["node"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -10,10 +10,10 @@
     // for @vercel/ncc:
     "jsx": "react-jsx",
     "verbatimModuleSyntax": false,
-    "rootDir": "../../",
-    "baseUrl": "../../",
+    "rootDir": "../../../",
+    "baseUrl": "../../../"
   },
   "files": [],
   "include": ["**/*.ts"],
-  "exclude": ["**/*.spec.ts"],
+  "exclude": ["**/*.spec.ts"]
 }

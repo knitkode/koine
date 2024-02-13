@@ -1,23 +1,11 @@
 import { request } from "node:https";
 import { minimatch } from "minimatch";
 import requestSync from "sync-request-curl";
-import { type LiteralUnion, isString } from "@koine/utils";
+import { isString } from "@koine/utils";
 import type { I18nCompiler } from "../types";
-import type { InputDataSharedOptions } from "./data";
+import type { InputDataRemoteOptions, InputDataSharedOptions } from "./types";
 
 const GITHUB_RAW_URL = "https://raw.githubusercontent.com";
-
-export type InputDataRemoteSource = LiteralUnion<
-  `http${string}` | `${typeof GITHUB_RAW_URL}${string}`,
-  string
->;
-
-export type InputDataRemoteOptions = {
-  /**
-   * Optionally pass a list of glob patterns to ignore (checked with `minimatch`)
-   */
-  ignore?: string[];
-};
 
 /**
  * Same for sync or async version

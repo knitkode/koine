@@ -1,6 +1,6 @@
 import { getInput, info } from "@actions/core";
-import { i18nAction } from "@koine/i18n/action";
-import { Git } from "./git.js";
+import { Git } from "./helpers-git";
+import { i18nAction } from "./helpers-i18n";
 
 const main = async () => {
   const repo = process.env["GITHUB_REPOSITORY"] as `${string}/${string}`;

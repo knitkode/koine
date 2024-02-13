@@ -2,27 +2,8 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { glob, globSync } from "glob";
-import type { LiteralUnion } from "@koine/utils";
 import type { I18nCompiler } from "../types";
-import type { InputDataSharedOptions } from "./data";
-
-export type InputDataLocalSource = LiteralUnion<
-  `.${string}` | `/${string}`,
-  string
->;
-
-export type InputDataLocalOptions = {
-  /**
-   * When `source` is a filesystem path that is resolved from this value
-   *
-   * @default process.cwd()
-   */
-  cwd?: string;
-  /**
-   * Optionally pass a list of glob patterns to ignore (checked with `minimatch`)
-   */
-  ignore?: string[];
-};
+import type { InputDataLocalOptions, InputDataSharedOptions } from "./types";
 
 const getLocalesFolders = (options: Required<InputDataLocalOptions>) => {
   const { cwd, ignore } = options;

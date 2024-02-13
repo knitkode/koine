@@ -27,20 +27,9 @@
         "compiler": "swc",
         "deleteOutputPath": true,
         "additionalEntryPoints": [
-          "packages/i18n/action.ts",
           "packages/i18n/compiler.ts",
           "packages/i18n/next.ts"
         ]
-      }
-    },
-    "_build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "outputPath": "dist/packages/i18n",
-        "tsConfig": "packages/i18n/tsconfig.lib.json",
-        "project": "packages/i18n/package.json",
-        "main": "packages/i18n/index.ts"
       }
     },
     "lint": {

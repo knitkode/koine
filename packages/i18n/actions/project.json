@@ -1,0 +1,19 @@
+{
+  "name": "i18n-actions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/i18n/actions",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/actions/i18n"],
+      "options": {
+        "command": [
+          "ncc build packages/i18n/actions/i18n.ts -o actions/i18n --minify --no-cache --no-source-map-register --license licenses.txt"
+        ],
+        "parallel": true
+      }
+    }
+  }
+}

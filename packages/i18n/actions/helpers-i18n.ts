@@ -1,16 +1,14 @@
-import { getConfig } from "./compiler/config";
-import {
-  type InputDataOptions,
-  getInputDataLocal,
-  writeInput,
-} from "./compiler/input";
-// import { type InputDataOptions, writeInput } from "./compiler/input";
-// import { getInputDataLocal } from "./compiler/input/data-local";
+/* eslint-disable @nx/enforce-module-boundaries */
+// these granular imports ensure we only bundle what needed with `@vercel/ncc`
+import { getConfig } from "../compiler/config";
+import { getInputDataLocal } from "../compiler/input/data-local";
+import { type InputDataOptions } from "../compiler/input/types";
+import { writeInput } from "../compiler/input/write";
 import {
   type SummaryDataOptions,
   getSummaryData,
-  writeSummary,
-} from "./compiler/summary";
+} from "../compiler/summary/data";
+import { writeSummary } from "../compiler/summary/write";
 
 type I18nActionOptions = Partial<InputDataOptions> & {
   /**
