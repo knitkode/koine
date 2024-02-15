@@ -10,7 +10,7 @@ import {
 } from "@koine/utils";
 import {
   type PluralKey,
-  PluralSuffix,
+  type PluralSuffix,
   getPluralSuffix,
   isPluralKey,
   removePluralSuffix,
