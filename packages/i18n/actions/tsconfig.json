@@ -4,8 +4,8 @@
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc",
     "types": ["node"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    // "module": "NodeNext",
+    // "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     // for @vercel/ncc:
     "jsx": "react-jsx",

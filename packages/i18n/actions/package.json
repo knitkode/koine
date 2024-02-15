@@ -1,7 +1,6 @@
 {
   "name": "@koine/i18n-actions",
   "private": true,
-  "sideEffects": false,
   "dependencies": {
     "@koine/i18n": "*"
   },
