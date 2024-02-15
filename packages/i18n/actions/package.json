@@ -1,6 +1,9 @@
 {
   "name": "@koine/i18n-actions",
   "private": true,
+  "scripts": {
+    "build": "ncc build ./i18n.ts -o ../../../actions/i18n --minify --no-cache --no-source-map-register --license licenses.txt"
+  },
   "dependencies": {
     "@koine/i18n": "*"
   },
