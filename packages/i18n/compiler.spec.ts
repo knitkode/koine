@@ -1,4 +1,5 @@
 import { join } from "path";
+import { fsWrite } from "@koine/node";
 import { i18nCompiler } from "./compiler";
 
 const mocksPath = (folder: string) =>
@@ -6,7 +7,7 @@ const mocksPath = (folder: string) =>
 
 describe("test write", () => {
   test("single-language setup", async () => {
-    await i18nCompiler({
+    const data = await i18nCompiler({
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
       input: {
@@ -36,10 +37,15 @@ describe("test write", () => {
         },
       },
     });
+
+    await fsWrite(
+      join(mocksPath("single-language"), "data.json"),
+      JSON.stringify(data.code.translations, null, 2),
+    );
   });
 
   test("multi-language setup", async () => {
-    await i18nCompiler({
+    const data = await i18nCompiler({
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
       input: {
@@ -69,6 +75,11 @@ describe("test write", () => {
         },
       },
     });
+
+    await fsWrite(
+      join(mocksPath("multi-language"), "data.json"),
+      JSON.stringify(data.code.translations, null, 2),
+    );
   });
 });
 

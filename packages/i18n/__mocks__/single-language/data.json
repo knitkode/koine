@@ -1,0 +1,290 @@
+{
+  "$404_seo": {
+    "values": {
+      "en": {
+        "title": "404 - Not found"
+      }
+    },
+    "typeValue": "Object"
+  },
+  "$404_seo_title": {
+    "values": {
+      "en": "404 - Not found"
+    },
+    "typeValue": "Primitive"
+  },
+  "$404_title": {
+    "values": {
+      "en": "404, page not found"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_boolShouldntBeHereBut": {
+    "values": {
+      "en": true
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_listComplex": {
+    "values": {
+      "en": [
+        {
+          "k1": "v1",
+          "k2": "v2"
+        }
+      ]
+    },
+    "typeValue": "Array"
+  },
+  "$account_$user$profile_listFlat": {
+    "values": {
+      "en": ["v1", "v2"]
+    },
+    "typeValue": "Array"
+  },
+  "$account_$user$profile_obj": {
+    "values": {
+      "en": {
+        "objNested": {
+          "str": "v",
+          "listFlatNested": ["v1", "v2"],
+          "listComplexNested": [
+            {
+              "k1": "v1 {{ nestedVarName1 }}",
+              "k2": "v2 {{ nestedVarName2 }}"
+            }
+          ],
+          "objNested2": {
+            "objNested21": {
+              "k": "v"
+            },
+            "listFlatNested22": ["v1", "v2"],
+            "str3": "v"
+          },
+          "objNested2b": {
+            "str2b1": "v",
+            "str2b2": "v",
+            "listFlatNested2b3": ["v1", "v2"],
+            "str2b4": "v"
+          }
+        }
+      }
+    },
+    "typeValue": "Object"
+  },
+  "$account_$user$profile_obj_objNested": {
+    "values": {
+      "en": {
+        "str": "v",
+        "listFlatNested": ["v1", "v2"],
+        "listComplexNested": [
+          {
+            "k1": "v1 {{ nestedVarName1 }}",
+            "k2": "v2 {{ nestedVarName2 }}"
+          }
+        ],
+        "objNested2": {
+          "objNested21": {
+            "k": "v"
+          },
+          "listFlatNested22": ["v1", "v2"],
+          "str3": "v"
+        },
+        "objNested2b": {
+          "str2b1": "v",
+          "str2b2": "v",
+          "listFlatNested2b3": ["v1", "v2"],
+          "str2b4": "v"
+        }
+      }
+    },
+    "typeValue": "Object"
+  },
+  "$account_$user$profile_obj_objNested_listComplexNested": {
+    "values": {
+      "en": [
+        {
+          "k1": "v1 {{ nestedVarName1 }}",
+          "k2": "v2 {{ nestedVarName2 }}"
+        }
+      ]
+    },
+    "typeValue": "Array"
+  },
+  "$account_$user$profile_obj_objNested_listFlatNested": {
+    "values": {
+      "en": ["v1", "v2"]
+    },
+    "typeValue": "Array"
+  },
+  "$account_$user$profile_obj_objNested_objNested2": {
+    "values": {
+      "en": {
+        "objNested21": {
+          "k": "v"
+        },
+        "listFlatNested22": ["v1", "v2"],
+        "str3": "v"
+      }
+    },
+    "typeValue": "Object"
+  },
+  "$account_$user$profile_obj_objNested_objNested2_listFlatNested22": {
+    "values": {
+      "en": ["v1", "v2"]
+    },
+    "typeValue": "Array"
+  },
+  "$account_$user$profile_obj_objNested_objNested2_objNested21": {
+    "values": {
+      "en": {
+        "k": "v"
+      }
+    },
+    "typeValue": "Object"
+  },
+  "$account_$user$profile_obj_objNested_objNested2_objNested21_k": {
+    "values": {
+      "en": "v"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_obj_objNested_objNested2_str3": {
+    "values": {
+      "en": "v"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_obj_objNested_objNested2b": {
+    "values": {
+      "en": {
+        "str2b1": "v",
+        "str2b2": "v",
+        "listFlatNested2b3": ["v1", "v2"],
+        "str2b4": "v"
+      }
+    },
+    "typeValue": "Object"
+  },
+  "$account_$user$profile_obj_objNested_objNested2b_listFlatNested2b3": {
+    "values": {
+      "en": ["v1", "v2"]
+    },
+    "typeValue": "Array"
+  },
+  "$account_$user$profile_obj_objNested_objNested2b_str2b1": {
+    "values": {
+      "en": "v"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_obj_objNested_objNested2b_str2b2": {
+    "values": {
+      "en": "v"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_obj_objNested_objNested2b_str2b4": {
+    "values": {
+      "en": "v"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_obj_objNested_str": {
+    "values": {
+      "en": "v"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_plural": {
+    "values": {
+      "en": {
+        "one": "One",
+        "other": "Some",
+        "zero": "Zero"
+      }
+    },
+    "typeValue": "Primitive",
+    "params": {
+      "count": "number"
+    },
+    "plural": true
+  },
+  "$account_$user$profile_pluralAsObject": {
+    "values": {
+      "en": {
+        "one": "One",
+        "other": "Others"
+      }
+    },
+    "typeValue": "Object",
+    "params": {
+      "count": "number"
+    },
+    "plural": true
+  },
+  "$account_$user$profile_pluralAsObjectWithExtraKeys": {
+    "values": {
+      "en": {
+        "one": "One",
+        "other": "Others",
+        "noPluralRelated": "Yes"
+      }
+    },
+    "typeValue": "Object",
+    "params": {
+      "count": "number"
+    },
+    "plural": true
+  },
+  "$account_$user$profile_pluralAsObjectWithExtraKeys_noPluralRelated": {
+    "values": {
+      "en": "Yes"
+    },
+    "typeValue": "Primitive"
+  },
+  "$account_$user$profile_pluralNoDefault": {
+    "params": {
+      "count": "number"
+    },
+    "values": {
+      "en": {
+        "one": "One",
+        "other": "Some"
+      }
+    },
+    "plural": true
+  },
+  "$account_$user$profile_title": {
+    "values": {
+      "en": "Title {{ varName }}"
+    },
+    "typeValue": "Primitive",
+    "params": {
+      "varName": "stringOrNumber"
+    }
+  },
+  "$account_FormUserLanguages_empty": {
+    "values": {
+      "en": {}
+    },
+    "typeValue": "Object"
+  },
+  "$account_FormUserLanguages_msg": {
+    "values": {
+      "en": "Some text"
+    },
+    "typeValue": "Primitive"
+  },
+  "$faq_home": {
+    "values": {
+      "en": [
+        {
+          "question": "What is?",
+          "answer": "That"
+        }
+      ]
+    },
+    "typeValue": "Array"
+  }
+}

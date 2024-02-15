@@ -1,4 +1,4 @@
-import type { I18nCompiler } from "../../compiler";
+import type { I18nCompiler } from "../../compiler/types";
 
 export default ({ config }: I18nCompiler.AdapterArg) => {
   const value = `[${config.locales.map((l) => `"${l}"`).join(", ")}]`;

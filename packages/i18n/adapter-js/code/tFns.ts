@@ -1,14 +1,52 @@
 import {
   areEqual,
-  forin,
   isArray,
   isBoolean,
   isNumber,
   isPrimitive,
   isString,
 } from "@koine/utils";
-import type { I18nCompiler } from "../../compiler";
 import { dataParamsToTsInterfaceBody } from "../../compiler/helpers";
+import type { I18nCompiler } from "../../compiler/types";
+
+// /**
+//  * Control plural keys depending the {{count}} variable
+//  */
+// function plural(
+//   pluralRules: Intl.PluralRules,
+//   dic: I18nDictionary,
+//   key: string,
+//   config: I18nConfig,
+//   query?: TranslationQuery | null,
+//   options?: {
+//     returnObjects?: boolean
+//     fallback?: string | string[]
+//   }
+// ): string {
+//   if (!query || typeof query.count !== 'number') return key
+
+//   const numKey = `${key}_${query.count}`
+//   if (getDicValue(dic, numKey, config, options) !== undefined) return numKey
+
+//   const pluralKey = `${key}_${pluralRules.select(query.count)}`
+//   if (getDicValue(dic, pluralKey, config, options) !== undefined) {
+//     return pluralKey
+//   }
+
+//   const nestedNumKey = `${key}.${query.count}`
+//   if (getDicValue(dic, nestedNumKey, config, options) !== undefined)
+//     return nestedNumKey
+
+//   const nestedKey = `${key}.${pluralRules.select(query.count)}`
+//   if (getDicValue(dic, nestedKey, config, options) !== undefined)
+//     return nestedKey
+
+//   return key
+// }
+
+// const getP = (dic) => {
+//   return
+// }
 
 const getTranslationValueOutput = (
   value: I18nCompiler.DataTranslationValue,
@@ -34,14 +72,16 @@ const getFunctionBodyWithLocales = (
 ) => {
   const { defaultLocale } = config;
   let output = "";
-  forin(perLocaleValues, (locale, value) => {
+
+  for (const locale in perLocaleValues) {
+    const value = perLocaleValues[locale];
     if (
       locale !== defaultLocale &&
       !areEqualTranslationsValues(value, perLocaleValues[defaultLocale])
     ) {
       output += `locale === "${locale}" ? ${getTranslationValueOutput(value)} : `;
     }
-  });
+  }
 
   output += getTranslationValueOutput(perLocaleValues[defaultLocale]);
 
@@ -54,13 +94,19 @@ export default ({ config, options, translations }: I18nCompiler.AdapterArg) => {
 /* eslint-disable prefer-const */
 import type { I18n } from "./types";
 import { tInterpolateParams } from "./tInterpolateParams";
+import { tPluralise } from "./tPluralise";
 
 `;
 
-  forin(translations, (translationId, { values, params, plural }) => {
+  for (const translationId in translations) {
+    let { values, params, plural } = translations[translationId];
     const name = `${options.translations.fnsPrefix}${translationId}`;
-    if (params && plural) {
-      params["count"] = "number";
+    if (plural) {
+      if (params) {
+        params["count"] = "number";
+      } else {
+        params = { count: "number" };
+      }
     }
     const argParam = params
       ? `params: { ${dataParamsToTsInterfaceBody(params)} }`
@@ -78,6 +124,9 @@ import { tInterpolateParams } from "./tInterpolateParams";
       outputFnReturn += getTranslationValueOutput(values);
     } else {
       outputFnReturn += getFunctionBodyWithLocales(config, values);
+    }
+    if (plural) {
+      outputFnReturn = `tPluralise(${outputFnReturn}, params.count)`;
     }
     if (params) {
       outputFnReturn = `tInterpolateParams(${outputFnReturn}, params);`;
@@ -97,7 +146,7 @@ import { tInterpolateParams } from "./tInterpolateParams";
     // }
 
     output += `\n`;
-  });
+  }
 
   return output;
 };

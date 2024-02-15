@@ -1,5 +1,5 @@
-import { changeCaseCamel, forin, isString } from "@koine/utils";
-import type { I18nCompiler } from "../../compiler";
+import { changeCaseSnake, isString } from "@koine/utils";
+import type { I18nCompiler } from "../../compiler/types";
 
 const getFunctionBodyWithLocales = (
   config: I18nCompiler.Config,
@@ -7,27 +7,32 @@ const getFunctionBodyWithLocales = (
 ) => {
   const { defaultLocale } = config;
   let output = "";
-  forin(perLocaleValues, (locale, value) => {
+
+  for (const locale in perLocaleValues) {
+    const value = perLocaleValues[locale];
     if (locale !== defaultLocale && value !== perLocaleValues[defaultLocale]) {
       output += `locale === "${locale}" ? "${value}" : `;
     }
-  });
+  }
 
   output += '"' + perLocaleValues[defaultLocale] + '"';
 
   return output;
 };
 
-export default ({ config, routes }: I18nCompiler.AdapterArg) => {
+export default ({ config, routes, options }: I18nCompiler.AdapterArg) => {
   const hasOneLocale = config.locales.length === 1;
   let output = `
+/* eslint-disable prefer-const */
 import { toFormat } from "./toFormat";
 import type { I18n } from "./types";
 
 `;
 
-  forin(routes, (routeId, { pathnames, params }) => {
-    const name = `to_${changeCaseCamel(routeId)}`;
+  for (const routeId in routes.byId) {
+    const { pathnames, params } = routes.byId[routeId];
+
+    const name = `${options.routes.fnsPrefix}${changeCaseSnake(routeId)}`;
     const paramsType = `I18n.RouteParams["${routeId}"]`;
 
     const argParam = params ? `params: ${paramsType}` : "";
@@ -48,7 +53,7 @@ import type { I18n } from "./types";
     }
 
     output += `\n`;
-  });
+  }
 
   return output;
 };

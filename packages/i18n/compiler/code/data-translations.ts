@@ -1,13 +1,66 @@
 import { basename, dirname, extname, join, sep } from "node:path";
 import { minimatch } from "minimatch";
-import { isArray, isPrimitive, isString, objectSort } from "@koine/utils";
+import {
+  forin,
+  isArray,
+  isObject,
+  isPrimitive,
+  isString,
+  objectSort,
+} from "@koine/utils";
 import {
   type PluralKey,
+  PluralSuffix,
+  getPluralSuffix,
   isPluralKey,
   removePluralSuffix,
 } from "../pluralisation";
 import type { I18nCompiler } from "../types";
-import type { CodeDataTranslationsOptions } from "./data";
+
+export const codeDataTranslationsOptions = {
+  /**
+   * A list of globs to run against source files, those that are matched will be
+   * ignored
+   *
+   * @see https://www.npmjs.com/package/minimatch
+   */
+  ignorePaths: [] as string[],
+  dynamicDelimiters: {
+    start: "{{",
+    end: "}}",
+  },
+  // TODO: add pluralisation config
+  /**
+   * It creates `t_` functions that returns objects and arrays to use as
+   * data source.
+   *
+   * NB: this greatly increased the generated code, tree shaking will still
+   * apply though.
+   *
+   * @default true
+   */
+  fnsAsDataCodes: true,
+  /**
+   * Generated `namespace_tKey()` functions prefix, prepended to the automatically
+   * generated function names.
+   *
+   * @default ""
+   */
+  fnsPrefix: "",
+  /**
+   * Given a translation value as `"myKey": ["two", "words"]`:
+   * - when `true`: it outputs `t_myKey_0`  and `t_myKey_1` functions
+   * - when `false`: if `fnsAsDataCodes` is `true` it outputs `t_myKey` otherwise
+   * it outputs nothing (TODO: maybe we could log this info in this case)
+   *
+   * NB: It is quite unlikely that you want to set this to `true`.
+   *
+   * @default false
+   */
+  createArrayIndexBasedFns: false,
+};
+
+export type CodeDataTranslationsOptions = typeof codeDataTranslationsOptions;
 
 const slashRegex = new RegExp(sep, "g");
 
@@ -52,6 +105,14 @@ const extractTranslationParamsFromPrimitive = (
   return;
 };
 
+/**
+ * This was an experiment to extract params to interpolate from non-flat
+ * translations values, but that does not seem really needed as one
+ * can always use `tInterpolateParams` directly on whatever string
+ *
+ * @deprecated
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const extractTranslationParamsFromValue = (
   options: CodeDataTranslationsOptions,
   value: I18nCompiler.DataTranslationValue,
@@ -83,46 +144,26 @@ const extractTranslationParamsFromValue = (
   return {};
 };
 
-// if (!query || typeof query.count !== 'number') return key
-
-// const numKey = `${key}_${query.count}`
-// if (getDicValue(dic, numKey, config, options) !== undefined) return numKey
-
-// const pluralKey = `${key}_${pluralRules.select(query.count)}`
-// if (getDicValue(dic, pluralKey, config, options) !== undefined) {
-//   return pluralKey
-// }
-
-// const nestedNumKey = `${key}.${query.count}`
-// if (getDicValue(dic, nestedNumKey, config, options) !== undefined)
-//   return nestedNumKey
-
-// const nestedKey = `${key}.${pluralRules.select(query.count)}`
-// if (getDicValue(dic, nestedKey, config, options) !== undefined)
-//   return nestedKey
-
-// return key
-
-const addDataTranslationEntryForObjectValue = (
-  options: CodeDataTranslationsOptions,
-  id: string,
-  locale: I18nCompiler.Locale,
-  value: Exclude<Extract<I18nCompiler.DataTranslationValue, object>, string[]>,
-  dataTranslations: I18nCompiler.DataTranslations,
-) => {
-  // if (hasOnlyPluralKeys(value)) {
-  //   return `'${key}': string;`;
-  // }
-  // if (!isArray(value) && isObject(value)) {
-  //   if (hasOnlyPluralKeys(value)) {
-  //     return `'${key}': string;`;
-  //   }
-  //   if (hasPlurals(value)) {
-  //     return `'${key}': string | ${buildTypeForValue(pickNonPluralValue(value))}`;
-  //   }
-  // }
-  // return `'${key}': ${buildTypeForValue(value)}`;
-};
+// const addDataTranslationEntryForObjectValue = (
+//   options: CodeDataTranslationsOptions,
+//   id: string,
+//   locale: I18nCompiler.Locale,
+//   value: Exclude<Extract<I18nCompiler.DataTranslationValue, object>, string[]>,
+//   dataTranslations: I18nCompiler.DataTranslations,
+// ) => {
+//   // if (hasOnlyPluralKeys(value)) {
+//   //   return `'${key}': string;`;
+//   // }
+//   // if (!isArray(value) && isObject(value)) {
+//   //   if (hasOnlyPluralKeys(value)) {
+//   //     return `'${key}': string;`;
+//   //   }
+//   //   if (hasPlurals(value)) {
+//   //     return `'${key}': string | ${buildTypeForValue(pickNonPluralValue(value))}`;
+//   //   }
+//   // }
+//   // return `'${key}': ${buildTypeForValue(value)}`;
+// };
 
 /**
  * At this point the data translations have been calculated, this happens in a
@@ -137,19 +178,59 @@ const manageDataTranslationsPlurals = (
 ) => {
   const pluralTranslationIds =
     Object.keys(dataTranslations).filter<PluralKey>(isPluralKey);
+
   pluralTranslationIds.forEach((translationIdPluralised) => {
     const id = removePluralSuffix(translationIdPluralised);
-    // const tDataPlural = dataTranslations[translationIdPluralised];
+    const pluralSuffix = getPluralSuffix(translationIdPluralised);
 
-    if (dataTranslations[id]) {
-      dataTranslations[id].plural = true;
-      // dataTranslations[id].pluralValues = dataTranslations[id].pluralValues || {};
-      // dataTranslations[id].pluralValues[tDataPlural.]
-    } else {
-      // addDataTranslationEntry(options, translationIdUnpluralised, )
+    // we need to create it if we only have `x_one` `x_other` but not `x`
+    dataTranslations[id] = dataTranslations[id] || {};
+
+    // we only need to rearrange plurals defined as `x_one`, `x_other`, if plurals
+    // are instead defined as objects `{ one: "", other: "" }` we just keep that
+    // object structure for `values`
+    if (dataTranslations[translationIdPluralised]) {
+      const values = dataTranslations[id].values || {};
+
+      forin(
+        dataTranslations[translationIdPluralised].values,
+        (locale, value) => {
+          // we need to ensure the value is an object for pluralisation, so if
+          // we encounter this structure:
+          // { "plural": "Plural", "plural_one": "One", "plural_other": "Some" }
+          // we just remove the first `plural` value as that key is instead used
+          // to grab the right pluralised version from the object value we build
+          // from the other plural-suffixed keys. TODO: maybe we could warn the
+          // developer of improper usage of `plural` translation key, which is
+          // simply useless
+          // prettier-ignore
+          values[locale] = isObject(values[locale]) ? values[locale] : {};
+          // prettier-ignore
+          (values[locale] as Record<PluralSuffix, I18nCompiler.DataTranslationValue>)[pluralSuffix] = value;
+
+          const params = extractTranslationParamsFromValue(options, value);
+          if (params) {
+            dataTranslations[id].params = {
+              ...(dataTranslations[id].params || {}),
+              ...params,
+            };
+          }
+        },
+      );
+
+      if (Object.keys(values).length) {
+        dataTranslations[id].values = values;
+        dataTranslations[id].plural = true;
+      }
+
+      // TODO: probaly here we should remove the non-plural keys from `values`
+      // as they are anyway accessible from "deeper" functions e.g.
+      // `withPluralAndOtherKeys({ count: 3 }) => "One" | "Many"`
+      // `withPluralAndOtherKeys_nonPluralKey()` => "Yes"
+
+      // delete ids that we re-arranged in the plural-ready object value
+      delete dataTranslations[translationIdPluralised];
     }
-
-    delete dataTranslations[translationIdPluralised];
   });
 
   return dataTranslations;
@@ -166,23 +247,21 @@ const addDataTranslationEntry = (
   dataTranslations: I18nCompiler.DataTranslations,
 ) => {
   if (isPrimitive(value)) {
-    const params = extractTranslationParamsFromPrimitive(options, value);
     dataTranslations[id] = dataTranslations[id] || {};
     dataTranslations[id].values = dataTranslations[id].values || {};
     dataTranslations[id].values[locale] = value;
     dataTranslations[id].typeValue = "Primitive";
+    const params = extractTranslationParamsFromPrimitive(options, value);
     if (params) dataTranslations[id].params = params;
   } else {
     if (options.fnsAsDataCodes) {
-      // const params = extractTranslationParamsFromValue(
-      //   options,
-      //   value,
-      // );
       const typeValue = isArray(value) ? "Array" : "Object";
       dataTranslations[id] = dataTranslations[id] || {};
       dataTranslations[id].values = dataTranslations[id].values || {};
       dataTranslations[id].values[locale] = value;
       dataTranslations[id].typeValue = typeValue;
+      // @see comment on `extractTranslationParamsFromValue`
+      // const params = extractTranslationParamsFromValue(options, value);
       // if (params) dataTranslations[id].params = params;
     }
 

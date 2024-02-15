@@ -1,4 +1,4 @@
-// import type { I18nCompiler } from "../../types";
+// import type { I18nCompiler } from "../../compiler/types";
 
 export default (/* {}: I18nCompiler.AdapterArg */) => `
 import { locales } from "./locales";

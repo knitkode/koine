@@ -1,6 +1,6 @@
 {
   "en": {
-    "characters": 472,
+    "characters": 493,
     "files": [
       {
         "characters": 277,
@@ -10,11 +10,11 @@
         "words": 35
       },
       {
-        "characters": 129,
+        "characters": 150,
         "locale": "en",
         "path": "~account/~user~profile.json",
         "url": "https://github.com/knitkode/koine/translations/tree/dev/en/~account/~user~profile.json",
-        "words": 40
+        "words": 49
       },
       {
         "characters": 8,
@@ -38,10 +38,10 @@
         "words": 12
       }
     ],
-    "words": 92
+    "words": 101
   },
   "it": {
-    "characters": 542,
+    "characters": 569,
     "files": [
       {
         "characters": 336,
@@ -51,11 +51,11 @@
         "words": 38
       },
       {
-        "characters": 127,
+        "characters": 154,
         "locale": "it",
         "path": "~account/~user~profile.json",
         "url": "https://github.com/knitkode/koine/translations/tree/dev/it/~account/~user~profile.json",
-        "words": 40
+        "words": 50
       },
       {
         "characters": 8,
@@ -79,6 +79,6 @@
         "words": 13
       }
     ],
-    "words": 95
+    "words": 105
   }
 }

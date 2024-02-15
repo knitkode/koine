@@ -1,6 +1,6 @@
-// import type { I18nCompiler } from "../../types";
+import type { I18nCompiler } from "../../compiler/types";
 
-export default (/* {}: I18nCompiler.AdapterArg */) => `
+export default ({ options }: I18nCompiler.AdapterArg) => `
 /**
  * Convert a URL like pathname to a "named route"
  * E.g. it transforms:
@@ -9,7 +9,7 @@ export default (/* {}: I18nCompiler.AdapterArg */) => `
 export const pathnameToRouteId = (pathname: string) =>
   pathname
     .replace(/^\\//g, "")
-    .replace(/\\//g, ".")
+    .replace(/\\//g, "${options.routes.tokens.idDelimiter}")
     .replace(/\\/index$/, "");
 
 export default pathnameToRouteId;

@@ -1,4 +1,4 @@
-import type { I18nCompiler } from "../../compiler";
+import type { I18nCompiler } from "../../compiler/types";
 import DynamicNamespaces from "./DynamicNamespaces";
 import T from "./T";
 import TransText from "./TransText";

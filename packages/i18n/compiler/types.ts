@@ -68,12 +68,15 @@ export namespace I18nCompiler {
   /**
    * {@link DataRoute}
    */
-  export type DataRoutes = Record<RouteId, DataRoute>;
+  export type DataRoutes = {
+    byId: Record<RouteId, DataRoute>;
+    wildcardIds: RouteId[];
+  };
 
   /**
    * A route metadata
    */
-  export type DataRoute = {
+  type DataRoute = {
     id: RouteId;
     /**
      * Dictionary with route ids as keys each one holding a dictionary of its

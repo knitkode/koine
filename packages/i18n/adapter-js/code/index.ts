@@ -1,4 +1,4 @@
-import type { I18nCompiler } from "../../compiler";
+import type { I18nCompiler } from "../../compiler/types";
 import config from "./config";
 import configCjs from "./config.cjs";
 import defaultLocale from "./defaultLocale";
@@ -10,6 +10,7 @@ import routes from "./routes";
 import routesSlim from "./routesSlim";
 import tFns from "./tFns";
 import tInterpolateParams from "./tInterpolateParams";
+import tPluralise from "./tPluralise";
 import to from "./to";
 import toFns from "./toFns";
 import toFormat from "./toFormat";
@@ -42,11 +43,11 @@ const adapter: I18nCompiler.AdpaterCreator = () => {
         name: "tInterpolateParams",
         fn: tInterpolateParams,
         ext: "ts",
-        index: false,
       },
       { name: "to", fn: to, ext: "ts", index: true },
       { name: "toFns", fn: toFns, ext: "ts", index: true },
       { name: "toFormat", fn: toFormat, ext: "ts", index: true },
+      { name: "tPluralise", fn: tPluralise, ext: "ts" },
       { name: "types", fn: types, ext: "ts", index: true },
     ],
   };

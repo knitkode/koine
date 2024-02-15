@@ -1,5 +1,4 @@
 import { forin, isArray, isBoolean, isObject, isString } from "@koine/utils";
-import type { I18nCompiler } from "../../compiler";
 import { dataParamsToTsInterfaceBody } from "../../compiler/helpers";
 import {
   hasOnlyPluralKeys,
@@ -7,6 +6,7 @@ import {
   pickNonPluralValue,
   transformKeysForPlurals,
 } from "../../compiler/pluralisation";
+import type { I18nCompiler } from "../../compiler/types";
 
 const buildTypeForObjectValue = (
   key: string | number,
@@ -86,7 +86,7 @@ const buildTranslationsDictionary = (
 const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {
   const out: string[] = [];
 
-  forin(routes, (routeId, { params }) => {
+  forin(routes.byId, (routeId, { params }) => {
     if (params) {
       out.push(`"${routeId}": { ${dataParamsToTsInterfaceBody(params)} };`);
     }
@@ -98,12 +98,12 @@ const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {
 const buildRoutesUnion = (
   routes: I18nCompiler.DataRoutes,
   filterFn: (
-    routeId: keyof I18nCompiler.DataRoutes,
-    routeData: I18nCompiler.DataRoutes[string],
+    routeId: keyof I18nCompiler.DataRoutes["byId"],
+    routeData: I18nCompiler.DataRoutes["byId"][string],
   ) => undefined | boolean,
 ) =>
-  Object.keys(routes)
-    .filter((routeId) => filterFn(routeId, routes[routeId]))
+  Object.keys(routes.byId)
+    .filter((routeId) => filterFn(routeId, routes.byId[routeId]))
     .sort()
     .map((routeId) => `"${routeId}"`)
     .join(" | ");

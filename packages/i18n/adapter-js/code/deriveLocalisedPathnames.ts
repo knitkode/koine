@@ -1,4 +1,4 @@
-// import type { I18nCompiler } from "../../types";
+// import type { I18nCompiler } from "../../compiler/types";
 
 export default (/* {}: I18nCompiler.AdapterArg, */) => `
 import { locales } from "./locales";
@@ -38,7 +38,7 @@ function localisePathname(
   const toPathnameParts = getPathnameParts(toPathname);
   // e.g. "my.path.[id].view"
   const routeIdDynamic = routeId as I18n.RouteIdDynamic;
-  // e.g. /my/path/1 23/view
+  // e.g. /my/path/123/view
   const currentPathname = locationLike.pathname;
   // e.g. ['my', 'path', '123', 'view']
   const currentPathnameParts = getPathnameParts(currentPathname);
@@ -53,7 +53,9 @@ function localisePathname(
     if (name) {
       // e.g. "123"
       const value = currentPathnameParts[i];
-      params[name] = value;
+      if (value) {
+        params[name] = value;
+      }
     }
   }
 

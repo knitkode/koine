@@ -1,18 +1,15 @@
-import type { Redirect as _Redirect } from "next/dist/lib/load-custom-routes";
-import { arrayUniqueByProperties } from "@koine/utils";
+import type { Redirect } from "next/dist/lib/load-custom-routes";
+import { arrayUniqueByProperties, escapeRegExp } from "@koine/utils";
 import { formatRoutePathname } from "../client";
-import type { I18nCompiler } from "../compiler";
+import type { CodeDataRoutesOptions } from "../compiler/code/data-routes";
+import type { I18nCompiler } from "../compiler/types";
 import { transformPathname } from "./transformPathname";
-
-// type Redirect = Omit<_Redirect, "locale"> & { locale?: boolean };
-type Redirect = _Redirect;
 
 function generatePathRedirect(arg: {
   localeSource?: I18nCompiler.Locale;
   localeDestination?: I18nCompiler.Locale;
   template: string;
   pathname: string;
-  localeParam?: string;
   permanent?: boolean;
 }) {
   const { localeSource, localeDestination, template, pathname, permanent } =
@@ -45,11 +42,16 @@ function generatePathRedirect(arg: {
  */
 export let generateRedirects = (
   config: I18nCompiler.Config,
-  routes: I18nCompiler.DataRoutes,
+  routes: I18nCompiler.DataRoutes["byId"],
+  options: CodeDataRoutesOptions,
   localeParam = "",
   permanent = false,
 ) => {
   const { defaultLocale, hideDefaultLocaleInUrl } = config;
+  const regexIdDelimiter = new RegExp(
+    escapeRegExp(options.tokens.idDelimiter),
+    "g",
+  );
   const redirects: (Redirect | undefined)[] = [];
 
   for (const routeId in routes) {
@@ -57,78 +59,56 @@ export let generateRedirects = (
     const pathnamesByLocale = routes[routeId].pathnames;
     for (const locale in pathnamesByLocale) {
       const localisedPathname = pathnamesByLocale[locale];
-      const template = transformPathname(route, routeId.replace(/\./g, "/"));
-      const pathname = transformPathname(route, localisedPathname);
+      // prettier-ignore
+      const template = transformPathname(routeId.replace(regexIdDelimiter, "/"), route.wildcard);
+      const pathname = transformPathname(localisedPathname, route.wildcard);
 
       // we do not redirect urls children of wildcard urls
       if (route.inWildcard) break;
 
-      const isVisibleDefaultLocale =
-        locale === defaultLocale && !hideDefaultLocaleInUrl;
-      const isHiddenDefaultLocale =
-        locale === defaultLocale && hideDefaultLocaleInUrl;
+      const isDefaultLocale = locale === defaultLocale;
+      const isVisibleDefaultLocale = isDefaultLocale && !hideDefaultLocaleInUrl;
+      const isHiddenDefaultLocale = isDefaultLocale && hideDefaultLocaleInUrl;
+      const arg = { template, pathname, permanent };
 
       if (localeParam) {
         // app router:
         if (isVisibleDefaultLocale) {
           redirects.push(
-            generatePathRedirect({
-              localeDestination: locale,
-              permanent,
-              template,
-              pathname,
-            }),
+            generatePathRedirect({ ...arg, localeDestination: locale }),
           );
         } else if (isHiddenDefaultLocale) {
           redirects.push(
-            generatePathRedirect({
-              localeSource: locale,
-              permanent,
-              template,
-              pathname,
-            }),
+            generatePathRedirect({ ...arg, localeSource: locale }),
           );
-        } else if (locale !== defaultLocale) {
+        } else if (!isDefaultLocale) {
           redirects.push(
             generatePathRedirect({
+              ...arg,
               localeSource: locale,
               localeDestination: locale,
-              permanent,
-              template,
-              pathname,
             }),
           );
         } else {
-          redirects.push(
-            generatePathRedirect({ permanent, template, pathname }),
-          );
+          redirects.push(generatePathRedirect(arg));
         }
       } else {
         // pages router:
         if (pathname !== template) {
           if (isVisibleDefaultLocale) {
             redirects.push(
-              generatePathRedirect({
-                localeDestination: locale,
-                permanent,
-                template,
-                pathname,
-              }),
+              generatePathRedirect({ ...arg, localeDestination: locale }),
             );
-          } else if (locale !== defaultLocale) {
+          } else if (!isDefaultLocale) {
             redirects.push(
               generatePathRedirect({
+                ...arg,
                 localeSource: locale,
                 localeDestination: locale,
-                permanent,
-                template,
-                pathname,
               }),
             );
           } else {
-            redirects.push(
-              generatePathRedirect({ permanent, template, pathname }),
-            );
+            redirects.push(generatePathRedirect(arg));
           }
         }
       }
@@ -138,7 +118,9 @@ export let generateRedirects = (
   const cleaned = arrayUniqueByProperties(
     redirects.filter(Boolean) as Redirect[],
     ["source", "destination"],
-  ).map((rewrite) => (localeParam ? rewrite : { ...rewrite, locale: false }));
+  )
+    .sort((a, b) => a.source.localeCompare(b.source))
+    .map((rewrite) => (localeParam ? rewrite : { ...rewrite, locale: false }));
 
   return cleaned as Redirect[];
 };

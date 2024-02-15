@@ -1,7 +1,11 @@
-import type { I18nCompiler } from "../../compiler";
+import type { I18nCompiler } from "../../compiler/types";
 import { generateRedirects } from "../redirects";
 
-export default ({ config, routes }: I18nCompiler.AdapterArg) => {
-  const value = JSON.stringify(generateRedirects(config, routes), null, 2);
+export default ({ config, routes, options }: I18nCompiler.AdapterArg) => {
+  const value = JSON.stringify(
+    generateRedirects(config, routes.byId, options.routes),
+    null,
+    2,
+  );
   return `module.exports = ${value}`;
 };

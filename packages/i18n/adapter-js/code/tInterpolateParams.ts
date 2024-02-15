@@ -1,4 +1,4 @@
-import type { I18nCompiler } from "../../compiler";
+import type { I18nCompiler } from "../../compiler/types";
 
 const escapeEachChar = (input: string) =>
   input
@@ -9,6 +9,7 @@ const escapeEachChar = (input: string) =>
 export default ({ options }: I18nCompiler.AdapterArg) => {
   const { start, end } = options.translations.dynamicDelimiters;
   return `
+/* eslint-disable prefer-const */
 export let tInterpolateParams = (
   value: string,
   params?: object,

@@ -2,9 +2,9 @@
   "boolShouldntBeHereBut": true,
   "title": "Title {{ varName }}",
   "plural": "Plural",
-  "plural_one": "One",
-  "plural_other": "Some",
-  "plural_zero": "Zero",
+  "plural_one": "One {{ who }}",
+  "plural_other": "Some {{ who }}",
+  "plural_zero": "Zero {{ who }}",
   "pluralNoDefault_one": "One",
   "pluralNoDefault_other": "Some",
   "pluralAsObject": {

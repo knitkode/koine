@@ -36,6 +36,12 @@ export let removePluralSuffix = (key: PluralKey) => {
 };
 
 /**
+ * Get plural suffix from string
+ */
+export let getPluralSuffix = (key: PluralKey) =>
+  splitReverse(key as PluralKey, "_")[0];
+
+/**
  * Is the translation value object key a plural form?
  *
  * Using `splitReverse` ensures to get the last underscore prefixed suffix

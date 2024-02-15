@@ -50,7 +50,8 @@ export let getRedirects = async (
 ) => {
   const defaultRedirects = generateRedirects(
     i18nResult.config,
-    i18nResult.code.routes,
+    i18nResult.code.routes.byId,
+    i18nResult.code.options.routes,
     appRouterLocaleParamName,
     permanentRedirects,
   );
@@ -69,7 +70,8 @@ export let getRewrites = async (
 ) => {
   const defaultRewrites = generateRewrites(
     i18nResult.config,
-    i18nResult.code.routes,
+    i18nResult.code.routes.byId,
+    i18nResult.code.options.routes,
     appRouterLocaleParamName,
   );
   if (prevRewrites) {

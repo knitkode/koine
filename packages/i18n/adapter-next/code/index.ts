@@ -1,4 +1,4 @@
-import type { I18nCompiler } from "../../compiler";
+import type { I18nCompiler } from "../../compiler/types";
 import nextRedirects from "./next-redirects";
 import nextRewrites from "./next-rewrites";
 import useCurrentLocalisedPathnames from "./useCurrentLocalisedPathnames";
@@ -10,7 +10,7 @@ const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
     dependsOn: ["js"],
     files: [
-      // TODO: maybe remoe these files, they are useful for debugging for now
+      // TODO: maybe remove these files, they are useful for debugging for now
       // but probably will be useless
       { name: "next-redirects", fn: nextRedirects, ext: "js" },
       { name: "next-rewrites", fn: nextRewrites, ext: "js" },
