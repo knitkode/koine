@@ -20,6 +20,7 @@ export const useTo = () => {
   ) => {
     const [routeId, params] = args;
     return (
+      // @ts-expect-error nevermind for now
       params ? to(routeId, params, locale) : to(routeId, locale)
     ) as I18n.RoutePathnames[Id];
   };
