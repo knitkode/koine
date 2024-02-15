@@ -40,7 +40,7 @@ describe("test write", () => {
 
     await fsWrite(
       join(mocksPath("single-language"), "data.json"),
-      JSON.stringify(data.code.translations, null, 2),
+      JSON.stringify(data, null, 2),
     );
   });
 
@@ -78,7 +78,7 @@ describe("test write", () => {
 
     await fsWrite(
       join(mocksPath("multi-language"), "data.json"),
-      JSON.stringify(data.code.translations, null, 2),
+      JSON.stringify(data, null, 2),
     );
   });
 });

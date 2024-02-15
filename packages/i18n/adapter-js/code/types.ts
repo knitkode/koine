@@ -1,4 +1,5 @@
 import { forin, isArray, isBoolean, isObject, isString } from "@koine/utils";
+import type { CodeDataOptions } from "../../compiler/code";
 import { dataParamsToTsInterfaceBody } from "../../compiler/helpers";
 import {
   hasOnlyPluralKeys,
@@ -95,6 +96,12 @@ const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {
   return out;
 };
 
+const buildUnionType = (values: string[]) =>
+  values
+    .sort()
+    .map((routeId) => `"${routeId}"`)
+    .join(" | ");
+
 const buildRoutesUnion = (
   routes: I18nCompiler.DataRoutes,
   filterFn: (
@@ -102,18 +109,91 @@ const buildRoutesUnion = (
     routeData: I18nCompiler.DataRoutes["byId"][string],
   ) => undefined | boolean,
 ) =>
-  Object.keys(routes.byId)
-    .filter((routeId) => filterFn(routeId, routes.byId[routeId]))
-    .sort()
-    .map((routeId) => `"${routeId}"`)
-    .join(" | ");
+  buildUnionType(
+    Object.keys(routes.byId).filter((routeId) =>
+      filterFn(routeId, routes.byId[routeId]),
+    ),
+  );
+
+const groupRoutesSpa = (routes: I18nCompiler.DataRoutes) =>
+  Object.keys(routes.byId).reduce(
+    (map, routeId) => {
+      const route = routes.byId[routeId];
+      if (route.inWildcard) {
+        for (let I = 0; I < routes.wildcardIds.length; I++) {
+          const spaRootRouteId = routes.wildcardIds[I];
+
+          if (routeId.startsWith(spaRootRouteId)) {
+            map[spaRootRouteId] = map[spaRootRouteId] || [];
+            map[spaRootRouteId].push(routeId);
+          }
+        }
+      }
+      return map;
+    },
+    {} as Record<I18nCompiler.RouteId, I18nCompiler.RouteId[]>,
+  );
+
+const buildRoutesSpa = (
+  config: I18nCompiler.Config,
+  routes: I18nCompiler.DataRoutes,
+  options: CodeDataOptions,
+) => {
+  const map = groupRoutesSpa(routes);
+  const output: string[] = [];
+
+  for (const rootRouteId in map) {
+    const pathRoutesIds = map[rootRouteId].map(
+      // remove the root id portion and the first character which is always
+      // the route `idDelimiter`
+      (fullRouteId) => fullRouteId.split(rootRouteId)[1].slice(1),
+    );
+
+    const rootPathname =
+      routes.byId[rootRouteId].pathnames[config.defaultLocale];
+    const pathnames: string[] = [];
+
+    for (let i = 0; i < pathRoutesIds.length; i++) {
+      const subRouteId = pathRoutesIds[i];
+      const fullRouteId = `${rootRouteId}${options.routes.tokens.idDelimiter}${subRouteId}`;
+      const fullPathname =
+        routes.byId[fullRouteId].pathnames[config.defaultLocale];
+      const pathPathname = fullPathname.split(rootPathname)[1];
+      pathnames.push(`"${subRouteId}": "${pathPathname}";`);
+    }
+
+    output.push(`"${rootRouteId}": { ${pathnames.join(" ")} }`);
+  }
+
+  return output;
+};
+
+const buildRoutesPathnames = (
+  config: I18nCompiler.Config,
+  routes: I18nCompiler.DataRoutes,
+) => {
+  const output: string[] = [];
+
+  for (const routeId in routes.byId) {
+    const route = routes.byId[routeId];
+    output.push(`"${route.id}": "${route.pathnames[config.defaultLocale]}";`);
+  }
+
+  return output;
+};
 
 // TODO: probably move the  Translate types into the adapter-next-translate
 // unless we will use the same api for other adapters
-export default ({ config, input, routes }: I18nCompiler.AdapterArg) => {
+export default ({
+  config,
+  input,
+  routes,
+  options,
+}: I18nCompiler.AdapterArg) => {
   const routeIdStatic = buildRoutesUnion(routes, (_, { params }) => !params);
   const routeIdDynamic = buildRoutesUnion(routes, (_, { params }) => !!params);
-
+  // const routeIdSpa = buildRoutesUnion(routes, (_, { inWildcard }) => inWildcard);
+  const { idDelimiter } = options.routes.tokens;
   return `
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -148,13 +228,35 @@ export namespace I18n {
    * The dynamic routes available ids
    */
   export type RouteIdDynamic = ${routeIdDynamic};
-  
+
+  /**
+   * SPA routes ids map
+   */
+  /**
+   * Map every SPA path divided by their roots to their actual pathname value for the default locale
+   */
+  export type RouteSpa = {
+    ${buildRoutesSpa(config, routes, options).join("\n    ")}
+  }
+
+  /**
+   * Map every route id to its actual pathanem value for the default locale
+   */
+  export type RoutePathnames = {
+    ${buildRoutesPathnames(config, routes).join("\n    ")}
+  }
+
   /**
    * Route dynamic params dictionary for each dynamic route id
    */
   export type RouteParams = {
     ${buildRouteParams(routes).join("\n    ")}
   }
+
+  /**
+   * Utility to join two route ids
+   */
+  export type RouteJoinedId<Root extends string, Tail extends string> = \`\${Root}${idDelimiter}\${Tail}\` extends RouteId ? \`\${Root}${idDelimiter}\${Tail}\` : never;
 
   /**
    * Extract all children routes that starts with the given string

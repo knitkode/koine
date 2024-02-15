@@ -5,6 +5,7 @@ import useCurrentLocalisedPathnames from "./useCurrentLocalisedPathnames";
 import useLocale from "./useLocale";
 import useRouteId from "./useRouteId";
 import useTo from "./useTo";
+import useToSpa from "./useToSpa";
 
 const adapter: I18nCompiler.AdpaterCreator = () => {
   return {
@@ -23,6 +24,7 @@ const adapter: I18nCompiler.AdpaterCreator = () => {
       { name: "useLocale", fn: useLocale, ext: "ts", index: true },
       { name: "useRouteId", fn: useRouteId, ext: "ts", index: true },
       { name: "useTo", fn: useTo, ext: "ts", index: true },
+      { name: "useToSpa", fn: useToSpa, ext: "ts", index: true },
     ],
   };
 };

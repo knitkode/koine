@@ -76,7 +76,7 @@ export namespace I18nCompiler {
   /**
    * A route metadata
    */
-  type DataRoute = {
+  export type DataRoute = {
     id: RouteId;
     /**
      * Dictionary with route ids as keys each one holding a dictionary of its
@@ -86,7 +86,10 @@ export namespace I18nCompiler {
     /**
      * When URLs are the same there is no `Locale` index, just a plain string
      */
-    optimizedPathnames?: string | Record<Locale, RoutePathname>;
+    pathnamesSlim?: string | Record<Locale, RoutePathname>;
+    /**
+     */
+    pathnamesSpa?: Record<Locale, RoutePathname>;
     /**
      * The route params dictionary {@link DataParams}}
      */

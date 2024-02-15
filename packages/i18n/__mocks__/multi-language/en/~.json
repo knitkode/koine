@@ -23,17 +23,17 @@
   },
   "apps": {
     "tool": {
-      "index": "/apps/tool/*",
+      "[[...spa]]": "/apps/tool",
       "things": {
-        "index": "/things",
+        "index": "^/things",
         "[id]": {
-          "index": "/things/{{ id }}",
+          "index": "^/{{ id }}",
           "detail": {
-            "index": "/things/{{ id }}/detail",
-            "new": "/things/{{ id }}/detail/new",
+            "index": "^/detail",
+            "new": "^/new",
             "[detailId]": {
-              "index": "/things/{{ id }}/detail/{{ detailId }}",
-              "edit": "/things/{{ id }}/detail/{{ detailId }}/edit"
+              "index": "^/{{ detailId }}",
+              "edit": "^/edit"
             }
           }
         }

@@ -28,7 +28,7 @@
         },
         "apps": {
           "tool": {
-            "index": "/apps/tool/*",
+            "[[...spa]]": "/apps/tool",
             "things": {
               "index": "/things",
               "[id]": {
