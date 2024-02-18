@@ -7,7 +7,7 @@ let pluralRules = new Intl.PluralRules();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export let tPluralise = (values: any, count: number) =>
-  values[count] || values[pluralRules.select(count)] || values["other"];
+  values[count] || values[pluralRules.select(count)] || (count === 0 ? values.zero : values["other"]);
 
 export default tPluralise;
 `;

@@ -13,19 +13,22 @@ export const useToSpa = () => {
   const locale = useLocale();
   return <
     Root extends keyof I18n.RouteSpa,
-    Path extends Extract<keyof I18n.RouteSpa[Root], string>
+    Path extends Extract<keyof I18n.RouteSpa[Root], string>,
   >(
+    root: Root,
+    path: Path,
     ...args: I18n.RouteJoinedId<Root, Path> extends I18n.RouteIdDynamic
-    ? [root: Root, path: Path, params: I18n.RouteParams[I18n.RouteJoinedId<Root, Path>]]
-    : I18n.RouteJoinedId<Root, Path> extends I18n.RouteIdStatic
-      ? [root: Root, path: Path]
-      : never
+      ? [params: I18n.RouteParams[I18n.RouteJoinedId<Root, Path>]]
+      : I18n.RouteJoinedId<Root, Path> extends I18n.RouteIdStatic
+        ? []
+        : never
   ) => {
-    const [root, path, params] = args;
+    const [params] = args;
     return (
+      // prettier-ignore
       // @ts-expect-error FIXME: types
-      params ? toSpa(root, path, params, locale) : toSpa(root, path, locale)
-    ) as I18n.RouteSpa[Root][Path];
+      (params ? toSpa(root, path, params, locale) : toSpa(root, path, locale)) as I18n.RouteSpa[Root][Path]
+    );
   };
 };
 

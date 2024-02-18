@@ -31,6 +31,11 @@ export function toSpa<
     // FIXME: actually the locale will be prepended if hideDefaultLocaleInUrl will be false
     "", // do not pass the locale so that won't be prepended
     (routesSpa[fullId] as Record<string, string>)[locale],
+    args.length === 2
+      ? args[0]
+      : args[0] && !isLocale(args[0])
+        ? args[0]
+        : void 0,
   ) as I18n.RouteSpa[Root][Path];
 }
 
