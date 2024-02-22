@@ -47,8 +47,8 @@ const buildTypeForValue = (value: I18nCompiler.DataTranslationValue) => {
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i] as keyof typeof value;
-      // fallback to a string as plurals without root definition would not get a
-      // type otherwise, e.g. ` pluralNoDefault_...` in __mocks__
+      // fallback to a string otherwise plurals without root definition would
+      // not get a type otherwise, e.g. ` pluralNoDefault_...` in __mocks__
       const single = value[key] || "";
       out += buildTypeForObjectValue(key, single);
     }

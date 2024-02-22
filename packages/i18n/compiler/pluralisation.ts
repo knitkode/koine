@@ -70,7 +70,7 @@ const groupPluralsKeysByRoot = (pluralKeys: PluralKey[]) => {
  * from the generated types, e.g. the plural versions of the same string.
  */
 export let transformKeysForPlurals = (keys: string[]) => {
-  if (keys.includes(requiredPluralSuffix)) {
+  if (keys.some(isPluralKey) || keys.includes(requiredPluralSuffix)) {
     const pluralKeys = keys.filter(isPluralKey);
 
     if (pluralKeys.length) {
@@ -104,7 +104,7 @@ export let transformKeysForPlurals = (keys: string[]) => {
 export let hasPlurals = (value: {
   [key: string]: I18nCompiler.DataTranslationValue;
 }) =>
-  // Object.keys(value).some(isPluralKey);
+  Object.keys(value).some(isPluralKey) ||
   Object.keys(value).includes(requiredPluralSuffix);
 
 /**

@@ -8,6 +8,28 @@
     "localesFolders": ["en"],
     "translationFiles": [
       {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
+        },
+        "locale": "en"
+      },
+      {
+        "path": "404.json",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found"
+        },
+        "locale": "en"
+      },
+      {
         "path": "~.json",
         "data": {
           "home": "/",
@@ -55,24 +77,10 @@
         "locale": "en"
       },
       {
-        "path": "404.json",
+        "path": "~account/FormUserLanguages.json",
         "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found"
-        },
-        "locale": "en"
-      },
-      {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
+          "empty": {},
+          "msg": "Some text"
         },
         "locale": "en"
       },
@@ -130,14 +138,6 @@
           }
         },
         "locale": "en"
-      },
-      {
-        "path": "~account/FormUserLanguages.json",
-        "data": {
-          "empty": {},
-          "msg": "Some text"
-        },
-        "locale": "en"
       }
     ]
   },
@@ -186,6 +186,28 @@
       "localesFolders": ["en"],
       "translationFiles": [
         {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
+          },
+          "locale": "en"
+        },
+        {
+          "path": "404.json",
+          "data": {
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found"
+          },
+          "locale": "en"
+        },
+        {
           "path": "~.json",
           "data": {
             "home": "/",
@@ -233,24 +255,10 @@
           "locale": "en"
         },
         {
-          "path": "404.json",
+          "path": "~account/FormUserLanguages.json",
           "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found"
-          },
-          "locale": "en"
-        },
-        {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
+            "empty": {},
+            "msg": "Some text"
           },
           "locale": "en"
         },
@@ -306,14 +314,6 @@
                 }
               }
             }
-          },
-          "locale": "en"
-        },
-        {
-          "path": "~account/FormUserLanguages.json",
-          "data": {
-            "empty": {},
-            "msg": "Some text"
           },
           "locale": "en"
         }
