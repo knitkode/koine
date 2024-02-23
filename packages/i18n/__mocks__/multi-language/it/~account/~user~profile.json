@@ -16,6 +16,11 @@
     "other": "Molti",
     "noPluralRelated": "Sì"
   },
+  "dontConsiderMeAPluralIDontHaveOther": {
+    "1": "Uno",
+    "2": "Due",
+    "3": "Tre"
+  },
   "listFlat": ["v1", "v2"],
   "listComplex": [
     {

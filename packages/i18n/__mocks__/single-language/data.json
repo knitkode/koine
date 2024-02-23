@@ -8,28 +8,6 @@
     "localesFolders": ["en"],
     "translationFiles": [
       {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        },
-        "locale": "en"
-      },
-      {
-        "path": "404.json",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found"
-        },
-        "locale": "en"
-      },
-      {
         "path": "~.json",
         "data": {
           "home": "/",
@@ -77,10 +55,24 @@
         "locale": "en"
       },
       {
-        "path": "~account/FormUserLanguages.json",
+        "path": "404.json",
         "data": {
-          "empty": {},
-          "msg": "Some text"
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found"
+        },
+        "locale": "en"
+      },
+      {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
         },
         "locale": "en"
       },
@@ -103,6 +95,11 @@
             "one": "One",
             "other": "Others",
             "noPluralRelated": "Yes"
+          },
+          "dontConsiderMeAPluralIDontHaveOther": {
+            "1": "One",
+            "2": "Two",
+            "3": "Three"
           },
           "listFlat": ["v1", "v2"],
           "listComplex": [
@@ -136,6 +133,14 @@
               }
             }
           }
+        },
+        "locale": "en"
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
+          "msg": "Some text"
         },
         "locale": "en"
       }
@@ -186,28 +191,6 @@
       "localesFolders": ["en"],
       "translationFiles": [
         {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
-          },
-          "locale": "en"
-        },
-        {
-          "path": "404.json",
-          "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found"
-          },
-          "locale": "en"
-        },
-        {
           "path": "~.json",
           "data": {
             "home": "/",
@@ -255,10 +238,24 @@
           "locale": "en"
         },
         {
-          "path": "~account/FormUserLanguages.json",
+          "path": "404.json",
           "data": {
-            "empty": {},
-            "msg": "Some text"
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found"
+          },
+          "locale": "en"
+        },
+        {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
           },
           "locale": "en"
         },
@@ -281,6 +278,11 @@
               "one": "One",
               "other": "Others",
               "noPluralRelated": "Yes"
+            },
+            "dontConsiderMeAPluralIDontHaveOther": {
+              "1": "One",
+              "2": "Two",
+              "3": "Three"
             },
             "listFlat": ["v1", "v2"],
             "listComplex": [
@@ -314,6 +316,14 @@
                 }
               }
             }
+          },
+          "locale": "en"
+        },
+        {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Some text"
           },
           "locale": "en"
         }
@@ -504,6 +514,34 @@
       "$account_$user$profile_boolShouldntBeHereBut": {
         "values": {
           "en": true
+        },
+        "typeValue": "Primitive"
+      },
+      "$account_$user$profile_dontConsiderMeAPluralIDontHaveOther": {
+        "values": {
+          "en": {
+            "1": "One",
+            "2": "Two",
+            "3": "Three"
+          }
+        },
+        "typeValue": "Object"
+      },
+      "$account_$user$profile_dontConsiderMeAPluralIDontHaveOther_$1": {
+        "values": {
+          "en": "One"
+        },
+        "typeValue": "Primitive"
+      },
+      "$account_$user$profile_dontConsiderMeAPluralIDontHaveOther_$2": {
+        "values": {
+          "en": "Two"
+        },
+        "typeValue": "Primitive"
+      },
+      "$account_$user$profile_dontConsiderMeAPluralIDontHaveOther_$3": {
+        "values": {
+          "en": "Three"
         },
         "typeValue": "Primitive"
       },

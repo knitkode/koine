@@ -70,7 +70,11 @@ const groupPluralsKeysByRoot = (pluralKeys: PluralKey[]) => {
  * from the generated types, e.g. the plural versions of the same string.
  */
 export let transformKeysForPlurals = (keys: string[]) => {
-  if (keys.some(isPluralKey) || keys.includes(requiredPluralSuffix)) {
+  // only transform if we have the required plural suffix in the keys
+  if (
+    keys.some(hasRequiredPluralSuffix) ||
+    keys.includes(requiredPluralSuffix)
+  ) {
     const pluralKeys = keys.filter(isPluralKey);
 
     if (pluralKeys.length) {
@@ -97,6 +101,12 @@ export let transformKeysForPlurals = (keys: string[]) => {
 };
 
 /**
+ * Check if the given key has the required plural suffix
+ */
+export let hasRequiredPluralSuffix = (key: string) =>
+  isPluralKey(key) && getPluralSuffix(key) === requiredPluralSuffix;
+
+/**
  * Does the translation value object has plurals version?
  *
  * NB: here we check only for the **required** plural suffix,
@@ -104,7 +114,7 @@ export let transformKeysForPlurals = (keys: string[]) => {
 export let hasPlurals = (value: {
   [key: string]: I18nCompiler.DataTranslationValue;
 }) =>
-  Object.keys(value).some(isPluralKey) ||
+  Object.keys(value).some(hasRequiredPluralSuffix) ||
   Object.keys(value).includes(requiredPluralSuffix);
 
 /**

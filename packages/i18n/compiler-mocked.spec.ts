@@ -57,5 +57,8 @@ describe("generated code: tFns", () => {
     expect(t.$account_$user$profile_pluralAsObject({ count: 10 })).toEqual("Others");
     expect(t.$account_$user$profile_pluralAsObject({ count: 1 }, "it")).toEqual("Uno");
     expect(t.$account_$user$profile_pluralAsObject({ count: 10 }, "it")).toEqual("Molti");
+
+    expect(t.$account_$user$profile_dontConsiderMeAPluralIDontHaveOther_$1()).toEqual("One");
+    expect(t.$account_$user$profile_dontConsiderMeAPluralIDontHaveOther("it")[1]).toEqual("Uno");
   });
 });

@@ -76,6 +76,66 @@
       "locale": "en"
     },
     {
+      "path": "~account/~user~profile.json",
+      "data": {
+        "boolShouldntBeHereBut": true,
+        "title": "Title {{ varName }}",
+        "plural": "Plural",
+        "plural_one": "One {{ who }}",
+        "plural_other": "Some {{ who }}",
+        "plural_zero": "Zero {{ who }}",
+        "pluralNoDefault_one": "One",
+        "pluralNoDefault_other": "Some",
+        "pluralAsObject": {
+          "one": "One",
+          "other": "Others"
+        },
+        "pluralAsObjectWithExtraKeys": {
+          "one": "One",
+          "other": "Others",
+          "noPluralRelated": "Yes"
+        },
+        "dontConsiderMeAPluralIDontHaveOther": {
+          "1": "One",
+          "2": "Two",
+          "3": "Three"
+        },
+        "listFlat": ["v1", "v2"],
+        "listComplex": [
+          {
+            "k1": "v1",
+            "k2": "v2"
+          }
+        ],
+        "obj": {
+          "objNested": {
+            "str": "v",
+            "listFlatNested": ["v1", "v2"],
+            "listComplexNested": [
+              {
+                "k1": "v1 en {{ nestedVarName1 }}",
+                "k2": "v2 {{ nestedVarName2 }}"
+              }
+            ],
+            "objNested2": {
+              "objNested21": {
+                "k": "v"
+              },
+              "listFlatNested22": ["v1", "v2"],
+              "str3": "v"
+            },
+            "objNested2b": {
+              "str2b1": "v",
+              "str2b2": "v",
+              "listFlatNested2b3": ["v1", "v2"],
+              "str2b4": "v"
+            }
+          }
+        }
+      },
+      "locale": "en"
+    },
+    {
       "path": "~account/FormUserLanguages.json",
       "data": {
         "empty": {},
@@ -131,59 +191,31 @@
       "locale": "it"
     },
     {
-      "path": "~account/~user~profile.json",
+      "path": "404.json",
       "data": {
-        "boolShouldntBeHereBut": true,
-        "title": "Title {{ varName }}",
-        "plural": "Plural",
-        "plural_one": "One {{ who }}",
-        "plural_other": "Some {{ who }}",
-        "plural_zero": "Zero {{ who }}",
-        "pluralNoDefault_one": "One",
-        "pluralNoDefault_other": "Some",
-        "pluralAsObject": {
-          "one": "One",
-          "other": "Others"
+        "seo": {
+          "title": "404 - Introvabile"
         },
-        "pluralAsObjectWithExtraKeys": {
-          "one": "One",
-          "other": "Others",
-          "noPluralRelated": "Yes"
-        },
-        "listFlat": ["v1", "v2"],
-        "listComplex": [
-          {
-            "k1": "v1",
-            "k2": "v2"
-          }
-        ],
-        "obj": {
-          "objNested": {
-            "str": "v",
-            "listFlatNested": ["v1", "v2"],
-            "listComplexNested": [
-              {
-                "k1": "v1 en {{ nestedVarName1 }}",
-                "k2": "v2 {{ nestedVarName2 }}"
-              }
-            ],
-            "objNested2": {
-              "objNested21": {
-                "k": "v"
-              },
-              "listFlatNested22": ["v1", "v2"],
-              "str3": "v"
-            },
-            "objNested2b": {
-              "str2b1": "v",
-              "str2b2": "v",
-              "listFlatNested2b3": ["v1", "v2"],
-              "str2b4": "v"
-            }
-          }
+        "title": "404, pagina non trovata",
+        "onlyNumberKeys": {
+          "1": "Una volta",
+          "2": "Due volte",
+          "3": "Tre volte"
         }
       },
-      "locale": "en"
+      "locale": "it"
+    },
+    {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "Cos'è?",
+            "answer": "Quello"
+          }
+        ]
+      },
+      "locale": "it"
     },
     {
       "path": "~account/~user~profile.json",
@@ -204,6 +236,11 @@
           "one": "Uno",
           "other": "Molti",
           "noPluralRelated": "Sì"
+        },
+        "dontConsiderMeAPluralIDontHaveOther": {
+          "1": "Uno",
+          "2": "Due",
+          "3": "Tre"
         },
         "listFlat": ["v1", "v2"],
         "listComplex": [
@@ -245,33 +282,6 @@
       "data": {
         "empty": {},
         "msg": "Del testo"
-      },
-      "locale": "it"
-    },
-    {
-      "path": "$faq.json",
-      "data": {
-        "home": [
-          {
-            "question": "Cos'è?",
-            "answer": "Quello"
-          }
-        ]
-      },
-      "locale": "it"
-    },
-    {
-      "path": "404.json",
-      "data": {
-        "seo": {
-          "title": "404 - Introvabile"
-        },
-        "title": "404, pagina non trovata",
-        "onlyNumberKeys": {
-          "1": "Una volta",
-          "2": "Due volte",
-          "3": "Tre volte"
-        }
       },
       "locale": "it"
     }

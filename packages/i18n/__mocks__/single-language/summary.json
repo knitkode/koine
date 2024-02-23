@@ -1,6 +1,6 @@
 {
   "en": {
-    "characters": 449,
+    "characters": 460,
     "files": [
       {
         "characters": 275,
@@ -10,11 +10,11 @@
         "words": 35
       },
       {
-        "characters": 127,
+        "characters": 138,
         "locale": "en",
         "path": "~account/~user~profile.json",
         "url": "https://github.com/knitkode/koine/translations/tree/dev/en/~account/~user~profile.json",
-        "words": 39
+        "words": 42
       },
       {
         "characters": 8,
@@ -38,6 +38,6 @@
         "words": 8
       }
     ],
-    "words": 87
+    "words": 90
   }
 }
