@@ -17,7 +17,7 @@ const buildTypeForObjectValue = (
     if (hasPlurals(value)) {
       return hasOnlyPluralKeys(value)
         ? `"${key}": string;`
-        : `"${key}": string | ${buildTypeForValue(pickNonPluralValue(value))}`;
+        : `"${key}": ${buildTypeForValue(pickNonPluralValue(value))}`;
     }
   }
 
@@ -80,7 +80,6 @@ const buildTranslationsDictionary = (
     out.push(`"${namespace}": ${buildTypeForValue(data)}`);
   }
 
-  // console.log("generateTypes: outputDir", outputDir, "outputPath", outputPath);
   return out.sort();
 };
 
