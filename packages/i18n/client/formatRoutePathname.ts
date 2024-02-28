@@ -14,3 +14,5 @@ export let formatRoutePathname = (
   }
   return pathname || "/";
 };
+
+export default formatRoutePathname;

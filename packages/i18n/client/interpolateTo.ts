@@ -86,3 +86,5 @@ export function interpolateTo<
 
   return formatRoutePathname(pathname);
 }
+
+export default interpolateTo;
