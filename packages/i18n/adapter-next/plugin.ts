@@ -1,4 +1,4 @@
-import { createRequire } from "module";
+import { createRequire } from "node:module";
 import type { NextConfig } from "next";
 import { type I18nCompilerOptions } from "../compiler";
 import { i18nCompilerSync } from "../compiler-sync";

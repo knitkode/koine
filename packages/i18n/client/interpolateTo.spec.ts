@@ -1,4 +1,3 @@
-// import { log } from "console";
 import { jestCreateExpectedThrownError } from "@koine/node/jest";
 import { interpolateTo as fn } from "./interpolateTo";
 
