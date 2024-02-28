@@ -5,27 +5,10 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nx/rollup:rollup",
-      "outputs": ["{options.outputPath}"],
+    "build": {},
+    "build-modularized": {},
+    "build-bundle": {
       "options": {
-        "outputPath": "dist/packages/i18n",
-        "tsConfig": "packages/i18n/tsconfig.lib.json",
-        "project": "packages/i18n/package.json",
-        "main": "packages/i18n/index.ts",
-        "assets": [
-          {
-            "input": "packages/i18n",
-            "glob": "/*.{md,d.ts}",
-            "output": "./"
-          }
-        ],
-        "generateExportsField": true,
-        "skipTypeCheck": false,
-        "external": "all",
-        "format": ["cjs", "esm"],
-        "compiler": "swc",
-        "deleteOutputPath": true,
         "additionalEntryPoints": [
           "packages/i18n/compiler.ts",
           "packages/i18n/compiler-sync.ts",
@@ -34,16 +17,7 @@
         ]
       }
     },
-    "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": [
-          "packages/i18n/**/*.ts",
-          "packages/i18n/package.json"
-        ]
-      }
-    },
+    "lint": {},
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/packages/i18n"],

@@ -1,3 +1,9 @@
+/**
+ * @fileoverview
+ *
+ * @see https://www.unicode.org/cldr/charts/43/supplemental/language_plural_rules.html
+ * @see https://cldr.unicode.org/index/cldr-spec/plural-rules
+ */
 import {
   forin,
   isNumericLiteral,
