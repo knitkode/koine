@@ -9,6 +9,8 @@ import {
   tweakNextConfig,
 } from "./plugin-shared";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore problem with cjs output
 const require = createRequire(import.meta.url);
 
 export type WithI18nOptions = NextConfig & {
