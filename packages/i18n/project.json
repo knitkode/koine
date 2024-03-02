@@ -5,7 +5,16 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {},
+    "build": {
+      "options": {
+        "additionalEntryPoints": [
+          "packages/i18n/compiler.ts",
+          "packages/i18n/compiler-sync.ts",
+          "packages/i18n/compiler-worker.ts",
+          "packages/i18n/next.ts"
+        ]
+      }
+    },
     "build-modularized-cjs": {},
     "build-modularized-esm": {},
     "build-modularized": {},
