@@ -100,10 +100,21 @@ const generateCodeFromAdapters = (
   adapters: I18nCompiler.Adpater[],
 ) => {
   const { outputFiles } = options;
-  const files = adapters.reduce(
-    (allFiles, adapter) => [...allFiles, ...adapter.files],
-    [] as I18nCompiler.AdpaterFile[],
-  );
+  const files = adapters.reduce((allFiles, adapter) => {
+    // NOTE: we allow adapters to produce the same files as their dependent's
+    // parent adapters (defined with `dependsOn`), here we ensure the parent
+    // adapters files do not override their previous same-named ones which
+    // should get the priority
+    const previousAdaptersFilesNames = allFiles.map(
+      (file) => file.name + file.ext,
+    );
+    return [
+      ...allFiles,
+      ...adapter.files.filter(
+        (file) => !previousAdaptersFilesNames.includes(file.name + file.ext),
+      ),
+    ];
+  }, [] as I18nCompiler.AdpaterFile[]);
 
   // TODO: prettier does probably not make sense unless one wants to keep the
   // auto-generated files on git, maybe allow this as an option?
@@ -127,7 +138,7 @@ const generateCodeFromAdapters = (
         name,
         content: fn({
           ...data,
-          adapterOptions: options.adapter,
+          adapterOptions: options.adapter.options,
         }),
       };
     },
@@ -153,13 +164,8 @@ const generateCodeFromAdapters = (
   };
 };
 
-export type CodeGenerateOptions<
-  T extends I18nCompiler.AdaptersName = I18nCompiler.AdaptersName,
-> = {
-  adapter: {
-    name: T;
-    options: I18nCompiler.AdaptersOptions<T>;
-  };
+export type CodeGenerateOptions = {
+  adapter: I18nCompiler.AnyAdapter;
   outputFiles?: Partial<{
     // TODO: make this works with generics based on chosen adapter?
     // defaultLocale: string;
@@ -179,9 +185,9 @@ export type CodeGenerateReturn =
   | Awaited<ReturnType<typeof generateCode>>
   | ReturnType<typeof generateCodeSync>;
 
-export let generateCode = async <T extends I18nCompiler.AdaptersName>(
+export let generateCode = async (
   data: I18nCompiler.DataCode,
-  options: CodeGenerateOptions<T>,
+  options: CodeGenerateOptions,
 ) =>
   generateCodeFromAdapters(
     data,
@@ -192,9 +198,9 @@ export let generateCode = async <T extends I18nCompiler.AdaptersName>(
     ),
   );
 
-export let generateCodeSync = <T extends I18nCompiler.AdaptersName>(
+export let generateCodeSync = (
   data: I18nCompiler.DataCode,
-  options: CodeGenerateOptions<T>,
+  options: CodeGenerateOptions,
 ) =>
   generateCodeFromAdapters(
     data,

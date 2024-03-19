@@ -6,14 +6,14 @@ import type { I18nCompiler } from "../compiler/types";
 import { transformPathname } from "./transformPathname";
 
 function generatePathRewrite(arg: {
-  config: I18nCompiler.Config;
   localeSource?: I18nCompiler.Locale;
   localeDestination?: I18nCompiler.Locale;
   template: string;
   pathname: string;
-  localeParam?: string;
+  passLocale?: boolean;
 }) {
-  const { localeSource, localeDestination, template, pathname } = arg;
+  const { localeSource, localeDestination, template, pathname, passLocale } =
+    arg;
 
   let sourcePrefix = "";
   if (localeSource) sourcePrefix = `/${localeSource}`;
@@ -31,6 +31,8 @@ function generatePathRewrite(arg: {
 
   const rewrite: Rewrite = { source, destination };
 
+  if (passLocale === false) rewrite.locale = false;
+
   return rewrite;
 }
 
@@ -46,16 +48,22 @@ const generateRewriteForPathname = (
   const isDefaultLocale = locale === defaultLocale;
   const isHiddenDefaultLocale = isDefaultLocale && hideDefaultLocaleInUrl;
   const isHiddenLocale = isHiddenDefaultLocale; // TODO: maybe support other locales to be hidden in the URL other than the default?
-  const arg = { config, template, pathname };
+  const arg = { template, pathname };
 
   if (localeParam) {
     // app router:
     if (isHiddenLocale) {
-      rewrites.push(generatePathRewrite({ ...arg, localeDestination: locale }));
+      rewrites.push(
+        generatePathRewrite({
+          ...arg,
+          localeDestination: locale,
+          passLocale: false,
+        }),
+      );
     } else {
       rewrites.push(
         // prettier-ignore
-        generatePathRewrite({ ...arg, localeSource: locale, localeDestination: locale }),
+        generatePathRewrite({ ...arg, localeSource: locale, localeDestination: locale, passLocale: false }),
       );
     }
   } else {
@@ -67,15 +75,18 @@ const generateRewriteForPathname = (
       if (isHiddenLocale) {
         rewrites.push(generatePathRewrite(arg));
       } else {
-        rewrites.push({
-          ...generatePathRewrite({ ...arg, localeSource: locale }),
-          // this must be `false` or the locale prefixed rewrite won't be
-          // applied and does not forward the locale to the route context
+        rewrites.push(
+          // `passLocale` must be `false` or the locale prefixed rewrite won't
+          // be applied and does not forward the locale to the route context
           // when the locale is included in the URL. In fact we explicitly
           // add the locale to the rewrite rule in order to get the least
           // amount of existing URLs which is a good SEO practice
-          locale: false,
-        } as Rewrite);
+          generatePathRewrite({
+            ...arg,
+            localeSource: locale,
+            passLocale: false,
+          }),
+        );
       }
     }
   }

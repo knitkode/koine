@@ -1,11 +1,10 @@
 import type { NextConfig } from "next";
-import { type I18nCompilerOptions, i18nCompiler } from "../compiler";
 import {
-  type I18nCompilerNextOptions,
-  getRedirects,
-  getRewrites,
-  tweakNextConfig,
-} from "./plugin-shared";
+  type I18nCompiler,
+  type I18nCompilerOptions,
+  i18nCompiler,
+} from "../compiler";
+import { getRedirects, getRewrites, tweakNextConfig } from "./plugin-shared";
 
 type NextConfigFn = (
   phase: string,
@@ -13,7 +12,7 @@ type NextConfigFn = (
 ) => Promise<NextConfig> | NextConfig;
 
 export type WithI18nAsyncOptions = NextConfig & {
-  i18nCompiler?: I18nCompilerOptions & I18nCompilerNextOptions;
+  i18nCompiler?: I18nCompilerOptions;
 };
 
 /**
@@ -23,10 +22,12 @@ export type WithI18nAsyncOptions = NextConfig & {
  * About next.config phases see https://github.com/vercel/next.js/discussions/48736
  */
 export let withI18nAsync =
-  (config: WithI18nAsyncOptions = {}): NextConfigFn =>
+  <TAdapterName extends I18nCompiler.AdaptersName>(
+    config: WithI18nAsyncOptions = {},
+  ): NextConfigFn =>
   async (/* phase: string */) => {
     const {
-      i18nCompiler: i18nConfig,
+      i18nCompiler: i18nCompilerOptions,
       redirects,
       rewrites,
       ...restNextConfig
@@ -41,9 +42,9 @@ export let withI18nAsync =
     // }
 
     // bail if user has not defined the compiler options object
-    if (!i18nConfig) return nextConfig;
+    if (!i18nCompilerOptions) return nextConfig;
 
-    const i18nResult = await i18nCompiler(i18nConfig);
+    const i18nResult = await i18nCompiler(i18nCompilerOptions);
 
     nextConfig = tweakNextConfig(i18nResult, nextConfig);
 
@@ -51,14 +52,29 @@ export let withI18nAsync =
 
     nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
 
-    if (i18nConfig.code.adapter.name === "next-translate") {
-      try {
-        const withNextTranslate = await import("next-translate-plugin").then(
-          (m) => m.default,
-        );
-        nextConfig = withNextTranslate(nextConfig);
-      } catch (e) {
-        // console.log()
+    const {
+      code: { adapter },
+    } = i18nCompilerOptions;
+
+    if (adapter.name === "next-translate") {
+      // const options = i18nConfig.code.adapter.options;
+      if (adapter.options.loader !== false) {
+        try {
+          const withNextTranslate = await import("next-translate-plugin").then(
+            (m) => m.default,
+          );
+          nextConfig = withNextTranslate(nextConfig);
+
+          // TODO: verify this:
+          // when using the locale param name structure just force to opt-out from
+          // next.js built in i18n support for pages router, this should also
+          // ease the cohexistence of pages and app router
+          // if (i18nResult.code.options.routes.localeParamName) {
+          //   delete nextConfig.i18n;
+          // }
+        } catch (e) {
+          // console.log()
+        }
       }
     }
 

@@ -4,12 +4,8 @@ import type { I18nCompilerReturn } from "../compiler";
 import { generateRedirects } from "./redirects";
 import { generateRewrites } from "./rewrites";
 
-export type I18nCompilerNextOptions = {
-  permanentRedirects?: boolean;
-};
-
 export let tweakNextConfig = (
-  options: I18nCompilerReturn & I18nCompilerNextOptions,
+  options: I18nCompilerReturn,
   nextConfig: NextConfig,
 ) => {
   const {

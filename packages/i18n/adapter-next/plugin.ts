@@ -1,25 +1,20 @@
 import { createRequire } from "node:module";
 import type { NextConfig } from "next";
-import { type I18nCompilerOptions } from "../compiler";
+import { type I18nCompiler, type I18nCompilerOptions } from "../compiler";
 import { i18nCompilerSync } from "../compiler-sync";
-import {
-  type I18nCompilerNextOptions,
-  getRedirects,
-  getRewrites,
-  tweakNextConfig,
-} from "./plugin-shared";
+import { getRedirects, getRewrites, tweakNextConfig } from "./plugin-shared";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore problem with cjs output
 const require = createRequire(import.meta.url);
 
 export type WithI18nOptions = NextConfig & {
-  i18nCompiler?: I18nCompilerOptions & I18nCompilerNextOptions;
+  i18nCompiler?: I18nCompilerOptions;
 };
 
 export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
   const {
-    i18nCompiler: i18nConfig,
+    i18nCompiler: i18nCompilerOptions,
     redirects,
     rewrites,
     ...restNextConfig
@@ -27,9 +22,9 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
   let nextConfig: NextConfig = restNextConfig;
 
   // bail if user has not defined the compiler options object
-  if (!i18nConfig) return nextConfig;
+  if (!i18nCompilerOptions) return nextConfig;
 
-  const i18nResult = i18nCompilerSync(i18nConfig);
+  const i18nResult = i18nCompilerSync(i18nCompilerOptions);
 
   nextConfig = tweakNextConfig(i18nResult, nextConfig);
 
@@ -37,12 +32,26 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
 
   nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
 
-  if (i18nConfig.code.adapter.name === "next-translate") {
-    try {
-      const withNextTranslate = require("next-translate-plugin");
-      nextConfig = withNextTranslate(nextConfig);
-    } catch (e) {
-      // console.log()
+  const {
+    code: { adapter },
+  } = i18nCompilerOptions;
+
+  if (adapter.name === "next-translate") {
+    if (adapter.options.loader !== false) {
+      try {
+        const withNextTranslate = require("next-translate-plugin");
+        nextConfig = withNextTranslate(nextConfig);
+
+        // TODO: verify this:
+        // when using the locale param name structure just force to opt-out from
+        // next.js built in i18n support for pages router, this should also
+        // ease the cohexistence of pages and app router
+        if (i18nResult.code.options.routes.localeParamName) {
+          delete nextConfig.i18n;
+        }
+      } catch (e) {
+        // console.log()
+      }
     }
   }
 

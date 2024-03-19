@@ -1,5 +1,6 @@
 import type { I18nCompiler } from "../../compiler/types";
 import DynamicNamespaces from "./DynamicNamespaces";
+import I18nProvider from "./I18nProvider";
 import T from "./T";
 import TransText from "./TransText";
 import getT from "./getT";
@@ -19,10 +20,11 @@ const adapter: I18nCompiler.AdpaterCreator<"next-translate"> = ({
   ];
 
   if (adapterOptions.loader === false) {
+    files.push({ name: "useLocale", fn: useLocale, ext: "ts", index: true });
     files.push({
-      name: "useLocale",
-      fn: useLocale,
-      ext: "ts",
+      name: "I18nProvider",
+      fn: I18nProvider,
+      ext: "tsx",
       index: true,
     });
   } else {

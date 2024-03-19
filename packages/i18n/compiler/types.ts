@@ -166,24 +166,42 @@ export namespace I18nCompiler {
     | string[]
     | { [key: string]: DataTranslationValue };
 
+  type AdapterJs = {
+    name: "js";
+    options: {};
+  };
+
+  type AdapterNext = {
+    name: "next";
+    options: {};
+  };
+
+  type AdapterNextTranslate = {
+    name: "next-translate";
+    options: Partial<Pick<I18nConfig, "loader">>;
+  };
+
   /**
    * Built in adapters with their options
    */
-  export type Adapters = {
-    js: {};
-    next: {};
-    "next-translate": Partial<Pick<I18nConfig, "loader">>;
-  };
+  export type AnyAdapter = AdapterJs | AdapterNext | AdapterNextTranslate;
 
   /**
    * Built in adapters names
    */
-  export type AdaptersName = keyof Adapters;
+  export type AdaptersName = AnyAdapter["name"];
 
   /**
    * Built in adapter options
    */
-  export type AdaptersOptions<T extends AdaptersName> = Adapters[T];
+  // export type AdaptersOptions<T extends AdaptersName> = Adapters[T];
+  export type AdaptersOptions<T extends AdaptersName> = T extends "js"
+    ? AdapterJs["options"]
+    : T extends "next"
+      ? AdapterNext["options"]
+      : T extends "next-translate"
+        ? AdapterNextTranslate["options"]
+        : never;
 
   /**
    * Adapter creator function, either _sync_ or _async_
