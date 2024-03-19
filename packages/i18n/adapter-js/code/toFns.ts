@@ -20,7 +20,7 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-export default ({ config, routes, options }: I18nCompiler.AdapterArg) => {
+export default ({ config, routes, options }: I18nCompiler.AdapterArg<"js">) => {
   const hasOneLocale = config.locales.length === 1;
   let output = `
 /* eslint-disable prefer-const */

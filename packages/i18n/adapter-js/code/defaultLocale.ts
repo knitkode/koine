@@ -1,6 +1,6 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg) =>
+export default ({ config }: I18nCompiler.AdapterArg<"js">) =>
   `
 import type { I18n } from "./types";
 

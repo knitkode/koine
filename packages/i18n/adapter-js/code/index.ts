@@ -18,7 +18,7 @@ import toFormat from "./toFormat";
 import toSpa from "./toSpa";
 import types from "./types";
 
-const adapter: I18nCompiler.AdpaterCreator = () => {
+const adapter: I18nCompiler.AdpaterCreator<"js"> = () => {
   return {
     files: [
       { name: "config.cjs", fn: configCjs, ext: "js" },

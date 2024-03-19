@@ -20,7 +20,12 @@ describe("test write", () => {
         },
       },
       code: {
-        adapter: "next-translate",
+        adapter: {
+          name: "next-translate",
+          options: {
+            loader: false,
+          },
+        },
         write: {
           cwd: mocksPath("single-language"),
           output: ".code",
@@ -58,7 +63,12 @@ describe("test write", () => {
         },
       },
       code: {
-        adapter: "next-translate",
+        adapter: {
+          name: "next-translate",
+          options: {
+            loader: false,
+          },
+        },
         write: {
           cwd: mocksPath("multi-language"),
           output: ".code",
@@ -93,7 +103,12 @@ describe("test your.io", () => {
         },
       },
       code: {
-        adapter: "next-translate",
+        adapter: {
+          name: "next-translate",
+          options: {
+            loader: false,
+          },
+        },
       },
       summary: {
         sourceUrl: "https://github.com/your-network/translations/tree/dev",
@@ -115,7 +130,12 @@ describe("test your.io", () => {
         //   "https://raw.githubusercontent.com/your-network/translations/dev/.github/input.json",
       },
       code: {
-        adapter: "next-translate",
+        adapter: {
+          name: "next-translate",
+          options: {
+            loader: false,
+          },
+        },
         write: {
           output: "../../Your/frontend/libs/i18n",
           skipTsCompile: true,

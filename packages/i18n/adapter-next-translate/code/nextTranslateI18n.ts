@@ -1,6 +1,9 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg) => `
+export default ({
+  config,
+  adapterOptions,
+}: I18nCompiler.AdapterArg<"next-translate">) => `
 /**
  * Get 'next-translate' configuration
  *
@@ -15,6 +18,7 @@ module.exports = (config = { pages: {} }) => {
     logBuild: false,
     // logger: () => void 0,
     loadLocaleFrom: (locale, namespace) => import(\`./translations/\${locale}/\${namespace}.json\`).then((m) => m.default),
+    ...${JSON.stringify(adapterOptions)},
     ...config,
   };
 }

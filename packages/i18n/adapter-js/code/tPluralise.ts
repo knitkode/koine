@@ -1,6 +1,6 @@
-// import type { I18nCompiler } from "../../compiler/types";
+import type { I18nCompiler } from "../../compiler/types";
 
-export default (/* {}: I18nCompiler.AdapterArg */) => {
+export default ({}: I18nCompiler.AdapterArg<"js">) => {
   return `
 /* eslint-disable prefer-const */
 let pluralRules = new Intl.PluralRules();

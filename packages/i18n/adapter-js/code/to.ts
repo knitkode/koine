@@ -1,6 +1,6 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg) => `
+export default ({ config }: I18nCompiler.AdapterArg<"js">) => `
 import { isLocale } from "./isLocale";
 import { toFormat } from "./toFormat";
 import { routesSlim } from "./routesSlim";

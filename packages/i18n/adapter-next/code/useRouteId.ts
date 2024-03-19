@@ -1,12 +1,16 @@
-// import type { I18nCompiler } from "../../compiler/types";
+import type { I18nCompiler } from "../../compiler/types";
 
-export default (/* {}: I18nCompiler.AdapterArg, */) => `
+export default ({
+  options: {
+    routes: { localeParamName },
+  },
+}: I18nCompiler.AdapterArg<"next">) => `
 import { useRouter } from "next/router";
 import type { I18n } from "./types";
 import { pathnameToRouteId } from "./pathnameToRouteId";
 
 export const useRouteId = () => 
-  pathnameToRouteId(useRouter().pathname) as I18n.RouteId;
+  pathnameToRouteId(useRouter().pathname${localeParamName ? `.replace("[${localeParamName}]/", "")` : ""}) as I18n.RouteId;
 
 export default useRouteId;
 `;

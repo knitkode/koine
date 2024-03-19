@@ -45,14 +45,13 @@ export let withI18nAsync =
 
     const i18nResult = await i18nCompiler(i18nConfig);
 
-    nextConfig = tweakNextConfig(i18nResult.config, nextConfig);
+    nextConfig = tweakNextConfig(i18nResult, nextConfig);
 
-    nextConfig.redirects = () =>
-      getRedirects(redirects, i18nConfig, i18nResult);
+    nextConfig.redirects = () => getRedirects(redirects, i18nResult);
 
-    nextConfig.rewrites = () => getRewrites(rewrites, i18nConfig, i18nResult);
+    nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
 
-    if (i18nConfig.code.adapter === "next-translate") {
+    if (i18nConfig.code.adapter.name === "next-translate") {
       try {
         const withNextTranslate = await import("next-translate-plugin").then(
           (m) => m.default,

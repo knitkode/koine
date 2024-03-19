@@ -1,6 +1,6 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg) => `
+export default ({ config }: I18nCompiler.AdapterArg<"js">) => `
 const { locales } = require("./locales");
 const { defaultLocale } = require("./defaultLocale");
 

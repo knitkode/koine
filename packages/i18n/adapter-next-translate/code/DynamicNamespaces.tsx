@@ -1,6 +1,6 @@
-// import type { I18nCompiler } from "../../compiler/types";
+import type { I18nCompiler } from "../../compiler/types";
 
-export default (/* {}: I18nCompiler.AdapterArg, */) => `
+export default ({}: I18nCompiler.AdapterArg<"next-translate">) => `
 "use client";
 
 import _DynamicNamespaces from "next-translate/DynamicNamespaces";

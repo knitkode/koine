@@ -1,6 +1,6 @@
-// import type { I18nCompiler } from "../../compiler/types";
+import type { I18nCompiler } from "../../compiler/types";
 
-export default (/* {}: I18nCompiler.AdapterArg */) => `
+export default ({}: I18nCompiler.AdapterArg<"next">) => `
 "use client";
 
 import { toSpa } from "./toSpa";
@@ -26,7 +26,7 @@ export const useToSpa = () => {
     const [params] = args;
     return (
       // prettier-ignore
-      // @ts-expect-error FIXME: types
+      // @ts-ignore FIXME: types
       (params ? toSpa(root, path, params, locale) : toSpa(root, path, locale)) as I18n.RouteSpa[Root][Path]
     );
   };

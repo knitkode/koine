@@ -1,6 +1,6 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg) =>
+export default ({ config }: I18nCompiler.AdapterArg<"js">) =>
   `
 export function toFormat(
   locale: string | undefined,
@@ -51,7 +51,7 @@ export function toFormat(
     config.hideDefaultLocaleInUrl
       ? `
   if (locale !== "${config.defaultLocale}") {
-    return "/" + locale + pathname;
+    return "/" + locale + (pathname === "/" ? "" : pathname);
   }
   `
       : ``

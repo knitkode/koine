@@ -188,7 +188,7 @@ export default ({
   input,
   routes,
   options,
-}: I18nCompiler.AdapterArg) => {
+}: I18nCompiler.AdapterArg<"js">) => {
   const routeIdStatic = buildRoutesUnion(routes, (_, { params }) => !params);
   const routeIdDynamic = buildRoutesUnion(routes, (_, { params }) => !!params);
   // const routeIdSpa = buildRoutesUnion(routes, (_, { inWildcard }) => inWildcard);

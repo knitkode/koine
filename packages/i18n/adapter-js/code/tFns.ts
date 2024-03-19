@@ -88,7 +88,11 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-export default ({ config, options, translations }: I18nCompiler.AdapterArg) => {
+export default ({
+  config,
+  options,
+  translations,
+}: I18nCompiler.AdapterArg<"js">) => {
   let output = `
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prefer-const */

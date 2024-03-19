@@ -1,6 +1,6 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ routes }: I18nCompiler.AdapterArg) => {
+export default ({ routes }: I18nCompiler.AdapterArg<"js">) => {
   const value = JSON.stringify(
     Object.fromEntries(
       Object.entries(routes.byId)

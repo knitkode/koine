@@ -6,7 +6,7 @@ const escapeEachChar = (input: string) =>
     .map((v) => `\\${v}`)
     .join("");
 
-export default ({ options }: I18nCompiler.AdapterArg) => {
+export default ({ options }: I18nCompiler.AdapterArg<"js">) => {
   const { start, end } = options.translations.dynamicDelimiters;
   return `
 /* eslint-disable prefer-const */

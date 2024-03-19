@@ -31,13 +31,13 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
 
   const i18nResult = i18nCompilerSync(i18nConfig);
 
-  nextConfig = tweakNextConfig(i18nResult.config, nextConfig);
+  nextConfig = tweakNextConfig(i18nResult, nextConfig);
 
-  nextConfig.redirects = () => getRedirects(redirects, i18nConfig, i18nResult);
+  nextConfig.redirects = () => getRedirects(redirects, i18nResult);
 
-  nextConfig.rewrites = () => getRewrites(rewrites, i18nConfig, i18nResult);
+  nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
 
-  if (i18nConfig.code.adapter === "next-translate") {
+  if (i18nConfig.code.adapter.name === "next-translate") {
     try {
       const withNextTranslate = require("next-translate-plugin");
       nextConfig = withNextTranslate(nextConfig);

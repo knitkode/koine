@@ -44,8 +44,6 @@ export let generateRedirects = (
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes["byId"],
   options: CodeDataRoutesOptions,
-  localeParam = "",
-  permanent = false,
 ) => {
   const { defaultLocale, hideDefaultLocaleInUrl } = config;
   const regexIdDelimiter = new RegExp(
@@ -69,9 +67,9 @@ export let generateRedirects = (
       const isDefaultLocale = locale === defaultLocale;
       const isVisibleDefaultLocale = isDefaultLocale && !hideDefaultLocaleInUrl;
       const isHiddenDefaultLocale = isDefaultLocale && hideDefaultLocaleInUrl;
-      const arg = { template, pathname, permanent };
+      const arg = { template, pathname, permanent: options.permanentRedirects };
 
-      if (localeParam) {
+      if (options.localeParamName) {
         // app router:
         if (isVisibleDefaultLocale) {
           redirects.push(
@@ -120,7 +118,9 @@ export let generateRedirects = (
     ["source", "destination"],
   )
     .sort((a, b) => a.source.localeCompare(b.source))
-    .map((rewrite) => (localeParam ? rewrite : { ...rewrite, locale: false }));
+    .map((redirect) =>
+      options.localeParamName ? redirect : { ...redirect, locale: false },
+    );
 
   return cleaned as Redirect[];
 };

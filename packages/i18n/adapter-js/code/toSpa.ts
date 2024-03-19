@@ -1,6 +1,6 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config, options }: I18nCompiler.AdapterArg) => {
+export default ({ config, options }: I18nCompiler.AdapterArg<"js">) => {
   const { idDelimiter } = options.routes.tokens;
   return `
 import { isLocale } from "./isLocale";

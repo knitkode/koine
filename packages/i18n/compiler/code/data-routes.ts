@@ -9,6 +9,19 @@ import { formatRoutePathname } from "../../client/formatRoutePathname";
 import type { I18nCompiler } from "../types";
 
 export const codeDataRoutesOptions = {
+  /**
+   * Set this to true once your routing setup is ready for production.
+   *
+   * @default false
+   */
+  permanentRedirects: false as boolean,
+  /**
+   * The name of the locale dynamic segment in the URL usually represented as
+   * `[lang]/my-slugs` but without neither brackets nor slashes, so just `lang`
+   *
+   * @default "lang"
+   */
+  localeParamName: "lang",
   /** @default  "~.json" */
   translationJsonFileName: "~.json",
   /**

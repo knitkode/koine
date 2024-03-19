@@ -26,19 +26,22 @@ type InputOptions = InputDataOptions & {
   write?: InputWriteOptions;
 };
 
-type CodeOptions = PartialDeep<CodeDataOptions> &
-  CodeGenerateOptions & {
-    write?: CodeWriteOptions;
-  };
+type CodeOptions<TAdapterName extends I18nCompiler.AdaptersName> =
+  PartialDeep<CodeDataOptions> &
+    CodeGenerateOptions<TAdapterName> & {
+      write?: CodeWriteOptions;
+    };
 
 type SummaryOptions = SummaryDataOptions &
   SummaryGenerateOptions & {
     write?: SummaryWriteOptions;
   };
 
-export type I18nCompilerOptions = Partial<I18nCompiler.Config> & {
+export type I18nCompilerOptions<
+  TAdapterName extends I18nCompiler.AdaptersName = I18nCompiler.AdaptersName,
+> = Partial<I18nCompiler.Config> & {
   input: InputOptions;
-  code: CodeOptions;
+  code: CodeOptions<TAdapterName>;
   summary?: SummaryOptions;
 };
 
@@ -49,7 +52,11 @@ export type I18nCompilerReturn = Awaited<ReturnType<typeof i18nCompiler>>;
  *
  * @public
  */
-export let i18nCompiler = async (options: I18nCompilerOptions) => {
+export let i18nCompiler = async <
+  TAdapterName extends I18nCompiler.AdaptersName,
+>(
+  options: I18nCompilerOptions<TAdapterName>,
+) => {
   const {
     input: optsInput,
     code: optsCode,

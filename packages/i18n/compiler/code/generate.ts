@@ -4,15 +4,6 @@ import nextTranslate from "../../adapter-next-translate/code";
 import next from "../../adapter-next/code";
 import type { I18nCompiler } from "../types";
 
-const adaptersMap: Record<
-  I18nCompiler.AdapterBuiltin,
-  I18nCompiler.AdpaterCreator
-> = {
-  js: js,
-  next: next,
-  "next-translate": nextTranslate,
-};
-
 const getIndexFile = (generatedFiles: I18nCompiler.AdpaterGeneratedFile[]) => {
   let output = "";
 
@@ -25,21 +16,39 @@ const getIndexFile = (generatedFiles: I18nCompiler.AdpaterGeneratedFile[]) => {
   return output;
 };
 
+const getAdapterCreator = <T extends I18nCompiler.AdaptersName>(
+  adapterName: T,
+) => {
+  switch (adapterName) {
+    case "js":
+      return js;
+    case "next":
+      return next;
+    case "next-translate":
+      return nextTranslate;
+  }
+  return js;
+};
+
 /**
  * Recursively builds a list of adapters to use based on the `dependsOn` array
  * of the choosen adapter
  */
-const getAdapters = async (
-  adapterArg: I18nCompiler.AdapterArg,
-  adapterName: I18nCompiler.AdapterBuiltin,
+const getAdapters = async <T extends I18nCompiler.AdaptersName>(
+  adapterArg: I18nCompiler.AdapterArg<T>,
+  adapterName: T,
   adapters: I18nCompiler.Adpater[] = [],
 ) => {
-  const adapterCreator = adaptersMap[adapterName];
+  // const { name } = adapterArg;
+  // const adapterCreator = adaptersMap[adapterName];
+  const adapterCreator = getAdapterCreator(
+    adapterName,
+  ) as I18nCompiler.AdpaterCreator<T>;
   const adapterToResolve = adapterCreator(adapterArg);
   const adapter = isPromise(adapterToResolve)
     ? await adapterToResolve
     : adapterToResolve;
-  adapters = adapters.concat(adapter);
+  adapters = adapters.concat([adapter as I18nCompiler.Adpater]);
 
   if (adapter.dependsOn) {
     await Promise.all(
@@ -56,12 +65,14 @@ const getAdapters = async (
  * Recursively builds a list of adapters to use based on the `dependsOn` array
  * of the choosen adapter, it filters out and warn if async adapters are defined
  */
-const getAdaptersSync = (
-  adapterArg: I18nCompiler.AdapterArg,
-  adapterName: I18nCompiler.AdapterBuiltin,
+const getAdaptersSync = <T extends I18nCompiler.AdaptersName>(
+  adapterArg: I18nCompiler.AdapterArg<T>,
+  adapterName: T,
   adapters: I18nCompiler.Adpater[] = [],
 ) => {
-  const adapterCreator = adaptersMap[adapterName];
+  const adapterCreator = getAdapterCreator(
+    adapterName,
+  ) as I18nCompiler.AdpaterCreator<T>;
   const adapterToResolve = adapterCreator(adapterArg);
 
   if (isPromise(adapterToResolve)) {
@@ -71,7 +82,7 @@ const getAdaptersSync = (
     );
   } else {
     const adapter = adapterToResolve;
-    adapters = adapters.concat(adapter);
+    adapters = adapters.concat([adapter as I18nCompiler.Adpater]);
 
     if (adapter.dependsOn) {
       adapter.dependsOn.forEach((adapaterName) => {
@@ -111,7 +122,14 @@ const generateCodeFromAdapters = (
       const name =
         outputFiles?.[rest.name as keyof typeof outputFiles] || rest.name;
 
-      return { ...rest, name, content: fn(data) };
+      return {
+        ...rest,
+        name,
+        content: fn({
+          ...data,
+          adapterOptions: options.adapter,
+        }),
+      };
     },
   );
 
@@ -135,8 +153,13 @@ const generateCodeFromAdapters = (
   };
 };
 
-export type CodeGenerateOptions = {
-  adapter: I18nCompiler.AdapterBuiltin;
+export type CodeGenerateOptions<
+  T extends I18nCompiler.AdaptersName = I18nCompiler.AdaptersName,
+> = {
+  adapter: {
+    name: T;
+    options: I18nCompiler.AdaptersOptions<T>;
+  };
   outputFiles?: Partial<{
     // TODO: make this works with generics based on chosen adapter?
     // defaultLocale: string;
@@ -156,22 +179,28 @@ export type CodeGenerateReturn =
   | Awaited<ReturnType<typeof generateCode>>
   | ReturnType<typeof generateCodeSync>;
 
-export let generateCode = async (
+export let generateCode = async <T extends I18nCompiler.AdaptersName>(
   data: I18nCompiler.DataCode,
-  options: CodeGenerateOptions,
+  options: CodeGenerateOptions<T>,
 ) =>
   generateCodeFromAdapters(
     data,
     options,
-    await getAdapters(data, options.adapter),
+    await getAdapters(
+      { ...data, adapterOptions: options.adapter.options },
+      options.adapter.name,
+    ),
   );
 
-export let generateCodeSync = (
+export let generateCodeSync = <T extends I18nCompiler.AdaptersName>(
   data: I18nCompiler.DataCode,
-  options: CodeGenerateOptions,
+  options: CodeGenerateOptions<T>,
 ) =>
   generateCodeFromAdapters(
     data,
     options,
-    getAdaptersSync(data, options.adapter),
+    getAdaptersSync(
+      { ...data, adapterOptions: options.adapter.options },
+      options.adapter.name,
+    ),
   );

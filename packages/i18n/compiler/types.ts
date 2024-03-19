@@ -1,3 +1,4 @@
+import type { I18nConfig } from "next-translate";
 import type { CodeDataOptions } from "./code";
 import type { I18nCompilerConfig } from "./config";
 import type { PluralSuffix } from "./pluralisation";
@@ -166,21 +167,37 @@ export namespace I18nCompiler {
     | { [key: string]: DataTranslationValue };
 
   /**
-   * Built in adapters
+   * Built in adapters with their options
    */
-  export type AdapterBuiltin = "js" | "next" | "next-translate";
+  export type Adapters = {
+    js: {};
+    next: {};
+    "next-translate": Partial<Pick<I18nConfig, "loader">>;
+  };
+
+  /**
+   * Built in adapters names
+   */
+  export type AdaptersName = keyof Adapters;
+
+  /**
+   * Built in adapter options
+   */
+  export type AdaptersOptions<T extends AdaptersName> = Adapters[T];
 
   /**
    * Adapter creator function, either _sync_ or _async_
    */
-  export type AdpaterCreator = (arg: AdapterArg) => Adpater | Promise<Adpater>;
+  export type AdpaterCreator<T extends AdaptersName> = (
+    arg: AdapterArg<T>,
+  ) => Adpater<T> | Promise<Adpater<T>>;
 
   /**
    * Adapter anatomy
    */
-  export type Adpater = {
-    dependsOn?: AdapterBuiltin[];
-    files: AdpaterFile[];
+  export type Adpater<T extends AdaptersName = AdaptersName> = {
+    dependsOn?: AdaptersName[];
+    files: AdpaterFile<T>[];
     /**
      * Adapters like `next-translate` need the JSON file to be available
      */
@@ -190,12 +207,19 @@ export namespace I18nCompiler {
   /**
    * {@link DataCode}
    */
-  export type AdapterArg = DataCode;
+  export type AdapterArg<T extends AdaptersName = AdaptersName> = DataCode & {
+    adapterOptions: AdaptersOptions<T>;
+  };
+  // name: T;
+  //   data: DataCode;
+  // };
+  //   data: Omit<DataCode, "config">;
+  // } & Pick<DataCode, "config">;
 
   /**
    * Adapter file anatomy
    */
-  export type AdpaterFile = {
+  export type AdpaterFile<T extends AdaptersName = AdaptersName> = {
     name: string;
     /**
      * File extension
@@ -204,7 +228,7 @@ export namespace I18nCompiler {
     /**
      * Function that generates the file content
      */
-    fn: (arg: AdapterArg) => string;
+    fn: (arg: AdapterArg<T>) => string;
     /**
      * Whether the generated file should be added to the automatically generated
      * `index.ts` barrel file
@@ -215,7 +239,7 @@ export namespace I18nCompiler {
   /**
    * An {@link AdpaterFile} whose `fn` has been called to generate content.
    */
-  export type AdpaterGeneratedFile = Omit<AdpaterFile, "fn"> & {
+  export type AdpaterGeneratedFile = Omit<AdpaterFile<AdaptersName>, "fn"> & {
     content: string;
   };
 }

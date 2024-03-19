@@ -1,7 +1,7 @@
 import { escapeRegExp } from "@koine/utils";
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ options }: I18nCompiler.AdapterArg) => {
+export default ({ options }: I18nCompiler.AdapterArg<"js">) => {
   const { idDelimiter, optionalCatchAll, catchAll } = options.routes.tokens;
   return `
 /**

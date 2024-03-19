@@ -92,7 +92,6 @@ export let generateRewrites = (
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes["byId"],
   options: CodeDataRoutesOptions,
-  localeParam = "",
 ) => {
   const regexIdDelimiter = new RegExp(
     escapeRegExp(options.tokens.idDelimiter),
@@ -113,7 +112,7 @@ export let generateRewrites = (
       // we need to rewrite both the root path...
       generateRewriteForPathname(
         config,
-        localeParam,
+        options.localeParamName,
         locale,
         transformPathname(routeIdAsTemplate),
         transformPathname(localisedPathname),
@@ -124,7 +123,7 @@ export let generateRewrites = (
         // and for wildcard routes the ones with the `/:segment*` portion
         generateRewriteForPathname(
           config,
-          localeParam,
+          options.localeParamName,
           locale,
           transformPathname(routeIdAsTemplate, route.wildcard),
           transformPathname(localisedPathname, route.wildcard),
