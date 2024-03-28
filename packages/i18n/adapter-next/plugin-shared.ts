@@ -17,13 +17,11 @@ export let tweakNextConfig = (
     },
   } = options;
   if (localeParamName) {
-    // app router:
-    // NOTE: after thousands attempts turns out that passing the i18n settings
-    // to the app router messes up everything, just rely on our internal i18n
-    // mechanisms
+    // NOTE: passing the i18n settings with the app router messes up everything
+    // especially while migrating from pages to app router, so opt out from that
+    // and only rely on our i18n implementation
     delete nextConfig.i18n;
   } else {
-    // pages routes:
     nextConfig.i18n = nextConfig.i18n || { locales, defaultLocale };
     nextConfig.i18n.locales = locales;
     nextConfig.i18n.defaultLocale = defaultLocale;

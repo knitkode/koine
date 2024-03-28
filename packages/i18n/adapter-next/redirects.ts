@@ -33,6 +33,62 @@ function generatePathRedirect(arg: {
   return redirect;
 }
 
+export function generateRedirectForPathname(
+  config: Pick<I18nCompiler.Config, "defaultLocale" | "hideDefaultLocaleInUrl">,
+  localeParam = "",
+  locale: string,
+  template: string,
+  pathname: string,
+  redirects: (Redirect | undefined)[],
+  permanentRedirects?: boolean,
+) {
+  const { defaultLocale, hideDefaultLocaleInUrl } = config;
+  const isDefaultLocale = locale === defaultLocale;
+  const isVisibleDefaultLocale = isDefaultLocale && !hideDefaultLocaleInUrl;
+  const isHiddenDefaultLocale = isDefaultLocale && hideDefaultLocaleInUrl;
+  const arg = { template, pathname, permanent: permanentRedirects };
+
+  if (localeParam) {
+    // app router:
+    if (isVisibleDefaultLocale) {
+      redirects.push(
+        generatePathRedirect({ ...arg, localeDestination: locale }),
+      );
+    } else if (isHiddenDefaultLocale) {
+      redirects.push(generatePathRedirect({ ...arg, localeSource: locale }));
+    } else if (!isDefaultLocale) {
+      redirects.push(
+        generatePathRedirect({
+          ...arg,
+          localeSource: locale,
+          localeDestination: locale,
+        }),
+      );
+    } else {
+      redirects.push(generatePathRedirect(arg));
+    }
+  } else {
+    // pages router:
+    if (pathname !== template) {
+      if (isVisibleDefaultLocale) {
+        redirects.push(
+          generatePathRedirect({ ...arg, localeDestination: locale }),
+        );
+      } else if (!isDefaultLocale) {
+        redirects.push(
+          generatePathRedirect({
+            ...arg,
+            localeSource: locale,
+            localeDestination: locale,
+          }),
+        );
+      } else {
+        redirects.push(generatePathRedirect(arg));
+      }
+    }
+  }
+}
+
 /**
  * TODO: maybe write directly the vercel configuration?
  *
@@ -45,7 +101,6 @@ export let generateRedirects = (
   routes: I18nCompiler.DataRoutes["byId"],
   options: CodeDataRoutesOptions,
 ) => {
-  const { defaultLocale, hideDefaultLocaleInUrl } = config;
   const regexIdDelimiter = new RegExp(
     escapeRegExp(options.tokens.idDelimiter),
     "g",
@@ -64,52 +119,15 @@ export let generateRedirects = (
       // we do not redirect urls children of wildcard urls
       if (route.inWildcard) break;
 
-      const isDefaultLocale = locale === defaultLocale;
-      const isVisibleDefaultLocale = isDefaultLocale && !hideDefaultLocaleInUrl;
-      const isHiddenDefaultLocale = isDefaultLocale && hideDefaultLocaleInUrl;
-      const arg = { template, pathname, permanent: options.permanentRedirects };
-
-      if (options.localeParamName) {
-        // app router:
-        if (isVisibleDefaultLocale) {
-          redirects.push(
-            generatePathRedirect({ ...arg, localeDestination: locale }),
-          );
-        } else if (isHiddenDefaultLocale) {
-          redirects.push(
-            generatePathRedirect({ ...arg, localeSource: locale }),
-          );
-        } else if (!isDefaultLocale) {
-          redirects.push(
-            generatePathRedirect({
-              ...arg,
-              localeSource: locale,
-              localeDestination: locale,
-            }),
-          );
-        } else {
-          redirects.push(generatePathRedirect(arg));
-        }
-      } else {
-        // pages router:
-        if (pathname !== template) {
-          if (isVisibleDefaultLocale) {
-            redirects.push(
-              generatePathRedirect({ ...arg, localeDestination: locale }),
-            );
-          } else if (!isDefaultLocale) {
-            redirects.push(
-              generatePathRedirect({
-                ...arg,
-                localeSource: locale,
-                localeDestination: locale,
-              }),
-            );
-          } else {
-            redirects.push(generatePathRedirect(arg));
-          }
-        }
-      }
+      generateRedirectForPathname(
+        config,
+        options.localeParamName,
+        locale,
+        template,
+        pathname,
+        redirects,
+        options.permanentRedirects,
+      );
     }
   }
 

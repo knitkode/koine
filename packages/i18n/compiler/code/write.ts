@@ -3,7 +3,6 @@ import { join } from "node:path";
 import { fsWrite, fsWriteSync } from "@koine/node";
 import type { I18nCompiler } from "../types";
 import {
-  type CodeGenerateOptions,
   type CodeGenerateReturn,
   generateCode,
   generateCodeSync,
@@ -121,7 +120,7 @@ export type CodeWriteOptions = {
 };
 
 export let writeCode = async (
-  options: CodeWriteOptions & CodeGenerateOptions,
+  options: CodeWriteOptions,
   data: I18nCompiler.DataCode,
 ) => {
   const {
@@ -130,10 +129,9 @@ export let writeCode = async (
     skipTsCompile,
     skipGitignore,
     skipTranslations,
-    ...generateOptions
   } = options;
 
-  const code = await generateCode(data, generateOptions);
+  const code = await generateCode(data);
   const files: Set<string> = new Set();
   const folders: Set<string> = new Set();
 
@@ -156,7 +154,7 @@ export let writeCode = async (
 };
 
 export let writeCodeSync = (
-  options: CodeWriteOptions & CodeGenerateOptions,
+  options: CodeWriteOptions,
   data: I18nCompiler.DataCode,
 ) => {
   const {
@@ -165,10 +163,9 @@ export let writeCodeSync = (
     skipTsCompile,
     skipGitignore,
     skipTranslations,
-    ...generateOptions
   } = options;
 
-  const code = generateCodeSync(data, generateOptions);
+  const code = generateCodeSync(data);
   const files: Set<string> = new Set();
   const folders: Set<string> = new Set();
 

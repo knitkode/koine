@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
-import { arrayUniqueByProperties, normaliseUrlPathname } from "@koine/utils";
+import { arrayUniqueByProperties, objectMergeWithDefaults } from "@koine/utils";
+import { generateRedirectForPathname } from "./redirects";
+import { generateRewriteForPathname } from "./rewrites";
 
 type Route =
   | string
@@ -54,36 +56,40 @@ function transformRoute(route: RoutesMapRoute) {
   const templateParts = rawTemplate.split("/").filter((part) => !!part);
   const mapPartsByIdx: MapPathnameParts = {};
 
-  const pathname = pathnameParts
-    .map((part) => {
-      const hasWildcard = part.endsWith("*");
-      part = part.replace("*", "");
-      const isDynamic = part.startsWith("{{") && part.endsWith("}}");
-      const asValue = isDynamic
-        ? part.match(/{{(.+)}}/)?.[1].trim() ?? ""
-        : part.trim();
-      const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
+  const pathname =
+    "/" +
+    pathnameParts
+      .map((part) => {
+        const hasWildcard = part.endsWith("*");
+        part = part.replace("*", "");
+        const isDynamic = part.startsWith("{{") && part.endsWith("}}");
+        const asValue = isDynamic
+          ? part.match(/{{(.+)}}/)?.[1].trim() ?? ""
+          : part.trim();
+        const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
 
-      mapPartsByIdx[asValue] = {
-        isDynamic,
-        hasWildcard,
-      };
-      return isDynamic ? `:${asPath}` : asPath;
-    })
-    .join("/");
+        mapPartsByIdx[asValue] = {
+          isDynamic,
+          hasWildcard,
+        };
+        return isDynamic ? `:${asPath}` : asPath;
+      })
+      .join("/");
 
-  const template = templateParts
-    .map((part) => {
-      const isDynamic = part.startsWith("[") && part.endsWith("]");
-      const asValue = isDynamic
-        ? part.match(/\[(.+)\]/)?.[1].trim() ?? ""
-        : part.trim();
-      const hasWildcard = mapPartsByIdx[asValue]?.hasWildcard;
-      const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
+  const template =
+    "/" +
+    templateParts
+      .map((part) => {
+        const isDynamic = part.startsWith("[") && part.endsWith("]");
+        const asValue = isDynamic
+          ? part.match(/\[(.+)\]/)?.[1].trim() ?? ""
+          : part.trim();
+        const hasWildcard = mapPartsByIdx[asValue]?.hasWildcard;
+        const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
 
-      return isDynamic ? `:${asPath}` : asPath;
-    })
-    .join("/");
+        return isDynamic ? `:${asPath}` : asPath;
+      })
+      .join("/");
 
   return { pathname, template };
 }
@@ -127,48 +133,7 @@ function getWithoutIndex(template: string) {
   return template.replace(/\/index$/, "");
 }
 
-/**
- * Get path redirect
- */
-function getPathRedirect(
-  arg: Pick<I18nRoutesOptions, "localeParam" | "permanent"> & {
-    localeSource?: Locale;
-    localeDestination?: Locale;
-    route: RoutesMapRoute;
-    usePathnameAsSource?: boolean;
-  },
-) {
-  const {
-    localeSource,
-    localeDestination,
-    route,
-    usePathnameAsSource,
-    permanent,
-  } = arg;
-  const { template: routeTemplate, pathname } = transformRoute(route);
-  const template = usePathnameAsSource ? pathname : routeTemplate;
-
-  const sourcePrefix = localeSource ? `${localeSource}/` : "";
-  const source = getWithoutIndex(
-    `/${normaliseUrlPathname(sourcePrefix + template)}`,
-  );
-
-  const destinationPrefix = localeDestination ? `${localeDestination}/` : "";
-  const destination = `/${normaliseUrlPathname(destinationPrefix + pathname)}`;
-  // console.log(`redirect template "${source}" to pathname "${destination}"`);
-
-  if (source === destination) return;
-
-  const redirect: Redirect = {
-    source,
-    destination,
-    permanent: Boolean(permanent),
-  };
-
-  return redirect;
-}
-
-function generateRedirects(arg: I18nRoutesOptions) {
+function generateRedirects(arg: I18nRoutesOptionsResolved) {
   const {
     routes,
     defaultLocale,
@@ -184,56 +149,20 @@ function generateRedirects(arg: I18nRoutesOptions) {
     const routesByLocale = routes[locale];
     const routesMap = getRoutesMap({}, routesByLocale);
 
-    for (const template in routesMap) {
-      const route = routesMap[template];
+    for (const routeId in routesMap) {
+      const route = routesMap[routeId];
+      const { template, pathname } = transformRoute(route);
 
-      if (route.pathname !== getWithoutIndex(template)) {
-        const isVisibleDefaultLocale =
-          locale === defaultLocale && !hideDefaultLocaleInUrl;
-        const isHiddenDefaultLocale =
-          locale === defaultLocale && hideDefaultLocaleInUrl;
-
-        if (localeParam) {
-          // app router:
-          if (isVisibleDefaultLocale) {
-            redirects.push(
-              getPathRedirect({ localeDestination: locale, route, permanent }),
-            );
-          } else if (isHiddenDefaultLocale) {
-            redirects.push(
-              getPathRedirect({ localeSource: locale, route, permanent }),
-            );
-          } else if (locale !== defaultLocale) {
-            redirects.push(
-              getPathRedirect({
-                localeSource: locale,
-                localeDestination: locale,
-                route,
-                permanent,
-              }),
-            );
-          } else {
-            redirects.push(getPathRedirect({ route, permanent }));
-          }
-        } else {
-          // pages router:
-          if (isVisibleDefaultLocale) {
-            redirects.push(
-              getPathRedirect({ localeDestination: locale, route, permanent }),
-            );
-          } else if (locale !== defaultLocale) {
-            redirects.push(
-              getPathRedirect({
-                localeSource: locale,
-                localeDestination: locale,
-                route,
-                permanent,
-              }),
-            );
-          } else {
-            redirects.push(getPathRedirect({ route, permanent }));
-          }
-        }
+      if (pathname !== getWithoutIndex(template)) {
+        generateRedirectForPathname(
+          { defaultLocale, hideDefaultLocaleInUrl },
+          localeParam,
+          locale,
+          getWithoutIndex(template),
+          getWithoutIndex(pathname),
+          redirects,
+          permanent,
+        );
       }
     }
   }
@@ -251,43 +180,7 @@ function generateRedirects(arg: I18nRoutesOptions) {
   return cleaned;
 }
 
-/**
- * Get path rewrite
- */
-function getPathRewrite(
-  arg: Pick<I18nRoutesOptions, "localeParam"> & {
-    localeSource?: Locale;
-    localeDestination?: Locale;
-    route: RoutesMapRoute;
-  },
-) {
-  const { localeSource, localeDestination, localeParam, route } = arg;
-  const { pathname, template } = transformRoute(route);
-
-  let sourcePrefix = "";
-  if (localeSource) sourcePrefix = `${localeSource}/`;
-  else if (localeParam) sourcePrefix = `:${localeParam}/`;
-
-  const source = `/${normaliseUrlPathname(sourcePrefix + pathname)}`;
-
-  let destinationPrefix = "";
-  if (localeDestination) destinationPrefix = `${localeDestination}/`;
-  else if (localeParam) destinationPrefix = `:${localeParam}/`;
-
-  const destination = getWithoutIndex(
-    `/${normaliseUrlPathname(destinationPrefix + template)}`,
-  );
-  // console.log(`rewrite pathname "${source}" to template "${destination}"`);
-
-  if (source === destination) return;
-
-  return {
-    source,
-    destination,
-  };
-}
-
-function generateRewrites(arg: I18nRoutesOptions) {
+function generateRewrites(arg: I18nRoutesOptionsResolved) {
   const { routes, defaultLocale, hideDefaultLocaleInUrl, localeParam, debug } =
     arg;
   const orderedRoutes = orderRoutes(routes, defaultLocale);
@@ -297,33 +190,18 @@ function generateRewrites(arg: I18nRoutesOptions) {
     const routesByLocale = routes[locale];
     const routesMap = getRoutesMap({}, routesByLocale);
 
-    for (const template in routesMap) {
-      const route = routesMap[template];
-      const isVisibleDefaultLocale =
-        locale === defaultLocale && !hideDefaultLocaleInUrl;
-      const isHiddenDefaultLocale =
-        locale === defaultLocale && hideDefaultLocaleInUrl;
+    for (const routeId in routesMap) {
+      const route = routesMap[routeId];
+      const { template, pathname } = transformRoute(route);
 
-      if (localeParam) {
-        // app router:
-        if (isHiddenDefaultLocale) {
-          rewrites.push(getPathRewrite({ localeDestination: locale, route }));
-        } else {
-          rewrites.push(getPathRewrite({ localeParam, route }));
-        }
-      } else {
-        // pages router:
-        // this condition only applies to the pages router as with the app one
-        // even if the template matches the pathname we always need to rewrite
-        // as the localeParam is always needed in the rewrite destination
-        if (route.pathname !== getWithoutIndex(template)) {
-          if (locale !== defaultLocale || isVisibleDefaultLocale) {
-            rewrites.push(getPathRewrite({ localeSource: locale, route }));
-          } else {
-            rewrites.push(getPathRewrite({ route }));
-          }
-        }
-      }
+      generateRewriteForPathname(
+        { defaultLocale, hideDefaultLocaleInUrl },
+        localeParam,
+        locale,
+        getWithoutIndex(template),
+        getWithoutIndex(pathname),
+        rewrites,
+      );
     }
   }
 
@@ -337,29 +215,6 @@ function generateRewrites(arg: I18nRoutesOptions) {
 
   return cleaned;
 }
-
-// function getRoutesOfDefaultLocale(
-//   routes: Routes | RoutesByLocale,
-//   defaultLocale?: Locale,
-// ) {
-//   const routesByLocale = routes as RoutesByLocale;
-//   if (
-//     defaultLocale &&
-//     routesByLocale[defaultLocale as keyof typeof routesByLocale]
-//   ) {
-//     return routesByLocale[defaultLocale] as Routes;
-//   }
-//   if (Object.keys(routes).length === 1) {
-//     const routesWithOneLocale = routes as Routes;
-//     let output: RoutesByLocale = {};
-//     for (const onlyLocale in routesWithOneLocale) {
-//       output =
-//         routesWithOneLocale[onlyLocale as keyof typeof routesWithOneLocale];
-//     }
-//     return output;
-//   }
-//   return routes as Routes;
-// }
 
 /**
  * Shared options to generate Next.js `rewrites` and `redirects`
@@ -421,8 +276,8 @@ type I18nRoutesOptions = {
    * the generated redirects as permanent 301 instead of the default 307
    */
   permanent?: boolean;
-  locales: Locale[];
-  defaultLocale: Locale;
+  locales?: Locale[];
+  defaultLocale?: Locale;
   /**
    * @default true
    */
@@ -436,13 +291,10 @@ type I18nRoutesOptions = {
   debug?: boolean;
 };
 
-type I18nRoutesNextOptions = Omit<
-  I18nRoutesOptions,
-  "locales" | "defaultLocale"
->;
+type I18nRoutesOptionsResolved = Required<I18nRoutesOptions>;
 
 export type WithI18nLegacyOptions = NextConfig & {
-  i18nRoutes?: I18nRoutesNextOptions;
+  i18nRoutes?: I18nRoutesOptions;
 };
 
 /**
@@ -454,25 +306,33 @@ export let withI18nLegacy = (config: WithI18nLegacyOptions): NextConfig => {
   if (!i18nRoutes) return restNextConfig;
 
   // set i18n related defaults grabbing them from basic next config i18n object
-  const {
-    locales = ["en"],
-    defaultLocale = "en",
-    ...restI18n
-  } = config.i18n || {};
+  const { locales: nextLocales, defaultLocale: nextDefaultLocale } =
+    restNextConfig.i18n || {};
 
-  // ensure defaults are set on next config
-  restNextConfig.i18n = { ...restI18n, locales, defaultLocale };
-
-  const options = {
-    hideDefaultLocaleInUrl: true,
-    localeParam: "",
-    ...i18nRoutes,
-    locales,
-    defaultLocale,
-  };
+  const options = objectMergeWithDefaults(
+    {
+      locales: nextLocales || ["en"],
+      defaultLocale: nextDefaultLocale || "en",
+      hideDefaultLocaleInUrl: true,
+      localeParam: "",
+    },
+    i18nRoutes,
+  );
+  const { localeParam, locales, defaultLocale, routes } = options;
   const nextConfig: NextConfig = { ...restNextConfig };
 
-  if (options.routes) {
+  if (localeParam) {
+    // NOTE: passing the i18n settings with the app router messes up everything
+    // especially while migrating from pages to app router, so opt out from that
+    // and only rely on our i18n implementation
+    delete nextConfig.i18n;
+  } else {
+    restNextConfig.i18n = restNextConfig.i18n || { locales, defaultLocale };
+    restNextConfig.i18n.defaultLocale = defaultLocale;
+    restNextConfig.i18n.locales = locales;
+  }
+
+  if (routes) {
     const { redirects, rewrites } = nextConfig;
     nextConfig.redirects = async () => {
       const defaults = generateRedirects(options);

@@ -1,12 +1,10 @@
-import { type PartialDeep } from "@koine/utils";
 import {
   type CodeDataOptions,
-  type CodeGenerateOptions,
   type CodeWriteOptions,
   getCodeData,
   writeCode, // writeCodeSync,
 } from "./code";
-import { getConfig } from "./config";
+import { type I18nCompilerConfig, getConfig } from "./config";
 import {
   type InputDataOptions,
   type InputWriteOptions,
@@ -15,7 +13,6 @@ import {
 } from "./input";
 import {
   type SummaryDataOptions,
-  type SummaryGenerateOptions,
   type SummaryWriteOptions,
   getSummaryData,
   writeSummary, // writeSummarySync,
@@ -26,17 +23,15 @@ type InputOptions = InputDataOptions & {
   write?: InputWriteOptions;
 };
 
-type CodeOptions = PartialDeep<CodeDataOptions> &
-  CodeGenerateOptions & {
-    write?: CodeWriteOptions;
-  };
+type CodeOptions = CodeDataOptions & {
+  write?: CodeWriteOptions;
+};
 
-type SummaryOptions = SummaryDataOptions &
-  SummaryGenerateOptions & {
-    write?: SummaryWriteOptions;
-  };
+type SummaryOptions = SummaryDataOptions & {
+  write?: SummaryWriteOptions;
+};
 
-export type I18nCompilerOptions = Partial<I18nCompiler.Config> & {
+export type I18nCompilerOptions = I18nCompilerConfig & {
   input: InputOptions;
   code: CodeOptions;
   summary?: SummaryOptions;

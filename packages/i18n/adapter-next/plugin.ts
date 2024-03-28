@@ -33,8 +33,10 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
   nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
 
   const {
-    code: { adapter },
-  } = i18nCompilerOptions;
+    code: {
+      options: { adapter },
+    },
+  } = i18nResult;
 
   if (adapter.name === "next-translate") {
     if (adapter.options.loader !== false) {

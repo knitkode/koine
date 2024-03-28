@@ -1,6 +1,10 @@
-import type { I18nConfig } from "next-translate";
-import type { CodeDataOptions } from "./code";
-import type { I18nCompilerConfig } from "./config";
+import type { SetOptional } from "@koine/utils";
+import type { AdapterJs } from "../adapter-js";
+import type { AdapterNext } from "../adapter-next";
+import type { AdapterNextTranslate } from "../adapter-next-translate";
+import type { AdapterReact } from "../adapter-react";
+import type { CodeDataOptionsResolved } from "./code";
+import type { I18nCompilerConfigResolved } from "./config";
 import type { PluralSuffix } from "./pluralisation";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -9,7 +13,7 @@ export namespace I18nCompiler {
    * The i18n compiler config, if user defined config allows partiality then we
    * need to provide the defaults.
    */
-  export type Config = I18nCompilerConfig;
+  export type Config = I18nCompilerConfigResolved;
 
   /**
    * Branded `string`
@@ -60,7 +64,7 @@ export namespace I18nCompiler {
    */
   export type DataCode = {
     config: Config;
-    options: CodeDataOptions;
+    options: CodeDataOptionsResolved;
     input: DataInput;
     routes: DataRoutes;
     translations: DataTranslations;
@@ -166,25 +170,36 @@ export namespace I18nCompiler {
     | string[]
     | { [key: string]: DataTranslationValue };
 
-  type AdapterJs = {
-    name: "js";
-    options: {};
-  };
-
-  type AdapterNext = {
-    name: "next";
-    options: {};
-  };
-
-  type AdapterNextTranslate = {
-    name: "next-translate";
-    options: Partial<Pick<I18nConfig, "loader">>;
-  };
-
   /**
    * Built in adapters with their options
    */
-  export type AnyAdapter = AdapterJs | AdapterNext | AdapterNextTranslate;
+  export type AnyAdapter =
+    | SetOptional<AnyAdapterResolved, "options">
+    | SetOptional<AdapterReact, "options">
+    | SetOptional<AdapterNext, "options">
+    | SetOptional<AdapterNextTranslate, "options">;
+
+  /**
+   * Built in adapters with their options (resolved options)
+   */
+  export type AnyAdapterResolved =
+    | AdapterJs
+    | AdapterReact
+    | AdapterNext
+    | AdapterNextTranslate;
+
+  /**
+   * Built in adapter options
+   */
+  type AdaptersOptions<T extends AdaptersName> = T extends "js"
+    ? AdapterJs["options"]
+    : T extends "react"
+      ? AdapterReact["options"]
+      : T extends "next"
+        ? AdapterNext["options"]
+        : T extends "next-translate"
+          ? AdapterNextTranslate["options"]
+          : never;
 
   /**
    * Built in adapters names
@@ -192,30 +207,19 @@ export namespace I18nCompiler {
   export type AdaptersName = AnyAdapter["name"];
 
   /**
-   * Built in adapter options
-   */
-  // export type AdaptersOptions<T extends AdaptersName> = Adapters[T];
-  export type AdaptersOptions<T extends AdaptersName> = T extends "js"
-    ? AdapterJs["options"]
-    : T extends "next"
-      ? AdapterNext["options"]
-      : T extends "next-translate"
-        ? AdapterNextTranslate["options"]
-        : never;
-
-  /**
    * Adapter creator function, either _sync_ or _async_
    */
-  export type AdpaterCreator<T extends AdaptersName> = (
+  export type AdapterCreator<T extends AdaptersName> = (
     arg: AdapterArg<T>,
-  ) => Adpater<T> | Promise<Adpater<T>>;
+  ) => Adapter<T> | Promise<Adapter<T>>;
 
   /**
    * Adapter anatomy
    */
-  export type Adpater<T extends AdaptersName = AdaptersName> = {
+  export type Adapter<T extends AdaptersName = AdaptersName> = {
     dependsOn?: AdaptersName[];
-    files: AdpaterFile<T>[];
+    files: AdapterFile<T>[];
+    // files: AdapterFile[];
     /**
      * Adapters like `next-translate` need the JSON file to be available
      */
@@ -225,9 +229,15 @@ export namespace I18nCompiler {
   /**
    * {@link DataCode}
    */
-  export type AdapterArg<T extends AdaptersName = AdaptersName> = DataCode & {
-    adapterOptions: AdaptersOptions<T>;
-  };
+  export type AdapterArgData = DataCode;
+
+  /**
+   * {@link AdapterArgData}
+   */
+  export type AdapterArg<T extends AdaptersName = AdaptersName> =
+    AdapterArgData & {
+      adapterOptions: AdaptersOptions<T>;
+    };
   // name: T;
   //   data: DataCode;
   // };
@@ -237,7 +247,7 @@ export namespace I18nCompiler {
   /**
    * Adapter file anatomy
    */
-  export type AdpaterFile<T extends AdaptersName = AdaptersName> = {
+  export type AdapterFile<T extends AdaptersName = AdaptersName> = {
     name: string;
     /**
      * File extension
@@ -255,9 +265,12 @@ export namespace I18nCompiler {
   };
 
   /**
-   * An {@link AdpaterFile} whose `fn` has been called to generate content.
+   * An {@link AdapterFile} whose `fn` has been called to generate content.
    */
-  export type AdpaterGeneratedFile = Omit<AdpaterFile<AdaptersName>, "fn"> & {
+  export type AdapterGeneratedFile = Omit<AdapterFile<AdaptersName>, "fn"> & {
     content: string;
   };
+  // export type AdapterGeneratedFile = Omit<AdapterFile, "fn"> & {
+  //   content: string;
+  // };
 }

@@ -25,10 +25,17 @@ export const codeDataTranslationsOptions = {
    * @see https://www.npmjs.com/package/minimatch
    */
   ignorePaths: [] as string[],
-  dynamicDelimiters: {
-    start: "{{",
-    end: "}}",
-  },
+  /**
+   * Given a translation value as `"myKey": ["two", "words"]`:
+   * - when `true`: it outputs `t_myKey_0`  and `t_myKey_1` functions
+   * - when `false`: if `fnsAsDataCodes` is `true` it outputs `t_myKey` otherwise
+   * it outputs nothing (TODO: maybe we could log this info in this case)
+   *
+   * NB: It is quite unlikely that you want to set this to `true`.
+   *
+   * @default false
+   */
+  createArrayIndexBasedFns: false,
   // TODO: add pluralisation config
   /**
    * It creates `t_` functions that returns objects and arrays to use as
@@ -47,17 +54,16 @@ export const codeDataTranslationsOptions = {
    * @default ""
    */
   fnsPrefix: "",
-  /**
-   * Given a translation value as `"myKey": ["two", "words"]`:
-   * - when `true`: it outputs `t_myKey_0`  and `t_myKey_1` functions
-   * - when `false`: if `fnsAsDataCodes` is `true` it outputs `t_myKey` otherwise
-   * it outputs nothing (TODO: maybe we could log this info in this case)
-   *
-   * NB: It is quite unlikely that you want to set this to `true`.
-   *
-   * @default false
-   */
-  createArrayIndexBasedFns: false,
+  tokens: {
+    /** @default ":" */
+    namespaceDelimiter: ":",
+    dynamicDelimiters: {
+      /** @default "{{" */
+      start: "{{",
+      /** @default "}}" */
+      end: "}}",
+    },
+  },
 };
 
 export type CodeDataTranslationsOptions = typeof codeDataTranslationsOptions;
@@ -88,7 +94,7 @@ const extractTranslationParamsFromPrimitive = (
   value: Extract<I18nCompiler.DataTranslationValue, string | number | boolean>,
 ) => {
   if (isString(value)) {
-    const { start, end } = options.dynamicDelimiters;
+    const { start, end } = options.tokens.dynamicDelimiters;
     const regex = new RegExp(`${start}(.*?)${end}`, "gm");
     const matches = value.match(regex);
     if (matches) {

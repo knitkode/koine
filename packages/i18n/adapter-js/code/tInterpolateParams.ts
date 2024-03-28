@@ -1,13 +1,8 @@
+import { escapeEachChar } from "../../compiler/helpers";
 import type { I18nCompiler } from "../../compiler/types";
 
-const escapeEachChar = (input: string) =>
-  input
-    .split("")
-    .map((v) => `\\${v}`)
-    .join("");
-
 export default ({ options }: I18nCompiler.AdapterArg<"js">) => {
-  const { start, end } = options.translations.dynamicDelimiters;
+  const { start, end } = options.translations.tokens.dynamicDelimiters;
   return `
 /* eslint-disable prefer-const */
 export let tInterpolateParams = (

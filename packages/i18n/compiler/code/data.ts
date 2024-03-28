@@ -7,15 +7,44 @@ import {
 } from "./data-translations";
 
 const codeDataOptions = {
+  adapter: {
+    name: "js",
+    options: {},
+  },
+  outputFiles: {},
   routes: codeDataRoutesOptions,
   translations: codeDataTranslationsOptions,
+} satisfies CodeDataOptionsResolved;
+
+export type CodeDataOptions = {
+  adapter: I18nCompiler.AnyAdapter;
+  outputFiles?: Partial<{
+    // TODO: make this works with generics based on chosen adapter?
+    // defaultLocale: string;
+    // index: string;
+    // isLocale: string;
+    // locales: string;
+    // routes: string;
+    // routesSlim: string;
+    // to: string;
+    // toFns: string;
+    // toFormat: string;
+    // types: string;
+  }>;
+  routes?: PartialDeep<typeof codeDataRoutesOptions>;
+  translations?: PartialDeep<typeof codeDataTranslationsOptions>;
 };
 
-export type CodeDataOptions = typeof codeDataOptions;
+export type CodeDataOptionsResolved = {
+  adapter: I18nCompiler.AnyAdapterResolved;
+  outputFiles: {};
+  routes: typeof codeDataRoutesOptions;
+  translations: typeof codeDataTranslationsOptions;
+};
 
 export let getCodeData = (
   config: I18nCompiler.Config,
-  options: PartialDeep<CodeDataOptions>,
+  options: CodeDataOptions,
   input: I18nCompiler.DataInput,
 ): I18nCompiler.DataCode => {
   const optionsSafe = objectMergeWithDefaults(codeDataOptions, options);
@@ -33,7 +62,8 @@ export let getCodeData = (
 
   return {
     config,
-    options: optionsSafe,
+    // TODO: types, remove this assertion
+    options: optionsSafe as CodeDataOptionsResolved,
     input,
     routes: getCodeDataRoutes(config, optionsSafe.routes, input),
     translations: getCodeDataTranslations(

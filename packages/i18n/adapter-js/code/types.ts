@@ -1,5 +1,5 @@
 import { forin, isArray, isBoolean, isObject, isString } from "@koine/utils";
-import type { CodeDataOptions } from "../../compiler/code";
+import type { CodeDataOptionsResolved } from "../../compiler/code";
 import { dataParamsToTsInterfaceBody } from "../../compiler/helpers";
 import {
   hasOnlyPluralKeys,
@@ -136,7 +136,7 @@ const groupRoutesSpa = (routes: I18nCompiler.DataRoutes) =>
 const buildRoutesSpa = (
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes,
-  options: CodeDataOptions,
+  options: CodeDataOptionsResolved,
 ) => {
   const map = groupRoutesSpa(routes);
   const output: string[] = [];
@@ -267,6 +267,13 @@ export namespace I18n {
     TStarts extends string,
     T extends string = RouteId,
   > = T extends \`\${TStarts}.\${infer First}\` ? \`\${TStarts}.\${First}\` : never;
+
+  /**
+   * @internal
+   */
+  export type TranslationsDictionaryLoose = {
+    [key: string]: string | TranslationsDictionaryLoose;
+  };
 
   /**
    * The types extracted from the translations JSON files, this is a little
@@ -457,6 +464,28 @@ export namespace I18n {
     q?: TranslationQuery,
     o?: TranslationOptions,
   ) => TReturn;
-}
+
+  /**
+   * Props available to each page when a root \`localeParam\` is in place (e.g. 
+   * in the typical _next.js_ folder structure \`/[lang]/my-route/page.tsx\`).
+   */
+  export type Props<TProps = {}> = TProps & {
+    params: {
+      "${options.routes.localeParamName}": Locale;
+    }
+  };
+
+  /**
+   * Data to generate SEO friendly alternate URLs \`<links>\`
+   *
+   * This type should satisfy the nextjs type too (TODO: maybe build a test for this)
+   * 
+   * \`\`\`ts
+   * import type { Metadata } from "next";
+   * 
+   * type Alternates = NonNullable<Metadata["alternates"]>["languages"]
+   * \`\`\`
+   */
+  export type Alternates = Record<string, string>;
 `;
 };

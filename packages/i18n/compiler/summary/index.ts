@@ -1,4 +1,3 @@
-export type { SummaryGenerateOptions } from "./generate";
 export {
   type SummaryWriteOptions,
   writeSummary,

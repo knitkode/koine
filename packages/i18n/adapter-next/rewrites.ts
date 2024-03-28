@@ -36,8 +36,8 @@ function generatePathRewrite(arg: {
   return rewrite;
 }
 
-const generateRewriteForPathname = (
-  config: I18nCompiler.Config,
+export const generateRewriteForPathname = (
+  config: Pick<I18nCompiler.Config, "defaultLocale" | "hideDefaultLocaleInUrl">,
   localeParam = "",
   locale: string,
   template: string,

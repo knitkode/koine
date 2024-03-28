@@ -8,6 +8,7 @@ const mocksPath = (folder: string) =>
 describe("test write", () => {
   test("single-language setup", async () => {
     const data = await i18nCompiler({
+      baseUrl: "https://example.com",
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
       input: {
@@ -21,10 +22,10 @@ describe("test write", () => {
       },
       code: {
         adapter: {
-          name: "next-translate",
-          options: {
-            loader: false,
-          },
+          name: "next",
+          // options: {
+          //   loader: false,
+          // },
         },
         write: {
           cwd: mocksPath("single-language"),
@@ -51,6 +52,7 @@ describe("test write", () => {
 
   test("multi-language setup", async () => {
     const data = await i18nCompiler({
+      baseUrl: "https://example.com",
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
       input: {
@@ -64,10 +66,10 @@ describe("test write", () => {
       },
       code: {
         adapter: {
-          name: "next-translate",
-          options: {
-            loader: false,
-          },
+          name: "next",
+          // options: {
+          //   loader: false,
+          // },
         },
         write: {
           cwd: mocksPath("multi-language"),
@@ -96,6 +98,8 @@ describe("test write", () => {
 describe("test your.io", () => {
   test("mimic the github action behaviour", async () => {
     await i18nCompiler({
+      baseUrl: "https://your.io",
+      defaultLocale: "en",
       input: {
         source: "../../Your/translations",
         write: {
@@ -104,10 +108,10 @@ describe("test your.io", () => {
       },
       code: {
         adapter: {
-          name: "next-translate",
-          options: {
-            loader: false,
-          },
+          name: "next",
+          // options: {
+          //   loader: false,
+          // },
         },
       },
       summary: {
@@ -122,6 +126,7 @@ describe("test your.io", () => {
 
   test("mimic next plugin build", async () => {
     await i18nCompiler({
+      baseUrl: "https://your.io",
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
       input: {
@@ -131,9 +136,9 @@ describe("test your.io", () => {
       },
       code: {
         adapter: {
-          name: "next-translate",
+          name: "next",
           options: {
-            loader: false,
+            router: "migrating",
           },
         },
         write: {

@@ -26,3 +26,9 @@ export let dataParamsToTsInterfaceBody = (params: I18nCompiler.DataParams) =>
       return pairs;
     }, [] as string[])
     .join(" ");
+
+export let escapeEachChar = (input: string) =>
+  input
+    .split("")
+    .map((v) => `\\${v}`)
+    .join("");

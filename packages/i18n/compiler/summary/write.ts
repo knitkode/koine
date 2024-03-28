@@ -1,7 +1,8 @@
 import { join } from "node:path";
 import { fsWrite, fsWriteSync } from "@koine/node";
 import type { I18nCompiler } from "../types";
-import { type SummaryGenerateOptions, generateSummary } from "./generate";
+import type { SummaryDataOptions } from "./data";
+import { generateSummary } from "./generate";
 
 export type SummaryWriteOptions = {
   /**
@@ -34,14 +35,14 @@ const getWriteSummaryJsonArgs = (
   ] as const;
 
 const getWriteSummaryMdArgs = (
-  options: SummaryGenerateOptions,
+  options: SummaryDataOptions,
   data: I18nCompiler.DataSummary,
   cwd: string,
   outputMarkdown: string,
 ) => [join(cwd, outputMarkdown), generateSummary(data, options)] as const;
 
 export let writeSummary = async (
-  options: SummaryWriteOptions & SummaryGenerateOptions,
+  options: SummaryWriteOptions & SummaryDataOptions,
   data: I18nCompiler.DataSummary,
 ) => {
   const { cwd = process.cwd(), outputJson, outputMarkdown, ...rest } = options;
@@ -56,7 +57,7 @@ export let writeSummary = async (
 };
 
 export let writeSummarySync = (
-  options: SummaryWriteOptions & SummaryGenerateOptions,
+  options: SummaryWriteOptions & SummaryDataOptions,
   data: I18nCompiler.DataSummary,
 ) => {
   const { cwd = process.cwd(), outputJson, outputMarkdown, ...rest } = options;

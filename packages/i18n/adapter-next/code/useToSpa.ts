@@ -26,7 +26,7 @@ export const useToSpa = () => {
     const [params] = args;
     return (
       // prettier-ignore
-      // @ts-ignore FIXME: types
+      // @ts-expect-error FIXME: types
       (params ? toSpa(root, path, params, locale) : toSpa(root, path, locale)) as I18n.RouteSpa[Root][Path]
     );
   };

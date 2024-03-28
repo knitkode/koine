@@ -1,13 +1,31 @@
-import { objectMergeWithDefaults } from "@koine/utils";
+import { normaliseUrl, objectMergeWithDefaults } from "@koine/utils";
 import type { I18nCompiler } from "./types";
 
-export type I18nCompilerConfig = typeof configDefaults;
+export type I18nCompilerConfig = {
+  /**
+   * Used to generate SEO optimized alternate URLs
+   *
+   * NB: It will be normalised and trailing slash stripped out in order to ease
+   * and make consistent a simple concatenation with relative URLs.
+   */
+  baseUrl: `http://${string}` | `https://${string}` | string;
+  defaultLocale: I18nCompiler.Locale;
+  locales?: I18nCompiler.Locale[];
+  hideDefaultLocaleInUrl?: boolean;
+};
+
+export type I18nCompilerConfigResolved = Required<
+  Omit<I18nCompilerConfig, "baseUrl"> & {
+    baseUrl: string;
+  }
+>;
 
 export const configDefaults = {
-  locales: ["en"] as I18nCompiler.Locale[],
-  defaultLocale: "en" as I18nCompiler.Locale,
+  baseUrl: "https://example.com",
+  locales: ["en"],
+  defaultLocale: "en",
   hideDefaultLocaleInUrl: true,
-};
+} satisfies I18nCompilerConfigResolved;
 
 /**
  * Get basic i18n compiler config with defaults and automatic inference from
@@ -15,8 +33,10 @@ export const configDefaults = {
  */
 export let getConfig = (
   dataInput: I18nCompiler.DataInput,
-  options: Partial<I18nCompilerConfig> = {},
+  options: I18nCompilerConfig = configDefaults,
 ) => {
+  options.baseUrl = normaliseUrl(options.baseUrl);
+
   // dynamically define locales
   options.locales = options.locales || dataInput.localesFolders;
 

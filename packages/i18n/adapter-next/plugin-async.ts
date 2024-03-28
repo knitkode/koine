@@ -53,8 +53,10 @@ export let withI18nAsync =
     nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
 
     const {
-      code: { adapter },
-    } = i18nCompilerOptions;
+      code: {
+        options: { adapter },
+      },
+    } = i18nResult;
 
     if (adapter.name === "next-translate") {
       // const options = i18nConfig.code.adapter.options;
