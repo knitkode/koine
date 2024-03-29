@@ -5,6 +5,7 @@ export default ({ config, options }: I18nCompiler.AdapterArg<"js">) => {
   const { start, end } = options.translations.tokens.dynamicDelimiters;
   return `
 import type { I18n } from "./types";
+import { defaultLocale } from "./defaultLocale";
 import { tInterpolateParams } from "./tInterpolateParams";
 
 // An optional parameter allowEmptyStrings - true as default.
@@ -17,11 +18,10 @@ const allowEmptyStrings = true;
  * @see https://github.com/aralroca/next-translate/blob/master/src/transCore.tsx
  */
 export function createT<TNamespace extends I18n.TranslateNamespace>(
-  namespaces: Record<string, I18n.TranslationsDictionary>,
+  dictionaries: I18n.Dictionaries,
   pluralRules: Intl.PluralRules,
-  locale?: string,
+  locale: string = defaultLocale,
 ) {
-  const lang = locale || "${config.defaultLocale}";
   const interpolateUnknown = (
     value: unknown,
     query?: I18n.TranslationQuery | null,
@@ -33,10 +33,10 @@ export function createT<TNamespace extends I18n.TranslateNamespace>(
       return objectInterpolation(
         value as Record<string, unknown>,
         query,
-        lang,
+        locale,
       );
     }
-    return interpolation(value as string, query, lang);
+    return interpolation(value as string, query, locale);
   };
 
   return <
@@ -51,7 +51,7 @@ export function createT<TNamespace extends I18n.TranslateNamespace>(
   ): TReturn => {
     const k = Array.isArray(key) ? key[0] : key;
     const [namespace, i18nKey] = k.split("${options.translations.tokens.namespaceDelimiter}");
-    const dic = (namespace && namespaces[namespace]) || {};
+    const dic = (namespace && dictionaries[namespace]) || {};
     const pluralisedKey = plural(pluralRules, dic, i18nKey, query, options);
     const dicValue = getDicValue(dic, pluralisedKey, query, options);
     const value =
@@ -89,7 +89,9 @@ function getDicValue(
   const keySeparator = ".";
   const keyParts = keySeparator ? key.split(keySeparator) : [key];
   const returnObjects =
-    query === "obj" || (options instanceof Object && options.returnObjects);
+    query === "obj" ||
+    options === "obj" ||
+    (options instanceof Object && options.returnObjects);
 
   if (key === keySeparator && returnObjects) return dic;
 
@@ -157,7 +159,7 @@ function plural(
 function interpolation(
   text?: string,
   query?: I18n.TranslationQuery | null,
-  _lang?: string | undefined,
+  _locale?: string | undefined,
 ): string {
   if (!text || !query || query === "obj") return text || "";
 
@@ -172,7 +174,7 @@ function interpolation(
 function objectInterpolation(
   obj: Record<string, string | unknown>,
   query?: I18n.TranslationQuery | null,
-  lang?: string,
+  locale?: string,
 ) {
   if (!query || Object.keys(query).length === 0) return obj;
   Object.keys(obj).forEach((key) => {
@@ -180,10 +182,10 @@ function objectInterpolation(
       objectInterpolation(
         obj[key] as Record<string, string | unknown>,
         query,
-        lang,
+        locale,
       );
     if (typeof obj[key] === "string")
-      obj[key] = interpolation(obj[key] as string, query, lang);
+      obj[key] = interpolation(obj[key] as string, query, locale);
   });
 
   return obj;

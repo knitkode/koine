@@ -1,5 +1,5 @@
 // import { jestCreateExpectedThrownError } from "@koine/node/jest";
-import * as t from "./__mocks__/multi-language/.code/tFns";
+import * as t from "./__mocks__/multi-language/.code/t";
 import { to } from "./__mocks__/multi-language/.code/to";
 import * as multiToFns from "./__mocks__/multi-language/.code/toFns";
 import * as singleToFns from "./__mocks__/single-language/.code/toFns";
@@ -24,7 +24,7 @@ describe("generated code: to", () => {
   });
 });
 
-describe("generated code: tFns", () => {
+describe("generated code: t", () => {
   test("basic multilingual translate", () => {
     expect(t.$404_seo_title()).toEqual("404 - Not found");
     expect(t.$404_seo_title("it")).toEqual("404 - Introvabile");

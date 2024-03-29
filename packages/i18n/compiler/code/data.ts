@@ -1,4 +1,5 @@
 import { type PartialDeep, objectMergeWithDefaults } from "@koine/utils";
+import { adapterJsOptions } from "../../adapter-js/options";
 import type { I18nCompiler } from "../types";
 import { codeDataRoutesOptions, getCodeDataRoutes } from "./data-routes";
 import {
@@ -9,7 +10,7 @@ import {
 const codeDataOptions = {
   adapter: {
     name: "js",
-    options: {},
+    options: adapterJsOptions,
   },
   outputFiles: {},
   routes: codeDataRoutesOptions,

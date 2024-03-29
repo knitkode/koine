@@ -2,6 +2,21 @@
   "localesFolders": ["en", "it"],
   "translationFiles": [
     {
+      "path": "404.json",
+      "data": {
+        "seo": {
+          "title": "404 - Not found"
+        },
+        "title": "404, page not found",
+        "onlyNumberKeys": {
+          "1": "Once",
+          "2": "Twice",
+          "3": "Three times"
+        }
+      },
+      "locale": "en"
+    },
+    {
       "path": "~.json",
       "data": {
         "home": "/",
@@ -45,33 +60,6 @@
             }
           }
         }
-      },
-      "locale": "en"
-    },
-    {
-      "path": "404.json",
-      "data": {
-        "seo": {
-          "title": "404 - Not found"
-        },
-        "title": "404, page not found",
-        "onlyNumberKeys": {
-          "1": "Once",
-          "2": "Twice",
-          "3": "Three times"
-        }
-      },
-      "locale": "en"
-    },
-    {
-      "path": "$faq.json",
-      "data": {
-        "home": [
-          {
-            "question": "What is?",
-            "answer": "That"
-          }
-        ]
       },
       "locale": "en"
     },
@@ -132,6 +120,18 @@
             }
           }
         }
+      },
+      "locale": "en"
+    },
+    {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
       },
       "locale": "en"
     },
@@ -218,6 +218,14 @@
       "locale": "it"
     },
     {
+      "path": "~account/FormUserLanguages.json",
+      "data": {
+        "empty": {},
+        "msg": "Del testo"
+      },
+      "locale": "it"
+    },
+    {
       "path": "~account/~user~profile.json",
       "data": {
         "boolShouldntBeHereBut": true,
@@ -274,14 +282,6 @@
             }
           }
         }
-      },
-      "locale": "it"
-    },
-    {
-      "path": "~account/FormUserLanguages.json",
-      "data": {
-        "empty": {},
-        "msg": "Del testo"
       },
       "locale": "it"
     }

@@ -466,6 +466,28 @@ export namespace I18n {
   ) => TReturn;
 
   /**
+   * @internal
+   */
+  export type Dictionaries = Record<string, TranslationsDictionaryLoose>;
+
+  /**
+   * @internal
+   */
+  export type RouteArgs<TRouteId extends RouteId> =
+    | {
+        id: TRouteId extends RouteIdDynamic ? TRouteId : never;
+        params: TRouteId extends RouteIdDynamic
+          ? RouteParams[TRouteId]
+          : never;
+      }
+    | {
+        id: TRouteId extends RouteIdStatic/*  | "404" | "500" */
+          ? TRouteId/*  | "404" | "500" */
+          : never;
+        params?: undefined;
+      };
+
+  /**
    * Props available to each page when a root \`localeParam\` is in place (e.g. 
    * in the typical _next.js_ folder structure \`/[lang]/my-route/page.tsx\`).
    */
@@ -487,5 +509,6 @@ export namespace I18n {
    * \`\`\`
    */
   export type Alternates = Record<string, string>;
+}
 `;
 };

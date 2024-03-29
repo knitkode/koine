@@ -28,8 +28,11 @@ import { toFormat } from "./toFormat";
 import type { I18n } from "./types";
 
 `;
+  const declarations: string[] = [];
+  const functionNames: string[] = [];
 
   for (const routeId in routes.byId) {
+    let declaration = "";
     const { pathnames, params } = routes.byId[routeId];
 
     const name = `${options.routes.fnsPrefix}${changeCaseSnake(routeId)}`;
@@ -41,19 +44,30 @@ import type { I18n } from "./types";
     const formatArgLocale = hasOneLocale ? `""` : "locale";
     const formatArgParams = params ? ", params" : "";
 
-    output += `export let ${name} = (${args}) => `;
+    declaration += `export let ${name} = (${args}) => `;
 
     if (isString(pathnames)) {
-      output += `toFormat(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
+      declaration += `toFormat(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
     } else {
-      output += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
+      declaration += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
         config,
         pathnames,
       )}${formatArgParams});`;
     }
 
-    output += `\n`;
+    declarations.push(declaration);
+    functionNames.push(name);
   }
+
+  output += declarations.join("\n");
+
+  // TODO: verify the impact of the following on bundle size, its relation to
+  // modularizeImports and maybe make this controllable through an adapter
+  // option
+  output += `\n\n`;
+  output += `export const toFns = {\n  ${functionNames.join(",\n  ")}\n};`;
+  output += `\n\n`;
+  output += `export default toFns;`;
 
   return output;
 };

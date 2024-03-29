@@ -6,5 +6,5 @@ export type AdapterNextOptions = {
   /**
    * @default "app"
    */
-  router?: "app" | "pages" | "migrating";
+  router: "app" | "pages" | "migrating";
 };

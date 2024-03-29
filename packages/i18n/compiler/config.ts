@@ -14,11 +14,7 @@ export type I18nCompilerConfig = {
   hideDefaultLocaleInUrl?: boolean;
 };
 
-export type I18nCompilerConfigResolved = Required<
-  Omit<I18nCompilerConfig, "baseUrl"> & {
-    baseUrl: string;
-  }
->;
+export type I18nCompilerConfigResolved = Required<I18nCompilerConfig>;
 
 export const configDefaults = {
   baseUrl: "https://example.com",

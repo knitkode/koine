@@ -5,8 +5,7 @@ import { useContext } from "react";
 import { I18nContext } from "./I18nContext";
 import type { I18n } from "./types";
 
-export const useLocale = () =>
-  (useContext(I18nContext).lang as I18n.Locale) || "${config.defaultLocale}";
+export const useLocale = () => useContext(I18nContext).locale || "${config.defaultLocale}";
 
 export default useLocale;
 `;

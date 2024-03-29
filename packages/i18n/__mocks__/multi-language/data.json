@@ -1,5 +1,6 @@
 {
   "config": {
+    "baseUrl": "https://example.com",
     "locales": ["en", "it"],
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true
@@ -7,6 +8,21 @@
   "input": {
     "localesFolders": ["en", "it"],
     "translationFiles": [
+      {
+        "path": "404.json",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
+          }
+        },
+        "locale": "en"
+      },
       {
         "path": "~.json",
         "data": {
@@ -51,33 +67,6 @@
               }
             }
           }
-        },
-        "locale": "en"
-      },
-      {
-        "path": "404.json",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
-          }
-        },
-        "locale": "en"
-      },
-      {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
         },
         "locale": "en"
       },
@@ -138,6 +127,18 @@
               }
             }
           }
+        },
+        "locale": "en"
+      },
+      {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
         },
         "locale": "en"
       },
@@ -224,6 +225,14 @@
         "locale": "it"
       },
       {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
+          "msg": "Del testo"
+        },
+        "locale": "it"
+      },
+      {
         "path": "~account/~user~profile.json",
         "data": {
           "boolShouldntBeHereBut": true,
@@ -282,25 +291,25 @@
           }
         },
         "locale": "it"
-      },
-      {
-        "path": "~account/FormUserLanguages.json",
-        "data": {
-          "empty": {},
-          "msg": "Del testo"
-        },
-        "locale": "it"
       }
     ]
   },
   "code": {
     "config": {
+      "baseUrl": "https://example.com",
       "locales": ["en", "it"],
       "defaultLocale": "en",
       "hideDefaultLocaleInUrl": true
     },
     "options": {
+      "adapter": {
+        "name": "next",
+        "options": {}
+      },
+      "outputFiles": {},
       "routes": {
+        "permanentRedirects": false,
+        "localeParamName": "lang",
         "translationJsonFileName": "~.json",
         "fnsPrefix": "",
         "tokens": {
@@ -318,25 +327,42 @@
       },
       "translations": {
         "ignorePaths": ["~.json", "~.json"],
-        "dynamicDelimiters": {
-          "start": "{{",
-          "end": "}}"
-        },
+        "createArrayIndexBasedFns": false,
         "fnsAsDataCodes": true,
         "fnsPrefix": "",
-        "createArrayIndexBasedFns": false
+        "tokens": {
+          "namespaceDelimiter": ":",
+          "dynamicDelimiters": {
+            "start": "{{",
+            "end": "}}"
+          }
+        }
       },
       "write": {
         "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/multi-language",
         "output": ".code",
         "skipTsCompile": true,
         "skipTranslations": true
-      },
-      "adapter": "next-translate"
+      }
     },
     "input": {
       "localesFolders": ["en", "it"],
       "translationFiles": [
+        {
+          "path": "404.json",
+          "data": {
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found",
+            "onlyNumberKeys": {
+              "1": "Once",
+              "2": "Twice",
+              "3": "Three times"
+            }
+          },
+          "locale": "en"
+        },
         {
           "path": "~.json",
           "data": {
@@ -381,33 +407,6 @@
                 }
               }
             }
-          },
-          "locale": "en"
-        },
-        {
-          "path": "404.json",
-          "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found",
-            "onlyNumberKeys": {
-              "1": "Once",
-              "2": "Twice",
-              "3": "Three times"
-            }
-          },
-          "locale": "en"
-        },
-        {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
           },
           "locale": "en"
         },
@@ -468,6 +467,18 @@
                 }
               }
             }
+          },
+          "locale": "en"
+        },
+        {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
           },
           "locale": "en"
         },
@@ -554,6 +565,14 @@
           "locale": "it"
         },
         {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Del testo"
+          },
+          "locale": "it"
+        },
+        {
           "path": "~account/~user~profile.json",
           "data": {
             "boolShouldntBeHereBut": true,
@@ -610,14 +629,6 @@
                 }
               }
             }
-          },
-          "locale": "it"
-        },
-        {
-          "path": "~account/FormUserLanguages.json",
-          "data": {
-            "empty": {},
-            "msg": "Del testo"
           },
           "locale": "it"
         }

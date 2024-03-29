@@ -102,7 +102,11 @@ import { tPluralise } from "./tPluralise";
 
 `;
 
+  const declarations: string[] = [];
+  const functionNames: string[] = [];
+
   for (const translationId in translations) {
+    let declaration = "";
     let { values, params, plural } = translations[translationId];
     const name = `${options.translations.fnsPrefix}${translationId}`;
     if (plural) {
@@ -121,36 +125,38 @@ import { tPluralise } from "./tPluralise";
     const args = [argParam, argLocale].filter(Boolean).join(", ");
     // const formatArgParams = params ? ", params" : "";
 
-    output += `export let ${name} = (${args}) => `;
-    let outputFnReturn = "";
+    declaration += `export let ${name} = (${args}) => `;
+    let declarationReturn = "";
 
     if (isPrimitive(values)) {
-      outputFnReturn += getTranslationValueOutput(values);
+      declarationReturn += getTranslationValueOutput(values);
     } else {
-      outputFnReturn += getFunctionBodyWithLocales(config, values);
+      declarationReturn += getFunctionBodyWithLocales(config, values);
     }
     if (plural) {
-      outputFnReturn = `tPluralise(${outputFnReturn}, params.count)`;
+      declarationReturn = `tPluralise(${declarationReturn}, params.count)`;
     }
     if (params) {
-      outputFnReturn = `tInterpolateParams(${outputFnReturn}, params);`;
+      declarationReturn = `tInterpolateParams(${declarationReturn}, params);`;
     } else {
-      outputFnReturn = `${outputFnReturn};`;
+      declarationReturn = `${declarationReturn};`;
     }
 
-    output += outputFnReturn;
-    // TODO: t interpolation and pluralisation
-    // if (isString(values)) {
-    //   output += `toFormat(${formatArgLocale}, "${values}"${formatArgParams});`;
-    // } else {
-    //   output += `toFormat(${formatArgLocale}, ${getFunctionBodyWithLocales(
-    //     data,
-    //     values,
-    //   )}${formatArgParams});`;
-    // }
+    declaration += declarationReturn;
 
-    output += `\n`;
+    declarations.push(declaration);
+    functionNames.push(name);
   }
+
+  output += declarations.join("\n");
+
+  // TODO: verify the impact of the following on bundle size, its relation to
+  // modularizeImports and maybe make this controllable through an adapter
+  // option
+  output += `\n\n`;
+  output += `export const t = {\n  ${functionNames.join(",\n  ")}\n};`;
+  output += `\n\n`;
+  output += `export default t;`;
 
   return output;
 };

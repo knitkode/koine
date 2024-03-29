@@ -1,5 +1,6 @@
 {
   "config": {
+    "baseUrl": "https://example.com",
     "locales": ["en"],
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true
@@ -7,6 +8,16 @@
   "input": {
     "localesFolders": ["en"],
     "translationFiles": [
+      {
+        "path": "404.json",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found"
+        },
+        "locale": "en"
+      },
       {
         "path": "~.json",
         "data": {
@@ -51,16 +62,6 @@
               }
             }
           }
-        },
-        "locale": "en"
-      },
-      {
-        "path": "404.json",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found"
         },
         "locale": "en"
       },
@@ -148,12 +149,20 @@
   },
   "code": {
     "config": {
+      "baseUrl": "https://example.com",
       "locales": ["en"],
       "defaultLocale": "en",
       "hideDefaultLocaleInUrl": true
     },
     "options": {
+      "adapter": {
+        "name": "next",
+        "options": {}
+      },
+      "outputFiles": {},
       "routes": {
+        "permanentRedirects": false,
+        "localeParamName": "lang",
         "translationJsonFileName": "~.json",
         "fnsPrefix": "",
         "tokens": {
@@ -171,15 +180,17 @@
       },
       "translations": {
         "ignorePaths": ["~.json"],
-        "dynamicDelimiters": {
-          "start": "{{",
-          "end": "}}"
-        },
+        "createArrayIndexBasedFns": false,
         "fnsAsDataCodes": true,
         "fnsPrefix": "",
-        "createArrayIndexBasedFns": false
+        "tokens": {
+          "namespaceDelimiter": ":",
+          "dynamicDelimiters": {
+            "start": "{{",
+            "end": "}}"
+          }
+        }
       },
-      "adapter": "next-translate",
       "write": {
         "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/single-language",
         "output": ".code",
@@ -190,6 +201,16 @@
     "input": {
       "localesFolders": ["en"],
       "translationFiles": [
+        {
+          "path": "404.json",
+          "data": {
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found"
+          },
+          "locale": "en"
+        },
         {
           "path": "~.json",
           "data": {
@@ -234,16 +255,6 @@
                 }
               }
             }
-          },
-          "locale": "en"
-        },
-        {
-          "path": "404.json",
-          "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found"
           },
           "locale": "en"
         },

@@ -7,7 +7,7 @@ import type { I18n } from "./types";
 
 export type I18nContextValue = {
   t: I18n.Translate;
-  lang: I18n.Locale;
+  locale: I18n.Locale;
 };
 
 let _I18nContext;
@@ -18,11 +18,14 @@ let _I18nContext;
 if (typeof React.createContext === "function") {
   _I18nContext = React.createContext<I18nContextValue>({
     t: ((key: string) => key) as I18n.Translate,
-    lang: defaultLocale,
+    locale: defaultLocale,
   });
 }
 
+/**
+ * @internal
+ */
 export const I18nContext = _I18nContext as React.Context<I18nContextValue>;
 
-export default I18nContext;
+// export default I18nContext;
 `;

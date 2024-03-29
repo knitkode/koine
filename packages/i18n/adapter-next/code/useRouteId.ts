@@ -12,13 +12,13 @@ export default ({
   switch (router) {
     case "app":
       return `
-import { usePathname } from "next/navigation";
-import { pathnameToRouteId } from "./pathnameToRouteId";
-import type { I18n } from "./types";
+"use client";
 
-export const useRouteId = () => 
-  pathnameToRouteId((usePathname() || "")${maybeReplace}) as I18n.RouteId;
+import { useContext } from "react";
+import { I18nRouteContext } from "./I18nRouteContext";
 
+export const useRouteId = () => useContext(I18nRouteContext);
+  
 export default useRouteId;
 `;
     case "pages":
@@ -35,13 +35,22 @@ export default useRouteId;
     case "migrating":
     default:
       return `
+"use client";
+
+import { useContext } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
+import { I18nRouteContext } from "./I18nRouteContext";
 import { pathnameToRouteId } from "./pathnameToRouteId";
 import type { I18n } from "./types";
 
 export const useRouteId = () => {
   try {
+    const routeId = useContext(I18nRouteContext);
+    if (routeId) {
+      return routeId;
+    }
+
     return pathnameToRouteId(
       useRouter().pathname${maybeReplace},
     ) as I18n.RouteId;

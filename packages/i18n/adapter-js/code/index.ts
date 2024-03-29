@@ -1,4 +1,5 @@
 import { createAdapter } from "../../compiler/createAdapter";
+import type { I18nCompiler } from "../../compiler/types";
 import { adapterJsOptions } from "../options";
 import config from "./config";
 import configCjs from "./config.cjs";
@@ -6,6 +7,8 @@ import createT from "./createT";
 import defaultLocale from "./defaultLocale";
 import deriveLocalisedPathnames from "./deriveLocalisedPathnames";
 import getAlternates from "./getAlternates";
+import getAlternatesFromDom from "./getAlternatesFromDom";
+import getI18nDictionaries from "./getI18nDictionaries";
 import getT from "./getT";
 import isLocale from "./isLocale";
 import loadTranslations from "./loadTranslations";
@@ -15,7 +18,7 @@ import pathnames from "./pathnames";
 import routes from "./routes";
 import routesSlim from "./routesSlim";
 import routesSpa from "./routesSpa";
-import tFns from "./tFns";
+import t from "./t";
 import tInterpolateParams from "./tInterpolateParams";
 import tPluralise from "./tPluralise";
 import to from "./to";
@@ -38,6 +41,18 @@ export default createAdapter(adapterJsOptions, ({}) => {
         index: true,
       },
       { name: "getAlternates", fn: getAlternates, ext: "ts", index: true },
+      {
+        name: "getAlternatesFromDom",
+        fn: getAlternatesFromDom,
+        ext: "ts",
+        index: true,
+      },
+      {
+        name: "getI18nDictionaries",
+        fn: getI18nDictionaries,
+        ext: "ts",
+        index: true,
+      },
       { name: "getT", fn: getT, ext: "ts", index: true },
       { name: "isLocale", fn: isLocale, ext: "ts", index: true },
       { name: "loadTranslations", fn: loadTranslations, ext: "ts" },
@@ -52,7 +67,7 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "routes", fn: routes, ext: "ts" },
       { name: "routesSlim", fn: routesSlim, ext: "ts" },
       { name: "routesSpa", fn: routesSpa, ext: "ts" },
-      { name: "tFns", fn: tFns, ext: "ts" },
+      { name: "t", fn: t, ext: "ts", index: true },
       {
         name: "tInterpolateParams",
         fn: tInterpolateParams,
@@ -64,6 +79,6 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "toSpa", fn: toSpa, ext: "ts", index: true },
       { name: "tPluralise", fn: tPluralise, ext: "ts" },
       { name: "types", fn: types, ext: "ts", index: true },
-    ],
+    ] as I18nCompiler.AdapterFile<"js">[],
   };
 });

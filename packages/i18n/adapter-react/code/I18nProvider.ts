@@ -1,28 +1,28 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg<"react">) => `
+export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
 import { I18nContext } from "./I18nContext";
+import { defaultLocale } from "./defaultLocale";
 import { createT } from "./createT";
 import type { I18n } from "./types";
 
 export type I18nProviderProps = React.PropsWithChildren<{
-  lang?: I18n.Locale;
-  namespaces?: Record<string, I18n.TranslationsDictionary>;
+  locale?: I18n.Locale;
+  dictionaries?: I18n.Dictionaries;
 }>;
 
 export const I18nProvider = ({
-  lang: langProp,
-  namespaces = {},
+  locale = defaultLocale,
+  dictionaries = {},
   children,
 }: I18nProviderProps) => {
-  const lang = langProp || "${config.defaultLocale}";
-  const pluralRules = new Intl.PluralRules(lang);
-  const t = createT(namespaces, pluralRules, lang) as I18n.Translate;
+  const pluralRules = new Intl.PluralRules(locale);
+  const t = createT(dictionaries, pluralRules, locale) as I18n.Translate;
 
   return (
-    <I18nContext.Provider value={{ lang, t }}>{children}</I18nContext.Provider>
+    <I18nContext.Provider value={{ locale, t }}>{children}</I18nContext.Provider>
   );
 };
 
