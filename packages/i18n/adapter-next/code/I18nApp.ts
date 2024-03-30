@@ -14,9 +14,11 @@ import type { I18n } from "./types";
  * @internal
  */
 export type I18nAppPropsData = {
-  locale: I18n.Locale;
-  dictionaries: I18n.Dictionaries;
-  alternates: I18n.Alternates;
+  i18n: {
+    locale: I18n.Locale;
+    dictionaries: I18n.Dictionaries;
+    alternates: I18n.Alternates;
+  }
 };
 
 type I18nAppProps =  React.PropsWithChildren<
@@ -42,8 +44,8 @@ type I18nAppProps =  React.PropsWithChildren<
  * \`\`\`
  */
 export const I18nApp = (props: I18nAppProps) => {
-  
-  const { locale, dictionaries, alternates, children } = props;
+  const { i18n, children } = props;
+  const { locale, dictionaries, alternates } = i18n;
   
   return (
     <I18nProvider

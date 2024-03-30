@@ -24,6 +24,7 @@ export function getAlternates<TRouteId extends I18n.RouteId>({
   id,
   params,
 }: GetAlternatesOptions<TRouteId>) {
+  // TODO: i18n maybe handle error routes
   // if (id === "404" || id === "500") return {};
 
   const alternates: I18n.Alternates = {

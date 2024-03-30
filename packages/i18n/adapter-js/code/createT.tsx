@@ -52,7 +52,7 @@ export function createT<TNamespace extends I18n.TranslateNamespace>(
     const k = Array.isArray(key) ? key[0] : key;
     const [namespace, i18nKey] = k.split("${options.translations.tokens.namespaceDelimiter}");
     const dic = (namespace && dictionaries[namespace]) || {};
-    const pluralisedKey = plural(pluralRules, dic, i18nKey, query, options);
+    const pluralisedKey = getPluralisedKey(pluralRules, dic, i18nKey, query, options);
     const dicValue = getDicValue(dic, pluralisedKey, query, options);
     const value =
       typeof dicValue === "object"
@@ -123,7 +123,7 @@ function getDicValue(
 /**
  * Control plural keys depending the {{count}} variable
  */
-function plural(
+function getPluralisedKey(
   pluralRules: Intl.PluralRules,
   dic: I18n.TranslationsDictionaryLoose,
   key: string,

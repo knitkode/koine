@@ -32,15 +32,17 @@ export async function i18nProps<TRouteId extends I18n.RouteId, TParams, TData>({
   params,
   data,
 }: I18nPropsOptions<TRouteId, TParams, TData>) {
-  const i18n: I18nAppPropsData = {
-    locale: locale,
-    // @ts-expect-error FIXME: route conditional type
-    alternates: getAlternates({ locale, id: routeId, params: routeParams }),
-    dictionaries: await getI18nDictionaries({ locale, namespaces }),
+  const props: I18nAppPropsData = {
+    i18n: {
+      locale: locale,
+      // @ts-expect-error FIXME: route conditional type
+      alternates: getAlternates({ locale, id: routeId, params: routeParams }),
+      dictionaries: await getI18nDictionaries({ locale, namespaces }),
+    }
   }
 
   return {
-    i18n,
+    ...props,
     params: ${localeParamName ? `{ ${localeParamName}: locale, ...(params || ({} as TParams)) }` : `params || ({} as TParams)`},
     data: data || ({} as TData),
   };

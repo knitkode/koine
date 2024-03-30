@@ -481,6 +481,7 @@ export namespace I18n {
           : never;
       }
     | {
+        // TODO: i18n maybe handle error routes
         id: TRouteId extends RouteIdStatic/*  | "404" | "500" */
           ? TRouteId/*  | "404" | "500" */
           : never;
