@@ -17,7 +17,7 @@ export default ({
 import { useContext } from "react";
 import { I18nRouteContext } from "./I18nRouteContext";
 
-export const useRouteId = () => useContext(I18nRouteContext);
+export const useRouteId = () => useContext(I18nRouteContext)[0];
   
 export default useRouteId;
 `;
@@ -46,7 +46,7 @@ import type { I18n } from "./types";
 
 export const useRouteId = () => {
   try {
-    const routeId = useContext(I18nRouteContext);
+    const routeId = useContext(I18nRouteContext)[0];
     if (routeId) {
       return routeId;
     }
