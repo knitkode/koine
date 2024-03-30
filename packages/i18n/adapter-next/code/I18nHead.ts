@@ -11,7 +11,7 @@ export type I18nHeadProps = {
 };
 
 /**
- * For Pages Router only
+ * **For Pages Router only**
  */
 export const I18nHead = (props: I18nHeadProps) => {
   const { alternates = {} } = props;

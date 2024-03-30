@@ -14,14 +14,22 @@ export type I18nCompilerConfig = {
   hideDefaultLocaleInUrl?: boolean;
 };
 
-export type I18nCompilerConfigResolved = Required<I18nCompilerConfig>;
+export type I18nCompilerConfigResolved = Required<I18nCompilerConfig> & {
+  /**
+   * Whether we have only a single locale.
+   *
+   * @computed
+   */
+  single: boolean;
+};
 
-export const configDefaults = {
+export const configDefaults: I18nCompilerConfigResolved = {
   baseUrl: "https://example.com",
   locales: ["en"],
   defaultLocale: "en",
   hideDefaultLocaleInUrl: true,
-} satisfies I18nCompilerConfigResolved;
+  single: true,
+};
 
 /**
  * Get basic i18n compiler config with defaults and automatic inference from
@@ -29,18 +37,20 @@ export const configDefaults = {
  */
 export let getConfig = (
   dataInput: I18nCompiler.DataInput,
-  options: I18nCompilerConfig = configDefaults,
+  options?: I18nCompilerConfig,
 ) => {
-  options.baseUrl = normaliseUrl(options.baseUrl);
+  if (options) {
+    options.baseUrl = normaliseUrl(options.baseUrl);
 
-  // dynamically define locales
-  options.locales = options.locales || dataInput.localesFolders;
+    // dynamically define locales
+    options.locales = options.locales || dataInput.localesFolders;
 
-  // ensure defaultLocale
-  options.defaultLocale = options.defaultLocale || options.locales?.[0];
+    // ensure defaultLocale
+    options.defaultLocale = options.defaultLocale || options.locales?.[0];
 
-  // ensure boolean value
-  options.hideDefaultLocaleInUrl = !!options.hideDefaultLocaleInUrl;
+    // ensure boolean value
+    options.hideDefaultLocaleInUrl = !!options.hideDefaultLocaleInUrl;
+  }
 
   const merged = objectMergeWithDefaults(configDefaults, options);
 
@@ -48,5 +58,9 @@ export let getConfig = (
   merged.locales = merged.locales.sort((a, b) =>
     merged.defaultLocale ? -1 : a.localeCompare(b),
   );
+
+  // compute single
+  merged.single = merged.locales.length === 1;
+
   return merged;
 };

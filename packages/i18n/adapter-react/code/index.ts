@@ -8,6 +8,7 @@ import I18nEffects from "./I18nEffects";
 import I18nProvider from "./I18nProvider";
 import I18nRouteContext from "./I18nRouteContext";
 import I18nRouteProvider from "./I18nRouteProvider";
+import I18nRouteSetter from "./I18nRouteSetter";
 import T from "./T";
 import TransText from "./TransText";
 import formatElements from "./formatElements";
@@ -32,6 +33,7 @@ export default createAdapter(adapterReactOptions, ({}) => {
       { name: "I18nProvider", fn: I18nProvider, ext: "tsx", index: true },
       { name: "I18nRouteContext", fn: I18nRouteContext, ext: "tsx" },
       { name: "I18nRouteProvider", fn: I18nRouteProvider, ext: "tsx" },
+      { name: "I18nRouteSetter", fn: I18nRouteSetter, ext: "tsx" },
       { name: "T", fn: T, ext: "tsx", index: true },
       { name: "TransText", fn: TransText, ext: "tsx", index: true },
       { name: "useAlternates", fn: useAlternates, ext: "ts", index: true },

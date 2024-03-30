@@ -12,7 +12,10 @@ export type I18nLayoutProps = React.PropsWithChildren<{
 }>;
 
 /**
- * For App Router only
+ * Optionally use this _in each_ \`layout.tsx\` where you have some translations
+ * specific to that layout and its descendant layouts and pages
+ * 
+ * **For App Router only**
  */
 export const I18nLayout = async ({
   locale = defaultLocale,

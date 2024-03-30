@@ -7,7 +7,7 @@ import { useContext, useEffect } from "react";
 import { I18nAlternatesContext } from "./I18nAlternatesContext";
 import type { I18n } from "./types";
 
-export type I18nAlternatesProps = {
+type I18nAlternatesProps = {
   alternates: I18n.Alternates;
 };
 

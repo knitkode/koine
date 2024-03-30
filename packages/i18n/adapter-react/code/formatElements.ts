@@ -20,6 +20,7 @@ function getElements(
 }
 
 /**
+ * @internal
  * @see https://github.com/aralroca/next-translate/blob/master/src/formatElements.tsx
  */
 export function formatElements(
@@ -58,5 +59,5 @@ export function formatElements(
   return tree;
 }
 
-export default formatElements;
+// export default formatElements;
 `;

@@ -1,40 +1,37 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({}: I18nCompiler.AdapterArg<"next">) => `
+export default ({
+  options: {
+    routes: { localeParamName },
+  },
+}: I18nCompiler.AdapterArg<"next">) => `
 import { I18nProvider } from "./I18nProvider";
 import { I18nAlternatesProvider } from "./I18nAlternatesProvider";
+import { I18nRouteProvider } from "./I18nRouteProvider";
 import { defaultLocale } from "./defaultLocale";
 import { getI18nDictionaries } from "./getI18nDictionaries";
 import type { I18n } from "./types";
 
-export type I18nLayoutProps = React.PropsWithChildren<{
-  locale?: I18n.Locale;
-  namespaces?: I18n.TranslateNamespace[];
-}>;
+export type I18nRootProps = React.PropsWithChildren;
 
 const alternates = {};
 
 /**
- * For App Router only
+ * Use this _only once_ in the root \`layout.tsx\` at root folder of your app
+ * directory (one up than the \`[${localeParamName}]\` folder).
+ * 
+ * **For App Router only**
  */
-export const I18nLayout = async ({
-  locale = defaultLocale,
-  namespaces = [],
-  children,
-}: I18nLayoutProps) => {
-  const dictionaries = await getI18nDictionaries({ locale, namespaces });
+export const I18nRoot = ({ children }: I18nRootProps) => {
 
   return (
-    <I18nProvider
-      locale={locale}
-      dictionaries={dictionaries}
-    >
+    <I18nRouteProvider id="">
       <I18nAlternatesProvider alternates={alternates}>
         {children}
       </I18nAlternatesProvider>
-    </I18nProvider>
+    </I18nRouteProvider>
   );
 };
 
-export default I18nLayout;
+export default I18nRoot;
 `;

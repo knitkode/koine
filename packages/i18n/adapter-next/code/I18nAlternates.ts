@@ -14,7 +14,10 @@ export type I18nAlternatesProps<TRouteId extends I18n.RouteId> =
   I18n.RouteArgs<TRouteId>;
 
 /**
- * For Pages Router only
+ * Use this in dynamic routes pages that use \`fallback: true\` in order to update
+ * the alternates once the data that populate the URL params is ready.
+ * 
+ * **For Pages Router only**
  */
 export const I18nAlternates = <TRouteId extends I18n.RouteId>(
   props: I18nAlternatesProps<TRouteId>,

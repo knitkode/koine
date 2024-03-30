@@ -10,29 +10,48 @@ import { I18nEffects } from "./I18nEffects";
 import { I18nHead } from "./I18nHead";
 import type { I18n } from "./types";
 
-type I18nGetProps = {
-  __locale: I18n.Locale;
-  __dictionaries: I18n.Dictionaries;
-  __alternates: I18n.Alternates;
+/**
+ * @internal
+ */
+export type I18nAppPropsData = {
+  locale: I18n.Locale;
+  dictionaries: I18n.Dictionaries;
+  alternates: I18n.Alternates;
 };
 
-export type I18nAppProps =  React.PropsWithChildren<
-  AppProps<I18nGetProps>["pageProps"]
+type I18nAppProps =  React.PropsWithChildren<
+  AppProps<I18nAppPropsData>["pageProps"]
 >;
 
 /**
- * For Pages Router only
+ * To use in \`_app.tsx\` file wrapping your component
+ * 
+ * **For Pages Router only**
+ * 
+ * @usage
+ * \`\`\`ts
+ * export default function App(props: AppProps) {
+ *   const { Component, pageProps } = props;
+ *   
+ *   return (
+ *     <I18nApp {...pageProps}>
+ *       <Component {...pageProps} />
+ *     </I18nApp>
+ *   );
+ * }
+ * \`\`\`
  */
 export const I18nApp = (props: I18nAppProps) => {
-  const { __locale, __dictionaries, __alternates, children } = props;
+  
+  const { locale, dictionaries, alternates, children } = props;
   
   return (
     <I18nProvider
-      locale={__locale}
-      dictionaries={__dictionaries}
+      locale={locale}
+      dictionaries={dictionaries}
     >
-      <I18nHead alternates={__alternates} />
-      <I18nAlternatesProvider alternates={__alternates}>
+      <I18nHead alternates={alternates} />
+      <I18nAlternatesProvider alternates={alternates}>
         {children}
       </I18nAlternatesProvider>
       <I18nEffects />
