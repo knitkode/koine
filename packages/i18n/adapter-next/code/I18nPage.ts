@@ -5,7 +5,7 @@ import { I18nAlternatesSetter } from "./I18nAlternatesSetter";
 import { I18nProvider } from "./I18nProvider";
 import { I18nRouteSetter } from "./I18nRouteSetter";
 import { defaultLocale } from "./defaultLocale";
-import { getAlternates } from "./getAlternates";
+import { getI18nAlternates } from "./getI18nAlternates";
 import { getI18nDictionaries } from "./getI18nDictionaries";
 import type { I18n } from "./types";
 
@@ -33,7 +33,7 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
     children,
   } = props;
   // @ts-expect-error FIXME: route conditional type
-  const alternates = await getAlternates({ locale, id, params });
+  const alternates = await getI18nAlternates({ locale, id, params });
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
 
   return (

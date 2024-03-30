@@ -5,16 +5,14 @@ import config from "./config";
 import configCjs from "./config.cjs";
 import createT from "./createT";
 import defaultLocale from "./defaultLocale";
-import deriveLocalisedPathnames from "./deriveLocalisedPathnames";
-import getAlternates from "./getAlternates";
-import getAlternatesFromDom from "./getAlternatesFromDom";
+import getI18nAlternates from "./getI18nAlternates";
+// import getI18nAlternatesFromDom from "./getI18nAlternatesFromDom";
 import getI18nDictionaries from "./getI18nDictionaries";
 import getT from "./getT";
 import isLocale from "./isLocale";
 import loadTranslations from "./loadTranslations";
 import locales from "./locales";
 import pathnameToRouteId from "./pathnameToRouteId";
-import pathnames from "./pathnames";
 import routes from "./routes";
 import routesSlim from "./routesSlim";
 import routesSpa from "./routesSpa";
@@ -35,18 +33,18 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "createT", fn: createT, ext: "ts", index: true },
       { name: "defaultLocale", fn: defaultLocale, ext: "ts", index: true },
       {
-        name: "deriveLocalisedPathnames",
-        fn: deriveLocalisedPathnames,
+        name: "getI18nAlternates",
+        fn: getI18nAlternates,
         ext: "ts",
         index: true,
       },
-      { name: "getAlternates", fn: getAlternates, ext: "ts", index: true },
-      {
-        name: "getAlternatesFromDom",
-        fn: getAlternatesFromDom,
-        ext: "ts",
-        index: true,
-      },
+      // TODO: probably remove it or move it to `i18n/client` public utils
+      // {
+      //   name: "getI18nAlternatesFromDom",
+      //   fn: getI18nAlternatesFromDom,
+      //   ext: "ts",
+      //   index: true,
+      // },
       {
         name: "getI18nDictionaries",
         fn: getI18nDictionaries,
@@ -57,7 +55,6 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "isLocale", fn: isLocale, ext: "ts", index: true },
       { name: "loadTranslations", fn: loadTranslations, ext: "ts" },
       { name: "locales", fn: locales, ext: "ts", index: true },
-      { name: "pathnames", fn: pathnames, ext: "ts", index: true },
       {
         name: "pathnameToRouteId",
         fn: pathnameToRouteId,

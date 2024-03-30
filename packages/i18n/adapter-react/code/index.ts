@@ -14,6 +14,7 @@ import TransText from "./TransText";
 import formatElements from "./formatElements";
 import useAlternates from "./useAlternates";
 import useLocale from "./useLocale";
+import useRouteId from "./useRouteId";
 import useT from "./useT";
 
 export default createAdapter(adapterReactOptions, ({}) => {
@@ -38,6 +39,7 @@ export default createAdapter(adapterReactOptions, ({}) => {
       { name: "TransText", fn: TransText, ext: "tsx", index: true },
       { name: "useAlternates", fn: useAlternates, ext: "ts", index: true },
       { name: "useLocale", fn: useLocale, ext: "ts", index: true },
+      { name: "useRouteId", fn: useRouteId, ext: "ts", index: true },
       { name: "useT", fn: useT, ext: "ts", index: true },
     ],
   };

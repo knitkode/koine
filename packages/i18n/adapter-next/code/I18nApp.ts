@@ -4,6 +4,7 @@ export default ({}: I18nCompiler.AdapterArg<"next">) => `
 "use client";
 
 import type { AppProps } from "next/app";
+import { defaultLocale } from "./defaultLocale";
 import { I18nProvider } from "./I18nProvider";
 import { I18nAlternatesProvider } from "./I18nAlternatesProvider";
 import { I18nEffects } from "./I18nEffects";
@@ -21,6 +22,12 @@ export type I18nAppPropsData = {
   }
 };
 
+const i18nDefaults: I18nAppPropsData["i18n"] = {
+  locale: defaultLocale,
+  dictionaries: {},
+  alternates: {}
+};
+
 type I18nAppProps =  React.PropsWithChildren<
   AppProps<I18nAppPropsData>["pageProps"]
 >;
@@ -29,6 +36,10 @@ type I18nAppProps =  React.PropsWithChildren<
  * To use in \`_app.tsx\` file wrapping your component
  * 
  * **For Pages Router only**
+ * 
+ * NB: Consider that when using ISR with \`fallback: true\` the first load
+ * will not have any useful i18n data (App's \`pageProps\` is an empty object),
+ * hence we provide a \`i18nDefaults\` object.
  * 
  * @usage
  * \`\`\`ts
@@ -45,7 +56,7 @@ type I18nAppProps =  React.PropsWithChildren<
  */
 export const I18nApp = (props: I18nAppProps) => {
   const { i18n, children } = props;
-  const { locale, dictionaries, alternates } = i18n;
+  const { locale, dictionaries, alternates } = i18n || i18nDefaults;
   
   return (
     <I18nProvider

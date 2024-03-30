@@ -19,7 +19,7 @@ export type GetAlternatesOptions<TRouteId extends I18n.RouteId> = {
   locale: I18n.Locale;
 } & I18n.RouteArgs<TRouteId>;
 
-export function getAlternates<TRouteId extends I18n.RouteId>({
+export function getI18nAlternates<TRouteId extends I18n.RouteId>({
   locale,
   id,
   params,
@@ -45,6 +45,6 @@ export function getAlternates<TRouteId extends I18n.RouteId>({
   return alternates;
 }
 
-export default getAlternates;
+export default getI18nAlternates;
 `;
 };

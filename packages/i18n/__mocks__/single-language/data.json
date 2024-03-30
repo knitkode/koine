@@ -3,21 +3,12 @@
     "baseUrl": "https://example.com",
     "locales": ["en"],
     "defaultLocale": "en",
-    "hideDefaultLocaleInUrl": true
+    "hideDefaultLocaleInUrl": true,
+    "single": true
   },
   "input": {
     "localesFolders": ["en"],
     "translationFiles": [
-      {
-        "path": "404.json",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found"
-        },
-        "locale": "en"
-      },
       {
         "path": "~.json",
         "data": {
@@ -62,6 +53,16 @@
               }
             }
           }
+        },
+        "locale": "en"
+      },
+      {
+        "path": "404.json",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found"
         },
         "locale": "en"
       },
@@ -152,12 +153,15 @@
       "baseUrl": "https://example.com",
       "locales": ["en"],
       "defaultLocale": "en",
-      "hideDefaultLocaleInUrl": true
+      "hideDefaultLocaleInUrl": true,
+      "single": true
     },
     "options": {
       "adapter": {
         "name": "next",
-        "options": {}
+        "options": {
+          "modularized": true
+        }
       },
       "outputFiles": {},
       "routes": {
@@ -202,16 +206,6 @@
       "localesFolders": ["en"],
       "translationFiles": [
         {
-          "path": "404.json",
-          "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found"
-          },
-          "locale": "en"
-        },
-        {
           "path": "~.json",
           "data": {
             "home": "/",
@@ -255,6 +249,16 @@
                 }
               }
             }
+          },
+          "locale": "en"
+        },
+        {
+          "path": "404.json",
+          "data": {
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found"
           },
           "locale": "en"
         },

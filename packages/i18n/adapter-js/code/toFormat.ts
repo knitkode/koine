@@ -1,13 +1,14 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg<"js">) =>
-  `
+export default ({ config }: I18nCompiler.AdapterArg<"js">) => `
+import { defaultLocale } from "./defaultLocale";
+
 export function toFormat(
   locale: string | undefined,
   pathname: string,
   params?: object,
 ) {
-  locale = locale || "${config.defaultLocale}";
+  locale = locale || defaultLocale;
   if (process.env["NODE_ENV"] === "development") {
     if (params) {
       pathname.replace(/\\[(.*?)\\]/g, (_, dynamicKey) => {
@@ -50,7 +51,7 @@ export function toFormat(
   ${
     config.hideDefaultLocaleInUrl
       ? `
-  if (locale !== "${config.defaultLocale}") {
+  if (locale !== defaultLocale) {
     return "/" + locale + (pathname === "/" ? "" : pathname);
   }
   `

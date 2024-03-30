@@ -6,7 +6,7 @@ export default ({}: I18nCompiler.AdapterArg<"next">) => `
 import { useContext, useEffect } from "react";
 import { I18nAlternatesContext } from "./I18nAlternatesContext";
 import { I18nHead } from "./I18nHead";
-import { getAlternates } from "./getAlternates";
+import { getI18nAlternates } from "./getI18nAlternates";
 import type { I18n } from "./types";
 import { useLocale } from "./useLocale";
 
@@ -28,7 +28,7 @@ export const I18nAlternates = <TRouteId extends I18n.RouteId>(
 
   useEffect(() => {
     // @ts-expect-error FIXME: route conditional type
-    setAlternates(getAlternates({ locale, id, params }));
+    setAlternates(getI18nAlternates({ locale, id, params }));
   }, [id, params, locale, setAlternates]);
 
   return <I18nHead alternates={alternates} />;

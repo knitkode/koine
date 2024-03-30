@@ -5,7 +5,7 @@ export default ({
     routes: { localeParamName },
   },
 }: I18nCompiler.AdapterArg<"next">) => `
-import { getAlternates } from "./getAlternates";
+import { getI18nAlternates } from "./getI18nAlternates";
 import { getI18nDictionaries } from "./getI18nDictionaries";
 import type { I18nAppPropsData } from "./I18nApp";
 import type { I18n } from "./types";
@@ -36,7 +36,7 @@ export async function i18nProps<TRouteId extends I18n.RouteId, TParams, TData>({
     i18n: {
       locale: locale,
       // @ts-expect-error FIXME: route conditional type
-      alternates: getAlternates({ locale, id: routeId, params: routeParams }),
+      alternates: getI18nAlternates({ locale, id: routeId, params: routeParams }),
       dictionaries: await getI18nDictionaries({ locale, namespaces }),
     }
   }

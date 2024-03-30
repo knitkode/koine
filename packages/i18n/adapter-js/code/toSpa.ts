@@ -3,6 +3,7 @@ import type { I18nCompiler } from "../../compiler/types";
 export default ({ config, options }: I18nCompiler.AdapterArg<"js">) => {
   const { idDelimiter } = options.routes.tokens;
   return `
+import { defaultLocale } from "./defaultLocale";
 import { isLocale } from "./isLocale";
 import { routesSpa } from "./routesSpa";
 import { toFormat } from "./toFormat";
@@ -25,7 +26,7 @@ export function toSpa<
         | [I18n.RouteParams[I18n.RouteJoinedId<Root, Path>], I18n.Locale]
     : [] | [I18n.Locale]
 ) {
-  const locale = (isLocale(args[0]) ? args[0] : args[1]) || "${config.defaultLocale}";
+  const locale = (isLocale(args[0]) ? args[0] : args[1]) || defaultLocale;
   const fullId = \`\${rootId}${idDelimiter}\${pathId}\` as I18n.RouteJoinedId<Root, Path>;
   return toFormat(
     // FIXME: actually the locale will be prepended if hideDefaultLocaleInUrl will be false
