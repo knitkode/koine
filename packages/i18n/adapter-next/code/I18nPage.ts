@@ -32,6 +32,7 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
     params,
     children,
   } = props;
+  // @ts-expect-error FIXME: route conditional type
   const alternates = await getAlternates({ locale, id, params });
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
 
