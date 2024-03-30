@@ -11,9 +11,9 @@ export const useT = <T extends I18n.TranslateNamespace>(namespace: T) => {
   const t = useContext(I18nContext).t;
   return useMemo(
     () =>
-      (i18nKey: string, ...args) =>
+      (key: string, ...args) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (t as any)(\`\${namespace}:\${i18nKey}\`, ...args),
+        (t as any)(\`\${namespace}:\${key}\`, ...args),
     [t],
   ) as I18n.TranslateNamespaced<T>;
 };

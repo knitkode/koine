@@ -4,22 +4,14 @@ export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
 import { useMemo } from "react";
-import { formatElements } from "./formatElements";
 import type { TProps } from "./T";
-import type { I18n } from "./types";
+import { formatElements } from "./formatElements";
 
-export type TransTextProps<
-  TNamespace extends I18n.TranslateNamespace | undefined,
-> = Pick<TProps<TNamespace>, "components"> & {
+export type TransTextProps = Pick<TProps, "components"> & {
   text: string;
 };
 
-export const TransText = <
-  TNamespace extends I18n.TranslateNamespace | undefined,
->({
-  text,
-  components,
-}: TransTextProps<TNamespace>) => {
+export const TransText = ({ text, components }: TransTextProps) => {
   return useMemo(
     () =>
       !components || components.length === 0

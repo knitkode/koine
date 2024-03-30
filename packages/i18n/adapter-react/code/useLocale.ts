@@ -1,13 +1,13 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config }: I18nCompiler.AdapterArg<"react">) => `
+export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
 import { useContext } from "react";
+import { defaultLocale } from "./defaultLocale";
 import { I18nContext } from "./I18nContext";
-import type { I18n } from "./types";
 
-export const useLocale = () => useContext(I18nContext).locale || "${config.defaultLocale}";
+export const useLocale = () => useContext(I18nContext).locale || defaultLocale;
 
 export default useLocale;
 `;

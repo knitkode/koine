@@ -28,6 +28,7 @@ export function getAlternates<TRouteId extends I18n.RouteId>({
 
   const alternates: I18n.Alternates = {
     "x-default": toUrl(
+      // @ts-expect-error FIXME: route conditional type
       params ? to(id, params, defaultLocale) : to(id, defaultLocale),
     ),
   };
@@ -35,6 +36,7 @@ export function getAlternates<TRouteId extends I18n.RouteId>({
     .filter((l) => l !== locale)
     .forEach((locale) => {
       alternates[locale] = toUrl(
+        // @ts-expect-error FIXME: route conditional type
         params ? to(id, params, locale) : to(id, locale),
       );
     });

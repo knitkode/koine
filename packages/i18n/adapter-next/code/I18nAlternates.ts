@@ -27,6 +27,7 @@ export const I18nAlternates = <TRouteId extends I18n.RouteId>(
   const [alternates, setAlternates] = useContext(I18nAlternatesContext);
 
   useEffect(() => {
+    // @ts-expect-error FIXME: route conditional type
     setAlternates(getAlternates({ locale, id, params }));
   }, [id, params, locale, setAlternates]);
 

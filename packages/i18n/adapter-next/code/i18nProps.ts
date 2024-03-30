@@ -34,6 +34,7 @@ export async function i18nProps<TRouteId extends I18n.RouteId, TParams, TData>({
 }: I18nPropsOptions<TRouteId, TParams, TData>) {
   const i18n: I18nAppPropsData = {
     locale: locale,
+    // @ts-expect-error FIXME: route conditional type
     alternates: getAlternates({ locale, id: routeId, params: routeParams }),
     dictionaries: await getI18nDictionaries({ locale, namespaces }),
   }
