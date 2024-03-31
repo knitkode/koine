@@ -14,8 +14,11 @@ export default ({ routes }: I18nCompiler.AdapterArg<"js">) => {
     2,
   );
   return `
+/**
+ * @internal
+ */
 export const routesSlim = ${value} as const;
 
-export default routesSlim;
+// export default routesSlim;
 `;
 };

@@ -8,7 +8,7 @@ import I18nLayout from "./I18nLayout";
 import I18nPage from "./I18nPage";
 import I18nRoot from "./I18nRoot";
 import getI18nMetadata from "./getI18nMetadata";
-import i18nProps from "./i18nProps";
+import i18nGet from "./i18nGet";
 import nextRedirects from "./next-redirects";
 import nextRewrites from "./next-rewrites";
 import useRouteId from "./useRouteId";
@@ -41,7 +41,7 @@ export default createAdapter(adapterNextOptions, ({ adapterOptions }) => {
       { name: "I18nAlternates", fn: I18nAlternates, ext: "tsx", index: true },
       { name: "I18nApp", fn: I18nApp, ext: "tsx", index: true },
       { name: "I18nHead", fn: I18nHead, ext: "tsx", index: true },
-      { name: "i18nProps", fn: i18nProps, ext: "ts", index: true },
+      { name: "i18nGet", fn: i18nGet, ext: "ts", index: true },
     ]);
   }
 

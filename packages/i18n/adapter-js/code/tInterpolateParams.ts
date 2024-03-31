@@ -4,6 +4,9 @@ import type { I18nCompiler } from "../../compiler/types";
 export default ({ options }: I18nCompiler.AdapterArg<"js">) => {
   const { start, end } = options.translations.tokens.dynamicDelimiters;
   return `
+/**
+ * @internal
+ */
 /* eslint-disable prefer-const */
 export let tInterpolateParams = (
   value: string,
@@ -15,6 +18,6 @@ export let tInterpolateParams = (
       params[key.trim() as keyof typeof params] + "",
   ) : value;
 
-export default tInterpolateParams;
+// export default tInterpolateParams;
 `;
 };

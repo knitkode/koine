@@ -199,6 +199,7 @@ export default ({
 /* eslint-disable @typescript-eslint/ban-types */
 import type { Split } from "@koine/utils";
 import type { I18nUtils } from "@koine/i18n";
+import type { RouteIdError } from "./routesError";
 
 export namespace I18n {
   /**
@@ -473,18 +474,13 @@ export namespace I18n {
   /**
    * @internal
    */
-  export type RouteArgs<TRouteId extends RouteId> =
+  export type RouteArgs<TRouteId extends RouteId | RouteIdError> =
     | {
         id: TRouteId extends RouteIdDynamic ? TRouteId : never;
-        params: TRouteId extends RouteIdDynamic
-          ? RouteParams[TRouteId]
-          : never;
+        params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
       }
     | {
-        // TODO: i18n maybe handle error routes
-        id: TRouteId extends RouteIdStatic/*  | "404" | "500" */
-          ? TRouteId/*  | "404" | "500" */
-          : never;
+        id: TRouteId extends RouteIdStatic | RouteIdError ? TRouteId : never;
         params?: undefined;
       };
 

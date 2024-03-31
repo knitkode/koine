@@ -14,6 +14,7 @@ import loadTranslations from "./loadTranslations";
 import locales from "./locales";
 import pathnameToRouteId from "./pathnameToRouteId";
 import routes from "./routes";
+import routesError from "./routesError";
 import routesSlim from "./routesSlim";
 import routesSpa from "./routesSpa";
 import t from "./t";
@@ -62,6 +63,7 @@ export default createAdapter(adapterJsOptions, ({}) => {
         index: true,
       },
       { name: "routes", fn: routes, ext: "ts" },
+      { name: "routesError", fn: routesError, ext: "ts" },
       { name: "routesSlim", fn: routesSlim, ext: "ts" },
       { name: "routesSpa", fn: routesSpa, ext: "ts" },
       { name: "t", fn: t, ext: "ts", index: true },
