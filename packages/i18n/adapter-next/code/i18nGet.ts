@@ -10,16 +10,43 @@ import type { GetStaticPathsContext, GetStaticPropsContext } from "next";
 import type { I18nAppPropsData } from "./I18nApp";
 import { getI18nAlternates } from "./getI18nAlternates";
 import { getI18nDictionaries } from "./getI18nDictionaries";
+import { isLocale } from "./isLocale";
 import { locales } from "./locales";
 import { type RouteIdError, isErrorRoute } from "./routesError";
 import type { I18n } from "./types";
 
+/**
+ * Get current _locale_ from \`getStaticProps\` context data (its first argument)
+ */
+function locale(params: GetStaticPropsContext["params"]): I18n.Locale | undefined;
+function locale(ctx: GetStaticPropsContext): I18n.Locale | undefined;
+function locale(
+  ctxOrParams: GetStaticPropsContext["params"] | GetStaticPropsContext,
+) {
+  const params = ctxOrParams?.params || ctxOrParams;
+  if (params) {
+    const locale = (params as any).${localeParamName};
+
+    if (isLocale(locale)) {
+      return locale;
+    }
+  }
+
+  return; // defaultLocale;
+}
+
+/**
+ * Get localised paths to feed into \`getStaticPaths\`
+ */
 const paths = <P extends { [key: string]: any }>(params?: P) =>
   locales.map((l) => ({
     params: { ${localeParamName}: l, ...(params || {}) },
     // locale: l,
   })) as Array<string | { params: P & { ${localeParamName}: I18n.Locale }; locale?: string }>;
 
+/**
+ * Function to use as \`getStaticPaths\` with \`fallback: false\`
+ */
 const staticPaths = (_context?: GetStaticPathsContext) => ({
   paths: paths(),
   fallback: false,
@@ -53,6 +80,9 @@ type I18nPropsOptions<
     }
 );
 
+/**
+ * Get page props data feed into \`getStaticProps\`'s return
+ */
 const props = async <
   TRouteId extends I18n.RouteId | RouteIdError,
   TParams,
@@ -85,6 +115,9 @@ const props = async <
   };
 };
 
+/**
+ * Get page props data to use as immediate return of \`getStaticProps\`
+ */
 const staticProps = async <
   TRouteId extends I18n.RouteId | RouteIdError,
   TParams,
@@ -110,6 +143,7 @@ const staticProps = async <
  * **For Pages Router only**
  */
 export const i18nGet = {
+  locale,
   paths,
   staticPaths,
   props,
