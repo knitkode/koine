@@ -45,20 +45,21 @@ import { pathnameToRouteId } from "./pathnameToRouteId";
 import type { I18n } from "./types";
 
 export const useRouteId = () => {
-  try {
-    const routeId = useContext(I18nRouteContext)[0];
-    if (routeId) {
-      return routeId;
-    }
+  const fromCtx = useContext(I18nRouteContext)[0];
+  let fromPages = "";
+  let fromApp = "";
 
-    return pathnameToRouteId(
+  try {
+    fromPages = pathnameToRouteId(
       useRouter().pathname${maybeReplace},
     ) as I18n.RouteId;
   } catch (e) {
-    return pathnameToRouteId(
+    fromApp = pathnameToRouteId(
       (usePathname() || "")${maybeReplace},
     ) as I18n.RouteId;
   }
+
+  return fromCtx || fromPages || fromApp;
 };
 
 export default useRouteId;
