@@ -3,6 +3,9 @@ import type { I18nCompiler } from "../../compiler/types";
 export default ({ config }: I18nCompiler.AdapterArg<"js">) => `
 import { defaultLocale } from "./defaultLocale";
 
+/**
+ * @internal
+ */
 export function toFormat(
   locale: string | undefined,
   pathname: string,
@@ -60,5 +63,5 @@ export function toFormat(
   return pathname;
 }
 
-export default toFormat;
+// export default toFormat;
 `;

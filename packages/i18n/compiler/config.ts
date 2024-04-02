@@ -12,6 +12,7 @@ export type I18nCompilerConfig = {
   defaultLocale: I18nCompiler.Locale;
   locales?: I18nCompiler.Locale[];
   hideDefaultLocaleInUrl?: boolean;
+  trailingSlash?: boolean;
 };
 
 export type I18nCompilerConfigResolved = Required<I18nCompilerConfig> & {
@@ -28,6 +29,7 @@ export const configDefaults: I18nCompilerConfigResolved = {
   locales: ["en"],
   defaultLocale: "en",
   hideDefaultLocaleInUrl: true,
+  trailingSlash: false,
   single: true,
 };
 

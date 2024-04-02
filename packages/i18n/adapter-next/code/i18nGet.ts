@@ -101,9 +101,9 @@ const props = async <
     i18n: {
       locale: locale,
       alternates: isErrorRoute(routeId)
-        ? // @ts-expect-error FIXME: route conditional type
-          getI18nAlternates({ locale, id: routeId, params: routeParams })
-        : {},
+        ? {}
+        : // @ts-expect-error FIXME: route conditional type
+          getI18nAlternates({ locale, id: routeId, params: routeParams }),
       dictionaries: await getI18nDictionaries({ locale, namespaces }),
     },
   };

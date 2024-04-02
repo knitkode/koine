@@ -17,7 +17,7 @@ type I18nRouteProviderProps = React.PropsWithChildren<{
 export function I18nRouteProvider(props: I18nRouteProviderProps) {
   const { children } = props;
   const [id, setId] = useState<I18n.RouteId>(
-    props.id || ({} as I18n.RouteId),
+    props.id || ("" as I18n.RouteId),
   );
   const value = useMemo(
     () => [id, setId] as const,

@@ -181,8 +181,8 @@ const buildRoutesPathnames = (
   return output;
 };
 
-// TODO: probably move the  Translate types into the adapter-next-translate
-// unless we will use the same api for other adapters
+// TODO: maybe move the Translate types into the various adapters unless we
+// will use the same api for all of them
 export default ({
   config,
   input,
@@ -229,9 +229,6 @@ export namespace I18n {
    */
   export type RouteIdDynamic = ${routeIdDynamic};
 
-  /**
-   * SPA routes ids map
-   */
   /**
    * Map every SPA path divided by their roots to their actual pathname value for the default locale
    */
@@ -378,7 +375,7 @@ export namespace I18n {
    * - \`""\` as a shortcut for \`{ fallback: "" }\`
    *
    */
-  export type TranslationShortcut = "obj" | "";
+  type TranslationShortcut = "obj" | "";
 
   /**
    * Query object to populate the returned translated string interpolating data
@@ -387,7 +384,7 @@ export namespace I18n {
    * NOTE: when using a shortcut passing TranslationOptions to \`t()\` is not supported
    * TODO: type safe this behaviour of the third argument (options).
    */
-  export type TranslationQuery =
+  type TranslationQuery =
     | undefined
     | null
     | TranslationShortcut
@@ -396,12 +393,12 @@ export namespace I18n {
       };
 
   /**
-   * Opions of the translate function or a TranslationShortcut.
+   * Options of the translate function or a TranslationShortcut.
    *
    * NOTE: when using a shortcut passing TranslationOptions to \`t()\` is not supported
    * TODO: type safe this behaviour of the third argument (options).
    */
-  export type TranslationOptions =
+  type TranslationOptions =
     | undefined
     | TranslationShortcut
     | {
@@ -427,9 +424,9 @@ export namespace I18n {
     TPath extends TranslationsAllPaths,
     TReturn = TranslationAtPath<TPath>,
   >(
-    s: TPath,
-    q?: TranslationQuery,
-    o?: TranslationOptions,
+    path: TPath,
+    query?: TranslationQuery,
+    options?: TranslationOptions,
   ) => TReturn;
 
   /**
@@ -440,9 +437,9 @@ export namespace I18n {
     TPath extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
     TReturn = TranslationAtPathFromNamespace<TNamespace, TPath>,
   >(
-    s: TPath,
-    q?: TranslationQuery,
-    o?: TranslationOptions,
+    path: TPath,
+    query?: TranslationQuery,
+    options?: TranslationOptions,
   ) => TReturn;
 
   /**
@@ -451,9 +448,9 @@ export namespace I18n {
    * to output.
    */
   export type TranslateLoose<TReturn = string> = (
-    s?: any,
-    q?: TranslationQuery,
-    o?: TranslationOptions,
+    path?: any,
+    query?: TranslationQuery,
+    options?: TranslationOptions,
   ) => TReturn;
 
   /**
@@ -461,9 +458,9 @@ export namespace I18n {
    * or whatever basically.
    */
   export type TranslateLoosest<TReturn = any> = (
-    s?: any,
-    q?: TranslationQuery,
-    o?: TranslationOptions,
+    path?: any,
+    query?: TranslationQuery,
+    options?: TranslationOptions,
   ) => TReturn;
 
   /**
@@ -485,20 +482,32 @@ export namespace I18n {
       };
 
   /**
-   * Props available to each page when a root \`localeParam\` is in place (e.g. 
-   * in the typical _next.js_ folder structure \`/[lang]/my-route/page.tsx\`).
+   * Params globally available from the URL/folder structure named accordingly
+   * to the \`localeParam\` option, e.g. \`lang\` for a typical folder structure
+   * such as \`/[lang]/my-route/page.tsx\`.
    */
-  export type Props<TProps = {}> = TProps & {
-    params: {
-      "${options.routes.localeParamName}": Locale;
-    }
+  export type Params = {
+    ${options.routes.localeParamName}: Locale;
   };
 
   /**
-   * Data to generate SEO friendly alternate URLs \`<links>\`
-   *
-   * This type should satisfy the nextjs type too (TODO: maybe build a test for this)
+   * Props available to each page/layout when a root \`localeParam\` is in place (e.g. 
+   * in the typical _next.js_ folder structure \`/[lang]/my-route/page.tsx\`).
+   */
+  export type Props<TProps = {}> = TProps & {
+    params: Params;
+  };
+
+  /**
+   * Dictionary to generate SEO friendly alternate URLs \`<links>\` where:
    * 
+   * - _key_: \`x-default\` or any valid locale code
+   * - _value_: fully qualified and localised absolute URL
+   * 
+   * It can also be an empty object, for instance with error routes.
+   *
+   * NOTE: this type should satisfy the nextjs type too that is:
+   * TODO: maybe build a test for this
    * \`\`\`ts
    * import type { Metadata } from "next";
    * 
