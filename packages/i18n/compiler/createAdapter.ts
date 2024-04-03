@@ -18,10 +18,6 @@ import type { I18nCompiler } from "./types";
 // export type Adapter<T extends AdaptersName = AdaptersName> = {
 //   dependsOn?: AdaptersName[];
 //   files: AdapterFile<T>[];
-//   /**
-//    * Adapters like `next-translate` need the JSON file to be available
-//    */
-//   needsTranslationsFiles?: boolean;
 // };
 
 export let createAdapter =

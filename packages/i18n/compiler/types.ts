@@ -231,10 +231,6 @@ export namespace I18nCompiler {
     dependsOn?: AdaptersName[];
     files: AdapterFile<T>[];
     // files: AdapterFile[];
-    /**
-     * Adapters like `next-translate` need the JSON file to be available
-     */
-    needsTranslationsFiles?: boolean;
   };
 
   /**

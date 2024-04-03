@@ -157,10 +157,6 @@ const generateCodeFromAdapters = (
 
   return {
     files: generatedFiles,
-    // it is enough that just one adapter requires this
-    needsTranslationsFiles: adapters.some(
-      (adapter) => adapter.needsTranslationsFiles,
-    ),
   };
 };
 

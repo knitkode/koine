@@ -41,7 +41,6 @@ export default createAdapter(
 
     return {
       dependsOn: ["next"],
-      needsTranslationsFiles: true,
       files,
     };
   },

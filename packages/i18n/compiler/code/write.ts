@@ -141,7 +141,7 @@ export let writeCode = async (
     writeCompiledTypescriptFiles(cwd, output, files);
   }
 
-  if (code.needsTranslationsFiles && !skipTranslations) {
+  if (!skipTranslations) {
     await writeTranslationsFiles(cwd, output, data.input, folders);
   }
 
@@ -175,7 +175,7 @@ export let writeCodeSync = (
     writeCompiledTypescriptFiles(cwd, output, files);
   }
 
-  if (code.needsTranslationsFiles && !skipTranslations) {
+  if (!skipTranslations) {
     writeTranslationsFilesSync(cwd, output, data.input, folders);
   }
 
