@@ -2,6 +2,7 @@ import { createAdapter } from "../../compiler/createAdapter";
 import type { I18nCompiler } from "../../compiler/types";
 import { adapterNextOptions } from "../options";
 import I18nApp from "./I18nApp";
+import I18nDocument from "./I18nDocument";
 import I18nHead from "./I18nHead";
 import I18nLayout from "./I18nLayout";
 import I18nPage from "./I18nPage";
@@ -38,6 +39,7 @@ export default createAdapter(adapterNextOptions, ({ adapterOptions }) => {
     files = files.concat([
       { name: "I18nSetter", fn: I18nSetter, ext: "tsx", index: true },
       { name: "I18nApp", fn: I18nApp, ext: "tsx", index: true },
+      { name: "I18nDocument", fn: I18nDocument, ext: "tsx", index: true },
       { name: "I18nHead", fn: I18nHead, ext: "tsx" },
       { name: "i18nGet", fn: i18nGet, ext: "ts", index: true },
     ]);
