@@ -4,85 +4,12 @@
     "locales": ["en", "it"],
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
+    "trailingSlash": false,
     "single": false
   },
   "input": {
     "localesFolders": ["en", "it"],
     "translationFiles": [
-      {
-        "path": "~.json",
-        "data": {
-          "home": "/",
-          "about": "/about",
-          "account": {
-            "user": {
-              "profile": "/account/user",
-              "[id]": "/account/user/{{ id }}",
-              "settings": {
-                "index": "/account/user/settings",
-                "personal": "/account/user/settings/personal"
-              }
-            }
-          },
-          "products": {
-            "index": "/products",
-            "[id]": {
-              "index": "^/{{ id }}",
-              "edit": {
-                "index": "^/edit",
-                "details": "^/details"
-              }
-            }
-          },
-          "apps": {
-            "tool": {
-              "[[...spa]]": "/apps/tool",
-              "things": {
-                "index": "^/things",
-                "[id]": {
-                  "index": "^/{{ id }}",
-                  "detail": {
-                    "index": "^/detail",
-                    "new": "^/new",
-                    "[detailId]": {
-                      "index": "^/{{ detailId }}",
-                      "edit": "^/edit"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "locale": "en"
-      },
-      {
-        "path": "404.json",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
-          }
-        },
-        "locale": "en"
-      },
-      {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        },
-        "locale": "en"
-      },
       {
         "path": "~account/~user~profile.json",
         "data": {
@@ -144,10 +71,91 @@
         "locale": "en"
       },
       {
-        "path": "~account/FormUserLanguages.json",
+        "path": "404.json",
         "data": {
-          "empty": {},
-          "msg": "Some text"
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
+          }
+        },
+        "locale": "en"
+      },
+      {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "Cos'è?",
+              "answer": "Quello"
+            }
+          ]
+        },
+        "locale": "it"
+      },
+      {
+        "path": "404.json",
+        "data": {
+          "seo": {
+            "title": "404 - Introvabile"
+          },
+          "title": "404, pagina non trovata",
+          "onlyNumberKeys": {
+            "1": "Una volta",
+            "2": "Due volte",
+            "3": "Tre volte"
+          }
+        },
+        "locale": "it"
+      },
+      {
+        "path": "~.json",
+        "data": {
+          "home": "/",
+          "about": "/about",
+          "account": {
+            "user": {
+              "profile": "/account/user",
+              "[id]": "/account/user/{{ id }}",
+              "settings": {
+                "index": "/account/user/settings",
+                "personal": "/account/user/settings/personal"
+              }
+            }
+          },
+          "products": {
+            "index": "/products",
+            "[id]": {
+              "index": "^/{{ id }}",
+              "edit": {
+                "index": "^/edit",
+                "details": "^/details"
+              }
+            }
+          },
+          "apps": {
+            "tool": {
+              "[[...spa]]": "/apps/tool",
+              "things": {
+                "index": "^/things",
+                "[id]": {
+                  "index": "^/{{ id }}",
+                  "detail": {
+                    "index": "^/detail",
+                    "new": "^/new",
+                    "[detailId]": {
+                      "index": "^/{{ detailId }}",
+                      "edit": "^/edit"
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
         "locale": "en"
       },
@@ -199,31 +207,16 @@
         "locale": "it"
       },
       {
-        "path": "404.json",
-        "data": {
-          "seo": {
-            "title": "404 - Introvabile"
-          },
-          "title": "404, pagina non trovata",
-          "onlyNumberKeys": {
-            "1": "Una volta",
-            "2": "Due volte",
-            "3": "Tre volte"
-          }
-        },
-        "locale": "it"
-      },
-      {
         "path": "$faq.json",
         "data": {
           "home": [
             {
-              "question": "Cos'è?",
-              "answer": "Quello"
+              "question": "What is?",
+              "answer": "That"
             }
           ]
         },
-        "locale": "it"
+        "locale": "en"
       },
       {
         "path": "~account/~user~profile.json",
@@ -289,6 +282,14 @@
         "path": "~account/FormUserLanguages.json",
         "data": {
           "empty": {},
+          "msg": "Some text"
+        },
+        "locale": "en"
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
           "msg": "Del testo"
         },
         "locale": "it"
@@ -301,13 +302,14 @@
       "locales": ["en", "it"],
       "defaultLocale": "en",
       "hideDefaultLocaleInUrl": true,
+      "trailingSlash": false,
       "single": false
     },
     "options": {
       "adapter": {
         "name": "next",
         "options": {
-          "modularized": true
+          "modularized": false
         }
       },
       "outputFiles": {},
@@ -352,80 +354,6 @@
     "input": {
       "localesFolders": ["en", "it"],
       "translationFiles": [
-        {
-          "path": "~.json",
-          "data": {
-            "home": "/",
-            "about": "/about",
-            "account": {
-              "user": {
-                "profile": "/account/user",
-                "[id]": "/account/user/{{ id }}",
-                "settings": {
-                  "index": "/account/user/settings",
-                  "personal": "/account/user/settings/personal"
-                }
-              }
-            },
-            "products": {
-              "index": "/products",
-              "[id]": {
-                "index": "^/{{ id }}",
-                "edit": {
-                  "index": "^/edit",
-                  "details": "^/details"
-                }
-              }
-            },
-            "apps": {
-              "tool": {
-                "[[...spa]]": "/apps/tool",
-                "things": {
-                  "index": "^/things",
-                  "[id]": {
-                    "index": "^/{{ id }}",
-                    "detail": {
-                      "index": "^/detail",
-                      "new": "^/new",
-                      "[detailId]": {
-                        "index": "^/{{ detailId }}",
-                        "edit": "^/edit"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "locale": "en"
-        },
-        {
-          "path": "404.json",
-          "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found",
-            "onlyNumberKeys": {
-              "1": "Once",
-              "2": "Twice",
-              "3": "Three times"
-            }
-          },
-          "locale": "en"
-        },
-        {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
-          },
-          "locale": "en"
-        },
         {
           "path": "~account/~user~profile.json",
           "data": {
@@ -487,10 +415,91 @@
           "locale": "en"
         },
         {
-          "path": "~account/FormUserLanguages.json",
+          "path": "404.json",
           "data": {
-            "empty": {},
-            "msg": "Some text"
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found",
+            "onlyNumberKeys": {
+              "1": "Once",
+              "2": "Twice",
+              "3": "Three times"
+            }
+          },
+          "locale": "en"
+        },
+        {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "Cos'è?",
+                "answer": "Quello"
+              }
+            ]
+          },
+          "locale": "it"
+        },
+        {
+          "path": "404.json",
+          "data": {
+            "seo": {
+              "title": "404 - Introvabile"
+            },
+            "title": "404, pagina non trovata",
+            "onlyNumberKeys": {
+              "1": "Una volta",
+              "2": "Due volte",
+              "3": "Tre volte"
+            }
+          },
+          "locale": "it"
+        },
+        {
+          "path": "~.json",
+          "data": {
+            "home": "/",
+            "about": "/about",
+            "account": {
+              "user": {
+                "profile": "/account/user",
+                "[id]": "/account/user/{{ id }}",
+                "settings": {
+                  "index": "/account/user/settings",
+                  "personal": "/account/user/settings/personal"
+                }
+              }
+            },
+            "products": {
+              "index": "/products",
+              "[id]": {
+                "index": "^/{{ id }}",
+                "edit": {
+                  "index": "^/edit",
+                  "details": "^/details"
+                }
+              }
+            },
+            "apps": {
+              "tool": {
+                "[[...spa]]": "/apps/tool",
+                "things": {
+                  "index": "^/things",
+                  "[id]": {
+                    "index": "^/{{ id }}",
+                    "detail": {
+                      "index": "^/detail",
+                      "new": "^/new",
+                      "[detailId]": {
+                        "index": "^/{{ detailId }}",
+                        "edit": "^/edit"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "locale": "en"
         },
@@ -542,31 +551,16 @@
           "locale": "it"
         },
         {
-          "path": "404.json",
-          "data": {
-            "seo": {
-              "title": "404 - Introvabile"
-            },
-            "title": "404, pagina non trovata",
-            "onlyNumberKeys": {
-              "1": "Una volta",
-              "2": "Due volte",
-              "3": "Tre volte"
-            }
-          },
-          "locale": "it"
-        },
-        {
           "path": "$faq.json",
           "data": {
             "home": [
               {
-                "question": "Cos'è?",
-                "answer": "Quello"
+                "question": "What is?",
+                "answer": "That"
               }
             ]
           },
-          "locale": "it"
+          "locale": "en"
         },
         {
           "path": "~account/~user~profile.json",
@@ -627,6 +621,14 @@
             }
           },
           "locale": "it"
+        },
+        {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Some text"
+          },
+          "locale": "en"
         },
         {
           "path": "~account/FormUserLanguages.json",
@@ -1293,16 +1295,16 @@
       },
       "$faq_home": {
         "values": {
-          "en": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ],
           "it": [
             {
               "question": "Cos'è?",
               "answer": "Quello"
+            }
+          ],
+          "en": [
+            {
+              "question": "What is?",
+              "answer": "That"
             }
           ]
         },

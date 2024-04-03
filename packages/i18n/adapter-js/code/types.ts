@@ -509,12 +509,28 @@ export namespace I18n {
    * NOTE: this type should satisfy the nextjs type too that is:
    * TODO: maybe build a test for this
    * \`\`\`ts
-   * import type { Metadata } from "next";
+   * import type { Metadata as NextMetadata } from "next";
    * 
-   * type Alternates = NonNullable<Metadata["alternates"]>["languages"]
+   * type Alternates = NonNullable<NextMetadata["alternates"]>["languages"];
    * \`\`\`
    */
   export type Alternates = Record<string, string>;
+
+  /**
+   * I18n/routing related SEO metadata:
+   *
+   * NOTE: this type should satisfy the nextjs type too that is:
+   * TODO: maybe build a test for this
+   * \`\`\`ts
+   * import type { Metadata as NextMetadata } from "next";
+   * 
+   * type Metadata = NonNullable<NextMetadata["alternates"]>;
+   * \`\`\`
+   */
+  export type Metadata = {
+    alternates: Alternates;
+    canonical: null | string;
+  }
 }
 `;
 };

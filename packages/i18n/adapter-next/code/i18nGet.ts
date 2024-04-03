@@ -8,7 +8,8 @@ export default ({
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { GetStaticPathsContext, GetStaticPropsContext } from "next";
 import type { I18nAppPropsData } from "./I18nApp";
-import { getI18nAlternates } from "./getI18nAlternates";
+import { defaultI18nMetadata} from "./defaultI18nMetadata";
+import { getI18nMetadata } from "./getI18nMetadata";
 import { getI18nDictionaries } from "./getI18nDictionaries";
 import { isLocale } from "./isLocale";
 import { locales } from "./locales";
@@ -100,10 +101,10 @@ const props = async <
   const props: I18nAppPropsData = {
     i18n: {
       locale: locale,
-      alternates: isErrorRoute(routeId)
-        ? {}
+      metadata: isErrorRoute(routeId)
+        ? defaultI18nMetadata
         : // @ts-expect-error FIXME: route conditional type
-          getI18nAlternates({ locale, id: routeId, params: routeParams }),
+        getI18nMetadata({ locale, id: routeId, params: routeParams }),
       dictionaries: await getI18nDictionaries({ locale, namespaces }),
     },
   };

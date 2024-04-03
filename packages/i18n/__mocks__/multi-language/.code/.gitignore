@@ -1,9 +1,10 @@
-/I18nAlternatesContext.tsx
-/I18nAlternatesProvider.tsx
-/I18nAlternatesSetter.tsx
 /I18nContext.tsx
 /I18nEffects.tsx
+/I18nHeadTags.tsx
 /I18nLayout.tsx
+/I18nMetadataContext.tsx
+/I18nMetadataProvider.tsx
+/I18nMetadataSetter.tsx
 /I18nPage.tsx
 /I18nProvider.tsx
 /I18nRoot.tsx
@@ -15,9 +16,10 @@
 /config.cjs.js
 /config.ts
 /createT.ts
+/defaultI18nMetadata.ts
 /defaultLocale.ts
 /formatElements.tsx
-/getI18nAlternates.ts
+/formatUrl.ts
 /getI18nDictionaries.ts
 /getI18nMetadata.ts
 /getT.ts
@@ -29,6 +31,7 @@
 /next-rewrites.js
 /pathnameToRouteId.ts
 /routes.ts
+/routesError.ts
 /routesSlim.ts
 /routesSpa.ts
 /t.ts
@@ -39,7 +42,7 @@
 /toFormat.ts
 /toSpa.ts
 /types.ts
-/useAlternates.ts
+/useI18nSwitch.ts
 /useLocale.ts
 /useRouteId.ts
 /useT.ts

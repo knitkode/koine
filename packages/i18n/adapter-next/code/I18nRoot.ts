@@ -5,7 +5,7 @@ export default ({
     routes: { localeParamName },
   },
 }: I18nCompiler.AdapterArg<"next">) => `
-import { I18nAlternatesProvider } from "./I18nAlternatesProvider";
+import { I18nMetadataProvider } from "./I18nMetadataProvider";
 import { I18nRouteProvider } from "./I18nRouteProvider";
 import type { I18n } from "./types";
 
@@ -22,9 +22,9 @@ const alternates = {};
 export const I18nRoot = ({ children }: I18nRootProps) => {
   return (
     <I18nRouteProvider id={"" as I18n.RouteId}>
-      <I18nAlternatesProvider alternates={alternates}>
+      <I18nMetadataProvider alternates={alternates}>
         {children}
-      </I18nAlternatesProvider>
+      </I18nMetadataProvider>
     </I18nRouteProvider>
   );
 };

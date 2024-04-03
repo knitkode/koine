@@ -1,12 +1,20 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config: { single } }: I18nCompiler.AdapterArg<"next">) => `
-import { I18nAlternatesSetter } from "./I18nAlternatesSetter";
+export default ({
+  config: { single },
+  options: {
+    routes: { localeParamName },
+  },
+}: I18nCompiler.AdapterArg<"next">) => `
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { notFound } from "next/navigation";
+import { I18nMetadataSetter } from "./I18nMetadataSetter";
 import { I18nProvider } from "./I18nProvider";
 import { I18nRouteSetter } from "./I18nRouteSetter";
 import { defaultLocale } from "./defaultLocale";
-import { getI18nAlternates } from "./getI18nAlternates";
 import { getI18nDictionaries } from "./getI18nDictionaries";
+import { getI18nMetadata } from "./getI18nMetadata";
+import { isLocale } from "./isLocale";
 import type { I18n } from "./types";
 
 export type I18nPageProps<TRouteId extends I18n.RouteId> =
@@ -18,8 +26,8 @@ export type I18nPageProps<TRouteId extends I18n.RouteId> =
   >;
 
 /**
- * Use this _in each_ \`page.tsx\`
- * 
+ * Use this _in each_ \`page.tsx\` render function
+ *
  * **For App Router only**
  */
 export const I18nPage = async <TRouteId extends I18n.RouteId>(
@@ -33,13 +41,13 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
     children,
   } = props;
   // @ts-expect-error FIXME: route conditional type
-  const alternates = await getI18nAlternates({ locale, id, params });
+  const metadata = getI18nMetadata({ locale, id, params });
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
 
   return (
     <>
       <I18nRouteSetter id={id} />
-      <I18nAlternatesSetter alternates={alternates} />
+      <I18nMetadataSetter metadata={metadata} />
       <I18nProvider
         locale={locale}
         dictionaries={dictionaries}
@@ -48,6 +56,50 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
       </I18nProvider>
     </>
   );
+};
+
+function locale(props: any): I18n.Locale;
+function locale(params: I18n.Props["params"]): I18n.Locale;
+function locale(props: I18n.Props): I18n.Locale;
+function locale(paramsOrProps: I18n.Props["params"] | I18n.Props) {
+  const params = (paramsOrProps as any)?.params || paramsOrProps;
+  if (params) {
+    const locale = (params as any).${localeParamName};
+
+    if (isLocale(locale)) {
+      return locale;
+    }
+  }
+
+  notFound();
+}
+
+/**
+ * Use this _in each_ \`page.tsx\` to get the current _locale_ from the page props
+ *
+ * It automatically 404s with next.js's \`notFound\` if the locale does not exists.
+ *
+ * **For App Router only**
+ */
+I18nPage.locale = locale;
+
+/**
+ * Use this _in each_ \`page.tsx\` -> \`generateMetadata\` function
+ *
+ * **For App Router only**
+ */
+I18nPage.metadata = <TRouteId extends I18n.RouteId>(
+  options: Omit<I18nPageProps<TRouteId>, "namespaces">,
+) => {
+  // @ts-expect-error FIXME: route conditional type
+  const { alternates, canonical } = getI18nMetadata(options);
+
+  return {
+    alternates: {
+      canonical,
+      languages: alternates,
+    },
+  };
 };
 
 export default I18nPage;

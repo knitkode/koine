@@ -10,7 +10,7 @@ export function getI18nAlternatesFromDom(
   includeSearch?: boolean,
   includeHash?: boolean,
 ) {
-  const urls: I18n.Alternates = {};
+  const alternates: I18n.Alternates = {};
 
   domEach("[rel='alternate'][hrefLang]", (el) => {
     const locale = el.getAttribute("hrefLang");
@@ -21,11 +21,11 @@ export function getI18nAlternatesFromDom(
       let relativeUrl = a.pathname;
       if (includeSearch) relativeUrl += a.search;
       if (includeHash) relativeUrl += a.hash;
-      urls[locale === "x-default" ? defaultLocale : locale] = relativeUrl;
+      alternates[locale === "x-default" ? defaultLocale : locale] = relativeUrl;
     }
   });
 
-  return urls;
+  return alternates;
 }
 
 export default getI18nAlternatesFromDom;

@@ -1,6 +1,7 @@
 import type { I18nCompiler } from "../../compiler/types";
 
 export default ({}: I18nCompiler.AdapterArg<"js">) => `
+import { defaultI18nMetadata } from "./defaultI18nMetadata";
 import { defaultLocale } from "./defaultLocale";
 import { formatUrl } from "./formatUrl";
 import { locales } from "./locales";
@@ -15,16 +16,15 @@ import type { I18n } from "./types";
  * @internal
  * @see https://developers.google.com/search/docs/specialty/international/localized-versions#html
  */
-export type GetAlternatesOptions<TRouteId extends I18n.RouteId | RouteIdError> =
+type GetI18nMetadataOptions<TRouteId extends I18n.RouteId | RouteIdError> =
   {
     locale: I18n.Locale;
   } & I18n.RouteArgs<TRouteId>;
 
-export function getI18nAlternates<
+export function getI18nMetadata<
   TRouteId extends I18n.RouteId | RouteIdError,
->({ /* locale: currentLocale, */ id, params }: GetAlternatesOptions<TRouteId>) {
-  if (isErrorRoute(id)) return {};
-
+>({ locale: currentLocale, id, params }: GetI18nMetadataOptions<TRouteId>) {
+  if (isErrorRoute(id)) return defaultI18nMetadata;
   const alternates: I18n.Alternates = {
     "x-default": formatUrl(
       params ? to(id, params, defaultLocale) : to(id, defaultLocale),
@@ -37,8 +37,13 @@ export function getI18nAlternates<
       );
     });
 
-  return alternates;
+  return {
+    alternates,
+    canonical: formatUrl(
+      params ? to(id, params, currentLocale) : to(id, currentLocale)
+    )
+  };
 }
 
-export default getI18nAlternates;
+export default getI18nMetadata;
 `;

@@ -4,11 +4,12 @@ import { adapterJsOptions } from "../options";
 import config from "./config";
 import configCjs from "./config.cjs";
 import createT from "./createT";
+import defaultI18nMetadata from "./defaultI18nMetadata";
 import defaultLocale from "./defaultLocale";
 import formatUrl from "./formatUrl";
-import getI18nAlternates from "./getI18nAlternates";
 // import getI18nAlternatesFromDom from "./getI18nAlternatesFromDom";
 import getI18nDictionaries from "./getI18nDictionaries";
+import getI18nMetadata from "./getI18nMetadata";
 import getT from "./getT";
 import isLocale from "./isLocale";
 import loadTranslations from "./loadTranslations";
@@ -33,14 +34,10 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "config.cjs", fn: configCjs, ext: "js" },
       { name: "config", fn: config, ext: "ts", index: true },
       { name: "createT", fn: createT, ext: "ts", index: true },
+      { name: "defaultI18nMetadata", fn: defaultI18nMetadata, ext: "ts" },
       { name: "defaultLocale", fn: defaultLocale, ext: "ts", index: true },
       { name: "formatUrl", fn: formatUrl, ext: "ts", index: true },
-      {
-        name: "getI18nAlternates",
-        fn: getI18nAlternates,
-        ext: "ts",
-        index: true,
-      },
+      { name: "getI18nMetadata", fn: getI18nMetadata, ext: "ts", index: true },
       // TODO: probably remove it or move it to `i18n/client` public utils
       // {
       //   name: "getI18nAlternatesFromDom",

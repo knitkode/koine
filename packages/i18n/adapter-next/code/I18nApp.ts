@@ -4,9 +4,10 @@ export default ({}: I18nCompiler.AdapterArg<"next">) => `
 "use client";
 
 import type { AppProps } from "next/app";
+import { defaultI18nMetadata } from "./defaultI18nMetadata";
 import { defaultLocale } from "./defaultLocale";
 import { I18nProvider } from "./I18nProvider";
-import { I18nAlternatesProvider } from "./I18nAlternatesProvider";
+import { I18nMetadataProvider } from "./I18nMetadataProvider";
 import { I18nEffects } from "./I18nEffects";
 import { I18nHead } from "./I18nHead";
 import type { I18n } from "./types";
@@ -18,14 +19,14 @@ export type I18nAppPropsData = {
   i18n: {
     locale: I18n.Locale;
     dictionaries: I18n.Dictionaries;
-    alternates: I18n.Alternates;
+    metadata: I18n.Metadata;
   }
 };
 
 const i18nDefaults: I18nAppPropsData["i18n"] = {
   locale: defaultLocale,
   dictionaries: {},
-  alternates: {}
+  metadata: defaultI18nMetadata
 };
 
 type I18nAppProps =  React.PropsWithChildren<
@@ -56,17 +57,17 @@ type I18nAppProps =  React.PropsWithChildren<
  */
 export const I18nApp = (props: I18nAppProps) => {
   const { i18n, children } = props;
-  const { locale, dictionaries, alternates } = i18n || i18nDefaults;
+  const { locale, dictionaries, metadata } = i18n || i18nDefaults;
   
   return (
     <I18nProvider
       locale={locale}
       dictionaries={dictionaries}
     >
-      <I18nHead alternates={alternates} />
-      <I18nAlternatesProvider alternates={alternates}>
+      <I18nHead metadata={metadata} />
+      <I18nMetadataProvider metadata={metadata}>
         {children}
-      </I18nAlternatesProvider>
+      </I18nMetadataProvider>
       <I18nEffects />
     </I18nProvider>
   );

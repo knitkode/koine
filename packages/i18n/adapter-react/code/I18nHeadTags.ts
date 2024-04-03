@@ -1,31 +1,24 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-/**
- * We cannot re-use `I18nHeadTags` as NextHead component does needs HTML tags
- * to be its immediate children.
- *
- * @see https://nextjs.org/docs/pages/api-reference/components/head#use-minimal-nesting
- */
-export default ({}: I18nCompiler.AdapterArg<"next">) => `
+export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
-import Head from "next/head";
 import { defaultI18nMetadata } from "./defaultI18nMetadata";
-import type { I18nHeadTagsProps } from "./I18nHeadTags";
+import type { I18n } from "./types";
 
-export type I18nHeadProps = I18nHeadTagsProps;
+export type I18nHeadTagsProps = {
+  metadata?: I18n.Metadata;
+};
 
 /**
- * **For Pages Router only**
- *
- * @internal
+ * Renders the HTML tags to use in the \`<head>\`
  */
-export const I18nHead = (props: I18nHeadProps) => {
+export const I18nHeadTags = (props: I18nHeadTagsProps) => {
   const { metadata = defaultI18nMetadata } = props;
   const { alternates, canonical } = metadata;
 
   return (
-    <Head key="I18nHead">
+    <>
       {canonical && (
         <link
           rel="canonical"
@@ -41,9 +34,9 @@ export const I18nHead = (props: I18nHeadProps) => {
           key={"alternate-" + locale}
         />
       ))}
-    </Head>
+    </>
   );
 };
 
-// export default I18nHead;
+export default I18nHeadTags;
 `;
