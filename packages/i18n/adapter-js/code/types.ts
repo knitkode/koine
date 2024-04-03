@@ -402,7 +402,7 @@ export namespace I18n {
    * 
    * @internal
    */
-  type TranslationOptions =
+  export type TranslationOptions =
     | undefined
     | TranslationShortcut
     | {
