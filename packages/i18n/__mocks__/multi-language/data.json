@@ -133,18 +133,6 @@
         "locale": "en"
       },
       {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        },
-        "locale": "en"
-      },
-      {
         "path": "~account/FormUserLanguages.json",
         "data": {
           "empty": {},
@@ -204,6 +192,18 @@
         "data": {
           "home": [
             {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
+        },
+        "locale": "en"
+      },
+      {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
               "question": "Cos'è?",
               "answer": "Quello"
             }
@@ -212,10 +212,17 @@
         "locale": "it"
       },
       {
-        "path": "~account/FormUserLanguages.json",
+        "path": "404.json",
         "data": {
-          "empty": {},
-          "msg": "Del testo"
+          "seo": {
+            "title": "404 - Introvabile"
+          },
+          "title": "404, pagina non trovata",
+          "onlyNumberKeys": {
+            "1": "Una volta",
+            "2": "Due volte",
+            "3": "Tre volte"
+          }
         },
         "locale": "it"
       },
@@ -280,17 +287,10 @@
         "locale": "it"
       },
       {
-        "path": "404.json",
+        "path": "~account/FormUserLanguages.json",
         "data": {
-          "seo": {
-            "title": "404 - Introvabile"
-          },
-          "title": "404, pagina non trovata",
-          "onlyNumberKeys": {
-            "1": "Una volta",
-            "2": "Due volte",
-            "3": "Tre volte"
-          }
+          "empty": {},
+          "msg": "Del testo"
         },
         "locale": "it"
       }
@@ -476,18 +476,6 @@
           "locale": "en"
         },
         {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
-          },
-          "locale": "en"
-        },
-        {
           "path": "~account/FormUserLanguages.json",
           "data": {
             "empty": {},
@@ -547,6 +535,18 @@
           "data": {
             "home": [
               {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
+          },
+          "locale": "en"
+        },
+        {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
                 "question": "Cos'è?",
                 "answer": "Quello"
               }
@@ -555,10 +555,17 @@
           "locale": "it"
         },
         {
-          "path": "~account/FormUserLanguages.json",
+          "path": "404.json",
           "data": {
-            "empty": {},
-            "msg": "Del testo"
+            "seo": {
+              "title": "404 - Introvabile"
+            },
+            "title": "404, pagina non trovata",
+            "onlyNumberKeys": {
+              "1": "Una volta",
+              "2": "Due volte",
+              "3": "Tre volte"
+            }
           },
           "locale": "it"
         },
@@ -623,17 +630,10 @@
           "locale": "it"
         },
         {
-          "path": "404.json",
+          "path": "~account/FormUserLanguages.json",
           "data": {
-            "seo": {
-              "title": "404 - Introvabile"
-            },
-            "title": "404, pagina non trovata",
-            "onlyNumberKeys": {
-              "1": "Una volta",
-              "2": "Due volte",
-              "3": "Tre volte"
-            }
+            "empty": {},
+            "msg": "Del testo"
           },
           "locale": "it"
         }

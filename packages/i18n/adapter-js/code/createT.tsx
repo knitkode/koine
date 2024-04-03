@@ -43,17 +43,13 @@ export function createT<TNamespace extends I18n.TranslateNamespace>(
     TPath extends I18n.TranslationsAllPaths,
     TReturn = I18n.TranslationAtPath<TPath>,
   >(
-    key: TPath,
+    path: TPath,
     query?: I18n.TranslationQuery,
     options?: I18n.TranslationOptions,
   ): TReturn => {
     const [namespace, key] = path.split("${options.translations.tokens.namespaceDelimiter}");
     const dic = (namespace && dictionaries[namespace]) || {};
     const pluralisedKey = getPluralisedKey(pluralRules, dic, key, query, options);
-    const dicValue = getDicValue(dic, pluralisedKey, query, options);
-    const k = Array.isArray(key) ? key[0] : key;
-    const dic = (namespace && dictionaries[namespace]) || {};
-    const pluralisedKey = getPluralisedKey(pluralRules, dic, i18nKey, query, options);
     const dicValue = getDicValue(dic, pluralisedKey, query, options);
     const value =
       typeof dicValue === "object"
