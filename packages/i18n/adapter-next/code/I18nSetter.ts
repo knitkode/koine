@@ -1,11 +1,11 @@
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({ config: { single } }: I18nCompiler.AdapterArg<"next">) => `
+export default ({}: I18nCompiler.AdapterArg<"next">) => `
 "use client";
 
 import { useContext, useEffect } from "react";
-import { I18nMetadataContext } from "./I18nMetadataContext";
 import { I18nHead } from "./I18nHead";
+import { I18nMetadataContext } from "./I18nMetadataContext";
 import { getI18nMetadata } from "./getI18nMetadata";
 import type { I18n } from "./types";
 import { useLocale } from "./useLocale";
