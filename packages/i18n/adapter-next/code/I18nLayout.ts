@@ -1,10 +1,13 @@
+import { getI18nDictionaries_inline } from "../../adapter-js/code/getI18nDictionaries_inline";
 import type { I18nCompiler } from "../../compiler/types";
 
 export default ({}: I18nCompiler.AdapterArg<"next">) => `
 import { I18nProvider } from "./I18nProvider";
 import { defaultLocale } from "./defaultLocale";
-import { getI18nDictionaries } from "./getI18nDictionaries";
+// import { getI18nDictionaries } from "./getI18nDictionaries";
 import type { I18n } from "./types";
+
+${getI18nDictionaries_inline()}
 
 export type I18nLayoutProps = React.PropsWithChildren<{
   locale?: I18n.Locale;

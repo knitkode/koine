@@ -1,3 +1,4 @@
+import { getI18nDictionaries_inline } from "../../adapter-js/code/getI18nDictionaries_inline";
 import type { I18nCompiler } from "../../compiler/types";
 
 export default ({
@@ -12,10 +13,12 @@ import { I18nMetadataSetter } from "./I18nMetadataSetter";
 import { I18nProvider } from "./I18nProvider";
 import { I18nRouteSetter } from "./I18nRouteSetter";
 import { defaultLocale } from "./defaultLocale";
-import { getI18nDictionaries } from "./getI18nDictionaries";
+// import { getI18nDictionaries } from "./getI18nDictionaries";
 import { getI18nMetadata } from "./getI18nMetadata";
 import { isLocale } from "./isLocale";
 import type { I18n } from "./types";
+
+${getI18nDictionaries_inline()}
 
 export type I18nPageProps<TRouteId extends I18n.RouteId> =
   React.PropsWithChildren<

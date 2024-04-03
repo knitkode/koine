@@ -1,17 +1,18 @@
 import type { I18nCompiler } from "../../compiler/types";
+import { loadTranslations_inline } from "./loadTranslations_inline";
 
 export default ({}: I18nCompiler.AdapterArg<"js">) => `
 import { createT } from "./createT";
 // import { loadTranslations } from "./loadTranslations";
 import type { I18n } from "./types";
 
+${loadTranslations_inline()}
+
 export async function getT<TNamespace extends I18n.TranslateNamespace>(
   locale: I18n.Locale,
   namespace: TNamespace,
 ) {
-  // prettier-ignore
-  const translations = await import(\`./translations/\${locale}/\${namespace}.json\`).then((m) => m.default);
-  // const translations = await loadTranslations(locale, namespace);
+  const translations = await loadTranslations(locale, namespace);
   const pluralRules = new Intl.PluralRules(locale);
 
   const t = createT({ [namespace]: translations }, pluralRules, locale);
@@ -25,5 +26,4 @@ export async function getT<TNamespace extends I18n.TranslateNamespace>(
 }
 
 export default getT;
-
 `;

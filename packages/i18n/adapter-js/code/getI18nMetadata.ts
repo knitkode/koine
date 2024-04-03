@@ -21,6 +21,9 @@ type GetI18nMetadataOptions<TRouteId extends I18n.RouteId | RouteIdError> =
     locale: I18n.Locale;
   } & I18n.RouteArgs<TRouteId>;
 
+/**
+ * @internal
+ */
 export function getI18nMetadata<
   TRouteId extends I18n.RouteId | RouteIdError,
 >({ locale: currentLocale, id, params }: GetI18nMetadataOptions<TRouteId>) {
@@ -45,5 +48,5 @@ export function getI18nMetadata<
   };
 }
 
-export default getI18nMetadata;
+// export default getI18nMetadata;
 `;

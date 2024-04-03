@@ -12,7 +12,7 @@ import getI18nDictionaries from "./getI18nDictionaries";
 import getI18nMetadata from "./getI18nMetadata";
 import getT from "./getT";
 import isLocale from "./isLocale";
-import loadTranslations from "./loadTranslations";
+// import loadTranslations from "./loadTranslations";
 import locales from "./locales";
 import pathnameToRouteId from "./pathnameToRouteId";
 import routes from "./routes";
@@ -37,7 +37,7 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "defaultI18nMetadata", fn: defaultI18nMetadata, ext: "ts" },
       { name: "defaultLocale", fn: defaultLocale, ext: "ts", index: true },
       { name: "formatUrl", fn: formatUrl, ext: "ts", index: true },
-      { name: "getI18nMetadata", fn: getI18nMetadata, ext: "ts", index: true },
+      { name: "getI18nMetadata", fn: getI18nMetadata, ext: "ts" },
       // TODO: probably remove it or move it to `i18n/client` public utils
       // {
       //   name: "getI18nAlternatesFromDom",
@@ -45,15 +45,10 @@ export default createAdapter(adapterJsOptions, ({}) => {
       //   ext: "ts",
       //   index: true,
       // },
-      {
-        name: "getI18nDictionaries",
-        fn: getI18nDictionaries,
-        ext: "ts",
-        index: true,
-      },
+      { name: "getI18nDictionaries", fn: getI18nDictionaries, ext: "ts" },
       { name: "getT", fn: getT, ext: "ts", index: true },
       { name: "isLocale", fn: isLocale, ext: "ts", index: true },
-      { name: "loadTranslations", fn: loadTranslations, ext: "ts" },
+      // // { name: "loadTranslations", fn: loadTranslations, ext: "ts" },
       { name: "locales", fn: locales, ext: "ts", index: true },
       {
         name: "pathnameToRouteId",
