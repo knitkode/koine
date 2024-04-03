@@ -383,8 +383,10 @@ export namespace I18n {
    *
    * NOTE: when using a shortcut passing TranslationOptions to \`t()\` is not supported
    * TODO: type safe this behaviour of the third argument (options).
+   * 
+   * @internal
    */
-  type TranslationQuery =
+  export type TranslationQuery =
     | undefined
     | null
     | TranslationShortcut
@@ -397,6 +399,8 @@ export namespace I18n {
    *
    * NOTE: when using a shortcut passing TranslationOptions to \`t()\` is not supported
    * TODO: type safe this behaviour of the third argument (options).
+   * 
+   * @internal
    */
   type TranslationOptions =
     | undefined
