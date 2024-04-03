@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, objectMergeWithDefaults } from "@koine/utils";
-import { CodeDataRoutesOptions } from "../compiler/code/data-routes";
-import { I18nCompilerConfig } from "../compiler/config";
+import type { CodeDataRoutesOptions } from "../compiler/code/data-routes";
+import type { I18nCompilerConfig } from "../compiler/config";
 import { generateRedirectForPathname } from "./redirects";
 import { generateRewriteForPathname } from "./rewrites";
 
