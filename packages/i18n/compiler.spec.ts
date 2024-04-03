@@ -31,7 +31,7 @@ describe("test write", () => {
           cwd: mocksPath("single-language"),
           output: ".code",
           skipTsCompile: true,
-          skipTranslations: true,
+          // skipTranslations: true,
         },
       },
       summary: {
@@ -75,7 +75,7 @@ describe("test write", () => {
           cwd: mocksPath("multi-language"),
           output: ".code",
           skipTsCompile: true,
-          skipTranslations: true,
+          // skipTranslations: true,
         },
       },
       summary: {

@@ -11,6 +11,18 @@
     "localesFolders": ["en"],
     "translationFiles": [
       {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
+        },
+        "locale": "en"
+      },
+      {
         "path": "~.json",
         "data": {
           "home": "/",
@@ -54,18 +66,6 @@
               }
             }
           }
-        },
-        "locale": "en"
-      },
-      {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
         },
         "locale": "en"
       },
@@ -200,13 +200,24 @@
       "write": {
         "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/single-language",
         "output": ".code",
-        "skipTsCompile": true,
-        "skipTranslations": true
+        "skipTsCompile": true
       }
     },
     "input": {
       "localesFolders": ["en"],
       "translationFiles": [
+        {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
+          },
+          "locale": "en"
+        },
         {
           "path": "~.json",
           "data": {
@@ -251,18 +262,6 @@
                 }
               }
             }
-          },
-          "locale": "en"
-        },
-        {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
           },
           "locale": "en"
         },

@@ -40,17 +40,18 @@ export function createT<TNamespace extends I18n.TranslateNamespace>(
   };
 
   return <
-    TPath extends I18n.TranslationsPaths<
-      I18n.TranslationsDictionary[TNamespace]
-    >,
-    TReturn = I18n.TranslationAtPathFromNamespace<TNamespace, TPath>,
+    TPath extends I18n.TranslationsAllPaths,
+    TReturn = I18n.TranslationAtPath<TPath>,
   >(
     key: TPath,
     query?: I18n.TranslationQuery,
     options?: I18n.TranslationOptions,
   ): TReturn => {
+    const [namespace, key] = path.split("${options.translations.tokens.namespaceDelimiter}");
+    const dic = (namespace && dictionaries[namespace]) || {};
+    const pluralisedKey = getPluralisedKey(pluralRules, dic, key, query, options);
+    const dicValue = getDicValue(dic, pluralisedKey, query, options);
     const k = Array.isArray(key) ? key[0] : key;
-    const [namespace, i18nKey] = k.split("${options.translations.tokens.namespaceDelimiter}");
     const dic = (namespace && dictionaries[namespace]) || {};
     const pluralisedKey = getPluralisedKey(pluralRules, dic, i18nKey, query, options);
     const dicValue = getDicValue(dic, pluralisedKey, query, options);
@@ -66,7 +67,7 @@ export function createT<TNamespace extends I18n.TranslateNamespace>(
 
     // no need to try interpolation
     if (empty) {
-      return query === "" ? "" : k;
+      return (query === "" ? "" : path) as unknown as TReturn;
     }
 
     // this can return an empty string if either value was already empty
@@ -130,7 +131,7 @@ function getPluralisedKey(
   query?: I18n.TranslationQuery | null,
   options?: I18n.TranslationOptions,
 ): string {
-  const count = query instanceof Object ? query.count : null;
+  const count = query instanceof Object ? query["count"] : null;
 
   if (!query || typeof count !== "number") return key;
 

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["jest", "node"],
+    "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": false
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.spec.ts", "**/*.d.ts"]

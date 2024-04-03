@@ -25,7 +25,6 @@
 /getT.ts
 /index.ts
 /isLocale.ts
-/loadTranslations.ts
 /locales.ts
 /next-redirects.js
 /next-rewrites.js
@@ -41,6 +40,8 @@
 /toFns.ts
 /toFormat.ts
 /toSpa.ts
+/translations/en
+/translations/it
 /types.ts
 /useI18nSwitch.ts
 /useLocale.ts

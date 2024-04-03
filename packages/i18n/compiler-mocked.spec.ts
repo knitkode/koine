@@ -1,8 +1,11 @@
 // import { jestCreateExpectedThrownError } from "@koine/node/jest";
 import * as t from "./__mocks__/multi-language/.code/t";
 import { to } from "./__mocks__/multi-language/.code/to";
+import { createT } from "./__mocks__/multi-language/.code/createT";
+// import { getI18nDictionaries } from "./__mocks__/multi-language/.code/getI18nDictionaries";
 import * as multiToFns from "./__mocks__/multi-language/.code/toFns";
 import * as singleToFns from "./__mocks__/single-language/.code/toFns";
+import * as dictionaries_accountUserProfile from "./__mocks__/multi-language/.code/translations/en/~account/~user~profile.json";
 
 // const err = jestCreateExpectedThrownError("@koine/i18n", "to");
 
@@ -62,3 +65,18 @@ describe("generated code: t", () => {
     expect(t.$account_$user$profile_dontConsiderMeAPluralIDontHaveOther("it")[1]).toEqual("Uno");
   });
 });
+
+describe("createT", () => {
+  test("should return t function that interpolates", async () => {
+    const ns = "~account/~user~profile" as const;
+    const dictionaries = { [ns]: dictionaries_accountUserProfile };
+    // const dictionaries = await getI18nDictionaries({ locale: "en", namespaces: [
+    //   ns
+    // ]})
+    const t = createT(dictionaries as any, new Intl.PluralRules());
+
+    expect(typeof t).toBe("function");
+    expect(t(`${ns}:title`, { varName: "here" })).toBe("Title here");
+    // expect(t("", null, { returnObjects: true })).toEqual(nsRootKeys)
+  })
+})
