@@ -6,9 +6,7 @@ export default ({ config: { single } }: I18nCompiler.AdapterArg<"next">) => `
 import { useContext, useEffect } from "react";
 import { I18nMetadataContext } from "./I18nMetadataContext";
 import { I18nHead } from "./I18nHead";
-import { formatUrl } from "./formatUrl";
 import { getI18nMetadata } from "./getI18nMetadata";
-import { to } from "./to";
 import type { I18n } from "./types";
 import { useLocale } from "./useLocale";
 
