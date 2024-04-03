@@ -5,6 +5,7 @@ import config from "./config";
 import configCjs from "./config.cjs";
 import createT from "./createT";
 import defaultLocale from "./defaultLocale";
+import formatUrl from "./formatUrl";
 import getI18nAlternates from "./getI18nAlternates";
 // import getI18nAlternatesFromDom from "./getI18nAlternatesFromDom";
 import getI18nDictionaries from "./getI18nDictionaries";
@@ -33,6 +34,7 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "config", fn: config, ext: "ts", index: true },
       { name: "createT", fn: createT, ext: "ts", index: true },
       { name: "defaultLocale", fn: defaultLocale, ext: "ts", index: true },
+      { name: "formatUrl", fn: formatUrl, ext: "ts", index: true },
       {
         name: "getI18nAlternates",
         fn: getI18nAlternates,
@@ -74,7 +76,7 @@ export default createAdapter(adapterJsOptions, ({}) => {
       },
       { name: "to", fn: to, ext: "ts", index: true },
       { name: "toFns", fn: toFns, ext: "ts", index: true },
-      { name: "toFormat", fn: toFormat, ext: "ts", index: true },
+      { name: "toFormat", fn: toFormat, ext: "ts" },
       { name: "toSpa", fn: toSpa, ext: "ts", index: true },
       { name: "tPluralise", fn: tPluralise, ext: "ts" },
       { name: "types", fn: types, ext: "ts", index: true },

@@ -34,21 +34,28 @@ function generatePathRedirect(arg: {
 }
 
 export function generateRedirectForPathname(
-  config: Pick<I18nCompiler.Config, "defaultLocale" | "hideDefaultLocaleInUrl">,
-  localeParam = "",
+  config: Pick<
+    I18nCompiler.Config,
+    "defaultLocale" | "hideDefaultLocaleInUrl" | "trailingSlash"
+  > &
+    Pick<CodeDataRoutesOptions, "localeParamName" | "permanentRedirects">,
   locale: string,
   template: string,
   pathname: string,
   redirects: (Redirect | undefined)[],
-  permanentRedirects?: boolean,
 ) {
-  const { defaultLocale, hideDefaultLocaleInUrl } = config;
+  const {
+    defaultLocale,
+    hideDefaultLocaleInUrl,
+    localeParamName,
+    permanentRedirects,
+  } = config;
   const isDefaultLocale = locale === defaultLocale;
   const isVisibleDefaultLocale = isDefaultLocale && !hideDefaultLocaleInUrl;
   const isHiddenDefaultLocale = isDefaultLocale && hideDefaultLocaleInUrl;
   const arg = { template, pathname, permanent: permanentRedirects };
 
-  if (localeParam) {
+  if (localeParamName) {
     // app router:
     if (isVisibleDefaultLocale) {
       redirects.push(
@@ -98,13 +105,11 @@ export function generateRedirectForPathname(
  */
 export let generateRedirects = (
   config: I18nCompiler.Config,
+  { localeParamName, permanentRedirects, tokens }: CodeDataRoutesOptions,
   routes: I18nCompiler.DataRoutes["byId"],
-  options: CodeDataRoutesOptions,
 ) => {
-  const regexIdDelimiter = new RegExp(
-    escapeRegExp(options.tokens.idDelimiter),
-    "g",
-  );
+  const opts = { ...config, localeParamName, permanentRedirects };
+  const regexIdDelimiter = new RegExp(escapeRegExp(tokens.idDelimiter), "g");
   const redirects: (Redirect | undefined)[] = [];
 
   for (const routeId in routes) {
@@ -119,15 +124,7 @@ export let generateRedirects = (
       // we do not redirect urls children of wildcard urls
       if (route.inWildcard) break;
 
-      generateRedirectForPathname(
-        config,
-        options.localeParamName,
-        locale,
-        template,
-        pathname,
-        redirects,
-        options.permanentRedirects,
-      );
+      generateRedirectForPathname(opts, locale, template, pathname, redirects);
     }
   }
 
@@ -137,7 +134,7 @@ export let generateRedirects = (
   )
     .sort((a, b) => a.source.localeCompare(b.source))
     .map((redirect) =>
-      options.localeParamName ? redirect : { ...redirect, locale: false },
+      localeParamName ? redirect : { ...redirect, locale: false },
     );
 
   return cleaned as Redirect[];

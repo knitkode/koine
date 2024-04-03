@@ -174,7 +174,7 @@ export namespace I18nCompiler {
    * Built in adapters with their options
    */
   export type AnyAdapter =
-    | SetOptional<AnyAdapterResolved, "options">
+    | SetOptional<AdapterJs, "options">
     | SetOptional<AdapterReact, "options">
     | SetOptional<AdapterNext, "options">
     | SetOptional<AdapterNextTranslate, "options">;
@@ -187,6 +187,17 @@ export namespace I18nCompiler {
     | AdapterReact
     | AdapterNext
     | AdapterNextTranslate;
+
+  type AdOptsFor<T extends AdaptersName> = AdaptersOptions<T> &
+    (Adapter<T>["dependsOn"] extends AdaptersName[]
+      ? {
+          [N in Adapter<T>["dependsOn"][number] as `parent_${N}`]: {
+            options: AdaptersOptions<N>;
+          };
+        }
+      : {});
+
+  type b = AdOptsFor<"next">;
 
   /**
    * Built in adapter options

@@ -15,23 +15,14 @@ export type I18nHeadProps = {
  */
 export const I18nHead = (props: I18nHeadProps) => {
   const { alternates = {} } = props;
-  const { "x-default": xDefault, ...others } = alternates;
 
   return (
     <Head key="I18nHead">
-      {xDefault && (
-        <link
-          rel="alternate"
-          hrefLang="x-default"
-          href={xDefault}
-          key="alternate-default"
-        />
-      )}
-      {Object.keys(others).map((locale) => (
+      {Object.keys(alternates).map((locale) => (
         <link
           rel="alternate"
           hrefLang={locale}
-          href={others[locale]}
+          href={alternates[locale]}
           key={"alternate-" + locale}
         />
       ))}

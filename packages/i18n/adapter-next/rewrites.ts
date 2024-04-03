@@ -22,7 +22,6 @@ function generatePathRewrite(arg: {
 
   let destinationPrefix = "";
   if (localeDestination) destinationPrefix = `/${localeDestination}`;
-  // else if (localeParam) destinationPrefix = `/:${localeParam}`;
 
   const destination = formatRoutePathname(destinationPrefix + template);
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
@@ -37,20 +36,23 @@ function generatePathRewrite(arg: {
 }
 
 export const generateRewriteForPathname = (
-  config: Pick<I18nCompiler.Config, "defaultLocale" | "hideDefaultLocaleInUrl">,
-  localeParam = "",
+  config: Pick<
+    I18nCompiler.Config,
+    "defaultLocale" | "hideDefaultLocaleInUrl" | "trailingSlash"
+  > &
+    Pick<CodeDataRoutesOptions, "localeParamName">,
   locale: string,
   template: string,
   pathname: string,
   rewrites: (Rewrite | undefined)[],
 ) => {
-  const { defaultLocale, hideDefaultLocaleInUrl } = config;
+  const { defaultLocale, hideDefaultLocaleInUrl, localeParamName } = config;
   const isDefaultLocale = locale === defaultLocale;
   const isHiddenDefaultLocale = isDefaultLocale && hideDefaultLocaleInUrl;
   const isHiddenLocale = isHiddenDefaultLocale; // TODO: maybe support other locales to be hidden in the URL other than the default?
   const arg = { template, pathname };
 
-  if (localeParam) {
+  if (localeParamName) {
     // app router:
     if (isHiddenLocale) {
       rewrites.push(
@@ -101,13 +103,11 @@ export const generateRewriteForPathname = (
  */
 export let generateRewrites = (
   config: I18nCompiler.Config,
+  { tokens, localeParamName, permanentRedirects }: CodeDataRoutesOptions,
   routes: I18nCompiler.DataRoutes["byId"],
-  options: CodeDataRoutesOptions,
 ) => {
-  const regexIdDelimiter = new RegExp(
-    escapeRegExp(options.tokens.idDelimiter),
-    "g",
-  );
+  const opts = { ...config, localeParamName, permanentRedirects };
+  const regexIdDelimiter = new RegExp(escapeRegExp(tokens.idDelimiter), "g");
   const rewrites: (Rewrite | undefined)[] = [];
 
   for (const routeId in routes) {
@@ -122,8 +122,7 @@ export let generateRewrites = (
 
       // we need to rewrite both the root path...
       generateRewriteForPathname(
-        config,
-        options.localeParamName,
+        opts,
         locale,
         transformPathname(routeIdAsTemplate),
         transformPathname(localisedPathname),
@@ -133,8 +132,7 @@ export let generateRewrites = (
       if (route.wildcard) {
         // and for wildcard routes the ones with the `/:segment*` portion
         generateRewriteForPathname(
-          config,
-          options.localeParamName,
+          opts,
           locale,
           transformPathname(routeIdAsTemplate, route.wildcard),
           transformPathname(localisedPathname, route.wildcard),

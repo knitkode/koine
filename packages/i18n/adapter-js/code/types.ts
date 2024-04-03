@@ -501,7 +501,7 @@ export namespace I18n {
   /**
    * Dictionary to generate SEO friendly alternate URLs \`<links>\` where:
    * 
-   * - _key_: \`x-default\` or any valid locale code
+   * - _key_: \`x-default\` or any valid locale code (see [Google docs](https://developers.google.com/search/docs/specialty/international/localized-versions#language-codes))
    * - _value_: fully qualified and localised absolute URL
    * 
    * It can also be an empty object, for instance with error routes.

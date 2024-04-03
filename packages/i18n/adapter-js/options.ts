@@ -1,5 +1,5 @@
 export const adapterJsOptions: AdapterJsOptions = {
-  modularized: true,
+  modularized: false,
 };
 
 export type AdapterJsOptions = {
@@ -22,7 +22,7 @@ export type AdapterJsOptions = {
    * t.myMessage_key();
    * ```
    *
-   * @default true
+   * @default false
    */
   modularized: boolean;
 };

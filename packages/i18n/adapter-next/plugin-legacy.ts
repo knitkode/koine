@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, objectMergeWithDefaults } from "@koine/utils";
+import { CodeDataRoutesOptions } from "../compiler/code/data-routes";
+import { I18nCompilerConfig } from "../compiler/config";
 import { generateRedirectForPathname } from "./redirects";
 import { generateRewriteForPathname } from "./rewrites";
 
@@ -138,10 +140,18 @@ function generateRedirects(arg: I18nRoutesOptionsResolved) {
     routes,
     defaultLocale,
     hideDefaultLocaleInUrl,
-    localeParam,
-    permanent,
+    trailingSlash,
+    localeParamName,
+    permanentRedirects,
     debug,
   } = arg;
+  const opts = {
+    defaultLocale,
+    hideDefaultLocaleInUrl,
+    trailingSlash,
+    localeParamName,
+    permanentRedirects,
+  };
   const orderedRoutes = orderRoutes(routes, defaultLocale);
   const redirects: (Redirect | undefined)[] = [];
 
@@ -155,13 +165,11 @@ function generateRedirects(arg: I18nRoutesOptionsResolved) {
 
       if (pathname !== getWithoutIndex(template)) {
         generateRedirectForPathname(
-          { defaultLocale, hideDefaultLocaleInUrl },
-          localeParam,
+          opts,
           locale,
           getWithoutIndex(template),
           getWithoutIndex(pathname),
           redirects,
-          permanent,
         );
       }
     }
@@ -171,7 +179,7 @@ function generateRedirects(arg: I18nRoutesOptionsResolved) {
     redirects.filter(Boolean) as Redirect[],
     ["source", "destination"],
   ).map((rewrite) =>
-    localeParam ? rewrite : { ...rewrite, locale: false as const },
+    localeParamName ? rewrite : { ...rewrite, locale: false as const },
   );
 
   if (debug)
@@ -181,8 +189,20 @@ function generateRedirects(arg: I18nRoutesOptionsResolved) {
 }
 
 function generateRewrites(arg: I18nRoutesOptionsResolved) {
-  const { routes, defaultLocale, hideDefaultLocaleInUrl, localeParam, debug } =
-    arg;
+  const {
+    routes,
+    defaultLocale,
+    hideDefaultLocaleInUrl,
+    trailingSlash,
+    localeParamName,
+    debug,
+  } = arg;
+  const opts = {
+    defaultLocale,
+    hideDefaultLocaleInUrl,
+    trailingSlash,
+    localeParamName,
+  };
   const orderedRoutes = orderRoutes(routes, defaultLocale);
   const rewrites: (Rewrite | undefined)[] = [];
 
@@ -195,8 +215,7 @@ function generateRewrites(arg: I18nRoutesOptionsResolved) {
       const { template, pathname } = transformRoute(route);
 
       generateRewriteForPathname(
-        { defaultLocale, hideDefaultLocaleInUrl },
-        localeParam,
+        opts,
         locale,
         getWithoutIndex(template),
         getWithoutIndex(pathname),
@@ -271,25 +290,12 @@ type I18nRoutesOptions = {
    * configuration. That is used for localised routing.
    */
   routes: Routes;
-  /**
-   * Set this to true once your URL structure is definitive, this will mark all
-   * the generated redirects as permanent 301 instead of the default 307
-   */
-  permanent?: boolean;
-  locales?: Locale[];
-  defaultLocale?: Locale;
-  /**
-   * @default true
-   */
-  hideDefaultLocaleInUrl?: boolean;
-  /**
-   * For app router
-   * 
-   @default ""
-   */
-  localeParam?: string;
   debug?: boolean;
-};
+} & Pick<
+  I18nCompilerConfig,
+  "locales" | "defaultLocale" | "hideDefaultLocaleInUrl" | "trailingSlash"
+> &
+  Pick<CodeDataRoutesOptions, "localeParamName" | "permanentRedirects">;
 
 type I18nRoutesOptionsResolved = Required<I18nRoutesOptions>;
 

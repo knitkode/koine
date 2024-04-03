@@ -2,7 +2,7 @@ import type { I18nCompiler } from "../../compiler/types";
 
 export default ({}: I18nCompiler.AdapterArg<"js">) => `
 import { defaultLocale } from "./defaultLocale";
-import { loadTranslations } from "./loadTranslations";
+// import { loadTranslations } from "./loadTranslations";
 import type { I18n } from "./types";
 
 type GetI18nDictionariesOptions = {
@@ -16,7 +16,11 @@ export async function getI18nDictionaries({
 }: GetI18nDictionariesOptions) {
   const translations =
     (await Promise.all(
-      namespaces.map((ns) => loadTranslations(locale, ns).catch(() => ({}))),
+      namespaces.map((namespace) => 
+        // prettier-ignore
+        import(\`./translations/\${locale}/\${namespace}.json\`).then((m) => m.default)
+        // loadTranslations(locale, namespace)
+        .catch(() => ({}))),
     )) || [];
 
   return namespaces.reduce((dictionaries, ns, idx) => {

@@ -126,7 +126,10 @@ const parseUserDefinedRouteId = (
  *
  * TODO: support also `/my/:id` syntax?
  */
-const normaliseUserDefinedRoutePathname = (routePathname: string) =>
+const normaliseUserDefinedRoutePathname = (
+  routePathname: string,
+  options: Pick<I18nCompiler.Config, "trailingSlash">,
+) =>
   formatRoutePathname(
     routePathname
       .replace(/\*/g, "")
@@ -134,6 +137,7 @@ const normaliseUserDefinedRoutePathname = (routePathname: string) =>
         /[[{]{1,2}(.*?)[\]}]{1,2}/g,
         (_search, replaceValue) => `[${replaceValue.trim()}]`,
       ),
+    options,
   );
 
 /**
@@ -376,7 +380,7 @@ const buildDataRoutesFromJsonData = (
 
     data.byId[routeId].pathnames = data.byId[routeId].pathnames || {};
     // prettier-ignore
-    data.byId[routeId].pathnames[locale] = normaliseUserDefinedRoutePathname(routePathname);
+    data.byId[routeId].pathnames[locale] = normaliseUserDefinedRoutePathname(routePathname, utils);
     // prettier-ignore
     data.byId[routeId].pathnames = objectSortByKeysMatching(data.byId[routeId].pathnames, utils.defaultLocale);
 

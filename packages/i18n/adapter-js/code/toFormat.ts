@@ -19,7 +19,7 @@ export function toFormat(
 
         if (!(key in params)) {
           console.warn(
-            "[@koine/i18n]::interpolateTo, using '" +
+            "[@koine/i18n]::toFormat, using '" +
               pathname +
               "' without param '" +
               key +

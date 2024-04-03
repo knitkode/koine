@@ -7,7 +7,7 @@ export default ({
   options,
 }: I18nCompiler.AdapterArg<"next">) => {
   const value = JSON.stringify(
-    generateRewrites(config, routes.byId, options.routes),
+    generateRewrites(config, options.routes, routes.byId),
     null,
     2,
   );

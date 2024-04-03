@@ -48,8 +48,8 @@ export let getRedirects = async (
 ) => {
   const defaultRedirects = generateRedirects(
     i18nResult.config,
-    i18nResult.code.routes.byId,
     i18nResult.code.options.routes,
+    i18nResult.code.routes.byId,
   );
 
   if (prevRedirects) {
@@ -65,8 +65,8 @@ export let getRewrites = async (
 ) => {
   const defaultRewrites = generateRewrites(
     i18nResult.config,
-    i18nResult.code.routes.byId,
     i18nResult.code.options.routes,
+    i18nResult.code.routes.byId,
   );
   if (prevRewrites) {
     const custom = await prevRewrites();

@@ -3,11 +3,11 @@ import { generateRedirects } from "../redirects";
 
 export default ({
   config,
-  routes,
   options,
+  routes,
 }: I18nCompiler.AdapterArg<"next">) => {
   const value = JSON.stringify(
-    generateRedirects(config, routes.byId, options.routes),
+    generateRedirects(config, options.routes, routes.byId),
     null,
     2,
   );
