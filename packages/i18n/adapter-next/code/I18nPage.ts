@@ -9,6 +9,7 @@ export default ({
 }: I18nCompiler.AdapterArg<"next">) => `
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { notFound } from "next/navigation";
+import type { Metadata } from "next/types";
 import { I18nMetadataSetter } from "./I18nMetadataSetter";
 import { I18nProvider } from "./I18nProvider";
 import { I18nRouteSetter } from "./I18nRouteSetter";
@@ -93,14 +94,19 @@ I18nPage.locale = locale;
  */
 I18nPage.metadata = <TRouteId extends I18n.RouteId>(
   options: Omit<I18nPageProps<TRouteId>, "namespaces">,
+  metadata?: Metadata,
 ) => {
+  const { alternates: alternatesOverride, ...restMetadata } = metadata || {};
+  const { canonical: canonicalOverride, languages: languagesOverride = {} } =
+    alternatesOverride || {};
   // @ts-expect-error FIXME: route conditional type
   const { alternates, canonical } = getI18nMetadata(options);
 
   return {
+    ...restMetadata,
     alternates: {
-      canonical,
-      languages: alternates,
+      canonical: canonicalOverride || canonical,
+      languages: { ...alternates, ...languagesOverride },
     },
   };
 };
