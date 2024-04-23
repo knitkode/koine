@@ -5,9 +5,9 @@ export default ({}: I18nCompiler.AdapterArg<"react">) => `
 
 import { useContext } from "react";
 import { defaultLocale } from "./defaultLocale";
-import { I18nContext } from "./I18nContext";
+import { I18nTranslateContext } from "./I18nTranslateContext";
 
-export const useLocale = () => useContext(I18nContext).locale || defaultLocale;
+export const useLocale = () => useContext(I18nTranslateContext).locale || defaultLocale;
 
 export default useLocale;
 `;

@@ -6,10 +6,10 @@ export default ({}: I18nCompiler.AdapterArg<"next">) => `
 import type { AppProps } from "next/app";
 import { defaultI18nMetadata } from "./defaultI18nMetadata";
 import { defaultLocale } from "./defaultLocale";
-import { I18nProvider } from "./I18nProvider";
-import { I18nMetadataProvider } from "./I18nMetadataProvider";
 import { I18nEffects } from "./I18nEffects";
 import { I18nHead } from "./I18nHead";
+import { I18nMetadataProvider } from "./I18nMetadataProvider";
+import { I18nTranslateProvider } from "./I18nTranslateProvider";
 import type { I18n } from "./types";
 
 /**
@@ -60,7 +60,7 @@ export const I18nApp = (props: I18nAppProps) => {
   const { locale, dictionaries, metadata } = i18n || i18nDefaults;
   
   return (
-    <I18nProvider
+    <I18nTranslateProvider
       locale={locale}
       dictionaries={dictionaries}
     >
@@ -69,7 +69,7 @@ export const I18nApp = (props: I18nAppProps) => {
         {children}
       </I18nMetadataProvider>
       <I18nEffects />
-    </I18nProvider>
+    </I18nTranslateProvider>
   );
 };
 

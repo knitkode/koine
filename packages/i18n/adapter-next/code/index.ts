@@ -5,8 +5,9 @@ import I18nApp from "./I18nApp";
 import I18nDocument from "./I18nDocument";
 import I18nHead from "./I18nHead";
 import I18nLayout from "./I18nLayout";
+import I18nLayoutLang from "./I18nLayoutLang";
+import I18nLayoutRoot from "./I18nLayoutRoot";
 import I18nPage from "./I18nPage";
-import I18nRoot from "./I18nRoot";
 import I18nSetter from "./I18nSetter";
 import i18nGet from "./i18nGet";
 import nextRedirects from "./next-redirects";
@@ -30,8 +31,9 @@ export default createAdapter(adapterNextOptions, ({ adapterOptions }) => {
   if (router === "app" || router === "migrating") {
     files = files.concat([
       { name: "I18nLayout", fn: I18nLayout, ext: "tsx", index: true },
+      { name: "I18nLayoutLang", fn: I18nLayoutLang, ext: "tsx", index: true },
+      { name: "I18nLayoutRoot", fn: I18nLayoutRoot, ext: "tsx", index: true },
       { name: "I18nPage", fn: I18nPage, ext: "tsx", index: true },
-      { name: "I18nRoot", fn: I18nRoot, ext: "tsx", index: true },
     ]);
   }
 

@@ -11,11 +11,12 @@ export default ({
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
 import { I18nMetadataSetter } from "./I18nMetadataSetter";
-import { I18nProvider } from "./I18nProvider";
+import { I18nTranslateProvider } from "./I18nTranslateProvider";
 import { I18nRouteSetter } from "./I18nRouteSetter";
 import { defaultLocale } from "./defaultLocale";
 // import { getI18nDictionaries } from "./getI18nDictionaries";
 import { getI18nMetadata } from "./getI18nMetadata";
+import { getLocale } from "./getLocale";
 import { isLocale } from "./isLocale";
 import type { I18n } from "./types";
 
@@ -24,8 +25,15 @@ ${getI18nDictionaries_inline()}
 export type I18nPageProps<TRouteId extends I18n.RouteId> =
   React.PropsWithChildren<
     {
-      locale${single ? "?" : ""}: I18n.Locale;
-      namespaces?: I18n.TranslateNamespace[];
+      ${
+        single
+          ? ""
+          : `/**
+       * Optionally set this manually to override the current locale
+       */
+      locale?: I18n.Locale;
+      `
+      }namespaces?: I18n.TranslateNamespace[];
     } & I18n.RouteArgs<TRouteId>
   >;
 
@@ -38,12 +46,13 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
   props: I18nPageProps<TRouteId>,
 ) => {
   const {
-    locale = defaultLocale,
+    locale: localeProp,
     namespaces = [],
     id,
     params,
     children,
   } = props;
+  const locale = localeProp || getLocale();
   // @ts-expect-error FIXME: route conditional type
   const metadata = getI18nMetadata({ locale, id, params });
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
@@ -52,12 +61,12 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
     <>
       <I18nRouteSetter id={id} />
       <I18nMetadataSetter metadata={metadata} />
-      <I18nProvider
+      <I18nTranslateProvider
         locale={locale}
         dictionaries={dictionaries}
       >
         {children}
-      </I18nProvider>
+      </I18nTranslateProvider>
     </>
   );
 };

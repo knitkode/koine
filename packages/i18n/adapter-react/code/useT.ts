@@ -4,11 +4,11 @@ export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
 import { useContext, useMemo } from "react";
-import { I18nContext } from "./I18nContext";
+import { I18nTranslateContext } from "./I18nTranslateContext";
 import type { I18n } from "./types";
 
 export const useT = <T extends I18n.TranslateNamespace>(namespace: T) => {
-  const t = useContext(I18nContext).t;
+  const t = useContext(I18nTranslateContext).t;
   return useMemo(
     () =>
       (key: string, ...args) =>
