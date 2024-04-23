@@ -7,6 +7,7 @@ export default ({
     routes: { localeParamName },
   },
 }: I18nCompiler.AdapterArg<"next">) => `
+import { notFound } from "next/navigation";
 import { I18nTranslateProvider } from "./I18nTranslateProvider";
 import { defaultLocale } from "./defaultLocale";
 import { getLocale } from "./getLocale";
