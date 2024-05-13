@@ -498,7 +498,7 @@ export namespace I18n {
    * Props available to each page/layout when a root \`localeParam\` is in place (e.g. 
    * in the typical _next.js_ folder structure \`/[lang]/my-route/page.tsx\`).
    */
-  export type Props<TProps = {}> = TProps & {
+  export type Props<P = {}> = P & {
     params: Params;
   };
 

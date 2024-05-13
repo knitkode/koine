@@ -11,7 +11,7 @@ import I18nRouteProvider from "./I18nRouteProvider";
 import I18nRouteSetter from "./I18nRouteSetter";
 import I18nTranslateContext from "./I18nTranslateContext";
 import I18nTranslateProvider from "./I18nTranslateProvider";
-import T from "./T";
+import Trans from "./Trans";
 import TransText from "./TransText";
 import formatElements from "./formatElements";
 import getLocale from "./getLocale";
@@ -42,7 +42,7 @@ export default createAdapter(adapterReactOptions, ({}) => {
         ext: "tsx",
         index: true,
       },
-      { name: "T", fn: T, ext: "tsx", index: true },
+      { name: "Trans", fn: Trans, ext: "tsx", index: true },
       { name: "TransText", fn: TransText, ext: "tsx", index: true },
       { name: "formatElements", fn: formatElements, ext: "tsx" },
       { name: "getLocale", fn: getLocale, ext: "ts", index: true },

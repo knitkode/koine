@@ -3,31 +3,31 @@ import type { I18nCompiler } from "../../compiler/types";
 export default ({}: I18nCompiler.AdapterArg<"next-translate">) => `
 "use client";
 
-import type { TransProps } from "next-translate";
-import Trans from "next-translate/Trans";
+import type { TransProps as NextTranslateTransProps } from "next-translate";
+import NextTranslateTrans from "next-translate/Trans";
 import type { I18n } from "./types";
 
-export type TProps<
+export type TransProps<
   TNamespace extends I18n.TranslateNamespace | undefined = undefined,
 > =
-  | (Omit<TransProps, "i18nKey" | "ns"> & {
+  | (Omit<NextTranslateTransProps, "i18nKey" | "ns"> & {
       i18nKey: I18n.TranslationsAllPaths;
     })
-  | (Omit<TransProps, "i18nKey" | "ns"> & {
+  | (Omit<NextTranslateTransProps, "i18nKey" | "ns"> & {
       ns: TNamespace;
       i18nKey: I18n.TranslationsPaths<TNamespace>;
     });
 
-const TypedT = <
+const TypedTrans = <
   TNamespace extends I18n.TranslateNamespace | undefined = undefined,
 >(
-  props: TProps<TNamespace>,
+  props: TransProps<TNamespace>,
 ) =>
-  (<Trans {...(props as TransProps)} />) as React.ReactElement<
-    TProps<TNamespace>
+  (<NextTranslateTrans {...(props as NextTranslateTransProps)} />) as React.ReactElement<
+    TransProps<TNamespace>
   >;
 
-export const T = Trans as typeof TypedT;
+export const Trans = NextTranslateTrans as typeof TypedTrans;
 
-export default T;
+export default Trans;
 `;

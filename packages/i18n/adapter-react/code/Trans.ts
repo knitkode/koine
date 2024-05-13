@@ -8,7 +8,7 @@ import { formatElements } from "./formatElements";
 import type { I18n } from "./types";
 import { useT } from "./useT";
 
-export type TProps = {
+export type TransProps = {
   i18nKey: I18n.TranslationsAllPaths;
   components?: React.ReactElement[] | Record<string, React.ReactElement>;
   values?: I18n.TranslationQuery;
@@ -20,12 +20,12 @@ export type TProps = {
  * <0>This is an <1>example</1><0>
  * to -> <h1>This is an <b>example</b><h1>
  */
-export const T = ({
+export const Trans = ({
   i18nKey,
   values,
   components,
   returnObjects,
-}: TProps) => {
+}: TransProps) => {
   const [namespace, path] = (i18nKey as string).split(":");
   const t = useT(namespace as I18n.TranslateNamespace) as I18n.TranslateLoose;
   const result = useMemo(() => {
@@ -47,5 +47,5 @@ export const T = ({
   return result;
 };
 
-export default T;
+export default Trans;
 `;

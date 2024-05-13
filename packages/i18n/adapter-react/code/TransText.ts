@@ -4,10 +4,10 @@ export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
 import { useMemo } from "react";
-import type { TProps } from "./T";
+import type { TransProps } from "./Trans";
 import { formatElements } from "./formatElements";
 
-export type TransTextProps = Pick<TProps, "components"> & {
+export type TransTextProps = Pick<TransProps, "components"> & {
   text: string;
 };
 
