@@ -27,12 +27,12 @@ export async function getT<TNamespace extends I18n.TranslateNamespace>(
   namespace: TNamespace,
 ): Promise<I18n.TranslateNamespaced<TNamespace>>;
 export async function getT<TNamespace extends I18n.TranslateNamespace>(
-  localeOrNamespace: TNamespace | I18n.Locale,
-  _namespace?: TNamespace,
+  ...args: [TNamespace | I18n.Locale] | [TNamespace | I18n.Locale, TNamespace]
+  // localeOrNamespace: TNamespace | I18n.Locale,
+  // _namespace?: TNamespace,
 ) {
-  const locale =
-    arguments.length === 1 ? getLocale() : (localeOrNamespace as I18n.Locale);
-  const namespace = _namespace || (localeOrNamespace as TNamespace);
+  const locale = args.length === 1 ? getLocale() : (args[0] as I18n.Locale);
+  const namespace = args[1] || (args[0] as TNamespace);
   const translations = await loadTranslations(locale, namespace);
   const pluralRules = new Intl.PluralRules(locale);
 
