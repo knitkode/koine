@@ -14,7 +14,7 @@ type I18nRouteProviderProps = React.PropsWithChildren<{
 /**
  * @internal
  */
-export function I18nRouteProvider(props: I18nRouteProviderProps) {
+export const I18nRouteProvider = (props: I18nRouteProviderProps) => {
   const { children } = props;
   const [id, setId] = useState<I18n.RouteId>(
     props.id || ("" as I18n.RouteId),

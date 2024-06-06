@@ -12,10 +12,12 @@ export default ({ routes }: I18nCompiler.AdapterArg<"js">) => {
     2,
   );
   return `
+import type { I18n } from "./types";
+
 /**
  * @internal
  */
-export const routesSpa = ${value} as const;
+export const routesSpa = ${value} as Record<string, string | Record<I18n.Locale, string>>;
 
 export default routesSpa;
 `;
