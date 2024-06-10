@@ -93,17 +93,15 @@ export default ({
   options,
   translations,
 }: I18nCompiler.AdapterArg<"js">) => {
-  let output = `
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prefer-const */
-import type { I18n } from "./types";
-import { tInterpolateParams } from "./tInterpolateParams";
-import { tPluralise } from "./tPluralise";
-
-`;
-
+  const eslint = [
+    "/* eslint-disable @typescript-eslint/no-unused-vars */",
+    "/* eslint-disable prefer-const */",
+  ];
+  const imports = [`import type { I18n } from "./types";`];
   const declarations: string[] = [];
   const functionNames: string[] = [];
+  let needsImport_tInterpolateParams = false;
+  let needsImport_tPluralise = false;
 
   for (const translationId in translations) {
     let declaration = "";
@@ -134,9 +132,11 @@ import { tPluralise } from "./tPluralise";
       declarationReturn += getFunctionBodyWithLocales(config, values);
     }
     if (plural) {
+      needsImport_tPluralise = true;
       declarationReturn = `tPluralise(${declarationReturn}, params.count)`;
     }
     if (params) {
+      needsImport_tInterpolateParams = true;
       declarationReturn = `tInterpolateParams(${declarationReturn}, params);`;
     } else {
       declarationReturn = `${declarationReturn};`;
@@ -147,6 +147,17 @@ import { tPluralise } from "./tPluralise";
     declarations.push(declaration);
     functionNames.push(name);
   }
+
+  if (needsImport_tInterpolateParams) {
+    imports.push(`import { tInterpolateParams } from "./tInterpolateParams";`);
+  }
+  if (needsImport_tPluralise) {
+    imports.push(`import { tPluralise } from "./tPluralise";`);
+  }
+
+  let output = "";
+  output += eslint.join("\n");
+  output += imports.join("\n");
 
   output += declarations.join("\n");
 
