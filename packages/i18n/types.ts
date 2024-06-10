@@ -181,7 +181,7 @@ export namespace I18nUtils {
     Separator extends string = InferredSeparator<T>,
     Delimiters extends GenericDelimiters = InferredDelimiters<T>,
   > = string extends T
-  ? Record<string, string>
+  ? Record<string, string | number>
   : T extends `${string}${Delimiters["start"]}${infer Param}${Delimiters["end"]}${Separator}${infer Rest}`
       ? {
           [k in Trim<Param> | keyof DynamicParams<Rest>]: string | number;
