@@ -112,7 +112,7 @@ const buildRoutesUnion = (
     Object.keys(routes.byId).filter((routeId) =>
       filterFn(routeId, routes.byId[routeId]),
     ),
-  );
+  ) || "never";
 
 const groupRoutesSpa = (routes: I18nCompiler.DataRoutes) =>
   Object.keys(routes.byId).reduce(
