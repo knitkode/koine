@@ -53,8 +53,7 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
     children,
   } = props;
   const locale = localeProp || getLocale();
-  // @ts-expect-error FIXME: route conditional type
-  const metadata = getI18nMetadata({ locale, id, params });
+  const metadata = getI18nMetadata(locale, id, params);
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
 
   return (
@@ -108,8 +107,11 @@ I18nPage.metadata = <TRouteId extends I18n.RouteId>(
   const { alternates: alternatesOverride, ...restMetadata } = metadata || {};
   const { canonical: canonicalOverride, languages: languagesOverride = {} } =
     alternatesOverride || {};
-  // @ts-expect-error FIXME: route conditional type
-  const { alternates, canonical } = getI18nMetadata(options);
+  const { alternates, canonical } = getI18nMetadata(
+    options.locale || defaultLocale,
+    options.id,
+    options.params,
+  );
 
   return {
     ...restMetadata,

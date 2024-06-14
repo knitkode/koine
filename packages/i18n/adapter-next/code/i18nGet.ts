@@ -107,8 +107,7 @@ const props = async <
       locale: locale,
       metadata: isErrorRoute(routeId)
         ? defaultI18nMetadata
-        : // @ts-expect-error FIXME: route conditional type
-        getI18nMetadata({ locale, id: routeId, params: routeParams }),
+        : getI18nMetadata(locale, routeId, routeParams),
       dictionaries: await getI18nDictionaries({ locale, namespaces }),
     },
   };
@@ -138,7 +137,6 @@ const staticProps = async <
   const locale = ctx.params?.${localeParamName} as I18n.Locale;
 
   return {
-    // @ts-expect-error FIXME: route conditional type
     props: await props({ locale, ...options }),
     revalidate,
   };

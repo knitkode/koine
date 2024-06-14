@@ -33,8 +33,7 @@ export const I18nSetter = <TRouteId extends I18n.RouteId>(
   const [metadata, setMetadata] = useContext(I18nMetadataContext);
 
   useEffect(() => {
-    // @ts-expect-error FIXME: route conditional type
-    setMetadata(getI18nMetadata({ locale, id, params }));
+    setMetadata(getI18nMetadata(locale, id, params));
   }, [id, params, locale, setMetadata]);
 
   return (
