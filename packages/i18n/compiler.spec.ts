@@ -138,11 +138,38 @@ describe("test your.io", () => {
         adapter: {
           name: "next",
           options: {
-            router: "migrating",
+            router: "app",
           },
         },
         write: {
           output: "../../Your/frontend/libs/i18n",
+          skipTsCompile: true,
+        },
+      },
+    });
+  });
+});
+
+describe("test yenvi.nl", () => {
+  test("mimic next plugin build", async () => {
+    await i18nCompiler({
+      baseUrl: "https://yenvi.nl",
+      defaultLocale: "en",
+      hideDefaultLocaleInUrl: true,
+      input: {
+        source: "../../Daan/yenvi/translations",
+        // source:
+        //   "https://raw.githubusercontent.com/your-network/translations/dev/.github/input.json",
+      },
+      code: {
+        adapter: {
+          name: "next",
+          options: {
+            router: "app",
+          },
+        },
+        write: {
+          output: "../../Daan/yenvi/i18n",
           skipTsCompile: true,
         },
       },
