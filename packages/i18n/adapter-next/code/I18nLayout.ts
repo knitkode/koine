@@ -49,7 +49,7 @@ export const I18nLayout = async ({
   );
 };
 
-function locale(props: any): I18n.Locale;
+// function locale(props: any): I18n.Locale;
 function locale(params: I18n.Props["params"]): I18n.Locale;
 function locale(props: I18n.Props): I18n.Locale;
 function locale(paramsOrProps: I18n.Props["params"] | I18n.Props) {

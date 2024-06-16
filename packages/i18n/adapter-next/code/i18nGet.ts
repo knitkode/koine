@@ -2,6 +2,7 @@ import { getI18nDictionaries_inline } from "../../adapter-js/code/getI18nDiction
 import type { I18nCompiler } from "../../compiler/types";
 
 export default ({
+  routes: { dynamicRoutes },
   options: {
     routes: { localeParamName },
   },
@@ -57,33 +58,19 @@ const staticPaths = (_context?: GetStaticPathsContext) => ({
   fallback: false,
 });
 
+/**
+ * {@link I18n.RouteArgs}
+ */
 type I18nPropsOptions<
   TRouteId extends I18n.RouteId | RouteIdError,
   TParams,
   TData,
 > = {
   namespaces: I18n.TranslateNamespace[];
-  // routeId: TRouteId;
-  // routeParams?: TRouteId extends I18n.RouteIdDynamic
-  //   ? I18n.RouteParams[TRouteId]
-  //   : never;
   params?: TParams;
   data?: TData;
-} & (
-  // as in I18n.RouteArgs
-  | {
-      routeId: TRouteId extends I18n.RouteIdDynamic ? TRouteId : never;
-      routeParams: TRouteId extends I18n.RouteIdDynamic
-        ? I18n.RouteParams[TRouteId]
-        : never;
-    }
-  | {
-      routeId: TRouteId extends I18n.RouteIdStatic | RouteIdError
-        ? TRouteId
-        : never;
-      routeParams?: undefined;
-    }
-);
+  route: I18n.RouteArgs<TRouteId>;
+};
 
 /**
  * Get page props data feed into \`getStaticProps\`'s return
@@ -95,8 +82,7 @@ const props = async <
 >({
   locale,
   namespaces,
-  routeId,
-  routeParams,
+  route,
   params,
   data,
 }: {
@@ -105,9 +91,9 @@ const props = async <
   const props: I18nAppPropsData = {
     i18n: {
       locale: locale,
-      metadata: isErrorRoute(routeId)
+      metadata: isErrorRoute(route.id)
         ? defaultI18nMetadata
-        : getI18nMetadata(locale, routeId, routeParams),
+        : getI18nMetadata({ locale, ...route }),
       dictionaries: await getI18nDictionaries({ locale, namespaces }),
     },
   };

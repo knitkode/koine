@@ -476,14 +476,21 @@ export namespace I18n {
    * @internal
    */
   export type RouteArgs<TRouteId extends RouteId | RouteIdError> =
-    | {
-        id: TRouteId extends RouteIdDynamic ? TRouteId : never;
-        params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
-      }
-    | {
-        id: TRouteId extends RouteIdStatic | RouteIdError ? TRouteId : never;
-        params?: undefined;
-      };
+    TRouteId extends RouteIdDynamic ? {
+      id: TRouteId;
+      params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
+    } : TRouteId extends RouteIdStatic | RouteIdError ? {
+      id: TRouteId;
+      params?: never;
+    } : never;
+    // | {
+    //     id: TRouteId extends RouteIdDynamic ? TRouteId : never;
+    //     params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
+    //   }
+    // | {
+    //     id: TRouteId extends RouteIdStatic | RouteIdError ? TRouteId : never;
+    //     params?: undefined;
+    //   };
 
   /**
    * Params globally available from the URL/folder structure named accordingly

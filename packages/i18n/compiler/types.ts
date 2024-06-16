@@ -76,6 +76,12 @@ export namespace I18nCompiler {
   export type DataRoutes = {
     byId: Record<RouteId, DataRoute>;
     wildcardIds: RouteId[];
+    /**
+     * Whether there are only static routes
+     */
+    onlyStaticRoutes: boolean;
+    dynamicRoutes: RouteId[];
+    staticRoutes: RouteId[];
   };
 
   /**

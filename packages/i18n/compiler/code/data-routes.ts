@@ -371,7 +371,13 @@ const buildDataRoutesFromJsonData = (
       data.byId[routeId] = data.byId[routeId] || {};
       const params = extractRouteParamsFromRouteId(routeId);
       data.byId[routeId].id = routeId;
-      if (params) data.byId[routeId].params = params;
+      if (params) {
+        data.byId[routeId].params = params;
+        data.dynamicRoutes.push(routeId);
+        data.onlyStaticRoutes = false;
+      } else {
+        data.staticRoutes.push(routeId);
+      }
       if (isCatchAll || isOptionalCatchAll) {
         data.byId[routeId].wildcard = true;
         data.wildcardIds.push(routeId);
@@ -401,7 +407,13 @@ export let getCodeDataRoutes = (
   options: CodeDataRoutesOptions,
   { translationFiles }: I18nCompiler.DataInput,
 ) => {
-  const dataRoutes: I18nCompiler.DataRoutes = { byId: {}, wildcardIds: [] };
+  const dataRoutes: I18nCompiler.DataRoutes = {
+    byId: {},
+    wildcardIds: [],
+    onlyStaticRoutes: true,
+    dynamicRoutes: [],
+    staticRoutes: [],
+  };
   const utils = getCodeDataRoutesUtils(config, options);
 
   for (let i = 0; i < translationFiles.length; i++) {

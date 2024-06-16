@@ -158,14 +158,12 @@ describe("test yenvi.nl", () => {
       hideDefaultLocaleInUrl: true,
       input: {
         source: "../../Daan/yenvi/translations",
-        // source:
-        //   "https://raw.githubusercontent.com/your-network/translations/dev/.github/input.json",
       },
       code: {
         adapter: {
           name: "next",
           options: {
-            router: "app",
+            router: "migrating",
           },
         },
         write: {

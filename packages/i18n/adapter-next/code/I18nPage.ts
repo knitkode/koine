@@ -6,6 +6,7 @@ export default ({
   options: {
     routes: { localeParamName },
   },
+  routes: { dynamicRoutes },
 }: I18nCompiler.AdapterArg<"next">) => `
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { notFound } from "next/navigation";
@@ -34,7 +35,8 @@ export type I18nPageProps<TRouteId extends I18n.RouteId> =
       locale?: I18n.Locale;
       `
       }namespaces?: I18n.TranslateNamespace[];
-    } & I18n.RouteArgs<TRouteId>
+      route: I18n.RouteArgs<TRouteId>;
+    }
   >;
 
 /**
@@ -48,17 +50,16 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
   const {
     locale: localeProp,
     namespaces = [],
-    id,
-    params,
+    route,
     children,
   } = props;
   const locale = localeProp || getLocale();
-  const metadata = getI18nMetadata(locale, id, params);
+  const metadata = getI18nMetadata({ locale, ...route });
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
 
   return (
     <>
-      <I18nRouteSetter id={id} />
+      <I18nRouteSetter id={route.id} />
       <I18nMetadataSetter metadata={metadata} />
       <I18nTranslateProvider
         locale={locale}
@@ -70,7 +71,7 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
   );
 };
 
-function locale(props: any): I18n.Locale;
+// function locale(props: any): I18n.Locale;
 function locale(params: I18n.Props["params"]): I18n.Locale;
 function locale(props: I18n.Props): I18n.Locale;
 function locale(paramsOrProps: I18n.Props["params"] | I18n.Props) {
@@ -101,17 +102,13 @@ I18nPage.locale = locale;
  * **For App Router only**
  */
 I18nPage.metadata = <TRouteId extends I18n.RouteId>(
-  options: Omit<I18nPageProps<TRouteId>, "namespaces">,
+  options: { locale: I18n.Locale; } & I18n.RouteArgs<TRouteId>,
   metadata?: Metadata,
 ) => {
   const { alternates: alternatesOverride, ...restMetadata } = metadata || {};
   const { canonical: canonicalOverride, languages: languagesOverride = {} } =
     alternatesOverride || {};
-  const { alternates, canonical } = getI18nMetadata(
-    options.locale || defaultLocale,
-    options.id,
-    options.params,
-  );
+  const { alternates, canonical } = getI18nMetadata(options);
 
   return {
     ...restMetadata,

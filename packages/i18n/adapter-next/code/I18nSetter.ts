@@ -10,8 +10,9 @@ import { getI18nMetadata } from "./getI18nMetadata";
 import type { I18n } from "./types";
 import { useLocale } from "./useLocale";
 
-export type I18nSetterProps<TRouteId extends I18n.RouteId> =
-  I18n.RouteArgs<TRouteId>;
+export type I18nSetterProps<TRouteId extends I18n.RouteId> = {
+  route: I18n.RouteArgs<TRouteId>;
+};
 
 /**
  * **For Pages Router only**
@@ -28,13 +29,13 @@ export type I18nSetterProps<TRouteId extends I18n.RouteId> =
 export const I18nSetter = <TRouteId extends I18n.RouteId>(
   props: I18nSetterProps<TRouteId>,
 ) => {
-  const { id, params } = props;
+  const { route } = props;
   const locale = useLocale();
   const [metadata, setMetadata] = useContext(I18nMetadataContext);
 
   useEffect(() => {
-    setMetadata(getI18nMetadata(locale, id, params));
-  }, [id, params, locale, setMetadata]);
+    setMetadata(getI18nMetadata({ locale, ...route }));
+  }, [locale, route, setMetadata]);
 
   return (
     <I18nHead metadata={metadata} />
