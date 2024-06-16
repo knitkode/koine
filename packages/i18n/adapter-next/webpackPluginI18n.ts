@@ -1,4 +1,6 @@
+import { resolve } from "path";
 import type { Compilation, Compiler } from "webpack";
+import { debounce, isAbsoluteUrl } from "@koine/utils";
 import { type I18nCompilerOptions, i18nCompiler } from "../compiler";
 
 const PLUGIN_NAME = "I18nWebpackPlugin";
@@ -8,25 +10,50 @@ export class I18nWebpackPlugin {
 
   constructor(opts: I18nCompilerOptions) {
     this.opts = opts;
-    // console.log("plugin init");
   }
 
   apply(compiler: Compiler) {
-    // console.log("plugin apply", !!compiler.hooks);
+    const { cwd = process.cwd(), source } = this.opts.input;
+    if (isAbsoluteUrl(source)) return;
+
+    const i18nInputFolder = resolve(cwd, source);
+
     if (compiler.hooks) {
-      // // https://webpack.js.org/api/compiler-hooks/
-      compiler.hooks.beforeCompile.tapPromise(
-        PLUGIN_NAME,
-        async (compilation: Compilation, callback: () => void) => {
-          // console.log("This is an example plugin!");
+      const addI18nFolderDeps = debounce(
+        (compilation: Compilation) => {
+          // const logger = compilation.getLogger(PLUGIN_NAME);
+          if (!compilation.contextDependencies.has(i18nInputFolder)) {
+            compilation.contextDependencies.add(i18nInputFolder);
+            // console.log("i18nCompiler input folder added to context deps");
+            // } else {
+            //   console.log("i18nCompiler input folder already added to context deps",);
+          }
+        },
+        1000,
+        true,
+      );
 
-          await i18nCompiler(this.opts);
+      compiler.hooks.thisCompilation.tap(PLUGIN_NAME, addI18nFolderDeps);
 
-          // await new Promise();
-          console.log("done async!!!!!!!!!!!!!!!!!!!!!!!", this.opts);
+      const maybeRunI18n = debounce(
+        async (compiler: Compiler, callback: () => void) => {
+          const isI18nInputFile = compiler.modifiedFiles?.has(i18nInputFolder);
+          if (isI18nInputFile) {
+            // console.log("i18nCompiler should compile now.");
+            try {
+              await i18nCompiler(this.opts);
+            } catch (e) {
+              // console.log("i18nCompiler failed to compile.");
+            }
+          }
+
           callback();
         },
+        100,
+        true,
       );
+
+      compiler.hooks.watchRun.tapAsync(PLUGIN_NAME, maybeRunI18n);
     } else {
       // compiler.plugin('done', done);
     }

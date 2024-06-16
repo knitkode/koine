@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 import { ContextReplacementPlugin } from "webpack";
-import type { I18nCompilerReturn } from "../compiler";
+import type { I18nCompilerOptions, I18nCompilerReturn } from "../compiler";
 import { generateRedirects } from "./redirects";
 import { generateRewrites } from "./rewrites";
+import { I18nWebpackPlugin } from "./webpackPluginI18n";
 
 export let tweakNextConfig = (
-  options: I18nCompilerReturn,
+  options: I18nCompilerOptions,
+  result: I18nCompilerReturn,
   nextConfig: NextConfig,
 ) => {
   const {
@@ -15,7 +17,7 @@ export let tweakNextConfig = (
         routes: { localeParamName },
       },
     },
-  } = options;
+  } = result;
   if (localeParamName) {
     // NOTE: passing the i18n settings with the app router messes up everything
     // especially while migrating from pages to app router, so opt out from that
@@ -30,6 +32,7 @@ export let tweakNextConfig = (
   nextConfig.webpack = (webpackConfig) => {
     // @see https://github.com/date-fns/date-fns/blob/main/docs/webpack.md#removing-unused-languages-from-dynamic-import
     webpackConfig.plugins.push(
+      new I18nWebpackPlugin(options),
       new ContextReplacementPlugin(
         /^date-fns[/\\]locale$/,
         new RegExp(`\\.[/\\\\](${locales.join("|")})[/\\\\]index\\.js$`),

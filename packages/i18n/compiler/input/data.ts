@@ -1,4 +1,4 @@
-import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
+import { isAbsoluteUrl } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import { getInputDataLocal, getInputDataLocalSync } from "./data-local";
 import { getInputDataRemote, getInputDataRemoteSync } from "./data-remote";

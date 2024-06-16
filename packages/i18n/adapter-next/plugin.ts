@@ -1,6 +1,6 @@
 import { createRequire } from "node:module";
 import type { NextConfig } from "next";
-import { type I18nCompiler, type I18nCompilerOptions } from "../compiler";
+import type { I18nCompilerOptions } from "../compiler";
 import { i18nCompilerSync } from "../compiler-sync";
 import { getRedirects, getRewrites, tweakNextConfig } from "./plugin-shared";
 
@@ -26,7 +26,7 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
 
   const i18nResult = i18nCompilerSync(i18nCompilerOptions);
 
-  nextConfig = tweakNextConfig(i18nResult, nextConfig);
+  nextConfig = tweakNextConfig(i18nCompilerOptions, i18nResult, nextConfig);
 
   nextConfig.redirects = () => getRedirects(redirects, i18nResult);
 
