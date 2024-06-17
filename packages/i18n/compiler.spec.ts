@@ -160,10 +160,13 @@ describe("test yenvi.nl", () => {
         source: "../../Daan/yenvi/translations",
       },
       code: {
+        routes: {
+          localeParamName: "lng",
+        },
         adapter: {
           name: "next",
           options: {
-            router: "migrating",
+            router: "app",
           },
         },
         write: {

@@ -6,11 +6,11 @@ export default ({
   options: {
     routes: { localeParamName },
   },
-  routes: { dynamicRoutes },
 }: I18nCompiler.AdapterArg<"next">) => `
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
+import { I18nLocaleContext } from "./I18nLocaleContext";
 import { I18nMetadataSetter } from "./I18nMetadataSetter";
 import { I18nTranslateProvider } from "./I18nTranslateProvider";
 import { I18nRouteSetter } from "./I18nRouteSetter";
@@ -71,16 +71,27 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
   );
 };
 
-// function locale(props: any): I18n.Locale;
-function locale(params: I18n.Props["params"]): I18n.Locale;
-function locale(props: I18n.Props): I18n.Locale;
-function locale(paramsOrProps: I18n.Props["params"] | I18n.Props) {
+function init(params: I18n.Props["params"]): I18n.Locale;
+function init(props: I18n.Props): I18n.Locale;
+function init(paramsOrProps: I18n.Props["params"] | I18n.Props) {
   const params = (paramsOrProps as any)?.params || paramsOrProps;
   if (params) {
     const locale = (params as any).${localeParamName};
 
     if (isLocale(locale)) {
-      return locale;
+      ${
+        single
+          ? ``
+          : `
+      // set the server context based locale as early as possible, usually this
+      // function is called as first thing in the page components. Setting the
+      // locale here might help reducing the cases where a 't' function needed
+      // in those "root" page components is obtained by calling 'getT' without
+      // passing a 'locale' argument. Passing the 'locale' should not be needed
+      // actually, but 
+      I18nLocaleContext.set(locale);
+      `
+      }return locale;
     }
   }
 
@@ -88,13 +99,17 @@ function locale(paramsOrProps: I18n.Props["params"] | I18n.Props) {
 }
 
 /**
- * Use this _in each_ \`page.tsx\` to get the current _locale_ from the page props
+ * Use this as **first thing** in _in each_ of your \`page.tsx\` file both in the
+ * _component_ function and in the \`generateMetadata\` function.
  *
+ * This function both sets and return the current locale based on the given
+ * _props_ by simply reading the dedicated \`[localeParamName]\` dynamic segment
+ * of the URL.
  * It automatically 404s with next.js's \`notFound\` if the locale does not exists.
  *
  * **For App Router only**
  */
-I18nPage.locale = locale;
+I18nPage.init = init;
 
 /**
  * Use this _in each_ \`page.tsx\` -> \`generateMetadata\` function
@@ -102,13 +117,15 @@ I18nPage.locale = locale;
  * **For App Router only**
  */
 I18nPage.metadata = <TRouteId extends I18n.RouteId>(
-  options: { locale: I18n.Locale; } & I18n.RouteArgs<TRouteId>,
+  options: { locale?: I18n.Locale; } & I18n.RouteArgs<TRouteId>,
   metadata?: Metadata,
 ) => {
+  const { locale: localeProp } = options;
+  const locale = localeProp || getLocale();
   const { alternates: alternatesOverride, ...restMetadata } = metadata || {};
   const { canonical: canonicalOverride, languages: languagesOverride = {} } =
     alternatesOverride || {};
-  const { alternates, canonical } = getI18nMetadata(options);
+  const { alternates, canonical } = getI18nMetadata({ ...options, locale });
 
   return {
     ...restMetadata,

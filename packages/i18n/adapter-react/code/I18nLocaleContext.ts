@@ -14,7 +14,7 @@ function createServerContext() {
     }
   }
 
-  let current = defaultLocale;
+  let current: I18n.Locale | undefined;
   const storage = new AsyncLocalStorage<I18n.Locale>();
 
   return {
@@ -22,8 +22,12 @@ function createServerContext() {
       children,
       value,
     }: React.PropsWithChildren<{ value: I18n.Locale }>) => {
+      // not sure about this mechanism, but we set it to 'undefined' here to
+      // make sure that in the 'get' method the value from 'storage.getStorage'
+      // is used as soon as available and with higher priority compared to 
+      // this closure based 'current' value.
+      current = undefined;
       storage.enterWith(value);
-      current = value;
       
       if (process.env.NODE_ENV !== "production") {
         // eslint-disable-next-line no-extra-boolean-cast
@@ -41,7 +45,7 @@ function createServerContext() {
       current = value;
       return current;
     },
-    get: () => storage.getStore() || defaultLocale,
+    get: () => current || storage.getStore() || defaultLocale,
   };
 }
 

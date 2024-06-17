@@ -1,7 +1,11 @@
-import { getI18nDictionaries_inline } from "../../adapter-js/code/getI18nDictionaries_inline";
+// import { getI18nDictionaries_inline } from "../../adapter-js/code/getI18nDictionaries_inline";
 import type { I18nCompiler } from "../../compiler/types";
 
-export default ({}: I18nCompiler.AdapterArg<"next">) => `
+export default ({
+  options: {
+    routes: { localeParamName },
+  },
+}: I18nCompiler.AdapterArg<"next">) => `
 import { defaultLocale } from "./defaultLocale";
 import { I18nLocaleContext } from "./I18nLocaleContext";
 import type { I18n } from "./types";
@@ -11,7 +15,7 @@ export type I18nLayoutLangProps = React.PropsWithChildren<{
 }>;
 
 /**
- * Use this _only once_ in \`app/[lang]/layout.tsx\` to set the locale context
+ * Use this _only once_ in \`app/[${localeParamName}]/layout.tsx\` to set the locale context
  * value server side
  *
  * **For App Router only**

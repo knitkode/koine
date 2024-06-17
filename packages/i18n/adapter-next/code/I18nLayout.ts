@@ -7,12 +7,10 @@ export default ({
     routes: { localeParamName },
   },
 }: I18nCompiler.AdapterArg<"next">) => `
-import { notFound } from "next/navigation";
 import { I18nTranslateProvider } from "./I18nTranslateProvider";
 import { defaultLocale } from "./defaultLocale";
 import { getLocale } from "./getLocale";
 // import { getI18nDictionaries } from "./getI18nDictionaries";
-import { isLocale } from "./isLocale";
 import type { I18n } from "./types";
 
 ${getI18nDictionaries_inline()}
@@ -49,30 +47,13 @@ export const I18nLayout = async ({
   );
 };
 
-// function locale(props: any): I18n.Locale;
-function locale(params: I18n.Props["params"]): I18n.Locale;
-function locale(props: I18n.Props): I18n.Locale;
-function locale(paramsOrProps: I18n.Props["params"] | I18n.Props) {
-  const params = (paramsOrProps as any)?.params || paramsOrProps;
-  if (params) {
-    const locale = (params as any).${localeParamName};
-
-    if (isLocale(locale)) {
-      return locale;
-    }
-  }
-
-  notFound();
-}
-
 /**
- * Use this _in each_ \`page.tsx\` to get the current _locale_ from the page props
- *
- * It automatically 404s with next.js's \`notFound\` if the locale does not exists.
+ * Optionally Use this _only in_ \`layout.tsx\` to get the current _locale_.
  *
  * **For App Router only**
  */
-I18nLayout.locale = locale;
+I18nLayout.locale = getLocale;
+I18nLayout.getLocale = getLocale;
 
 export default I18nLayout;
 `;
