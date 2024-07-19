@@ -124,14 +124,6 @@
       "locale": "en"
     },
     {
-      "path": "~account/FormUserLanguages.json",
-      "data": {
-        "empty": {},
-        "msg": "Some text"
-      },
-      "locale": "en"
-    },
-    {
       "path": "~.json",
       "data": {
         "home": "/",
@@ -191,6 +183,14 @@
       "locale": "en"
     },
     {
+      "path": "~account/FormUserLanguages.json",
+      "data": {
+        "empty": {},
+        "msg": "Some text"
+      },
+      "locale": "en"
+    },
+    {
       "path": "$faq.json",
       "data": {
         "home": [
@@ -214,6 +214,14 @@
           "2": "Due volte",
           "3": "Tre volte"
         }
+      },
+      "locale": "it"
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "data": {
+        "empty": {},
+        "msg": "Del testo"
       },
       "locale": "it"
     },
@@ -274,14 +282,6 @@
             }
           }
         }
-      },
-      "locale": "it"
-    },
-    {
-      "path": "~account/FormUserLanguages.json",
-      "data": {
-        "empty": {},
-        "msg": "Del testo"
       },
       "locale": "it"
     }

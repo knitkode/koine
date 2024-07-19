@@ -80,14 +80,6 @@
         "locale": "en"
       },
       {
-        "path": "~account/FormUserLanguages.json",
-        "data": {
-          "empty": {},
-          "msg": "Some text"
-        },
-        "locale": "en"
-      },
-      {
         "path": "~account/~user~profile.json",
         "data": {
           "boolShouldntBeHereBut": true,
@@ -144,6 +136,14 @@
               }
             }
           }
+        },
+        "locale": "en"
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
+          "msg": "Some text"
         },
         "locale": "en"
       }
@@ -276,14 +276,6 @@
           "locale": "en"
         },
         {
-          "path": "~account/FormUserLanguages.json",
-          "data": {
-            "empty": {},
-            "msg": "Some text"
-          },
-          "locale": "en"
-        },
-        {
           "path": "~account/~user~profile.json",
           "data": {
             "boolShouldntBeHereBut": true,
@@ -340,6 +332,14 @@
                 }
               }
             }
+          },
+          "locale": "en"
+        },
+        {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Some text"
           },
           "locale": "en"
         }
@@ -504,7 +504,29 @@
           }
         }
       },
-      "wildcardIds": ["apps.tool"]
+      "wildcardIds": ["apps.tool"],
+      "onlyStaticRoutes": false,
+      "dynamicRoutes": [
+        "account.user.[id]",
+        "products.[id]",
+        "products.[id].edit",
+        "products.[id].edit.details",
+        "apps.tool.things.[id]",
+        "apps.tool.things.[id].detail",
+        "apps.tool.things.[id].detail.new",
+        "apps.tool.things.[id].detail.[detailId]",
+        "apps.tool.things.[id].detail.[detailId].edit"
+      ],
+      "staticRoutes": [
+        "home",
+        "about",
+        "account.user.profile",
+        "account.user.settings",
+        "account.user.settings.personal",
+        "products",
+        "apps.tool",
+        "apps.tool.things"
+      ]
     },
     "translations": {
       "$404_seo": {

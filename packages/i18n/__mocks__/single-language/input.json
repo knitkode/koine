@@ -71,14 +71,6 @@
       "locale": "en"
     },
     {
-      "path": "~account/FormUserLanguages.json",
-      "data": {
-        "empty": {},
-        "msg": "Some text"
-      },
-      "locale": "en"
-    },
-    {
       "path": "~account/~user~profile.json",
       "data": {
         "boolShouldntBeHereBut": true,
@@ -135,6 +127,14 @@
             }
           }
         }
+      },
+      "locale": "en"
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "data": {
+        "empty": {},
+        "msg": "Some text"
       },
       "locale": "en"
     }

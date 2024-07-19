@@ -133,14 +133,6 @@
         "locale": "en"
       },
       {
-        "path": "~account/FormUserLanguages.json",
-        "data": {
-          "empty": {},
-          "msg": "Some text"
-        },
-        "locale": "en"
-      },
-      {
         "path": "~.json",
         "data": {
           "home": "/",
@@ -200,6 +192,14 @@
         "locale": "en"
       },
       {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
+          "msg": "Some text"
+        },
+        "locale": "en"
+      },
+      {
         "path": "$faq.json",
         "data": {
           "home": [
@@ -223,6 +223,14 @@
             "2": "Due volte",
             "3": "Tre volte"
           }
+        },
+        "locale": "it"
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
+          "msg": "Del testo"
         },
         "locale": "it"
       },
@@ -285,14 +293,6 @@
           }
         },
         "locale": "it"
-      },
-      {
-        "path": "~account/FormUserLanguages.json",
-        "data": {
-          "empty": {},
-          "msg": "Del testo"
-        },
-        "locale": "it"
       }
     ]
   },
@@ -332,7 +332,7 @@
         }
       },
       "translations": {
-        "ignorePaths": ["~.json", "~.json"],
+        "ignorePaths": ["~.json"],
         "createArrayIndexBasedFns": false,
         "fnsAsDataCodes": true,
         "fnsPrefix": "",
@@ -476,14 +476,6 @@
           "locale": "en"
         },
         {
-          "path": "~account/FormUserLanguages.json",
-          "data": {
-            "empty": {},
-            "msg": "Some text"
-          },
-          "locale": "en"
-        },
-        {
           "path": "~.json",
           "data": {
             "home": "/",
@@ -543,6 +535,14 @@
           "locale": "en"
         },
         {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Some text"
+          },
+          "locale": "en"
+        },
+        {
           "path": "$faq.json",
           "data": {
             "home": [
@@ -566,6 +566,14 @@
               "2": "Due volte",
               "3": "Tre volte"
             }
+          },
+          "locale": "it"
+        },
+        {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Del testo"
           },
           "locale": "it"
         },
@@ -626,14 +634,6 @@
                 }
               }
             }
-          },
-          "locale": "it"
-        },
-        {
-          "path": "~account/FormUserLanguages.json",
-          "data": {
-            "empty": {},
-            "msg": "Del testo"
           },
           "locale": "it"
         }
@@ -825,7 +825,29 @@
           }
         }
       },
-      "wildcardIds": ["apps.tool"]
+      "wildcardIds": ["apps.tool"],
+      "onlyStaticRoutes": false,
+      "dynamicRoutes": [
+        "account.user.[id]",
+        "products.[id]",
+        "products.[id].edit",
+        "products.[id].edit.details",
+        "apps.tool.things.[id]",
+        "apps.tool.things.[id].detail",
+        "apps.tool.things.[id].detail.new",
+        "apps.tool.things.[id].detail.[detailId]",
+        "apps.tool.things.[id].detail.[detailId].edit"
+      ],
+      "staticRoutes": [
+        "home",
+        "about",
+        "account.user.profile",
+        "account.user.settings",
+        "account.user.settings.personal",
+        "products",
+        "apps.tool",
+        "apps.tool.things"
+      ]
     },
     "translations": {
       "$404_onlyNumberKeys": {
