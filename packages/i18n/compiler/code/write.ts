@@ -1,5 +1,6 @@
-import { rmSync } from "node:fs";
+import { renameSync, rmSync } from "node:fs";
 import { join } from "node:path";
+import * as ts from "typescript";
 import { fsWrite, fsWriteSync } from "@koine/node";
 import type { I18nCompiler } from "../types";
 import {
@@ -47,6 +48,37 @@ const writeCompiledTypescriptFiles = (
   const tsFiles = Array.from(files).filter(
     (f) => f.endsWith(".ts") || f.endsWith(".tsx"),
   );
+
+  // ESM output
+  tsCompile(cwd, output, tsFiles, {
+    target: ts.ScriptTarget.ESNext,
+    module: ts.ModuleKind.ESNext,
+  });
+
+  // rename ESM output files
+  tsFiles.forEach((relativePath) => {
+    const absolutePath = join(
+      cwd,
+      output,
+      relativePath.replace(/\.tsx?$/, ".js"),
+    );
+    files.add(relativePath.replace(/\.tsx?$/, ".mjs"));
+
+    renameSync(absolutePath, absolutePath.replace(/\.js$/, ".mjs"));
+  });
+
+  // CommonJs output
+  tsCompile(cwd, output, tsFiles);
+
+  tsFiles.forEach((relativePath) => {
+    files.add(relativePath.replace(/\.tsx?$/, ".js"));
+    files.add(relativePath.replace(/\.tsx?$/, ".d.ts"));
+
+    // remove TypeScript files
+    files.delete(relativePath);
+    rmSync(join(cwd, output, relativePath), { force: true });
+  });
+
   tsCompile(cwd, output, tsFiles);
 
   tsFiles.forEach((relativePath) => {

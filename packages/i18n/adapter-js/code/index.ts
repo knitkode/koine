@@ -20,6 +20,7 @@ import routesError from "./routesError";
 import routesSlim from "./routesSlim";
 import routesSpa from "./routesSpa";
 import t from "./t";
+import { tFiles } from "./tFiles";
 import tInterpolateParams from "./tInterpolateParams";
 import tPluralise from "./tPluralise";
 import to from "./to";
@@ -61,6 +62,7 @@ export default createAdapter(adapterJsOptions, ({}) => {
       { name: "routesSlim", fn: routesSlim, ext: "ts" },
       { name: "routesSpa", fn: routesSpa, ext: "ts" },
       { name: "t", fn: t, ext: "ts", index: true },
+      ...tFiles(),
       {
         name: "tInterpolateParams",
         fn: tInterpolateParams,

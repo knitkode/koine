@@ -12,7 +12,6 @@ import { defaultLocale } from "./defaultLocale";
 import { getLocale } from "./getLocale";
 // import { getI18nDictionaries } from "./getI18nDictionaries";
 import type { I18n } from "./types";
-
 ${getI18nDictionaries_inline()}
 
 export type I18nLayoutProps = React.PropsWithChildren<{

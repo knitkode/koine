@@ -4,8 +4,8 @@ export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
 import { useMemo, useState } from "react";
-import type { I18n } from "@/i18n";
 import { I18nMetadataContext } from "./I18nMetadataContext";
+import type { I18n } from "./types";
 
 type I18nMetadataProviderProps = React.PropsWithChildren<{
   metadata?: I18n.Metadata;

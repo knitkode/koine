@@ -18,7 +18,6 @@ import { isLocale } from "./isLocale";
 import { locales } from "./locales";
 import { type RouteIdError, isErrorRoute } from "./routesError";
 import type { I18n } from "./types";
-
 ${getI18nDictionaries_inline()}
 
 /**

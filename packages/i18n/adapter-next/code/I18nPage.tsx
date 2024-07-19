@@ -20,7 +20,6 @@ import { getI18nMetadata } from "./getI18nMetadata";
 import { getLocale } from "./getLocale";
 import { isLocale } from "./isLocale";
 import type { I18n } from "./types";
-
 ${getI18nDictionaries_inline()}
 
 export type I18nPageProps<TRouteId extends I18n.RouteId> =
@@ -90,6 +89,7 @@ function init(paramsOrProps: I18n.Props["params"] | I18n.Props) {
       // passing a 'locale' argument. Passing the 'locale' should not be needed
       // actually, but 
       I18nLocaleContext.set(locale);
+      global.locale = locale;
       `
       }return locale;
     }

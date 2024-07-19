@@ -12,22 +12,32 @@ export let tsCompile = (
     .map((relativePath) => join(cwd, output, relativePath));
 
   const compilerOptions: ts.CompilerOptions = {
-    noEmitOnError: true,
+    noEmitOnError: false,
     noImplicitAny: true,
     declaration: true,
+
+    module: ts.ModuleKind.Node16,
     // target: ts.ScriptTarget.ES5,
-    target: ts.ScriptTarget.ESNext,
+    // // target: ts.ScriptTarget.ESNext,
     // module: ts.ModuleKind.CommonJS,
-    module: ts.ModuleKind.ESNext,
-    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    // // module: ts.ModuleKind.ESNext,
+    // moduleResolution: ts.ModuleResolutionKind.Bundler,
+
     resolveJsonModule: true,
     allowJs: false,
     esModuleInterop: true,
     jsx: ts.JsxEmit.ReactJSX,
-    outDir: join(cwd, output),
+    // outDir: join(cwd, output, ".tmp"),
+    // outDir: join(cwd, "dist"),
     skipLibCheck: true,
     noEmitHelpers: true,
     importHelpers: true,
+    paths: {
+      "@koine/i18n": [join(cwd, "packages/i18n/index.ts")],
+      "@koine/browser": [join(cwd, "packages/browser/index.ts")],
+      "@koine/dom": [join(cwd, "packages/dom/index.ts")],
+      "@koine/utils": [join(cwd, "packages/utils/index.ts")],
+    },
     ...(tsOptions || {}),
   };
   // Create a Program with an in-memory emit
@@ -73,6 +83,7 @@ export let tsCompile = (
       );
     }
   });
+  // console.log("tsCompile", { emitResult });
 
   return emitResult;
 };

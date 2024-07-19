@@ -4,8 +4,8 @@ export default ({}: I18nCompiler.AdapterArg<"react">) => `
 "use client";
 
 import { useMemo, useState } from "react";
-import type { I18n } from "@/i18n";
 import { I18nRouteContext } from "./I18nRouteContext";
+import type { I18n } from "./types";
 
 type I18nRouteProviderProps = React.PropsWithChildren<{
   id: I18n.RouteId;

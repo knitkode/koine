@@ -11,5 +11,9 @@ export default ({
     null,
     2,
   );
-  return `module.exports = ${value}`;
+  return `
+/**
+ * @type {import("next/dist/lib/load-custom-routes").Redirect[]}
+ */
+module.exports = ${value}`;
 };

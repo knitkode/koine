@@ -7,9 +7,10 @@ import I18nHead from "./I18nHead";
 import I18nLayout from "./I18nLayout";
 import I18nLayoutLang from "./I18nLayoutLang";
 import I18nLayoutRoot from "./I18nLayoutRoot";
-import I18nPage from "./I18nPage";
+// import I18nPage from "./I18nPage";
 import I18nSetter from "./I18nSetter";
 import i18nGet from "./i18nGet";
+import i18nPage from "./i18nPage";
 import nextRedirects from "./next-redirects";
 import nextRewrites from "./next-rewrites";
 import useRouteId from "./useRouteId";
@@ -33,7 +34,8 @@ export default createAdapter(adapterNextOptions, ({ adapterOptions }) => {
       { name: "I18nLayout", fn: I18nLayout, ext: "tsx", index: true },
       { name: "I18nLayoutLang", fn: I18nLayoutLang, ext: "tsx", index: true },
       { name: "I18nLayoutRoot", fn: I18nLayoutRoot, ext: "tsx", index: true },
-      { name: "I18nPage", fn: I18nPage, ext: "tsx", index: true },
+      // { name: "I18nPage", fn: I18nPage, ext: "tsx", index: true },
+      { name: "i18nPage", fn: i18nPage, ext: "tsx", index: true },
     ]);
   }
 

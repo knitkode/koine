@@ -9,9 +9,23 @@ export type I18nCompilerConfig = {
    * and make consistent a simple concatenation with relative URLs.
    */
   baseUrl: `http://${string}` | `https://${string}` | string;
-  defaultLocale: I18nCompiler.Locale;
+  /**
+   * By default this is computed by reading the folder structure of your translations
+   * @default ["en"]
+   */
   locales?: I18nCompiler.Locale[];
+  /**
+   * By default this is computed by using the first locale computed or defined
+   * @default "en"
+   */
+  defaultLocale: I18nCompiler.Locale;
+  /**
+   * @default true
+   */
   hideDefaultLocaleInUrl?: boolean;
+  /**
+   * @default false
+   */
   trailingSlash?: boolean;
 };
 
@@ -52,6 +66,11 @@ export let getConfig = (
 
     // ensure boolean value
     options.hideDefaultLocaleInUrl = !!options.hideDefaultLocaleInUrl;
+  } else if (dataInput) {
+    options = {} as I18nCompilerConfig;
+
+    // dynamically define locales
+    options.locales = dataInput.localesFolders;
   }
 
   const merged = objectMergeWithDefaults(configDefaults, options);

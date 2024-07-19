@@ -150,6 +150,34 @@ describe("test your.io", () => {
   });
 });
 
+describe("test playground-next", () => {
+  test("mimic next plugin build", async () => {
+    await i18nCompiler({
+      baseUrl: "http://localhost:4200",
+      defaultLocale: "en",
+      hideDefaultLocaleInUrl: true,
+      input: {
+        source: "./playground/next/translations",
+      },
+      code: {
+        // routes: {
+        //   localeParamName: "lang",
+        // },
+        adapter: {
+          name: "next",
+          options: {
+            router: "app",
+          },
+        },
+        write: {
+          output: "./playground/next/i18n",
+          skipTsCompile: false,
+        },
+      },
+    });
+  }, 40000);
+});
+
 describe("test yenvi.nl", () => {
   test("mimic next plugin build", async () => {
     await i18nCompiler({
