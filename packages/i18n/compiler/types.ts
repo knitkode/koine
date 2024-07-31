@@ -1,8 +1,9 @@
-import type { SetOptional } from "@koine/utils";
-import type { AdapterJs } from "../adapter-js";
-import type { AdapterNext } from "../adapter-next";
-import type { AdapterNextTranslate } from "../adapter-next-translate";
-import type { AdapterReact } from "../adapter-react";
+import type { Simplify } from "@koine/utils";
+import type { PartialDeep } from "@koine/utils";
+import type * as AdapterJs from "../adapter-js";
+import type * as AdapterNext from "../adapter-next";
+import type * as AdapterNextTranslate from "../adapter-next-translate";
+import type * as AdapterReact from "../adapter-react";
 import type { CodeDataOptionsResolved } from "./code";
 import type { I18nCompilerConfigResolved } from "./config";
 import type { PluralSuffix } from "./pluralisation";
@@ -43,7 +44,15 @@ export namespace I18nCompiler {
    * Data extracted from filesystem structure
    */
   export type DataInput = {
+    /**
+     * List of the translations source `.json` files
+     *
+     * TODO: maybe support more formats like `yml` or `.po`
+     */
     translationFiles: DataInputTranslationFile[];
+    /**
+     * List of the locale folders found in the input source data
+     */
     localesFolders: string[];
   };
 
@@ -59,16 +68,41 @@ export namespace I18nCompiler {
     data: { [key: string]: I18nCompiler.DataTranslationValue };
   };
 
+  export type DataSummary = Record<
+    Locale,
+    {
+      words: number;
+      characters: number;
+      files: DataSummaryFile[];
+    }
+  >;
+
   /**
+   * {@link DataSummary}
+   */
+  export type DataSummaryFile = {
+    locale: Locale;
+    path: string;
+    url: string;
+    words: number;
+    characters: number;
+  };
+
+  /**
+   * This contains all the generated/transformed/parsed data used for code generation
    * {@link DataRoute} - {@link DataTranslations}
    */
-  export type DataCode = {
+  export type DataCode<TAdapterName extends AdapterName> = {
     config: Config;
-    options: CodeDataOptionsResolved;
+    options: CodeDataOptionsResolved<TAdapterName>;
     input: DataInput;
     routes: DataRoutes;
     translations: DataTranslations;
   };
+
+  export type AnyDataCode = {
+    [Name in AdapterName]: DataCode<Name>;
+  }[AdapterName];
 
   /**
    * {@link DataRoute}
@@ -88,6 +122,9 @@ export namespace I18nCompiler {
    * A route metadata
    */
   export type DataRoute = {
+    /**
+     * Unique identifier of the route
+     */
     id: RouteId;
     /**
      * Dictionary with route ids as keys each one holding a dictionary of its
@@ -115,26 +152,6 @@ export namespace I18nCompiler {
     inWildcard?: boolean;
   };
 
-  export type DataSummary = Record<
-    Locale,
-    {
-      words: number;
-      characters: number;
-      files: DataSummaryFile[];
-    }
-  >;
-
-  /**
-   * {@link DataSummary}
-   */
-  export type DataSummaryFile = {
-    locale: Locale;
-    path: string;
-    url: string;
-    words: number;
-    characters: number;
-  };
-
   /**
    * {@link DataTranslation}
    */
@@ -143,25 +160,29 @@ export namespace I18nCompiler {
   /**
    */
   export type DataTranslation = {
+    /**
+     * Unique identifier of the translation
+     */
     id: string;
     /**
-     * Translation type
+     * Translation' value type
      */
     typeValue: "Primitive" | "Array" | "Object";
     /**
-     * Values by locale dictionary
+     * Dictionary of the translation' values {@link DataTranslationValue} mapped by locale
      */
     values: Record<Locale, DataTranslationValue>;
     /**
-     * Plural versions of the values by locale dictionary
+     * Dictionary of the plural versions of the translations' values
+     * {@link DataTranslationValue} for each plural suffix mapped by locale
      */
     pluralValues?: Record<Locale, Record<PluralSuffix, DataTranslationValue>>;
     /**
-     * Is this a translation with plurals versions
+     * Indicates whether this translation has plurals versions
      */
     plural?: boolean;
     /**
-     * The translation params dictionary {@link DataParams}}
+     * Dictionary of The translation dynamic params to be interpolated {@link DataParams}}
      */
     params?: DataParams;
   };
@@ -177,90 +198,101 @@ export namespace I18nCompiler {
     | { [key: string]: DataTranslationValue };
 
   /**
-   * Built in adapters with their options
+   * Built in adapters definition (map)
    */
-  export type AnyAdapter =
-    | SetOptional<AdapterJs, "options">
-    | SetOptional<AdapterReact, "options">
-    | SetOptional<AdapterNext, "options">
-    | SetOptional<AdapterNextTranslate, "options">;
+  type AdaptersOptionsMap = {
+    js: AdapterJs.Options;
+    react: AdapterReact.Options;
+    next: AdapterNext.Options;
+    "next-translate": AdapterNextTranslate.Options;
+  };
+
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Built in adapters with their options (to-customise options)
+   */
+  export type AnyAdapterConfiguration = {
+    [Name in AdapterName]: {
+      name: Name;
+      options?: PartialDeep<AdaptersOptionsMap[Name]>;
+    };
+  }[AdapterName];
+
+  // ---------------------------------------------------------------------------
+
+  type AdapterConfigurationResolvedEntry<T extends AdapterName> = {
+    name: T;
+  } & AdaptersOptionsMap[T];
 
   /**
    * Built in adapters with their options (resolved options)
    */
-  export type AnyAdapterResolved =
-    | AdapterJs
-    | AdapterReact
-    | AdapterNext
-    | AdapterNextTranslate;
+  export type AnyAdapterConfigurationResolved = {
+    [Name in AdapterName]: AdapterConfigurationResolvedEntry<Name>;
+  }[AdapterName];
 
-  type AdOptsFor<T extends AdaptersName> = AdaptersOptions<T> &
-    (Adapter<T>["dependsOn"] extends AdaptersName[]
-      ? {
-          [N in Adapter<T>["dependsOn"][number] as `parent_${N}`]: {
-            options: AdaptersOptions<N>;
-          };
-        }
-      : {});
+  export type AdapterConfigurationResolved<T extends AdapterName> =
+    T extends "js"
+      ? AdapterConfigurationResolvedEntry<"js">
+      : T extends "react"
+        ? AdapterConfigurationResolvedEntry<"react">
+        : T extends "next"
+          ? AdapterConfigurationResolvedEntry<"next">
+          : T extends "next-translate"
+            ? AdapterConfigurationResolvedEntry<"next-translate">
+            : never;
 
-  type b = AdOptsFor<"next">;
+  // ---------------------------------------------------------------------------
 
-  /**
-   * Built in adapter options
-   */
-  type AdaptersOptions<T extends AdaptersName> = T extends "js"
-    ? AdapterJs["options"]
+  export type AnyAdapterResolved = {
+    [Name in AdapterName]: AdapterResolved<Name>;
+  }[AdapterName];
+
+  export type AdapterResolved<T extends AdapterName> = T extends "js"
+    ? Simplify<ReturnType<AdapterJs.Adapter>>
     : T extends "react"
-      ? AdapterReact["options"]
+      ? Simplify<ReturnType<AdapterReact.Adapter>>
       : T extends "next"
-        ? AdapterNext["options"]
+        ? Simplify<ReturnType<AdapterNext.Adapter>>
         : T extends "next-translate"
-          ? AdapterNextTranslate["options"]
+          ? Simplify<ReturnType<AdapterNextTranslate.Adapter>>
           : never;
+
+  // ---------------------------------------------------------------------------
 
   /**
    * Built in adapters names
    */
-  export type AdaptersName = AnyAdapter["name"];
+  export type AdapterName = keyof AdaptersOptionsMap;
 
   /**
-   * Adapter creator function, either _sync_ or _async_
+   * A generator within an {@link Adapter}, responsible for generating one or
+   * more files/folders
    */
-  export type AdapterCreator<T extends AdaptersName> = (
-    arg: AdapterArg<T>,
-  ) => Adapter<T> | Promise<Adapter<T>>;
+  export type AdapterGenerator<T extends I18nCompiler.AdapterName> = (
+    data: I18nCompiler.DataCode<T>,
+  ) => AdapterGeneratorResult;
 
   /**
-   * Adapter anatomy
+   * The shape of what an {@link AdapterGenerator} returns, a dictionary of
+   * files where the key is a `fileId`
    */
-  export type Adapter<T extends AdaptersName = AdaptersName> = {
-    dependsOn?: AdaptersName[];
-    files: AdapterFile<T>[];
-    // files: AdapterFile[];
-  };
-
-  /**
-   * {@link DataCode}
-   */
-  export type AdapterArgData = DataCode;
-
-  /**
-   * {@link AdapterArgData}
-   */
-  export type AdapterArg<T extends AdaptersName = AdaptersName> =
-    AdapterArgData & {
-      adapterOptions: AdaptersOptions<T>;
-    };
-  // name: T;
-  //   data: DataCode;
-  // };
-  //   data: Omit<DataCode, "config">;
-  // } & Pick<DataCode, "config">;
+  export type AdapterGeneratorResult = Record<string, I18nCompiler.AdapterFile>;
 
   /**
    * Adapter file anatomy
    */
-  export type AdapterFile<T extends AdaptersName = AdaptersName> = {
+  export type AdapterFile = {
+    /**
+     * File directory, by default it is placed in the root code generation
+     * configured directory see `cwd` and `output` in {@link import("./code/write.ts").CodeWriteOptions}
+     * @default "."
+     */
+    dir?: string;
+    /**
+     * File name
+     */
     name: string;
     /**
      * File extension
@@ -269,7 +301,7 @@ export namespace I18nCompiler {
     /**
      * Function that generates the file content
      */
-    fn: (arg: AdapterArg<T>) => string;
+    content: () => string;
     /**
      * Whether the generated file should be added to the automatically generated
      * `index.ts` barrel file
@@ -278,12 +310,16 @@ export namespace I18nCompiler {
   };
 
   /**
-   * An {@link AdapterFile} whose `fn` has been called to generate content.
+   * An {@link AdapterFile} whose `content` function has been called to generate content.
    */
-  export type AdapterGeneratedFile = Omit<AdapterFile<AdaptersName>, "fn"> & {
+  export type AdapterFileGenerated = Omit<AdapterFile, "content"> & {
+    /**
+     * The file content as string
+     */
     content: string;
+    /**
+     * The file full relative path: `dir`, `name` and `ext` of {@link AdapterFile}
+     */
+    path: string;
   };
-  // export type AdapterGeneratedFile = Omit<AdapterFile, "fn"> & {
-  //   content: string;
-  // };
 }

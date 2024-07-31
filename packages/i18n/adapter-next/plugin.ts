@@ -4,8 +4,6 @@ import type { I18nCompilerOptions } from "../compiler";
 import { i18nCompilerSync } from "../compiler-sync";
 import { getRedirects, getRewrites, tweakNextConfig } from "./plugin-shared";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore problem with cjs output
 const require = createRequire(import.meta.url);
 
 export type WithI18nOptions = NextConfig & {
@@ -39,7 +37,7 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
   } = i18nResult;
 
   if (adapter.name === "next-translate") {
-    if (adapter.options.loader !== false) {
+    if (adapter.loader !== false) {
       try {
         const withNextTranslate = require("next-translate-plugin");
         nextConfig = withNextTranslate(nextConfig);

@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { ContextReplacementPlugin } from "webpack";
+import { swcCreateTransform } from "@koine/node/swc";
 import type { I18nCompilerOptions, I18nCompilerReturn } from "../compiler";
 import { generateRedirects } from "./redirects";
 import { generateRewrites } from "./rewrites";
@@ -28,6 +29,14 @@ export let tweakNextConfig = (
     nextConfig.i18n.locales = locales;
     nextConfig.i18n.defaultLocale = defaultLocale;
   }
+
+  // automatically create swc transforms based on given options
+  const tsConfigAlias = result.code.options.write?.tsconfig.alias;
+  nextConfig.modularizeImports = {
+    ...swcCreateTransform("@koine/i18n"),
+    ...(tsConfigAlias ? swcCreateTransform(tsConfigAlias) : {}),
+    ...(nextConfig.modularizeImports || {}),
+  };
 
   nextConfig.webpack = (webpackConfig) => {
     // @see https://github.com/date-fns/date-fns/blob/main/docs/webpack.md#removing-unused-languages-from-dynamic-import

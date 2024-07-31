@@ -11,18 +11,6 @@
     "localesFolders": ["en"],
     "translationFiles": [
       {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        },
-        "locale": "en"
-      },
-      {
         "path": "404.json",
         "data": {
           "seo": {
@@ -76,6 +64,18 @@
               }
             }
           }
+        },
+        "locale": "en"
+      },
+      {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
         },
         "locale": "en"
       },
@@ -159,12 +159,6 @@
       "single": true
     },
     "options": {
-      "adapter": {
-        "name": "next",
-        "options": {
-          "modularized": false
-        }
-      },
       "outputFiles": {},
       "routes": {
         "permanentRedirects": false,
@@ -197,27 +191,27 @@
           }
         }
       },
+      "adapter": {
+        "modularized": true,
+        "router": "app",
+        "name": "next"
+      },
       "write": {
         "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/single-language",
         "output": ".code",
-        "skipTsCompile": true
+        "emptyOutputFolder": true,
+        "tsconfig": {
+          "path": "../tsconfig.json",
+          "alias": "@/i18n"
+        },
+        "typescriptCompilation": false,
+        "copyTranslations": true,
+        "gitignore": "all"
       }
     },
     "input": {
       "localesFolders": ["en"],
       "translationFiles": [
-        {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
-          },
-          "locale": "en"
-        },
         {
           "path": "404.json",
           "data": {
@@ -272,6 +266,18 @@
                 }
               }
             }
+          },
+          "locale": "en"
+        },
+        {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
           },
           "locale": "en"
         },

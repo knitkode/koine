@@ -2,18 +2,6 @@
   "localesFolders": ["en"],
   "translationFiles": [
     {
-      "path": "$faq.json",
-      "data": {
-        "home": [
-          {
-            "question": "What is?",
-            "answer": "That"
-          }
-        ]
-      },
-      "locale": "en"
-    },
-    {
       "path": "404.json",
       "data": {
         "seo": {
@@ -67,6 +55,18 @@
             }
           }
         }
+      },
+      "locale": "en"
+    },
+    {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
       },
       "locale": "en"
     },

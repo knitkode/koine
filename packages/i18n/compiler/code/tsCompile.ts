@@ -15,14 +15,6 @@ export let tsCompile = (
     noEmitOnError: false,
     noImplicitAny: true,
     declaration: true,
-
-    module: ts.ModuleKind.Node16,
-    // target: ts.ScriptTarget.ES5,
-    // // target: ts.ScriptTarget.ESNext,
-    // module: ts.ModuleKind.CommonJS,
-    // // module: ts.ModuleKind.ESNext,
-    // moduleResolution: ts.ModuleResolutionKind.Bundler,
-
     resolveJsonModule: true,
     allowJs: false,
     esModuleInterop: true,
@@ -32,12 +24,14 @@ export let tsCompile = (
     skipLibCheck: true,
     noEmitHelpers: true,
     importHelpers: true,
-    paths: {
-      "@koine/i18n": [join(cwd, "packages/i18n/index.ts")],
-      "@koine/browser": [join(cwd, "packages/browser/index.ts")],
-      "@koine/dom": [join(cwd, "packages/dom/index.ts")],
-      "@koine/utils": [join(cwd, "packages/utils/index.ts")],
-    },
+    paths: process.env["JEST_WORKER_ID"]
+      ? {
+          "@koine/i18n": [join(cwd, "packages/i18n/index.ts")],
+          "@koine/browser": [join(cwd, "packages/browser/index.ts")],
+          "@koine/dom": [join(cwd, "packages/dom/index.ts")],
+          "@koine/utils": [join(cwd, "packages/utils/index.ts")],
+        }
+      : {},
     ...(tsOptions || {}),
   };
   // Create a Program with an in-memory emit

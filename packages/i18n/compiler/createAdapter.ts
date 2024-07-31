@@ -1,39 +1,78 @@
-import {
-  type PartialDeep,
-  type PlainObject,
-  objectMergeWithDefaults,
-} from "@koine/utils";
+import type { PlainObject } from "@koine/utils";
+import type { UnionToIntersection } from "@koine/utils";
 import type { I18nCompiler } from "./types";
 
-// /**
-//  * Adapter creator function, either _sync_ or _async_
-//  */
-// export type AdapterCreator<T extends AdaptersName> = (
-//   arg: AdapterArg<T>,
-// ) => Adapter<T> | Promise<Adapter<T>>;
+export function createAdapter<
+  TName extends I18nCompiler.AdapterName,
+  TGenerators extends I18nCompiler.AdapterGenerator<I18nCompiler.AdapterName>[],
+  // TGenerators extends I18nCompiler.AdapterGenerator<TName>[],
+  TGetGenerators extends (
+    // data: I18nCompiler.DataCode<I18nCompiler.AdapterName>
+    data: I18nCompiler.DataCode<TName>,
+  ) => TGenerators,
+  // | Promise<I18nCompiler.AdapterGenerator<TName>[]>;
+  TOptions extends PlainObject,
+>(config: {
+  name: TName;
+  defaultOptions: TOptions;
+  getGenerators: TGetGenerators;
+  getTransformers: (data: I18nCompiler.DataCode<TName>) => Partial<{
+    [FileId in keyof UnionToIntersection<
+      ReturnType<ReturnType<typeof config.getGenerators>[number]>
+    >]: (
+      file: UnionToIntersection<
+        ReturnType<ReturnType<typeof config.getGenerators>[number]>
+      >[FileId],
+    ) => I18nCompiler.AdapterFile;
+  }>;
+  // tranformFile?: <
+  //   TFileId extends keyof UnionToIntersection<ReturnType<ReturnType<typeof config.getGenerators>[number]>>,
+  //   TFile extends UnionToIntersection<ReturnType<ReturnType<typeof config.getGenerators>[number]>>[TFileId]
+  // >(
+  //   fileId: TFileId,
+  //   file: TFile,
+  // ) => I18nCompiler.AdapterFile;
+}) {
+  function adapter(data: I18nCompiler.DataCode<TName>) {
+    // reverse the order so that one adapter can override its parent adapter's
+    // generators
+    const generators = config.getGenerators(data).reverse();
+    const transformers = config.getTransformers(data);
+    // const files = generators.reduce(
+    //   (all, generator) => {
+    //     all = { ...all, ...generator(data) };
+    //     return all;
+    //   },
+    //   {} as UnionToIntersection<
+    //     ReturnType<ReturnType<typeof config.getGenerators>[number]>
+    //   >,
+    // );
 
-// /**
-//  * Adapter anatomy
-//  */
-// export type Adapter<T extends AdaptersName = AdaptersName> = {
-//   dependsOn?: AdaptersName[];
-//   files: AdapterFile<T>[];
-// };
+    return {
+      generators,
+      transformers,
+      // files,
+    };
+  }
 
-export let createAdapter =
-  <T extends PlainObject>(
-    adapterOptionsDefaults: T,
-    creator: (
-      arg: I18nCompiler.DataCode & {
-        adapterOptions: T;
-      },
-    ) => I18nCompiler.Adapter | Promise<I18nCompiler.Adapter>,
-  ) =>
-  (data: I18nCompiler.DataCode, adapterOptions: PartialDeep<T>) =>
-    creator({
-      ...data,
-      adapterOptions: objectMergeWithDefaults(
-        adapterOptionsDefaults,
-        adapterOptions,
-      ) as T,
-    });
+  adapter.getGenerators = config.getGenerators;
+  adapter.defaultOptions = config.defaultOptions;
+
+  return adapter;
+}
+
+export function createGenerator<
+  TName extends I18nCompiler.AdapterName,
+  TResult extends I18nCompiler.AdapterGeneratorResult,
+>(_name: TName, generator: (data: I18nCompiler.DataCode<TName>) => TResult) {
+  return generator;
+}
+
+/**
+ * Dictionary of the used code generator **directories** names
+ */
+createGenerator.dirs = {
+  internal: "internal",
+  server: "server",
+  test: "test",
+};

@@ -73,6 +73,18 @@
         "locale": "en"
       },
       {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
+        },
+        "locale": "en"
+      },
+      {
         "path": "~account/~user~profile.json",
         "data": {
           "boolShouldntBeHereBut": true,
@@ -133,6 +145,14 @@
         "locale": "en"
       },
       {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
+          "msg": "Some text"
+        },
+        "locale": "en"
+      },
+      {
         "path": "~.json",
         "data": {
           "home": "/",
@@ -184,26 +204,6 @@
         "data": {
           "home": [
             {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        },
-        "locale": "en"
-      },
-      {
-        "path": "~account/FormUserLanguages.json",
-        "data": {
-          "empty": {},
-          "msg": "Some text"
-        },
-        "locale": "en"
-      },
-      {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
               "question": "Cos'è?",
               "answer": "Quello"
             }
@@ -223,14 +223,6 @@
             "2": "Due volte",
             "3": "Tre volte"
           }
-        },
-        "locale": "it"
-      },
-      {
-        "path": "~account/FormUserLanguages.json",
-        "data": {
-          "empty": {},
-          "msg": "Del testo"
         },
         "locale": "it"
       },
@@ -293,6 +285,14 @@
           }
         },
         "locale": "it"
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "data": {
+          "empty": {},
+          "msg": "Del testo"
+        },
+        "locale": "it"
       }
     ]
   },
@@ -306,12 +306,6 @@
       "single": false
     },
     "options": {
-      "adapter": {
-        "name": "next",
-        "options": {
-          "modularized": false
-        }
-      },
       "outputFiles": {},
       "routes": {
         "permanentRedirects": false,
@@ -332,7 +326,7 @@
         }
       },
       "translations": {
-        "ignorePaths": ["~.json"],
+        "ignorePaths": ["~.json", "~.json"],
         "createArrayIndexBasedFns": false,
         "fnsAsDataCodes": true,
         "fnsPrefix": "",
@@ -344,10 +338,22 @@
           }
         }
       },
+      "adapter": {
+        "modularized": true,
+        "router": "app",
+        "name": "next"
+      },
       "write": {
         "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/multi-language",
         "output": ".code",
-        "skipTsCompile": true
+        "emptyOutputFolder": true,
+        "tsconfig": {
+          "path": "../tsconfig.json",
+          "alias": "@/.code"
+        },
+        "typescriptCompilation": false,
+        "copyTranslations": true,
+        "gitignore": "all"
       }
     },
     "input": {
@@ -416,6 +422,18 @@
           "locale": "en"
         },
         {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
+          },
+          "locale": "en"
+        },
+        {
           "path": "~account/~user~profile.json",
           "data": {
             "boolShouldntBeHereBut": true,
@@ -476,6 +494,14 @@
           "locale": "en"
         },
         {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Some text"
+          },
+          "locale": "en"
+        },
+        {
           "path": "~.json",
           "data": {
             "home": "/",
@@ -527,26 +553,6 @@
           "data": {
             "home": [
               {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
-          },
-          "locale": "en"
-        },
-        {
-          "path": "~account/FormUserLanguages.json",
-          "data": {
-            "empty": {},
-            "msg": "Some text"
-          },
-          "locale": "en"
-        },
-        {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
                 "question": "Cos'è?",
                 "answer": "Quello"
               }
@@ -566,14 +572,6 @@
               "2": "Due volte",
               "3": "Tre volte"
             }
-          },
-          "locale": "it"
-        },
-        {
-          "path": "~account/FormUserLanguages.json",
-          "data": {
-            "empty": {},
-            "msg": "Del testo"
           },
           "locale": "it"
         },
@@ -634,6 +632,14 @@
                 }
               }
             }
+          },
+          "locale": "it"
+        },
+        {
+          "path": "~account/FormUserLanguages.json",
+          "data": {
+            "empty": {},
+            "msg": "Del testo"
           },
           "locale": "it"
         }

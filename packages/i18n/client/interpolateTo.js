@@ -10,7 +10,7 @@ function interpolateTo(
   let pathname = value.replace(/\./g, "/");
   if (process.env["NODE_ENV"] === "development") {
     if (params) {
-      pathname.replace(/[[{]{1,2}(.*?)[\]}]{1,2}/g, (_, dynamicKey) => {
+      pathname.replace(/[[{]{1,2}(.*?)[\]}]{1,2}/g, function (_, dynamicKey) {
         const key = dynamicKey;
         if (!(key in params)) {
           throw new Error(
@@ -38,10 +38,9 @@ function interpolateTo(
   }
   pathname = pathname
     ? params
-      ? pathname.replace(
-          /[[{]{1,2}(.*?)[\]}]{1,2}/g,
-          (_, dynamicKey) => params[dynamicKey.trim()] + "",
-        )
+      ? pathname.replace(/[[{]{1,2}(.*?)[\]}]{1,2}/g, function (_, dynamicKey) {
+          return params[dynamicKey.trim()] + "";
+        })
       : pathname
     : // special home page case
       "/";

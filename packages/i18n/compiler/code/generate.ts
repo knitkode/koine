@@ -1,120 +1,97 @@
-import { isPromise } from "@koine/utils";
-import js from "../../adapter-js/code";
-import nextTranslate from "../../adapter-next-translate/code";
-import next from "../../adapter-next/code";
-import react from "../../adapter-react/code";
+import { forin } from "@koine/utils";
 import type { I18nCompiler } from "../types";
+import {
+  getAdapter,
+  getAdapterFileContent,
+  getAdapterFileMeta,
+  getAdapterSync,
+} from "./adapters";
 
-const getIndexFile = (generatedFiles: I18nCompiler.AdapterGeneratedFile[]) => {
-  let output = "";
+const getBarrelFileContent = (
+  generatedFiles: I18nCompiler.AdapterFileGenerated[],
+) => {
+  let content = "";
 
   generatedFiles
     .filter((generatedFile) => generatedFile.index)
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach((generatedFile) => {
-      output += `export * from "./${generatedFile.name}";\n`;
+      content += `export * from "./${generatedFile.name}";\n`;
     });
-  return output;
+  return content;
 };
 
-const getAdapterCreator = <T extends I18nCompiler.AnyAdapter["name"]>(
-  adapterName: T,
+const getBarrelFiles = (
+  generatedFiles: I18nCompiler.AdapterFileGenerated[],
 ) => {
-  switch (adapterName) {
-    case "js":
-      return js;
-    case "next":
-      return next;
-    case "next-translate":
-      return nextTranslate;
-    case "react":
-      return react;
-  }
-  return js;
-};
+  const filesGroupedByDir = generatedFiles.reduce(
+    (map, generatedFile) => {
+      const dir = generatedFile.dir || ".";
+      map[dir] = map[dir] || [];
+      map[dir].push(generatedFile);
+      return map;
+    },
+    {} as Record<string, I18nCompiler.AdapterFileGenerated[]>,
+  );
 
-/**
- * Recursively builds a list of adapters to use based on the `dependsOn` array
- * of the choosen adapter
- */
-const getAdapters = async <T extends I18nCompiler.AnyAdapter>(
-  adapterArgData: I18nCompiler.AdapterArgData,
-  { name, options = {} }: T,
-  adapters: I18nCompiler.Adapter[] = [],
-) => {
-  const adapterCreator = getAdapterCreator(name);
-  const adapterToResolve = adapterCreator(adapterArgData, options || {});
-  const adapter = isPromise(adapterToResolve)
-    ? await adapterToResolve
-    : adapterToResolve;
-  adapters = adapters.concat([adapter]);
+  const indexFiles: I18nCompiler.AdapterFileGenerated[] = [];
 
-  if (adapter.dependsOn) {
-    await Promise.all(
-      adapter.dependsOn.map(async (adapaterName) => {
-        adapters = adapters.concat(
-          await getAdapters(adapterArgData, { name: adapaterName }),
-        );
-      }),
-    );
-  }
-
-  return adapters;
-};
-
-/**
- * Recursively builds a list of adapters to use based on the `dependsOn` array
- * of the choosen adapter, it filters out and warn if async adapters are defined
- */
-const getAdaptersSync = <T extends I18nCompiler.AnyAdapter>(
-  adapterArgData: I18nCompiler.AdapterArgData,
-  { name, options = {} }: T,
-  adapters: I18nCompiler.Adapter[] = [],
-) => {
-  const adapterCreator = getAdapterCreator(name);
-  const adapterToResolve = adapterCreator(adapterArgData, options || {});
-
-  if (isPromise(adapterToResolve)) {
-    console.warn(
-      `i18nCompiler: unsupported use of async adapter '${name}'`,
-      "Please use the sync api",
-    );
-  } else {
-    const adapter = adapterToResolve;
-    adapters = adapters.concat([adapter]);
-
-    if (adapter.dependsOn) {
-      adapter.dependsOn.forEach((adapaterName) => {
-        adapters = adapters.concat(
-          getAdaptersSync(adapterArgData, { name: adapaterName }),
-        );
-      });
+  forin(filesGroupedByDir, (dir, filesInDir) => {
+    const content = getBarrelFileContent(filesInDir);
+    if (content) {
+      const file = {
+        content,
+        ext: "ts",
+        name: "index",
+        dir,
+        index: false,
+      } as const;
+      const meta = getAdapterFileMeta({}, file);
+      indexFiles.push({ ...file, ...meta });
     }
-  }
+  });
 
-  return adapters;
+  return indexFiles;
 };
 
-const generateCodeFromAdapters = (
-  data: I18nCompiler.DataCode,
-  adapters: I18nCompiler.Adapter[],
+const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
+  data: I18nCompiler.DataCode<T>,
+  adapter: I18nCompiler.AdapterResolved<T>,
 ) => {
   const { outputFiles } = data.options;
-  const files = adapters.reduce((allFiles, adapter) => {
-    // NOTE: we allow adapters to produce the same files as their dependent's
-    // parent adapters (defined with `dependsOn`), here we ensure the parent
-    // adapters files do not override their children same-named ones which
-    // should get the priority
-    const previousAdaptersFilesNames = allFiles.map(
-      (file) => file.name + file.ext,
-    );
-    return [
-      ...allFiles,
-      ...adapter.files.filter(
-        (file) => !previousAdaptersFilesNames.includes(file.name + file.ext),
-      ),
-    ];
-  }, [] as I18nCompiler.AdapterFile[]);
+  // NOTE: we allow adapters to produce the same files as their dependent's
+  // parent adapters, here we ensure the parent adapters files do not override
+  // their children same-named ones which should get the priority
+  const previousAdaptersGeneratedFilesPaths: Record<string, 1> = {};
+
+  const { generators, transformers } = adapter;
+
+  const generatedFiles = generators.reduce((all, generator) => {
+    const files = generator(data);
+
+    Object.keys(files).forEach((fileId) => {
+      const _file = files[fileId];
+      const transformerId = fileId as keyof typeof transformers;
+      const file = transformers?.[transformerId]?.(_file as never) ?? _file;
+      const { content } = file;
+      const { dir, name, path } = getAdapterFileMeta(outputFiles, file);
+
+      // check that we haven't already generated this file
+      if (!previousAdaptersGeneratedFilesPaths[path]) {
+        previousAdaptersGeneratedFilesPaths[path] = 1;
+
+        all.push({
+          ...file,
+          dir,
+          name,
+          path,
+          content: getAdapterFileContent(file, content()),
+        });
+      }
+    });
+
+    return all;
+  }, [] as I18nCompiler.AdapterFileGenerated[]);
 
   // TODO: prettier does probably not make sense unless one wants to keep the
   // auto-generated files on git, maybe allow this as an option?
@@ -127,36 +104,9 @@ const generateCodeFromAdapters = (
   //   });
   // }
 
-  const generatedFiles: I18nCompiler.AdapterGeneratedFile[] = files.map(
-    (file) => {
-      const { fn, ...rest } = file;
-      const name =
-        outputFiles?.[rest.name as keyof typeof outputFiles] || rest.name;
-
-      return {
-        ...rest,
-        name,
-        content: fn({
-          ...data,
-          adapterOptions: data.options.adapter.options || {},
-        }),
-      };
-    },
-  );
-
-  // automatically create an index file if the adapters want it
-  const indexFileContent = getIndexFile(generatedFiles);
-
-  if (indexFileContent) {
-    generatedFiles.push({
-      name: "index",
-      ext: "ts",
-      content: getIndexFile(generatedFiles),
-    });
-  }
-
   return {
-    files: generatedFiles,
+    // automatically create indexs file if the adapters want them
+    files: [...generatedFiles, ...(getBarrelFiles(generatedFiles) || [])],
   };
 };
 
@@ -164,8 +114,10 @@ export type CodeGenerateReturn =
   | Awaited<ReturnType<typeof generateCode>>
   | ReturnType<typeof generateCodeSync>;
 
-export let generateCode = async (data: I18nCompiler.DataCode) =>
-  generateCodeFromAdapters(data, await getAdapters(data, data.options.adapter));
+export let generateCode = async <T extends I18nCompiler.AdapterName>(
+  data: I18nCompiler.DataCode<T>,
+) => generateCodeFromAdapter(data, await getAdapter(data));
 
-export let generateCodeSync = (data: I18nCompiler.DataCode) =>
-  generateCodeFromAdapters(data, getAdaptersSync(data, data.options.adapter));
+export let generateCodeSync = <T extends I18nCompiler.AdapterName>(
+  data: I18nCompiler.DataCode<T>,
+) => generateCodeFromAdapter(data, getAdapterSync(data));

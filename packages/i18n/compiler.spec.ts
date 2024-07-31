@@ -24,14 +24,15 @@ describe("test write", () => {
         adapter: {
           name: "next",
           // options: {
-          //   loader: false,
+          //   modularized: false
           // },
         },
         write: {
           cwd: mocksPath("single-language"),
           output: ".code",
-          skipTsCompile: true,
-          // skipTranslations: true,
+          tsconfig: {
+            alias: "@/i18n",
+          },
         },
       },
       summary: {
@@ -67,15 +68,10 @@ describe("test write", () => {
       code: {
         adapter: {
           name: "next",
-          // options: {
-          //   loader: false,
-          // },
         },
         write: {
           cwd: mocksPath("multi-language"),
           output: ".code",
-          skipTsCompile: true,
-          // skipTranslations: true,
         },
       },
       summary: {
@@ -137,13 +133,14 @@ describe("test your.io", () => {
       code: {
         adapter: {
           name: "next",
-          options: {
-            router: "app",
-          },
+          options: {},
         },
         write: {
           output: "../../Your/frontend/libs/i18n",
-          skipTsCompile: true,
+          tsconfig: {
+            alias: "@/i18n",
+            path: "../../Your/frontend/tsconfig.base.json",
+          },
         },
       },
     });
@@ -165,13 +162,11 @@ describe("test playground-next", () => {
         // },
         adapter: {
           name: "next",
-          options: {
-            router: "app",
-          },
+          options: {},
         },
         write: {
           output: "./playground/next/i18n",
-          skipTsCompile: false,
+          typescriptCompilation: true,
         },
       },
     });
@@ -193,13 +188,13 @@ describe("test yenvi.nl", () => {
         },
         adapter: {
           name: "next",
-          options: {
-            router: "app",
-          },
         },
         write: {
           output: "../../Daan/yenvi/i18n",
-          skipTsCompile: true,
+          tsconfig: {
+            path: "../../Daan/yenvi/tsconfig.json",
+            alias: "@/i18n",
+          },
         },
       },
     });

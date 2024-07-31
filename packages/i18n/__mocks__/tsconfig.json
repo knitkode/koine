@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/i18n": [
+        "single-language/.code/index.ts",
+        "./single-language/.code/index.ts"
+      ],
+      "@/i18n/*": ["single-language/.code/*", "./single-language/.code/*"],
+      "@/.code": ["./multi-language/.code/index.ts"],
+      "@/.code/*": ["./multi-language/.code/*"]
+    }
+  }
+}
