@@ -29,6 +29,8 @@ import { I18nLayoutRoot } from "./I18nLayoutRoot";
 import { createI18nLayout } from "./I18nLayout";
 import { createI18nPage } from "./I18nPage";
 
+export type { I18n } from "../types";
+
 export const i18nServer = {
   /**
    * {@link I18nLayoutRoot}
