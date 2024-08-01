@@ -30,6 +30,7 @@ const getImports = (folderUp = 0) => {
   };
 };
 
+// TODO: check whether adding /*#__PURE__*/ annotation changes anything
 const $to = ({
   config,
   routes,

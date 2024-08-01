@@ -102,6 +102,7 @@ const getImports = (folderUp = 0) => {
   };
 };
 
+// TODO: check whether adding /*#__PURE__*/ annotation changes anything
 export default createGenerator("js", (data) => {
   const {
     config,
