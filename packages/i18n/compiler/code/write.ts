@@ -327,7 +327,9 @@ function writeTsconfigFile(config: CodeWriteConfig) {
   if (hasChanged) {
     writeFileSync(tsconfigPath, newContent + EOL);
   } else {
-    console.log(`i18n: tsconfig.json is up to date.`);
+    if (process.env["JEST_WORKER_ID"]) {
+      console.log(`i18n: tsconfig.json is up to date.`);
+    }
   }
 }
 

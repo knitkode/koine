@@ -1,7 +1,10 @@
-import { forin, isArray, isBoolean, isObject, isString } from "@koine/utils";
+import { isArray, isBoolean, isObject, isString } from "@koine/utils";
 import type { CodeDataOptionsResolved } from "../../compiler/code";
 import { createGenerator } from "../../compiler/createAdapter";
-import { dataParamsToTsInterfaceBody } from "../../compiler/helpers";
+import {
+  dataParamsToTsInterfaceBody,
+  filterInputTranslationFiles,
+} from "../../compiler/helpers";
 import {
   hasOnlyPluralKeys,
   hasPlurals,
@@ -64,18 +67,24 @@ const buildTypeForValue = (value: I18nCompiler.DataTranslationValue) => {
 };
 
 const buildTranslationsDictionary = (
-  config: I18nCompiler.Config,
-  dataInput: I18nCompiler.DataInput,
+  data: I18nCompiler.DataCode<I18nCompiler.AdapterName>,
 ) => {
-  const { translationFiles } = dataInput;
-  const { defaultLocale } = config;
-  const defaultLocaleFiles = translationFiles.filter(
-    (f) => f.locale === defaultLocale,
+  const {
+    config: { defaultLocale },
+    input: { translationFiles },
+    options: {
+      translations: { ignorePaths },
+    },
+  } = data;
+  const filteredFiles = filterInputTranslationFiles(
+    translationFiles,
+    ignorePaths,
+    (file) => file.locale === defaultLocale,
   );
   const out: string[] = [];
 
-  for (let i = 0; i < defaultLocaleFiles.length; i++) {
-    const { path, data } = defaultLocaleFiles[i];
+  for (let i = 0; i < filteredFiles.length; i++) {
+    const { path, data } = filteredFiles[i];
     const namespace = path.replace(".json", "");
 
     out.push(`"${namespace}": ${buildTypeForValue(data)}`);
@@ -87,11 +96,12 @@ const buildTranslationsDictionary = (
 const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {
   const out: string[] = [];
 
-  forin(routes.byId, (routeId, { params }) => {
+  for (const routeId in routes.byId) {
+    const { params } = routes.byId[routeId];
     if (params) {
       out.push(`"${routeId}": { ${dataParamsToTsInterfaceBody(params)} };`);
     }
-  });
+  }
 
   return out;
 };
@@ -185,7 +195,7 @@ const buildRoutesPathnames = (
 // TODO: maybe move the Translate types into the various adapters unless we
 // will use the same api for all of them
 export default createGenerator("js", (arg) => {
-  const { config, input, routes, options } = arg;
+  const { config, routes, options } = arg;
   const routeIdStatic = buildRoutesUnion(routes, (_, { params }) => !params);
   const routeIdDynamic = buildRoutesUnion(routes, (_, { params }) => !!params);
   // const routeIdSpa = buildRoutesUnion(routes, (_, { inWildcard }) => inWildcard);
@@ -278,7 +288,7 @@ export namespace I18n {
    * more sophisticated than the type result of \`typeof "./en/messages.json"\`
    */
   export type TranslationsDictionary = {
-    ${buildTranslationsDictionary(config, input).join("\n    ")}
+    ${buildTranslationsDictionary(arg).join("\n    ")}
   }
 
   /**

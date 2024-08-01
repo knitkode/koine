@@ -1,3 +1,4 @@
+import { minimatch } from "minimatch";
 import type { I18nCompiler } from "./types";
 
 export type FunctionData = {
@@ -51,3 +52,19 @@ export let escapeEachChar = (input: string) =>
     .split("")
     .map((v) => `\\${v}`)
     .join("");
+
+/**
+ * @param ignore List of paths to be ignored (using `minimatch`)
+ * @param otherCondition Optionally pass another condition
+ * @returns
+ */
+export let filterInputTranslationFiles = (
+  files: I18nCompiler.DataInput["translationFiles"],
+  ignore: string[] = [],
+  condition?: (file: I18nCompiler.DataInputTranslationFile) => boolean,
+) =>
+  files.filter(
+    (file) =>
+      (!condition || (condition && condition(file))) &&
+      (!ignore.length || ignore.every((glob) => !minimatch(file.path, glob))),
+  );

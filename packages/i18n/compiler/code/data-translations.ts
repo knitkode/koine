@@ -1,5 +1,4 @@
 import { basename, dirname, extname, join, sep } from "node:path";
-import { minimatch } from "minimatch";
 import {
   forin,
   isArray,
@@ -8,6 +7,7 @@ import {
   isString,
   objectSort,
 } from "@koine/utils";
+import { filterInputTranslationFiles } from "../helpers";
 import {
   type PluralKey,
   type PluralSuffix,
@@ -330,19 +330,9 @@ export let getCodeDataTranslations = (
   const { ignorePaths } = options;
   let dataTranslations: I18nCompiler.DataTranslations = {};
 
-  for (let i = 0; i < translationFiles.length; i++) {
-    if (
-      !ignorePaths ||
-      (ignorePaths &&
-        ignorePaths.every((glob) => !minimatch(translationFiles[i].path, glob)))
-    ) {
-      getCodeDataTranslationsFromFile(
-        options,
-        translationFiles[i],
-        dataTranslations,
-      );
-    }
-  }
+  filterInputTranslationFiles(translationFiles, ignorePaths).forEach((file) =>
+    getCodeDataTranslationsFromFile(options, file, dataTranslations),
+  );
 
   dataTranslations = manageDataTranslationsPlurals(options, dataTranslations);
 

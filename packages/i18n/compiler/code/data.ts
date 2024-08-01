@@ -9,7 +9,6 @@ import {
 import type { CodeWriteOptionsResolved } from "./write";
 
 export const defaultCodeDataOptions = {
-  outputFiles: {},
   routes: codeDataRoutesOptions,
   translations: codeDataTranslationsOptions,
 } satisfies Omit<CodeDataOptionsResolved<"js">, "adapter">;
@@ -25,21 +24,6 @@ export type CodeDataOptions /* <TAdapterName extends I18nCompiler.AdapterName> *
      */
     adapter: I18nCompiler.AnyAdapterConfiguration;
     /**
-     * A _dictionary_ that allows to override the filename of each generated file
-     *
-     * TODO: make this works with generics based on chosen adapter?
-     */
-    outputFiles?: Partial<{
-      // defaultLocale: string;
-      // index: string;
-      // isLocale: string;
-      // locales: string;
-      // routes: string;
-      // routesSlim: string;
-      // to: string;
-      // types: string;
-    }>;
-    /**
      * Options for `routes` code data generation handling
      */
     routes?: PartialDeep<typeof codeDataRoutesOptions>;
@@ -53,12 +37,10 @@ export type CodeDataOptionsResolved<
   TAdapterName extends I18nCompiler.AdapterName = I18nCompiler.AdapterName,
 > = {
   adapter: I18nCompiler.AdapterConfigurationResolved<TAdapterName>;
-  // adapter: I18nCompiler.AnyAdapterConfigurationResolved;
-  outputFiles: {};
   routes: typeof codeDataRoutesOptions;
   translations: typeof codeDataTranslationsOptions;
   /**
-   * Only here if the compiler actually `write`s.
+   * Only here if the compiler actually `write`s
    */
   write?: CodeWriteOptionsResolved;
 };

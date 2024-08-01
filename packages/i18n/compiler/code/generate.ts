@@ -1,4 +1,3 @@
-import { forin } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import {
   getAdapter,
@@ -36,7 +35,8 @@ const getBarrelFiles = (
 
   const indexFiles: I18nCompiler.AdapterFileGenerated[] = [];
 
-  forin(filesGroupedByDir, (dir, filesInDir) => {
+  for (const dir in filesGroupedByDir) {
+    const filesInDir = filesGroupedByDir[dir];
     const content = getBarrelFileContent(filesInDir);
     if (content) {
       const file = {
@@ -46,10 +46,10 @@ const getBarrelFiles = (
         dir,
         index: false,
       } as const;
-      const meta = getAdapterFileMeta({}, file);
+      const meta = getAdapterFileMeta(file, {});
       indexFiles.push({ ...file, ...meta });
     }
-  });
+  }
 
   return indexFiles;
 };
@@ -58,7 +58,6 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
   data: I18nCompiler.DataCode<T>,
   adapter: I18nCompiler.AdapterResolved<T>,
 ) => {
-  const { outputFiles } = data.options;
   // NOTE: we allow adapters to produce the same files as their dependent's
   // parent adapters, here we ensure the parent adapters files do not override
   // their children same-named ones which should get the priority
@@ -74,7 +73,7 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
       const transformerId = fileId as keyof typeof transformers;
       const file = transformers?.[transformerId]?.(_file as never) ?? _file;
       const { content } = file;
-      const { dir, name, path } = getAdapterFileMeta(outputFiles, file);
+      const { dir, name, path } = getAdapterFileMeta(file, {});
 
       // check that we haven't already generated this file
       if (!previousAdaptersGeneratedFilesPaths[path]) {

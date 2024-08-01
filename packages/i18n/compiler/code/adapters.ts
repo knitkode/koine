@@ -86,8 +86,8 @@ export const resolveAdapterOptions = <
 };
 
 export const getAdapterFileMeta = (
-  nameOverrideDictionary: Record<string, string>,
   file: Omit<I18nCompiler.AdapterFile, "content">,
+  nameOverrideDictionary: Record<string, string>,
 ) => {
   const dir = file.dir === "." ? "" : file.dir || "";
   // allow overwriting output file names through compiler options

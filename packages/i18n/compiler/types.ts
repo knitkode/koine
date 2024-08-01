@@ -57,7 +57,7 @@ export namespace I18nCompiler {
   };
 
   /**
-   * Basic metadata of a `.json` translation file as read from the filesystem
+   * Basic data of a translation file as read from the filesystem
    */
   export type DataInputTranslationFile = {
     /**
@@ -207,10 +207,8 @@ export namespace I18nCompiler {
     "next-translate": AdapterNextTranslate.Options;
   };
 
-  // ---------------------------------------------------------------------------
-
   /**
-   * Built in adapters with their options (to-customise options)
+   * Any adapter user-based configuration (union)
    */
   export type AnyAdapterConfiguration = {
     [Name in AdapterName]: {
@@ -219,19 +217,23 @@ export namespace I18nCompiler {
     };
   }[AdapterName];
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * An adapter resolved configuration shape
+   */
   type AdapterConfigurationResolvedEntry<T extends AdapterName> = {
     name: T;
   } & AdaptersOptionsMap[T];
 
   /**
-   * Built in adapters with their options (resolved options)
+   * Any adapter resolved configuration (union)
    */
   export type AnyAdapterConfigurationResolved = {
     [Name in AdapterName]: AdapterConfigurationResolvedEntry<Name>;
   }[AdapterName];
 
+  /**
+   * An adapter resolved configuration (generic)
+   */
   export type AdapterConfigurationResolved<T extends AdapterName> =
     T extends "js"
       ? AdapterConfigurationResolvedEntry<"js">
@@ -243,12 +245,16 @@ export namespace I18nCompiler {
             ? AdapterConfigurationResolvedEntry<"next-translate">
             : never;
 
-  // ---------------------------------------------------------------------------
-
+  /**
+   * Any resolved adapter (union)
+   */
   export type AnyAdapterResolved = {
     [Name in AdapterName]: AdapterResolved<Name>;
   }[AdapterName];
 
+  /**
+   * A resolved adapter (generic)
+   */
   export type AdapterResolved<T extends AdapterName> = T extends "js"
     ? Simplify<ReturnType<AdapterJs.Adapter>>
     : T extends "react"
@@ -258,8 +264,6 @@ export namespace I18nCompiler {
         : T extends "next-translate"
           ? Simplify<ReturnType<AdapterNextTranslate.Adapter>>
           : never;
-
-  // ---------------------------------------------------------------------------
 
   /**
    * Built in adapters names
