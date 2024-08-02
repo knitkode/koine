@@ -61,7 +61,7 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
   // NOTE: we allow adapters to produce the same files as their dependent's
   // parent adapters, here we ensure the parent adapters files do not override
   // their children same-named ones which should get the priority
-  const previousAdaptersGeneratedFilesPaths: Record<string, 1> = {};
+  const previousAdaptersGeneratedFilesIds: Record<string, 1> = {};
 
   const { generators, transformers } = adapter;
 
@@ -76,8 +76,8 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
       const { dir, name, path } = getAdapterFileMeta(file, {});
 
       // check that we haven't already generated this file
-      if (!previousAdaptersGeneratedFilesPaths[path]) {
-        previousAdaptersGeneratedFilesPaths[path] = 1;
+      if (!previousAdaptersGeneratedFilesIds[fileId]) {
+        previousAdaptersGeneratedFilesIds[fileId] = 1;
 
         all.push({
           ...file,
