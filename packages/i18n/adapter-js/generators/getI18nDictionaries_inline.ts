@@ -1,4 +1,3 @@
-// import type { I18nCompiler } from "../../compiler/types";
 import { loadTranslations_inline } from "./loadTranslations_inline";
 
 /**

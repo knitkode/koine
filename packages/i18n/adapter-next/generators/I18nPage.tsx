@@ -137,7 +137,6 @@ function pageInit(paramsOrProps: I18n.Props["params"] | I18n.Props) {
       // passing a 'locale' argument. Passing the 'locale' should not be needed
       // actually, but...
       I18nLocaleContext.set(locale);
-      global.__i18n_locale = locale;
       `
       }return locale;
     }
@@ -195,42 +194,85 @@ type Configurator<TRouteId extends I18n.RouteId> = {
  * @example
  * 
  * \`\`\`
- * type Props = {
- *   params: {
- *     slug: string;
- *   };
- * };
- * 
- * const i18nPage = i18nServer.page<Props>(async (_props, _locale) => {
+ * type Props = { params: { slug: string; }; };
+ *
+ * const page = i18nServer.page((props: Props) => {
  *   return {
- *     route: { id: "home" },
- *     namespaces: ["~home"],
+ *     route: { id: "collection.[slug]", params: { slug: props.params.slug } },
+ *     namespaces: ["~collection-single"],
  *   };
  * });
+ * 
+ * export const generateMetadata = page.generateMetadata((props) => {
+ *    return {};
+ * });
+ * 
+ * // or async:
+ * export const generateMetadata = page.generateMetadata(async (props) => {
+ *    return {};
+ * });
+ * 
+ * export default page.default((props) => {
+ *    return <>{props.route.id} {props.locale}</>;
+ * });
+ * 
+ * // or async:
+ * export default page.default(async (props) => {
+ *   const data = await fetch(...);
+ *   return <>{props.route.id} {props.locale}</>;
+ * });
  * \`\`\`
- * @returns 
  */
-export const createI18nPage = <TProps extends {}, TRouteId extends I18n.RouteId = I18n.RouteId>(
-  configurator: (props: I18n.Props & TProps, locale: I18n.Locale) => Configurator<TRouteId> | Promise<Configurator<TRouteId>>
+export const createI18nPage = <
+  TProps extends {},
+  TRouteId extends I18n.RouteId,
+  TConfig extends Configurator<TRouteId>,
+>(
+  configurator: (
+    props: I18n.Props<TProps>,
+    locale: I18n.Locale,
+  ) => TConfig | Promise<TConfig>,
 ) => {
   return {
-    generateMetadata: (impl: (props: I18n.Props & TProps, locale: I18n.Locale) => Promise<Metadata>) => {
-      return async (props: I18n.Props & TProps): Promise<Metadata> => {
+    generateMetadata: (
+      impl: (
+        props: TProps &
+          Omit<TConfig, "namespaces"> & {
+            locale: I18n.Locale;
+          },
+      ) => Metadata | Promise<Metadata>,
+    ) => {
+      return async (props: I18n.Props<TProps>): Promise<Metadata> => {
         const locale = pageInit(props);
-        const { route } = await configurator(props, locale);
-        const custom = await impl(props, locale)
-        return getMetadata({ ...route, locale }, custom)
+        const { namespaces, ...config } = await configurator(props, locale);
+        const metadata = await impl({ locale, ...config, ...props });
+        return getMetadata({ ...config.route, locale }, metadata);
       };
     },
-    default: (impl: (props: I18n.Props & TProps, locale: I18n.Locale) => React.ReactNode | Promise<React.ReactNode>) => {
-      return async (props: I18n.Props & TProps) => {
+    default: (
+      impl: (
+        props: TProps &
+          Omit<TConfig, "namespaces"> & {
+            locale: I18n.Locale;
+          },
+      ) => React.ReactNode | Promise<React.ReactNode>,
+    ) => {
+      return async (props: I18n.Props<TProps>) => {
         const locale = pageInit(props);
-        const { route, ...options } = await configurator(props, locale);
-        const render = await impl(props, locale);
-        return (<I18nPage route={route} {...options}>{render}</I18nPage>);
-      }
-    }
-  }
+        const { namespaces, ...config } = await configurator(props, locale);
+        const render = await impl({ locale, ...config, ...props });
+        return (
+          <I18nPage
+            locale={locale}
+            namespaces={namespaces}
+            route={config.route}
+          >
+            {render}
+          </I18nPage>
+        );
+      };
+    },
+  };
 };
 
 export default I18nPage;

@@ -1,6 +1,6 @@
 import { getType } from "@koine/utils";
-import type { I18nUtils } from "../types";
 import { formatRoutePathname } from "./formatRoutePathname";
+import type { I18nUtils } from "./types";
 
 /**
  * Given a `value` it returns a well formed URL pathname, optionally interpolating

@@ -16,6 +16,8 @@ export default createGenerator("next", (arg) => {
       // index: true,
       content: () => /* js */ `
 import React from "react";
+import type { Metadata } from "next/types";
+import { rtlLocales } from "@koine/i18n";
 // import { getI18nDictionaries } from "../getI18nDictionaries";
 import { defaultLocale } from "../defaultLocale";
 import { I18nTranslateProvider } from "../I18nTranslateProvider";
@@ -23,7 +25,6 @@ import { locales } from "../locales";
 import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
 import { I18nLayoutRoot } from "./I18nLayoutRoot";
-// import { I18nNotFound } from "./I18nNotFound";
 import { I18nLocaleContext } from "./I18nLocaleContext";
 ${getI18nDictionaries_inline(1)}
 
@@ -82,50 +83,75 @@ type Configurator = {
  * @example
  * 
  * \`\`\`
- * type Props = {
- *   params: {
- *     slug: string;
- *   };
- * };
+ * const layout = i18nServer.layout({
+ *   namespaces: ["dashboard"],
+ * });
  * 
- * const i18nLayout = i18nServer.layout<Props>(async (_props, _locale) => {
+ * // or as a function (async supported):
+ * type Props = { params: { slug: string; }; };
+ * 
+ * const layout = i18nServer.layout((props: Props, locale) => {
  *   return {
  *     namespaces: ["dashboard"],
  *   };
  * });
  * \`\`\`
  */
-export const createI18nLayout = <TProps extends {}>(
-  configurator?: (props: I18n.Props & TProps, locale: I18n.Locale) => Configurator | Promise<Configurator>
+export const createI18nLayout = <
+  TProps extends {},
+>(
+  configurator?:
+    | ((
+        props: I18n.Props<TProps>,
+        locale: I18n.Locale,
+      ) => Configurator | Promise<Configurator>)
+    | Configurator,
 ) => {
+  const resolveConfigurator = async (props: I18n.Props<TProps>) => {
+    const localeParam = props.params?.${localeParamName};
+    const config = configurator
+      ? typeof configurator === "function"
+        ? await configurator(props, localeParam)
+        : configurator
+      : null;
+    const { locale: localeConfig, ...restConfig } = config || {};
+    const locale = localeConfig || getLocale();
+    return { ...restConfig, locale };
+  };
+
   return {
-    notFound: () => {
-      // <I18nNotFound />
-    },
-    generateStaticParams: () => {
-      return locales.map((l) => ({ ${localeParamName}: l }));
+    generateStaticParams: () => locales.map((l) => ({ ${localeParamName}: l })),
+    generateMetadata: (
+      impl: (
+        props: TProps & { locale: I18n.Locale },
+      ) => Metadata | Promise<Metadata>,
+    ) => {
+      return async (props: I18n.Props<TProps>): Promise<Metadata> => {
+        const { locale } = await resolveConfigurator(props);
+        const metadata = await impl({ locale, ...props });
+        return metadata;
+      };
     },
     default: (
       impl: (
-        props: I18n.Props<
-          TProps & React.PropsWithChildren<{
-            i18nHtmlAttrs: Pick<React.ComponentPropsWithoutRef<"html">, "lang" | "dir">
-          }>
-        >,
-        locale: I18n.Locale
-      ) => React.ReactNode | Promise<React.ReactNode>
+        props: TProps & { locale: I18n.Locale } & React.PropsWithChildren<{
+            i18nHtmlAttrs: Pick<
+              React.ComponentPropsWithoutRef<"html">,
+              "lang" | "dir"
+            >;
+          }>,
+      ) => React.ReactNode | Promise<React.ReactNode>,
     ) => {
       return async (props: I18n.Props<TProps>) => {
-        // const locale = props.params.${localeParamName};
-        const locale = getLocale();
-        // TODO: determine "dir" dynamically
-        const i18nHtmlAttrs = { lang: locale, dir: "ltr" };
-        const options = configurator ? await configurator(props, locale) : {};
-        const inner = await impl({ ...props, i18nHtmlAttrs }, locale);
-        return (<I18nLayout {...options}>{inner}</I18nLayout>);
-      }
-    }
-  }
+        const config = await resolveConfigurator(props);
+        const { locale } = config;
+        const dir = rtlLocales.includes(locale) ? "rtl" : "ltr";
+        const i18nHtmlAttrs = { lang: locale, dir };
+        const render = await impl({ locale, i18nHtmlAttrs, ...props });
+        return <I18nLayout {...config}>{render}</I18nLayout>;
+      };
+    },
+  };
 };
 
 createI18nLayout.Root = I18nLayoutRoot;

@@ -5,7 +5,7 @@ import {
   objectSort,
   objectSortByKeysMatching,
 } from "@koine/utils";
-import { formatRoutePathname } from "../../client/formatRoutePathname";
+import { formatRoutePathname } from "../../formatRoutePathname";
 import type { I18nCompiler } from "../types";
 
 export const codeDataRoutesOptions = {

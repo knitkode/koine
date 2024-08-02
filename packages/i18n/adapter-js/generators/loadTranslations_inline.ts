@@ -1,4 +1,3 @@
-// import type { I18nCompiler } from "../../compiler/types";
 import { getTranslationsDir } from "../../compiler/helpers";
 
 export const loadTranslations_inline = (

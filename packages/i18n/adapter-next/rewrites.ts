@@ -1,8 +1,8 @@
 import type { Rewrite } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, escapeRegExp } from "@koine/utils";
-import { formatRoutePathname } from "../client";
 import type { CodeDataRoutesOptions } from "../compiler/code/data-routes";
 import type { I18nCompiler } from "../compiler/types";
+import { formatRoutePathname } from "../formatRoutePathname";
 import { transformPathname } from "./transformPathname";
 
 function generatePathRewrite(arg: {
