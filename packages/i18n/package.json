@@ -4,6 +4,7 @@
   "dependencies": {
     "@koine/node": "*",
     "@koine/utils": "*",
+    "comment-json": "^4.2.4",
     "glob": "^10.3.10",
     "minimatch": "^9.0.3",
     "negotiator": "^0.6.3",
