@@ -27,6 +27,10 @@ export type I18nCompilerConfig = {
    * @default false
    */
   trailingSlash?: boolean;
+  /**
+   * @default false
+   */
+  debug?: boolean;
 };
 
 export type I18nCompilerConfigResolved = Required<I18nCompilerConfig> & {
@@ -44,6 +48,7 @@ export const configDefaults: I18nCompilerConfigResolved = {
   defaultLocale: "en",
   hideDefaultLocaleInUrl: true,
   trailingSlash: false,
+  debug: false,
   single: true,
 };
 

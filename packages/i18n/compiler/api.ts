@@ -84,8 +84,8 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
   if (optsCode?.write) {
     const codeWriteOptions = resolveWriteCodeOptions(optsCode.write);
     code.options.write = codeWriteOptions;
-    // writables.push(writeCode({ ...optsCode, ...optsCode.write }, code));
-    writables.push(writeCode(codeWriteOptions, code));
+    // writables.push(writeCode(config, { ...optsCode, ...optsCode.write }, code));
+    writables.push(writeCode(config, codeWriteOptions, code));
   }
 
   if (optsSummary?.write) {
@@ -131,8 +131,8 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
 //   if (optsCode?.write) {
 //     const codeWriteOptions = resolveWriteCodeOptions(optsCode.write);
 //     code.options.write = codeWriteOptions;
-//     // writeCodeSync({ ...optsCode, ...optsCode.write }, code);
-//     writeCodeSync(codeWriteOptions, code);
+//     // writeCodeSync(config, { ...optsCode, ...optsCode.write }, code);
+//     writeCodeSync(config, codeWriteOptions, code);
 //   }
 
 //   if (optsSummary?.write) {

@@ -101,41 +101,44 @@ export type CodeWriteOptions = {
 
 export type CodeWriteOptionsResolved = RequiredDeep<CodeWriteOptions>;
 
-type CodeWriteConfig = CodeWriteOptionsResolved & {
-  /** It stores the files' paths being written to disk */
-  files: Set<string>;
-  /** It stores the folders' paths being written to disk */
-  folders: Set<string>;
-};
+type CodeWriteConfig = CodeWriteOptionsResolved &
+  Pick<I18nCompiler.Config, "debug"> & {
+    /** It stores the files' paths being written to disk */
+    files: Set<string>;
+    /** It stores the folders' paths being written to disk */
+    folders: Set<string>;
+  };
 
 export let writeCode = async <TAdapterName extends I18nCompiler.AdapterName>(
+  config: I18nCompiler.Config,
   options: CodeWriteOptionsResolved,
   data: I18nCompiler.DataCode<TAdapterName>,
 ) => {
-  const config = getWriteCodeConfig(options);
+  const writeConfig = getWriteCodeConfig(config, options);
   const code = await generateCode(data);
 
-  await emptyOutputFolder(config);
-  await writeCodeFiles(config, code);
-  writeTsconfigFile(config);
-  writeCompiledTypescriptFiles(config, code);
-  await writeTranslationsFiles(config, data.input);
-  writeGitignore(config);
+  await emptyOutputFolder(writeConfig);
+  await writeCodeFiles(writeConfig, code);
+  writeTsconfigFile(writeConfig);
+  writeCompiledTypescriptFiles(writeConfig, code);
+  await writeTranslationsFiles(writeConfig, data.input);
+  writeGitignore(writeConfig);
 };
 
 export let writeCodeSync = <TAdapterName extends I18nCompiler.AdapterName>(
+  config: I18nCompiler.Config,
   options: CodeWriteOptionsResolved,
   data: I18nCompiler.DataCode<TAdapterName>,
 ) => {
-  const config = getWriteCodeConfig(options);
+  const writeConfig = getWriteCodeConfig(config, options);
   const code = generateCodeSync(data);
 
-  emptyOutputFolderSync(config);
-  writeCodeFilesSync(config, code);
-  writeTsconfigFile(config);
-  writeCompiledTypescriptFiles(config, code);
-  writeTranslationsFilesSync(config, data.input);
-  writeGitignore(config);
+  emptyOutputFolderSync(writeConfig);
+  writeCodeFilesSync(writeConfig, code);
+  writeTsconfigFile(writeConfig);
+  writeCompiledTypescriptFiles(writeConfig, code);
+  writeTranslationsFilesSync(writeConfig, data.input);
+  writeGitignore(writeConfig);
 };
 
 export function resolveWriteCodeOptions(options: CodeWriteOptions) {
@@ -167,12 +170,13 @@ export function resolveWriteCodeOptions(options: CodeWriteOptions) {
 }
 
 export function getWriteCodeConfig(
+  config: I18nCompiler.Config,
   options: CodeWriteOptionsResolved,
 ): CodeWriteConfig {
   const files: Set<string> = new Set();
   const folders: Set<string> = new Set();
 
-  return { ...options, files, folders };
+  return { debug: config.debug, ...options, files, folders };
 }
 
 async function emptyOutputFolder(config: CodeWriteConfig) {
@@ -290,7 +294,7 @@ function tweakTsconfigJsonData(config: CodeWriteConfig, data: TsConfigJson) {
 /**
  */
 function writeTsconfigFile(config: CodeWriteConfig) {
-  const { cwd, tsconfig } = config;
+  const { cwd, debug, tsconfig } = config;
   const tsconfigPath = join(cwd, tsconfig.path);
   let hasChanged = false;
   let newData: TweakedTsConfigFile = {
@@ -326,8 +330,11 @@ function writeTsconfigFile(config: CodeWriteConfig) {
 
   if (hasChanged) {
     writeFileSync(tsconfigPath, newContent + EOL);
+    if (debug || process.env["JEST_WORKER_ID"]) {
+      console.log(`i18n: tsconfig.json updated.`);
+    }
   } else {
-    if (process.env["JEST_WORKER_ID"]) {
+    if (debug || process.env["JEST_WORKER_ID"]) {
       console.log(`i18n: tsconfig.json is up to date.`);
     }
   }
