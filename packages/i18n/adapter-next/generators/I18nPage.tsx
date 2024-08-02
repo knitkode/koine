@@ -188,6 +188,10 @@ type Configurator<TRouteId extends I18n.RouteId> = {
    * components down this page's components tree
    */
   namespaces?: I18n.TranslateNamespace[];
+  /**
+   * Optionally set this manually to override the current locale
+   */
+  locale?: I18n.Locale;
 };
 
 /**
@@ -232,7 +236,7 @@ type Configurator<TRouteId extends I18n.RouteId> = {
  *    return <>{props.route.id} {props.locale}</>;
  * });
  * 
- * // or an sync function (if you need to await)
+ * // or an async function (if you need to await)
  * export default page.default(async (props) => {
  *   const data = await fetch(...);
  *   return <>{props.route.id} {props.locale}</>;
@@ -251,39 +255,48 @@ export const createI18nPage = <
       ) => TConfig | Promise<TConfig>)
     | TConfig,
 ) => {
+  const resolveConfigurator = async (props: I18n.Props<TProps>) => {
+    const localeParam = pageInit(props);
+    const config =
+      typeof configurator === "function"
+        ? await configurator(props, localeParam)
+        : configurator;
+    const { locale: localeConfig, ...restConfig } = config;
+    const locale = localeConfig || localeParam;
+    return { ...restConfig, locale };
+  };
+
   return {
     generateMetadata: (
       impl: (
         props: TProps &
-          Omit<TConfig, "namespaces"> & {
+          Pick<TConfig, "route"> & {
             locale: I18n.Locale;
-          },
+          }
       ) => Metadata | Promise<Metadata>,
     ) => {
       return async (props: I18n.Props<TProps>): Promise<Metadata> => {
-        const locale = pageInit(props);
-        const { namespaces, ...config } = await configurator(props, locale);
-        const metadata = await impl({ locale, ...config, ...props });
-        return getMetadata({ ...config.route, locale }, metadata);
+        const { locale, route } = await resolveConfigurator(props);
+        const metadata = await impl({ locale, route, ...props });
+        return getMetadata({ locale, ...route }, metadata);
       };
     },
     default: (
       impl: (
         props: TProps &
-          Omit<TConfig, "namespaces"> & {
+          Pick<TConfig, "route"> & {
             locale: I18n.Locale;
           },
       ) => React.ReactNode | Promise<React.ReactNode>,
     ) => {
       return async (props: I18n.Props<TProps>) => {
-        const locale = pageInit(props);
-        const { namespaces, ...config } = await configurator(props, locale);
-        const render = await impl({ locale, ...config, ...props });
+        const { locale, route, namespaces } = await resolveConfigurator(props);
+        const render = await impl({ locale, route, ...props });
         return (
           <I18nPage
             locale={locale}
+            route={route}
             namespaces={namespaces}
-            route={config.route}
           >
             {render}
           </I18nPage>

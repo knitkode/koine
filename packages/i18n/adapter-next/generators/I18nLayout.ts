@@ -100,7 +100,7 @@ type Configurator = {
  *   };
  * });
  * 
- * // 2) export the metadata (maybe only in /app/${localeParamName})/layout.tsx)
+ * // 2) export the metadata (maybe only in /app/[${localeParamName}]/layout.tsx)
  * 
  * // with a sync function
  * export const generateMetadata = layout.generateMetadata((props) => {
@@ -114,7 +114,7 @@ type Configurator = {
  * 
  * // 3) export the default component
  * 
- * // 3a) in /app/${localeParamName})/layout.tsx)
+ * // 3a) in /app/[${localeParamName}]/layout.tsx)
  * 
  * // only thing to do is to spread the i18nHtmlAttrs prop on the <html> element
  * export default layout.default((props) => {
@@ -128,14 +128,14 @@ type Configurator = {
  *   );
  * });
  * 
- * // 3b) in /app/${localeParamName})/ ...folders... /layout.tsx)
+ * // 3b) in /app/[${localeParamName}]/ ...folders... /layout.tsx)
  * 
  * // with a sync function (if you do not need to await)
  * export default layout.default((props) => {
  *    return <>{props.route.id} {props.locale}</>;
  * });
  * 
- * // or an sync function (if you need to await)
+ * // or an async function (if you need to await)
  * export default layout.default(async (props) => {
  *   const data = await fetch(...);
  *   return <>{props.route.id} {props.locale}</>;
