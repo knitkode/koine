@@ -194,8 +194,18 @@ type Configurator<TRouteId extends I18n.RouteId> = {
  * @example
  * 
  * \`\`\`
- * type Props = { params: { slug: string; }; };
+ * 
+ * // 1) configure and create a page
+ * 
+ * // with a simple object
+ * const page = i18nServer.page({
+ *   route: { id: "about" },
+ *   namespaces: ["~about"],
+ * });
  *
+ * // or with a function (async supported)
+ * type Props = { params: { slug: string; }; };
+ * 
  * const page = i18nServer.page((props: Props) => {
  *   return {
  *     route: { id: "collection.[slug]", params: { slug: props.params.slug } },
@@ -203,20 +213,26 @@ type Configurator<TRouteId extends I18n.RouteId> = {
  *   };
  * });
  * 
+ * // 2) export the metadata
+ * 
+ * // with a sync function
  * export const generateMetadata = page.generateMetadata((props) => {
  *    return {};
  * });
  * 
- * // or async:
+ * // or an async function
  * export const generateMetadata = page.generateMetadata(async (props) => {
  *    return {};
  * });
  * 
+ * // 3) export the default component
+ * 
+ * // with a sync function (if you do not need to await)
  * export default page.default((props) => {
  *    return <>{props.route.id} {props.locale}</>;
  * });
  * 
- * // or async:
+ * // or an sync function (if you need to await)
  * export default page.default(async (props) => {
  *   const data = await fetch(...);
  *   return <>{props.route.id} {props.locale}</>;
@@ -228,10 +244,12 @@ export const createI18nPage = <
   TRouteId extends I18n.RouteId,
   TConfig extends Configurator<TRouteId>,
 >(
-  configurator: (
-    props: I18n.Props<TProps>,
-    locale: I18n.Locale,
-  ) => TConfig | Promise<TConfig>,
+  configurator:
+    | ((
+        props: I18n.Props<TProps>,
+        locale: I18n.Locale,
+      ) => TConfig | Promise<TConfig>)
+    | TConfig,
 ) => {
   return {
     generateMetadata: (

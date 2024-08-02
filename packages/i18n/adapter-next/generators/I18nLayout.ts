@@ -83,17 +83,62 @@ type Configurator = {
  * @example
  * 
  * \`\`\`
+ * 
+ * // 1) configure and create a layout
+ * 
+ * // with a simple object
  * const layout = i18nServer.layout({
  *   namespaces: ["dashboard"],
  * });
  * 
- * // or as a function (async supported):
+ * // or with a function (async supported)
  * type Props = { params: { slug: string; }; };
  * 
  * const layout = i18nServer.layout((props: Props, locale) => {
  *   return {
  *     namespaces: ["dashboard"],
  *   };
+ * });
+ * 
+ * // 2) export the metadata (maybe only in /app/${localeParamName})/layout.tsx)
+ * 
+ * // with a sync function
+ * export const generateMetadata = layout.generateMetadata((props) => {
+ *    return {};
+ * });
+ * 
+ * // or an async function
+ * export const generateMetadata = layout.generateMetadata(async (props) => {
+ *    return {};
+ * });
+ * 
+ * // 3) export the default component
+ * 
+ * // 3a) in /app/${localeParamName})/layout.tsx)
+ * 
+ * // only thing to do is to spread the i18nHtmlAttrs prop on the <html> element
+ * export default layout.default((props) => {
+ *   const { i18nHtmlAttrs, children } = props;
+ * 
+ *   return (
+ *     <html {...i18nHtmlAttrs}>
+ *       <head />
+ *       <body>{children}</body>
+ *     </html>
+ *   );
+ * });
+ * 
+ * // 3b) in /app/${localeParamName})/ ...folders... /layout.tsx)
+ * 
+ * // with a sync function (if you do not need to await)
+ * export default layout.default((props) => {
+ *    return <>{props.route.id} {props.locale}</>;
+ * });
+ * 
+ * // or an sync function (if you need to await)
+ * export default layout.default(async (props) => {
+ *   const data = await fetch(...);
+ *   return <>{props.route.id} {props.locale}</>;
  * });
  * \`\`\`
  */
