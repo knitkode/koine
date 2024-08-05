@@ -20,6 +20,7 @@ import NextDocument, {
   Main,
   NextScript,
 } from "next/document";
+import { rtlLocales } from "@koine/i18n";
 import { defaultLocale } from "./defaultLocale";
 import type { I18n } from "./types";
 
@@ -30,7 +31,7 @@ type I18nDocumentContextProp = {
 };
 
 export type I18nDocumentProps = {
-  htmlProps: {
+  i18nHtmlAttrs: {
     lang: string;
     dir?: string;
   };
@@ -63,15 +64,16 @@ export class I18nDocument extends NextDocument<I18nDocumentProps> {
       });
 
     const initialProps = await NextDocument.getInitialProps(ctx);
+    const dir = rtlLocales.includes(locale) ? "rtl" : "ltr";
 
-    return { ...initialProps, htmlProps: { lang } };
+    return { ...initialProps, i18nHtmlAttrs: { lang, dir } };
   }
 
   override render() {
-    const { htmlProps } = this.props;
+    const { i18nHtmlAttrs } = this.props;
 
     return (
-      <Html {...htmlProps}>
+      <Html {...i18nHtmlAttrs}>
         <Head />
         <body>
           <Main />

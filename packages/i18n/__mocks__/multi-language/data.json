@@ -5,6 +5,7 @@
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
+    "debug": false,
     "single": false
   },
   "input": {
@@ -200,18 +201,6 @@
         "locale": "it"
       },
       {
-        "path": "$faq.json",
-        "data": {
-          "home": [
-            {
-              "question": "Cos'è?",
-              "answer": "Quello"
-            }
-          ]
-        },
-        "locale": "it"
-      },
-      {
         "path": "404.json",
         "data": {
           "seo": {
@@ -223,6 +212,18 @@
             "2": "Due volte",
             "3": "Tre volte"
           }
+        },
+        "locale": "it"
+      },
+      {
+        "path": "$faq.json",
+        "data": {
+          "home": [
+            {
+              "question": "Cos'è?",
+              "answer": "Quello"
+            }
+          ]
         },
         "locale": "it"
       },
@@ -303,10 +304,10 @@
       "defaultLocale": "en",
       "hideDefaultLocaleInUrl": true,
       "trailingSlash": false,
+      "debug": false,
       "single": false
     },
     "options": {
-      "outputFiles": {},
       "routes": {
         "permanentRedirects": false,
         "localeParamName": "lang",
@@ -549,18 +550,6 @@
           "locale": "it"
         },
         {
-          "path": "$faq.json",
-          "data": {
-            "home": [
-              {
-                "question": "Cos'è?",
-                "answer": "Quello"
-              }
-            ]
-          },
-          "locale": "it"
-        },
-        {
           "path": "404.json",
           "data": {
             "seo": {
@@ -572,6 +561,18 @@
               "2": "Due volte",
               "3": "Tre volte"
             }
+          },
+          "locale": "it"
+        },
+        {
+          "path": "$faq.json",
+          "data": {
+            "home": [
+              {
+                "question": "Cos'è?",
+                "answer": "Quello"
+              }
+            ]
           },
           "locale": "it"
         },

@@ -199,6 +199,7 @@ export default createGenerator("js", (arg) => {
   const routeIdStatic = buildRoutesUnion(routes, (_, { params }) => !params);
   const routeIdDynamic = buildRoutesUnion(routes, (_, { params }) => !!params);
   // const routeIdSpa = buildRoutesUnion(routes, (_, { inWildcard }) => inWildcard);
+  const { localeParamName } = options.routes;
   const { idDelimiter } = options.routes.tokens;
 
   return {
@@ -503,17 +504,17 @@ export namespace I18n {
     //   };
 
   /**
-   * Params globally available from the URL/folder structure named accordingly
-   * to the \`localeParam\` option, e.g. \`lang\` for a typical folder structure
-   * such as \`/[lang]/my-route/page.tsx\`.
+   * Params globally available from the URL/folder structure \`${localeParamName}\`,
+   * named accordingly to the \`localeParam\` option (e.g. _next.js_ folder structure
+   * \`/[${localeParamName}]/my-route/page.tsx\`)
    */
   export type Params = {
     ${options.routes.localeParamName}: Locale;
   };
 
   /**
-   * Props available to each page/layout when a root \`localeParam\` is in place (e.g. 
-   * in the typical _next.js_ folder structure \`/[lang]/my-route/page.tsx\`).
+   * Props available to each page/layout when a root \`localeParam\` is in place
+   * (e.g. _next.js_ folder structure \`/[${localeParamName}]/my-route/page.tsx\`).
    */
   export type Props<P = {}> = P & {
     params: Params;

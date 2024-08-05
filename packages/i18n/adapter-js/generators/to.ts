@@ -1,13 +1,16 @@
 import { changeCaseSnake, isString } from "@koine/utils";
 import { createGenerator } from "../../compiler/createAdapter";
-import { type FunctionData, getImportDir } from "../../compiler/helpers";
+import {
+  FunctionsCompiler,
+  type FunctionsCompilerDataArg,
+} from "../../compiler/functions";
+import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
 const getFunctionBodyWithLocales = (
-  config: I18nCompiler.Config,
+  defaultLocale: string,
   perLocaleValues: Record<string, string>,
 ) => {
-  const { defaultLocale } = config;
   let output = "";
 
   for (const locale in perLocaleValues) {
@@ -22,12 +25,80 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-const getImports = (folderUp = 0) => {
-  const dir = getImportDir(folderUp);
-  return {
-    formatTo: `import { formatTo } from "${dir}formatTo";`,
-    types: `import type { I18n } from "${dir}types";`,
-  };
+const importsMap = {
+  formatTo: new ImportsCompiler({
+    path: "formatTo",
+    named: [{ name: "formatTo" }],
+  }),
+  types: new ImportsCompiler({
+    path: "types",
+    named: [{ name: "I18n", type: true }],
+  }),
+  // formatTo: `import { formatTo } from "${dir}formatTo";`,
+  // types: `import type { I18n } from "${dir}types";`,
+};
+
+const getToFunctions = (
+  routes: I18nCompiler.DataRoutes,
+  options: {
+    defaultLocale: string;
+    locales: string[];
+    modularized: boolean;
+    fnsPrefix: string;
+  },
+) => {
+  const { defaultLocale, locales, modularized, fnsPrefix } = options;
+  const functions: FunctionsCompiler[] = [];
+  const hasOneLocale = locales.length === 1;
+  const allImports = new Set<ImportsCompiler>();
+  // if the user does not specifiy a custom prefix by default we prepend `t_`
+  // when `modularized` option is true
+  const fnPrefix = fnsPrefix || modularized ? "$to_" : "";
+
+  allImports.add(importsMap.formatTo);
+  allImports.add(importsMap.types);
+
+  for (const routeId in routes.byId) {
+    let body = "";
+    const { pathnames, params } = routes.byId[routeId];
+
+    const name = `${fnPrefix}${changeCaseSnake(routeId)}`;
+    const paramsType = `I18n.RouteParams["${routeId}"]`;
+
+    const args: FunctionsCompilerDataArg[] = [];
+    if (params) {
+      args.push({
+        name: "params",
+        type: paramsType,
+        optional: false,
+      });
+    }
+    // for ergonomy always allow the user to pass the locale
+    args.push({ name: "locale", type: "I18n.Locale", optional: true });
+
+    const formatArgLocale = hasOneLocale ? `""` : "locale";
+    const formatArgParams = params ? ", params" : "";
+
+    if (isString(pathnames)) {
+      body += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
+    } else {
+      body += `formatTo(${formatArgLocale}, ${getFunctionBodyWithLocales(
+        defaultLocale,
+        pathnames,
+      )}${formatArgParams});`;
+    }
+
+    functions.push(
+      new FunctionsCompiler({
+        imports: [importsMap.formatTo, importsMap.types],
+        name,
+        args,
+        body,
+      }),
+    );
+  }
+
+  return { functions, fnPrefix, allImports };
 };
 
 // TODO: check whether adding /*#__PURE__*/ annotation changes anything
@@ -39,46 +110,13 @@ const $to = ({
     adapter: { modularized },
   },
 }: I18nCompiler.DataCode<"js">): I18nCompiler.AdapterGeneratorResult => {
-  const hasOneLocale = config.locales.length === 1;
-  const functions: FunctionData[] = [];
-  const allImports = new Set();
-  // if the user does not specifiy a custom prefix by default we prepend `t_`
-  // when `modularized` option is true
-  const fnPrefix = fnsPrefix || modularized ? "$to_" : "";
+  const { functions, fnPrefix, allImports } = getToFunctions(routes, {
+    defaultLocale: config.defaultLocale,
+    locales: config.locales,
+    fnsPrefix,
+    modularized,
+  });
 
-  allImports.add(getImports().formatTo);
-  allImports.add(getImports().types);
-
-  for (const routeId in routes.byId) {
-    let declaration = "";
-    const { pathnames, params } = routes.byId[routeId];
-
-    const name = `${fnPrefix}${changeCaseSnake(routeId)}`;
-    const paramsType = `I18n.RouteParams["${routeId}"]`;
-
-    const argParam = params ? `params: ${paramsType}` : "";
-    const argLocale = hasOneLocale ? "" : "locale?: I18n.Locale";
-    const args = [argParam, argLocale].filter(Boolean).join(", ");
-    const formatArgLocale = hasOneLocale ? `""` : "locale";
-    const formatArgParams = params ? ", params" : "";
-
-    declaration += `export let ${name} = (${args}) => `;
-
-    if (isString(pathnames)) {
-      declaration += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
-    } else {
-      declaration += `formatTo(${formatArgLocale}, ${getFunctionBodyWithLocales(
-        config,
-        pathnames,
-      )}${formatArgParams});`;
-    }
-
-    functions.push({
-      name,
-      declaration,
-      imports: [getImports(1).formatTo, getImports(1).types],
-    });
-  }
   return modularized
     ? (functions.reduce((map, fn) => {
         map[fn.name] = {
@@ -90,10 +128,10 @@ const $to = ({
           index: true,
           content: () => {
             let output = "";
-            output += Array.from(fn.imports).join("\n") + `\n\n`;
-            output += fn.declaration;
-            output += `\n\n`;
-            output += `export default ${fn.name};`;
+            output += fn.$out("ts", {
+              imports: { folderUp: 1 },
+              exports: "both",
+            });
 
             return output;
           },
@@ -108,8 +146,14 @@ const $to = ({
           index: true,
           content: () => {
             let output = "";
-            output += Array.from(allImports).join("\n") + `\n\n`;
-            output += functions.map((f) => f.declaration).join("\n");
+            output += ImportsCompiler.outMany("ts", allImports, {
+              folderUp: 0,
+            });
+            output += FunctionsCompiler.outMany("ts", functions, {
+              imports: false,
+              exports: "named",
+            });
+
             // TODO: verify the impact of the following on bundle size, its
             // relation to modularizeImports and maybe make this controllable
             // through an adapter option

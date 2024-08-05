@@ -8,7 +8,7 @@ import type { CodeDataOptionsResolved } from "./code";
 import type { I18nCompilerConfigResolved } from "./config";
 import type { PluralSuffix } from "./pluralisation";
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
+ 
 export namespace I18nCompiler {
   /**
    * The i18n compiler config, if user defined config allows partiality then we
@@ -182,7 +182,7 @@ export namespace I18nCompiler {
      */
     plural?: boolean;
     /**
-     * Dictionary of The translation dynamic params to be interpolated {@link DataParams}}
+     * Dictionary of the translation dynamic params to be interpolated {@link DataParams}}
      */
     params?: DataParams;
   };

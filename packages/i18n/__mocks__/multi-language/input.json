@@ -191,18 +191,6 @@
       "locale": "it"
     },
     {
-      "path": "$faq.json",
-      "data": {
-        "home": [
-          {
-            "question": "Cos'è?",
-            "answer": "Quello"
-          }
-        ]
-      },
-      "locale": "it"
-    },
-    {
       "path": "404.json",
       "data": {
         "seo": {
@@ -214,6 +202,18 @@
           "2": "Due volte",
           "3": "Tre volte"
         }
+      },
+      "locale": "it"
+    },
+    {
+      "path": "$faq.json",
+      "data": {
+        "home": [
+          {
+            "question": "Cos'è?",
+            "answer": "Quello"
+          }
+        ]
       },
       "locale": "it"
     },

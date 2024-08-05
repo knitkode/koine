@@ -157,16 +157,13 @@ describe("test playground-next", () => {
         source: "./playground/next/translations",
       },
       code: {
-        // routes: {
-        //   localeParamName: "lang",
-        // },
         adapter: {
           name: "next",
           options: {},
         },
         write: {
           output: "./playground/next/i18n",
-          typescriptCompilation: true,
+          // typescriptCompilation: true,
         },
       },
     });

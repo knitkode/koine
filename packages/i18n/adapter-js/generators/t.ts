@@ -8,10 +8,11 @@ import {
 } from "@koine/utils";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
-  type FunctionData,
-  dataParamsToTsInterfaceBody,
-  getImportDir,
-} from "../../compiler/helpers";
+  FunctionsCompiler,
+  type FunctionsCompilerDataArg,
+} from "../../compiler/functions";
+import { dataParamsToTsInterfaceBody } from "../../compiler/helpers";
+import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
 // /**
@@ -49,10 +50,6 @@ import type { I18nCompiler } from "../../compiler/types";
 //   return key
 // }
 
-// const getP = (dic) => {
-//   return
-// }
-
 const getTranslationValueOutput = (
   value: I18nCompiler.DataTranslationValue,
 ) => {
@@ -72,10 +69,9 @@ const areEqualTranslationsValues = (
 ) => areEqual(a, b);
 
 const getFunctionBodyWithLocales = (
-  config: I18nCompiler.Config,
+  defaultLocale: I18nCompiler.Config["defaultLocale"],
   perLocaleValues: I18nCompiler.DataTranslation["values"],
 ) => {
-  const { defaultLocale } = config;
   let output = "";
 
   for (const locale in perLocaleValues) {
@@ -93,32 +89,37 @@ const getFunctionBodyWithLocales = (
   return output;
 };
 
-const getImports = (folderUp = 0) => {
-  const dir = getImportDir(folderUp);
-  return {
-    types: `import type { I18n } from "${dir}types";`,
-    tInterpolateParams: `import { tInterpolateParams } from "${dir}tInterpolateParams";`,
-    tPluralise: `import { tPluralise } from "${dir}tPluralise";`,
-  };
+const importsMap = {
+  types: new ImportsCompiler({
+    path: "types",
+    named: [{ name: "I18n", type: true }],
+  }),
+  tInterpolateParams: new ImportsCompiler({
+    path: "tInterpolateParams",
+    named: [{ name: "tInterpolateParams" }],
+  }),
+  tPluralise: new ImportsCompiler({
+    path: "tPluralise",
+    named: [{ name: "tPluralise" }],
+  }),
 };
 
-// TODO: check whether adding /*#__PURE__*/ annotation changes anything
-export default createGenerator("js", (data) => {
-  const {
-    config,
-    options: {
-      adapter: { modularized },
-      translations: { fnsPrefix },
-    },
-    translations,
-  } = data;
-  const functions: FunctionData[] = [];
-  const allImports: Set<string> = new Set();
-  // if the user does not specifiy a custom prefix by default we prepend `t_`
+const getTFunctions = (
+  translations: I18nCompiler.DataTranslations,
+  options: {
+    defaultLocale: string;
+    modularized: boolean;
+    fnsPrefix: string;
+  },
+) => {
+  const { defaultLocale, modularized, fnsPrefix } = options;
+  const functions: FunctionsCompiler[] = [];
+  const allImports: Set<ImportsCompiler> = new Set();
+  // if the user does not specifiy a custom prefix by default we prepend `$t_`
   // when `modularized` option is true
   const fnPrefix = fnsPrefix || (modularized ? "$t_" : "");
 
-  allImports.add(getImports().types);
+  allImports.add(importsMap.types);
 
   for (const translationId in translations) {
     let needsImport_tInterpolateParams = false;
@@ -133,48 +134,66 @@ export default createGenerator("js", (data) => {
         params = { count: "number" };
       }
     }
-    const argParam = params
-      ? `params: { ${dataParamsToTsInterfaceBody(params)} }`
-      : "";
-
+    const args: FunctionsCompilerDataArg[] = [];
+    if (params) {
+      args.push({
+        name: "params",
+        type: `{ ${dataParamsToTsInterfaceBody(params)} }`,
+        optional: false,
+      });
+    }
     // for ergonomy always allow the user to pass the locale
-    const argLocale = "locale?: I18n.Locale";
-    const args = [argParam, argLocale].filter(Boolean).join(", ");
-    // const formatArgParams = params ? ", params" : "";
+    args.push({ name: "locale", type: "I18n.Locale", optional: true });
 
-    let declaration = `export let ${name} = (${args}) => `;
-    let declarationReturn = "";
-    const imports = [getImports(1).types];
+    let body = "";
+    const imports = [importsMap.types];
 
     if (isPrimitive(values)) {
-      declarationReturn += getTranslationValueOutput(values);
+      body += getTranslationValueOutput(values);
     } else {
-      declarationReturn += getFunctionBodyWithLocales(config, values);
+      body += getFunctionBodyWithLocales(defaultLocale, values);
     }
     if (plural) {
       needsImport_tPluralise = true;
-      declarationReturn = `tPluralise(${declarationReturn}, params.count)`;
+      body = `tPluralise(${body}, params.count)`;
     }
     if (params) {
       needsImport_tInterpolateParams = true;
-      declarationReturn = `tInterpolateParams(${declarationReturn}, params);`;
+      body = `tInterpolateParams(${body}, params);`;
     } else {
-      declarationReturn = `${declarationReturn};`;
+      body += ";";
     }
-
-    declaration += declarationReturn;
 
     if (needsImport_tInterpolateParams) {
-      imports.push(getImports(1).tInterpolateParams);
-      allImports.add(getImports().tInterpolateParams);
+      imports.push(importsMap.tInterpolateParams);
+      allImports.add(importsMap.tInterpolateParams);
     }
     if (needsImport_tPluralise) {
-      imports.push(getImports(1).tPluralise);
-      allImports.add(getImports().tPluralise);
+      imports.push(importsMap.tPluralise);
+      allImports.add(importsMap.tPluralise);
     }
 
-    functions.push({ name, declaration, imports });
+    functions.push(new FunctionsCompiler({ imports, name, args, body }));
   }
+
+  return { functions, fnPrefix, allImports };
+};
+
+// TODO: check whether adding /*#__PURE__*/ annotation changes anything
+export default createGenerator("js", (data) => {
+  const {
+    config: { defaultLocale },
+    options: {
+      adapter: { modularized },
+      translations: { fnsPrefix },
+    },
+    translations,
+  } = data;
+  const { functions, fnPrefix, allImports } = getTFunctions(translations, {
+    defaultLocale,
+    modularized,
+    fnsPrefix,
+  });
 
   return modularized
     ? (functions.reduce((map, fn) => {
@@ -187,10 +206,10 @@ export default createGenerator("js", (data) => {
           index: true,
           content: () => {
             let output = "";
-            output += Array.from(fn.imports).join("\n") + `\n\n`;
-            output += fn.declaration;
-            output += `\n\n`;
-            output += `export default ${fn.name};`;
+            output += fn.$out("ts", {
+              imports: { folderUp: 1 },
+              exports: "both",
+            });
 
             return output;
           },
@@ -205,8 +224,13 @@ export default createGenerator("js", (data) => {
           index: true,
           content: () => {
             let output = "";
-            output += Array.from(allImports).join("\n") + `\n\n`;
-            output += functions.map((f) => f.declaration).join("\n");
+            output += ImportsCompiler.outMany("ts", allImports, {
+              folderUp: 0,
+            });
+            output += FunctionsCompiler.outMany("ts", functions, {
+              imports: false,
+              exports: "named",
+            });
             // TODO: verify the impact of the following on bundle size, its
             // relation to modularizeImports and maybe make this controllable
             // through an adapter option

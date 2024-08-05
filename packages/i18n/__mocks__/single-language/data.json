@@ -5,21 +5,12 @@
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
+    "debug": false,
     "single": true
   },
   "input": {
     "localesFolders": ["en"],
     "translationFiles": [
-      {
-        "path": "404.json",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found"
-        },
-        "locale": "en"
-      },
       {
         "path": "~.json",
         "data": {
@@ -64,6 +55,16 @@
               }
             }
           }
+        },
+        "locale": "en"
+      },
+      {
+        "path": "404.json",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found"
         },
         "locale": "en"
       },
@@ -156,10 +157,10 @@
       "defaultLocale": "en",
       "hideDefaultLocaleInUrl": true,
       "trailingSlash": false,
+      "debug": false,
       "single": true
     },
     "options": {
-      "outputFiles": {},
       "routes": {
         "permanentRedirects": false,
         "localeParamName": "lang",
@@ -213,16 +214,6 @@
       "localesFolders": ["en"],
       "translationFiles": [
         {
-          "path": "404.json",
-          "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found"
-          },
-          "locale": "en"
-        },
-        {
           "path": "~.json",
           "data": {
             "home": "/",
@@ -266,6 +257,16 @@
                 }
               }
             }
+          },
+          "locale": "en"
+        },
+        {
+          "path": "404.json",
+          "data": {
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found"
           },
           "locale": "en"
         },

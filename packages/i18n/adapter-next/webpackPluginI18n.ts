@@ -24,7 +24,7 @@ export class I18nWebpackPlugin {
           // const logger = compilation.getLogger(PLUGIN_NAME);
           if (!compilation.contextDependencies.has(i18nInputFolder)) {
             compilation.contextDependencies.add(i18nInputFolder);
-            // console.log("i18nCompiler input folder added to context deps");
+            console.log("i18nCompiler input folder added to context deps");
             // } else {
             //   console.log("i18nCompiler input folder already added to context deps",);
           }

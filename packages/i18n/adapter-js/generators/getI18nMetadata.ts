@@ -23,7 +23,7 @@ type GetI18nMetadataOptions<TRouteId extends I18n.RouteId | RouteIdError> = {
 } & I18n.RouteArgs<TRouteId>;
 
 /**
- * - All localised variants should always be included (despite the current lang)
+ * - All localised variants should always be included (despite the current locale)
  * - We use the defaultLocale's URL as the \`x-default\` alternate value
  * @see https://developers.google.com/search/docs/specialty/international/localized-versions#html
  *

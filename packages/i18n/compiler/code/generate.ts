@@ -69,24 +69,24 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
     const files = generator(data);
 
     Object.keys(files).forEach((fileId) => {
+      // check that we haven't already generated this file
+      if (previousAdaptersGeneratedFilesIds[fileId]) return;
+
+      previousAdaptersGeneratedFilesIds[fileId] = 1;
+
       const _file = files[fileId];
       const transformerId = fileId as keyof typeof transformers;
       const file = transformers?.[transformerId]?.(_file as never) ?? _file;
-      const { content } = file;
       const { dir, name, path } = getAdapterFileMeta(file, {});
+      const { content } = file;
 
-      // check that we haven't already generated this file
-      if (!previousAdaptersGeneratedFilesIds[fileId]) {
-        previousAdaptersGeneratedFilesIds[fileId] = 1;
-
-        all.push({
-          ...file,
-          dir,
-          name,
-          path,
-          content: getAdapterFileContent(file, content()),
-        });
-      }
+      all.push({
+        ...file,
+        dir,
+        name,
+        path,
+        content: getAdapterFileContent(file, content()),
+      });
     });
 
     return all;
