@@ -192,22 +192,45 @@ const buildRoutesPathnames = (
   return output;
 };
 
+const toTypeObj = (typeBodyLines: string[]) => `{
+    ${typeBodyLines.join("\n    ")}
+  }`;
+
+const getTypes = (data: I18nCompiler.DataCode<I18nCompiler.AdapterName>) => {
+  const { config, routes, options } = data;
+
+  return {
+    Locale: config.locales.map((l) => `"${l}"`).join(" | "),
+    RouteIdStatic: buildRoutesUnion(routes, (_, { params }) => !params),
+    RouteIdDynamic: buildRoutesUnion(routes, (_, { params }) => !!params),
+    // RouteIdSpa: buildRoutesUnion(routes, (_, { inWildcard }) => inWildcard),
+    RouteSpa: toTypeObj(buildRoutesSpa(config, routes, options)),
+    RoutePathnames: toTypeObj(buildRoutesPathnames(config, routes)),
+    RouteParams: toTypeObj(buildRouteParams(routes)),
+    TranslationsDictionary: toTypeObj(buildTranslationsDictionary(data)),
+  };
+};
+
 // TODO: maybe move the Translate types into the various adapters unless we
 // will use the same api for all of them
 export default createGenerator("js", (arg) => {
-  const { config, routes, options } = arg;
-  const routeIdStatic = buildRoutesUnion(routes, (_, { params }) => !params);
-  const routeIdDynamic = buildRoutesUnion(routes, (_, { params }) => !!params);
-  // const routeIdSpa = buildRoutesUnion(routes, (_, { inWildcard }) => inWildcard);
-  const { localeParamName } = options.routes;
-  const { idDelimiter } = options.routes.tokens;
+  const {
+    options: {
+      routes: {
+        localeParamName,
+        tokens: { idDelimiter },
+      },
+    },
+  } = arg;
+
+  const types = getTypes(arg);
 
   return {
     types: {
       name: "types",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import type { Split } from "@koine/utils";
 import type { I18nUtils } from "@koine/i18n";
 import type { RouteIdError } from "./routesError";
@@ -216,7 +239,7 @@ export namespace I18n {
   /**
    * Any of the available locale code
    */
-  export type Locale = ${config.locales.map((l) => `"${l}"`).join(" | ")};
+  export type Locale = ${types.Locale};
  
   /**
    * Utility to map values by all available locales
@@ -233,33 +256,27 @@ export namespace I18n {
   /**
    * The static routes available ids
    */
-  export type RouteIdStatic = ${routeIdStatic};
+  export type RouteIdStatic = ${types.RouteIdStatic};
 
   /**
    * The dynamic routes available ids
    */
-  export type RouteIdDynamic = ${routeIdDynamic};
+  export type RouteIdDynamic = ${types.RouteIdDynamic};
 
   /**
    * Map every SPA path divided by their roots to their actual pathname value for the default locale
    */
-  export type RouteSpa = {
-    ${buildRoutesSpa(config, routes, options).join("\n    ")}
-  }
+  export type RouteSpa = ${types.RouteSpa};
 
   /**
    * Map every route id to its actual pathanem value for the default locale
    */
-  export type RoutePathnames = {
-    ${buildRoutesPathnames(config, routes).join("\n    ")}
-  }
+  export type RoutePathnames = ${types.RoutePathnames};
 
   /**
    * Route dynamic params dictionary for each dynamic route id
    */
-  export type RouteParams = {
-    ${buildRouteParams(routes).join("\n    ")}
-  }
+  export type RouteParams = ${types.RouteParams};
 
   /**
    * Utility to join two route ids
@@ -288,9 +305,7 @@ export namespace I18n {
    * The types extracted from the translations JSON files, this is a little
    * more sophisticated than the type result of \`typeof "./en/messages.json"\`
    */
-  export type TranslationsDictionary = {
-    ${buildTranslationsDictionary(arg).join("\n    ")}
-  }
+  export type TranslationsDictionary = ${types.TranslationsDictionary};
 
   /**
    * Any of the available translations namespaces
@@ -509,7 +524,7 @@ export namespace I18n {
    * \`/[${localeParamName}]/my-route/page.tsx\`)
    */
   export type Params = {
-    ${options.routes.localeParamName}: Locale;
+    ${localeParamName}: Locale;
   };
 
   /**

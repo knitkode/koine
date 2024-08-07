@@ -76,7 +76,6 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
   // it would be easy to make this optional but it's nice to be able to always
   // predictably return data
   const code = await getCodeData(config, optsCode, input);
-  // console.log("🚀 ~ i18nCompiler ~ code.options:", code.options)
 
   if (optsInput?.write) {
     writables.push(writeInput(optsInput.write, input));

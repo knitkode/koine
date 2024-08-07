@@ -72,6 +72,9 @@ describe("test write", () => {
         write: {
           cwd: mocksPath("multi-language"),
           output: ".code",
+          tsconfig: {
+            alias: "@/i18n",
+          },
         },
       },
       summary: {

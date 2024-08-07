@@ -8,7 +8,6 @@ import type { CodeDataOptionsResolved } from "./code";
 import type { I18nCompilerConfigResolved } from "./config";
 import type { PluralSuffix } from "./pluralisation";
 
- 
 export namespace I18nCompiler {
   /**
    * The i18n compiler config, if user defined config allows partiality then we
@@ -301,7 +300,7 @@ export namespace I18nCompiler {
     /**
      * File extension
      */
-    ext: "ts" | "tsx" | "mjs" | "js" | "json";
+    ext: "d.ts" | "ts" | "tsx" | "mjs" | "js" | "json";
     /**
      * Function that generates the file content
      */

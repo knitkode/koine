@@ -1,13 +1,17 @@
 {
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "types": ["node"],
+    "jsx": "react-jsx",
     "paths": {
       "@/i18n": [
         "single-language/.code/index.ts",
-        "./single-language/.code/index.ts"
+        "multi-language/.code/index.ts"
       ],
-      "@/i18n/*": ["single-language/.code/*", "./single-language/.code/*"],
-      "@/.code": ["./multi-language/.code/index.ts"],
-      "@/.code/*": ["./multi-language/.code/*"]
+      "@/i18n/*": ["single-language/.code/*", "multi-language/.code/*"]
     }
-  }
+  },
+  "include": ["**/.code/*.ts", "**/.code/*.tsx"],
+  "exclude": []
 }

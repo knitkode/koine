@@ -122,11 +122,17 @@ export const getAdapterFileContent = (
   content = content.replace(/^\s*/m, "");
 
   if (!process.env["JEST_WORKER_ID"]) {
-    if (ext === "ts" || ext === "tsx") {
+    if (ext === "d.ts" || ext === "ts" || ext === "tsx") {
       content = `// @ts-nocheck\n` + content;
     }
 
-    if (ext === "js" || ext === "mjs" || ext === "ts" || ext === "tsx") {
+    if (
+      ext === "js" ||
+      ext === "mjs" ||
+      ext === "d.ts" ||
+      ext === "ts" ||
+      ext === "tsx"
+    ) {
       content = `/* eslint-disable */\n` + content;
     }
   }

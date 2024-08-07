@@ -59,29 +59,28 @@ export type CodeWriteOptions = {
   gitignore?: "all" | "granular" | false;
   /**
    * Determine how to treat the `tsconfig` JSON file.
+   *
+   * Set it to `false` to avoid any file modification.
+   *
+   * @default { path: "../tsconfg.json", alias: "@/{computed}" }
    */
-  tsconfig?: {
-    /**
-     * Path of the `tsconfig.json` file relative to the `cwd` option.
-     *
-     * @default "../tsconfig.json"
-     */
-    path?: string;
-    /**
-     * By default `myfolder` is the dynamically resolved leaf folder name of
-     * `output` option path' folders tree and append it to the standard `@/`.
-     *
-     * @default "@/myfolder"
-     */
-    alias?: string;
-    // /**
-    //  * Wether to add the `output` folder with the generated files to the `exclude`
-    //  * tsconfig option
-    //  *
-    //  * @default
-    //  */
-    // exclude?: boolean;
-  };
+  tsconfig?:
+    | false
+    | {
+        /**
+         * Path of the `tsconfig.json` file relative to the `cwd` option.
+         *
+         * @default "../tsconfig.json"
+         */
+        path?: string;
+        /**
+         * By default `myfolder` is the dynamically resolved leaf folder name of
+         * `output` option path' folders tree and append it to the standard `@/`.
+         *
+         * @default "@/myfolder"
+         */
+        alias?: string;
+      };
   /**
    * TypeScript options. Set this to `true` to compile TypeScript files to
    * JavaScript, .e.g. if you don't already have a compilation step in your project.
@@ -259,6 +258,8 @@ type TweakedTsConfigFile = Omit<TsConfigJson, "compilerOptions"> & {
  */
 function tweakTsconfigJsonData(config: CodeWriteConfig, data: TsConfigJson) {
   const { cwd, output, tsconfig } = config;
+  if (!tsconfig) return;
+
   const { alias: keyAlias } = tsconfig;
   const keyAliasStar = `${keyAlias}/*`;
   const dirOutput = join(cwd, output);
@@ -295,6 +296,8 @@ function tweakTsconfigJsonData(config: CodeWriteConfig, data: TsConfigJson) {
  */
 function writeTsconfigFile(config: CodeWriteConfig) {
   const { cwd, debug, tsconfig } = config;
+  if (!tsconfig) return;
+
   const tsconfigPath = join(cwd, tsconfig.path);
   let hasChanged = false;
   let newData: TweakedTsConfigFile = {
@@ -331,7 +334,9 @@ function writeTsconfigFile(config: CodeWriteConfig) {
   if (hasChanged) {
     writeFileSync(tsconfigPath, newContent + EOL);
     if (debug || process.env["JEST_WORKER_ID"]) {
-      console.log(`i18n: tsconfig.json updated.`);
+      console.log(
+        `i18n: tsconfig.json updated. You need to manually check 'paths' are setup correctly.`,
+      );
     }
   } else {
     if (debug || process.env["JEST_WORKER_ID"]) {
@@ -352,7 +357,7 @@ function writeCompiledTypescriptFiles(
   if (!typescriptCompilation) return;
 
   const tsFiles = codeGenerated.files.filter(
-    (file) => file.ext === "ts" || file.ext === "tsx",
+    (file) => file.ext === "d.ts" || file.ext === "ts" || file.ext === "tsx",
   );
   const tsFilesPaths = tsFiles.map((file) => file.path);
 

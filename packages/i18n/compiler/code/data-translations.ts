@@ -118,7 +118,7 @@ const extractTranslationParamsFromPrimitive = (
  *
  * @deprecated
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 const extractTranslationParamsFromValue = (
   options: CodeDataTranslationsOptions,
   value: I18nCompiler.DataTranslationValue,
@@ -339,6 +339,5 @@ export let getCodeDataTranslations = (
   // sort
   dataTranslations = objectSort(dataTranslations);
 
-  // console.log("generateTypes: outputDir", outputDir, "outputPath", outputPath);
   return dataTranslations;
 };

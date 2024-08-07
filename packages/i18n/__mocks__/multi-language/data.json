@@ -350,7 +350,7 @@
         "emptyOutputFolder": true,
         "tsconfig": {
           "path": "../tsconfig.json",
-          "alias": "@/.code"
+          "alias": "@/i18n"
         },
         "typescriptCompilation": false,
         "copyTranslations": true,
