@@ -1,10 +1,5 @@
 import type { I18nCompiler } from "../types";
-import {
-  getAdapter,
-  getAdapterFileContent,
-  getAdapterFileMeta,
-  getAdapterSync,
-} from "./adapters";
+import { getAdapter, getAdapterFileMeta, getAdapterSync } from "./adapters";
 
 const getBarrelFileContent = (
   generatedFiles: I18nCompiler.AdapterFileGenerated[],
@@ -45,6 +40,7 @@ const getBarrelFiles = (
         name: "index",
         dir,
         index: false,
+        isBarrel: true,
       } as const;
       const meta = getAdapterFileMeta(file, {});
       indexFiles.push({ ...file, ...meta });
@@ -85,7 +81,8 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
         dir,
         name,
         path,
-        content: getAdapterFileContent(file, content()),
+        content: content(),
+        isBarrel: false,
       });
     });
 

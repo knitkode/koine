@@ -33,6 +33,8 @@ describe("test write", () => {
           tsconfig: {
             alias: "@/i18n",
           },
+          eslintDisable: true,
+          tsNoCheck: true,
         },
       },
       summary: {
@@ -75,6 +77,8 @@ describe("test write", () => {
           tsconfig: {
             alias: "@/i18n",
           },
+          eslintDisable: true,
+          tsNoCheck: true,
         },
       },
       summary: {

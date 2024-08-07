@@ -324,5 +324,9 @@ export namespace I18nCompiler {
      * The file full relative path: `dir`, `name` and `ext` of {@link AdapterFile}
      */
     path: string;
+    /**
+     * Flags generated barrel files
+     */
+    isBarrel: boolean;
   };
 }

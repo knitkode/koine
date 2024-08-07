@@ -13,7 +13,9 @@ export class I18nWebpackPlugin {
   }
 
   apply(compiler: Compiler) {
-    const { cwd = process.cwd(), source } = this.opts.input;
+    const { debug, input } = this.opts;
+    const { cwd = process.cwd(), source } = input;
+
     if (isAbsoluteUrl(source)) return;
 
     const i18nInputFolder = resolve(cwd, source);
@@ -24,7 +26,9 @@ export class I18nWebpackPlugin {
           // const logger = compilation.getLogger(PLUGIN_NAME);
           if (!compilation.contextDependencies.has(i18nInputFolder)) {
             compilation.contextDependencies.add(i18nInputFolder);
-            console.log("i18nCompiler input folder added to context deps");
+            if (debug) {
+              console.log("i18nCompiler input folder added to context deps");
+            }
             // } else {
             //   console.log("i18nCompiler input folder already added to context deps",);
           }
@@ -42,7 +46,7 @@ export class I18nWebpackPlugin {
             // console.log("i18nCompiler should compile now.");
             try {
               await i18nCompiler(this.opts);
-            } catch (e) {
+            } catch (_e) {
               // console.log("i18nCompiler failed to compile.");
             }
           }

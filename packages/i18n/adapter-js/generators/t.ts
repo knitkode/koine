@@ -197,21 +197,20 @@ export default createGenerator("js", (data) => {
 
   return modularized
     ? (functions.reduce((map, fn) => {
+        // TODO: weak point: we strip the trailing underscore but the user
+        // might defined a different prefix for these functions
+        const dir = fnPrefix.replace(/_*$/, "");
+
         map[fn.name] = {
-          // TODO: weak point: we strip the trailing underscore but the user
-          // might defined a different prefix for these functions
-          dir: fnPrefix.replace(/_*$/, ""),
+          dir,
           name: fn.name,
           ext: "ts",
           index: true,
           content: () => {
-            let output = "";
-            output += fn.$out("ts", {
+            return fn.$out("ts", {
               imports: { folderUp: 1 },
               exports: "both",
             });
-
-            return output;
           },
         };
         return map;

@@ -31,7 +31,8 @@ export let tweakNextConfig = (
   }
 
   // automatically create swc transforms based on given options
-  const tsConfigAlias = result.code.options.write?.tsconfig.alias;
+  const tsConfig = result.code.options.write?.tsconfig;
+  const tsConfigAlias = tsConfig ? tsConfig.alias : "";
   nextConfig.modularizeImports = {
     ...swcCreateTransform("@koine/i18n"),
     ...(tsConfigAlias ? swcCreateTransform(tsConfigAlias) : {}),

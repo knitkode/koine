@@ -73,7 +73,7 @@ export class Git {
           e.message.includes("fatal: pathspec") &&
           e.message.includes("did not match any files")
         ) {
-          this.errors.push(new Error(`Add command did not match any file`));
+          this.errors.push(new Error("Add command did not match any file"));
         } else throw e;
       });
 
@@ -131,7 +131,7 @@ export class Git {
       throw this.errors[0];
     } else if (this.errors.length > 1) {
       this.errors.forEach((e) => core.error(e));
-      throw "There have been multiple runtime errors.";
+      throw Error("There have been multiple runtime errors.");
     }
 
     this.logOutputs();

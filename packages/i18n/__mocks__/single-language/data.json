@@ -206,6 +206,8 @@
           "alias": "@/i18n"
         },
         "typescriptCompilation": false,
+        "tsNoCheck": true,
+        "eslintDisable": true,
         "copyTranslations": true,
         "gitignore": "all"
       }

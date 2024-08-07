@@ -8,8 +8,9 @@ module.exports = [
   ...baseConfig.map((config) => ({
     ...config,
     ignores: [
-      "packages/i18n/__mocks__",
+      // "packages/i18n/__mocks__",
       // "__mocks__/**/*.{ts,tsx}"
+      "packages/i18n/__mocks__/**/*.{ts,tsx}",
     ],
   })),
   {

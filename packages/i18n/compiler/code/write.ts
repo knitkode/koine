@@ -89,6 +89,18 @@ export type CodeWriteOptions = {
    */
   typescriptCompilation?: boolean;
   /**
+   * Optionally enable/disable the automatic addition of the `@ts-nocheck` directive
+   *
+   * @default true Enabled, (NB: `false`: disabled during jest testing)
+   */
+  tsNoCheck?: boolean;
+  /**
+   * Optionally enable/disable the automatic addition of the `/* eslint-disable * /` directive
+   *
+   * @default true Enabled, (NB: `false`: disabled during jest testing)
+   */
+  eslintDisable?: boolean;
+  /**
    * Skip copying the translations files to the `{output}/`{@link getTranslationsDir()}
    * folder
    *
@@ -147,6 +159,8 @@ export function resolveWriteCodeOptions(options: CodeWriteOptions) {
     emptyOutputFolder = true,
     tsconfig = {},
     typescriptCompilation = false,
+    tsNoCheck = process.env["JEST_WORKER_ID"] ? false : true,
+    eslintDisable = process.env["JEST_WORKER_ID"] ? false : true,
     copyTranslations = true,
     gitignore = "all",
   } = options;
@@ -161,6 +175,8 @@ export function resolveWriteCodeOptions(options: CodeWriteOptions) {
       ...tsconfig,
     },
     typescriptCompilation,
+    tsNoCheck,
+    eslintDisable,
     copyTranslations,
     gitignore,
   };
@@ -204,6 +220,46 @@ function addFileToGitignoreLists(
   }
 }
 
+/**
+ * NB: this mutates the generated file object
+ *
+ * Uniformly treat adapter files' generated content, here we:
+ *
+ * - remove empty first line
+ * - add `@ts-nocheck` directive for TypeScript files
+ * - add `eslint-disable` directive for JavaScript/TypeScript files
+ *
+ * @follow [proposal for eslint new directive](https://github.com/eslint/rfcs/pull/118)
+ */
+const treatFileContent = (
+  config: CodeWriteConfig,
+  generatedFile: I18nCompiler.AdapterFileGenerated,
+) => {
+  const { tsNoCheck, eslintDisable } = config;
+  const { ext } = generatedFile;
+  let { content } = generatedFile;
+
+  // remove empty first line
+  content = content.replace(/^\s*/m, "");
+
+  if (tsNoCheck && (ext === "d.ts" || ext === "ts" || ext === "tsx")) {
+    content = `// @ts-nocheck\n` + content;
+  }
+  if (
+    eslintDisable &&
+    (ext === "js" ||
+      ext === "mjs" ||
+      ext === "d.ts" ||
+      ext === "ts" ||
+      ext === "tsx")
+  ) {
+    content = `/* eslint-disable */\n` + content;
+  }
+
+  generatedFile.content = content;
+  // return content;
+};
+
 function manageFileToWrite(
   config: CodeWriteConfig,
   generatedFile: I18nCompiler.AdapterFileGenerated,
@@ -211,6 +267,7 @@ function manageFileToWrite(
   const { path } = generatedFile;
   const filepath = join(config.cwd, config.output, path);
   addFileToGitignoreLists(config, generatedFile);
+  treatFileContent(config, generatedFile);
 
   return filepath;
 }
@@ -317,7 +374,7 @@ function writeTsconfigFile(config: CodeWriteConfig) {
         hasChanged = true;
         newData = tweakedData;
       }
-    } catch (e) {
+    } catch (_e) {
       console.log(`Failed to read tsconfig at given ${tsconfig.path}`);
       console.log(`a tsconfig.json file will be created at the given path.`);
     }

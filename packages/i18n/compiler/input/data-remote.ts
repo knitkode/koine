@@ -1,8 +1,8 @@
-import { execSync } from "node:child_process";
+// import { execSync } from "node:child_process";
 import { request } from "node:https";
 import { minimatch } from "minimatch";
 // import requestSync from "sync-request-curl";
-import { isString } from "@koine/utils";
+// import { isString } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import type { InputDataRemoteOptions, InputDataSharedOptions } from "./types";
 
@@ -33,7 +33,7 @@ const onResponseData = (
           )
         : dataInput.translationFiles,
     };
-  } catch (e) {
+  } catch (_e) {
     throw Error(`Failed to parse JSON from ${source}`);
   }
 };
@@ -84,7 +84,7 @@ export let getInputDataRemote = async (
                   )
                 : dataInput.translationFiles,
             });
-          } catch (e) {
+          } catch (_e) {
             throw Error(`Failed to parse JSON from ${source}`);
           }
         });

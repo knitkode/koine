@@ -49,7 +49,7 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
         if (i18nResult.code.options.routes.localeParamName) {
           delete nextConfig.i18n;
         }
-      } catch (e) {
+      } catch (_e) {
         // console.log()
       }
     }

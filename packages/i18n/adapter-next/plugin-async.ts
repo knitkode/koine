@@ -67,7 +67,7 @@ export let withI18nAsync =
           // if (i18nResult.code.options.routes.localeParamName) {
           //   delete nextConfig.i18n;
           // }
-        } catch (e) {
+        } catch (_e) {
           // console.log()
         }
       }
