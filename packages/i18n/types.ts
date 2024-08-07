@@ -193,7 +193,7 @@ export namespace I18nUtils {
         //   ? {
         //       [k in Trim<Param>]: string | number;
         //     }
-          // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+           
           : {};
 
   export type RouteStrictIdStatic<T extends string> = FilterOnlyStaticRouteId<

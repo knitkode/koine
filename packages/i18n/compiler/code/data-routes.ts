@@ -245,7 +245,6 @@ const manageRoutesSpaPathnames = (
 
     if (inWildcard && dataRoutes.byId[routeId].pathnamesSpa) {
       for (const locale in dataRoutes.byId[routeId].pathnamesSpa) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         dataRoutes.byId[routeId].pathnamesSpa![locale] =
           replaceRouteParentTokens(
             dataRoutes,

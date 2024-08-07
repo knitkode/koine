@@ -107,11 +107,7 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
 //  *
 //  * @public
 //  */
-// export let i18nCompilerSync = ( <
-//   TAdapterName extends I18nCompiler.AdapterName,
-// >(
-//   options: I18nCompilerOptions,
-// ) => {
+// export let i18nCompilerSync = (options: I18nCompilerOptions) => {
 //   const {
 //     input: optsInput,
 //     code: optsCode,

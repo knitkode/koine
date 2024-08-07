@@ -8,7 +8,7 @@ import type { I18nCompiler } from "../types";
 
 const getWords = (
   value: string | string[] | object | object[],
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+
   options: {} = {},
 ) => {
   let out = "";

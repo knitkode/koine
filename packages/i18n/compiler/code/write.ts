@@ -239,6 +239,8 @@ const treatFileContent = (
   const { ext } = generatedFile;
   let { content } = generatedFile;
 
+  if (generatedFile.isBarrel) return;
+
   // remove empty first line
   content = content.replace(/^\s*/m, "");
 
