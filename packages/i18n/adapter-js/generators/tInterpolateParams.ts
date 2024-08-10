@@ -20,7 +20,7 @@ export const tInterpolateParams = ({
     /${escapeEachChar(start)}(.*?)${escapeEachChar(end)}/g,
     (_, key) =>
       params[key.trim()${format === "ts" ? " as keyof typeof params" : ""}] + "",
-  ) : value;`,
+  ) : value`,
   });
 
 export default createGenerator("js", (arg) => {

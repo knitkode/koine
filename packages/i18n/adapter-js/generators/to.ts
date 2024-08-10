@@ -7,7 +7,7 @@ import {
 import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
-const getFunctionBodyWithLocales = (
+export const getToFunctionBodyWithLocales = (
   defaultLocale: string,
   perLocaleValues: Record<string, string>,
 ) => {
@@ -78,7 +78,7 @@ const getToFunctions = (
     if (isString(pathnames)) {
       body += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
     } else {
-      body += `formatTo(${formatArgLocale}, ${getFunctionBodyWithLocales(
+      body += `formatTo(${formatArgLocale}, ${getToFunctionBodyWithLocales(
         defaultLocale,
         pathnames,
       )}${formatArgParams});`;

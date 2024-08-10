@@ -204,3 +204,5 @@ createI18nLayout.Root = I18nLayoutRoot;
     },
   };
 });
+// TODO: add this:before `const render = ...`
+// const i18nScript = `<script dangerouslySetInnerHTML={{ __html: `window.global = window.global || {}; global.__i18n_locale = "${i18nHtmlAttrs.lang}";`}}></script>`;

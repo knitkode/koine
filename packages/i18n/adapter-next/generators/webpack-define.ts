@@ -1,11 +1,12 @@
 import { isPrimitive, isString } from "@koine/utils";
 import { formatTo } from "../../adapter-js/generators/formatTo";
 import {
-  getFunctionBodyWithLocales,
+  getTFunctionBodyWithLocales,
   getTranslationValueOutput,
 } from "../../adapter-js/generators/t";
 import { tInterpolateParams } from "../../adapter-js/generators/tInterpolateParams";
 import { tPluralise } from "../../adapter-js/generators/tPluralise";
+import { getToFunctionBodyWithLocales } from "../../adapter-js/generators/to";
 import { createGenerator } from "../../compiler/createAdapter";
 import type { I18nCompiler } from "../../compiler/types";
 
@@ -35,12 +36,12 @@ const getToLookup = (
     const formatArgParams = params ? ", params" : "";
 
     if (isString(pathnames)) {
-      body += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
+      body += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams})`;
     } else {
-      body += `formatTo(${formatArgLocale}, ${getFunctionBodyWithLocales(
+      body += `formatTo(${formatArgLocale}, ${getToFunctionBodyWithLocales(
         defaultLocale,
         pathnames,
-      )}${formatArgParams});`;
+      )}${formatArgParams})`;
     }
 
     lines.push(`"${routeId}": (${args.join(", ")}) => ${body}`);
@@ -80,7 +81,7 @@ const getTLookup = (
     if (isPrimitive(values)) {
       body += getTranslationValueOutput(values);
     } else {
-      body += getFunctionBodyWithLocales(defaultLocale, values);
+      body += getTFunctionBodyWithLocales(defaultLocale, values);
     }
     if (plural) {
       body = `tPluralise(${body}, params.count)`;
@@ -95,6 +96,41 @@ const getTLookup = (
   }
 
   return lines.join(",\n  ");
+};
+
+const getGlobalToType = (routes: I18nCompiler.DataRoutes) => {
+  const { dynamicRoutes, staticRoutes } = routes;
+  const I18n = `import("../types").I18n`;
+  let out = `
+  /**
+   * Global to function (allows to select any of the all available routes)
+   */
+  type GlobalTo = <Id extends ${I18n}.RouteId>(`;
+
+  if (dynamicRoutes.length && staticRoutes.length) {
+    out += `
+      id: Id,
+      ...args: Id extends ${I18n}.RouteIdDynamic
+        ?
+            | [${I18n}.RouteParams[Id]]
+            | [${I18n}.RouteParams[Id], ${I18n}.Locale]
+        : [] | [${I18n}.Locale]
+    ) => ${I18n}.RoutePathnames[Id];`;
+  } else if (dynamicRoutes.length) {
+    out += `
+    id: Id,
+    ...args:
+      | [${I18n}.RouteParams[Id]]
+      | [${I18n}.RouteParams[Id], ${I18n}.Locale]
+  ) => ${I18n}.RoutePathnames[Id];`;
+  } else {
+    out += `
+    id: Id,
+    locale?: ${I18n}.Locale
+  ) => ${I18n}.RoutePathnames[Id];`;
+  }
+
+  return out;
 };
 
 export default createGenerator("next", (arg) => {
@@ -115,31 +151,20 @@ export default createGenerator("next", (arg) => {
 export {};
 
 declare global {
-  // type I18n = import("./types").I18n;
 
   /**
-   * Global t function it allows to select any of the all available
-   * strings in _all_ namespaces.
+   * Global t function (allows to select any of the all available translations)
+   *
+   * @param path e.g. \`"myNamespace${namespaceDelimiter}myPath.nestedKey"\`
    */
   type GlobalT = <
-    TPath extends import("./types").I18n.TranslationsAllPaths,
-    TReturn = import("./types").I18n.TranslationAtPath<TPath>,
+    TPath extends import("../types").I18n.TranslationsAllPaths,
+    TReturn = import("../types").I18n.TranslationAtPath<TPath>,
   >(
     path: TPath,
     query?: object,
   ) => TReturn;
-
-  /**
-   * Global to function it allows to select any of the all available routes
-   */
-  type GlobalTo<Id extends import("./types").I18n.RouteId> = (
-    id: Id,
-    ...args: Id extends import("./types").I18n.RouteIdDynamic
-      ?
-          | [import("./types").I18n.RouteParams[Id]]
-          | [import("./types").I18n.RouteParams[Id], I18n.Locale]
-      : [] | [I18n.Locale]
-  ) => import("./types").I18n.RoutePathnames[Id];
+  ${getGlobalToType(routes)}
 
   var ${globalName}: {
     t: GlobalT;
@@ -161,12 +186,16 @@ declare global {
       index: false,
       content: () => {
         return /* j s */ `
+const { join } = require("path");
+const { DefinePlugin } = require("webpack");
+
 module.exports = {
-  [${globalName}]: DefinePlugin.runtimeValue(
+  ${globalName}: DefinePlugin.runtimeValue(
     (_ctx) => {
       return {
         to: \`(function(routeId, params) {
           const locale = global.__i18n_locale;
+          const defaultLocale = "${defaultLocale}";
 
           ${formatTo(config).$out("cjs", {
             exports: false,

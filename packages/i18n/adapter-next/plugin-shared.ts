@@ -16,7 +16,7 @@ export let tweakNextConfig = (
     config: { defaultLocale, locales },
     code: {
       options: {
-        adapter: { globalName },
+        // adapter: { globalName },
         routes: { localeParamName },
         write,
       },

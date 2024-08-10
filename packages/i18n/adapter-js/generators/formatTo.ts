@@ -14,7 +14,7 @@ export const formatTo = ({
       }),
     ],
     comment: { internal: true },
-    name: "tInterpolateParams",
+    name: "formatTo",
     args: [
       { name: "locale", type: "string | undefined", optional: false },
       { name: "pathname", type: "string", optional: false },

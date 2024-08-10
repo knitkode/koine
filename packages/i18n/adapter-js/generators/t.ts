@@ -68,7 +68,7 @@ export const areEqualTranslationsValues = (
   b: I18nCompiler.DataTranslationValue,
 ) => areEqual(a, b);
 
-export const getFunctionBodyWithLocales = (
+export const getTFunctionBodyWithLocales = (
   defaultLocale: I18nCompiler.Config["defaultLocale"],
   perLocaleValues: I18nCompiler.DataTranslation["values"],
 ) => {
@@ -147,7 +147,7 @@ export const getTFunctions = (
     if (isPrimitive(values)) {
       body += getTranslationValueOutput(values);
     } else {
-      body += getFunctionBodyWithLocales(defaultLocale, values);
+      body += getTFunctionBodyWithLocales(defaultLocale, values);
     }
     if (plural) {
       needsImport_tPluralise = true;
