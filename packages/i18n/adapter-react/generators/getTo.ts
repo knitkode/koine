@@ -6,7 +6,7 @@ export default createGenerator("react", (arg) => {
   } = arg;
   return {
     getTo: {
-      dir: "server",
+      dir: createGenerator.dirs.server,
       name: "getTo",
       ext: "ts",
       index: true,

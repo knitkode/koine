@@ -3,7 +3,7 @@ import { createGenerator } from "../../compiler/createAdapter";
 export default createGenerator("react", (_arg) => {
   return {
     I18nLocaleContext: {
-      dir: "server",
+      dir: createGenerator.dirs.server,
       name: "I18nLocaleContext",
       ext: "tsx",
       index: false,

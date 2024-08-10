@@ -24,6 +24,7 @@ export default createGenerator("js", (_arg) => {
 
 ${tPluralise().$out("ts", { imports: false, exports: "named" })}
 `,
+      // TODO: cleanup commented old impl
       // content: () => /* j s */`
       // let pluralRules = new Intl.PluralRules();
 

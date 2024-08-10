@@ -48,78 +48,83 @@ export let tweakNextConfig = (
             new RegExp(`\\.[/\\\\](${locales.join("|")})[/\\\\]index\\.js$`),
           ),
           write &&
-            new DefinePlugin({
-              /**
-               * @see
-               * - [DefinePlugin / add support for watch mode](https://github.com/webpack/webpack/issues/7717)
-               * - [support expressionMemberChain in DefinePlugin](https://github.com/webpack/webpack/pull/15562)
-               */
-              [globalName]: DefinePlugin.runtimeValue(
-                (_ctx) => {
-                  const i18nDir = join(write.cwd, write.output);
-                  // const i18nDir = resolve(__dirname, rel "./i18n");
-                  // const { context, layer, resource } = ctx.module;
-                  // const requirePath = relative(resource, i18nDir);
-                  // console.log({
-                  //   i18nDir,
-                  //   // module: ctx.module,
-                  //   context,
-                  //   layer,
-                  //   resource,
-                  //   requirePath
-                  // });
+            new DefinePlugin(
+              require(join(write.cwd, write.output, "internal/webpack-define")),
+            ),
+          // write &&
+          //   new DefinePlugin({
+          //     /**
+          //      * @see
+          //      * - [DefinePlugin / add support for watch mode](https://github.com/webpack/webpack/issues/7717)
+          //      * - [support expressionMemberChain in DefinePlugin](https://github.com/webpack/webpack/pull/15562)
+          //      */
+          //     [globalName]: DefinePlugin.runtimeValue(
+          //       (_ctx) => {
+          //         const i18nDir = join(write.cwd, write.output);
+          //         // const i18nDir = resolve(__dirname, rel "./i18n");
+          //         // const { context, layer, resource } = ctx.module;
+          //         // const requirePath = relative(resource, i18nDir);
+          //         // const isReactServerComponent = ctx.module.layer === "rsc";
+          //         // console.log({
+          //         //   i18nDir,
+          //         //   // module: ctx.module,
+          //         //   context,
+          //         //   layer,
+          //         //   resource,
+          //         //   requirePath
+          //         // });
 
-                  return {
-                    t: `(function(...args) {
-                    const $t = require("${i18nDir}/webppack-define-t");
-                    return $t(...args);
-                  })`,
-                    // tOriginalAttempt: `(function(i18nKey, ...args) {
-                    //   const $t = require("${i18nDir}/webppack-define-t");
-                    //   const locale = global.__i18n_locale;
+          //         return {
+          //           t: `(function(...args) {
+          //           const $t = require("${i18nDir}/webpack-define-t");
+          //           return $t(...args);
+          //         })`,
+          //           // tOriginalAttempt: `(function(i18nKey, ...args) {
+          //           //   const $t = require("${i18nDir}/webpack-define-t");
+          //           //   const locale = global.__i18n_locale;
 
-                    //   /**
-                    //    * Normalise translation key
-                    //    */
-                    //   const normaliseTranslationKey = (key) => {
-                    //     const sep = "/";
-                    //     const slashRegex = new RegExp(sep, "g");
-                    //     const replaced = key
-                    //       // replace tilde with dollar
-                    //       .replace(/~/g, "$")
-                    //       // replace dash with underscore
-                    //       .replace(/-/g, "_")
-                    //       .replace(slashRegex, "_")
-                    //       // collapse consecutive underscores
-                    //       .replace(/_+/g, "_")
-                    //       // ensure valid js identifier, allow only alphanumeric characters and few symbols
-                    //       .replace(/[^a-zA-Z0-9_$]/gi, "");
+          //           //   /**
+          //           //    * Normalise translation key
+          //           //    */
+          //           //   const normaliseTranslationKey = (key) => {
+          //           //     const sep = "/";
+          //           //     const slashRegex = new RegExp(sep, "g");
+          //           //     const replaced = key
+          //           //       // replace tilde with dollar
+          //           //       .replace(/~/g, "$")
+          //           //       // replace dash with underscore
+          //           //       .replace(/-/g, "_")
+          //           //       .replace(slashRegex, "_")
+          //           //       // collapse consecutive underscores
+          //           //       .replace(/_+/g, "_")
+          //           //       // ensure valid js identifier, allow only alphanumeric characters and few symbols
+          //           //       .replace(/[^a-zA-Z0-9_$]/gi, "");
 
-                    //     // ensure the key does not start with a number (invalid js)
-                    //     return /^[0-9]/.test(replaced) ? "$" + replaced : replaced;
-                    //   };
-                    //   const fnName = normaliseTranslationKey(
-                    //     i18nKey.replace(/:/, ".").split(".")
-                    //       .filter(Boolean)
-                    //       .map(normaliseTranslationKey)
-                    //       .join("_")
-                    //   );
-                    //   // console.log({ fnName });
-                    //   return $t["$t_" + fnName](locale, ...args);
-                    // })`,
-                    // FIXME: webpack wants a CodeValuePrimitive type here but returning
-                    // an object also works and allows for a nicer namespaced global api
-                    // verify that returning an object here is intentionally supported
-                  } as unknown as string;
-                },
-                // _runtimeValueOptions
-                {
-                  fileDependencies: [
-                    join(write.cwd, write.output, "webppack-define-t.js"),
-                  ],
-                },
-              ),
-            }),
+          //           //     // ensure the key does not start with a number (invalid js)
+          //           //     return /^[0-9]/.test(replaced) ? "$" + replaced : replaced;
+          //           //   };
+          //           //   const fnName = normaliseTranslationKey(
+          //           //     i18nKey.replace(/:/, ".").split(".")
+          //           //       .filter(Boolean)
+          //           //       .map(normaliseTranslationKey)
+          //           //       .join("_")
+          //           //   );
+          //           //   // console.log({ fnName });
+          //           //   return $t["$t_" + fnName](locale, ...args);
+          //           // })`,
+          //           // FIXME: webpack wants a CodeValuePrimitive type here but returning
+          //           // an object also works and allows for a nicer namespaced global api
+          //           // verify that returning an object here is intentionally supported
+          //         } as unknown as string;
+          //       },
+          //       // _runtimeValueOptions
+          //       {
+          //         fileDependencies: [
+          //           join(write.cwd, write.output, "webpack-define-t.js"),
+          //         ],
+          //       },
+          //     ),
+          //   }),
         ].filter(Boolean),
       };
     },

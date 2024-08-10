@@ -39,6 +39,7 @@ export default createGenerator("js", (arg) => {
  */
 ${tInterpolateParams(dynamicDelimiters).$out("ts", { imports: false, exports: "named" })}
 `,
+      // TODO: cleanup commented old impl
       // content: () => /* j s */`
       // /**
       //  * @internal

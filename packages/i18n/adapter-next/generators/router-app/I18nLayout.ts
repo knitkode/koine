@@ -10,7 +10,7 @@ export default createGenerator("next", (arg) => {
 
   return {
     I18nLayout: {
-      dir: "server",
+      dir: createGenerator.dirs.server,
       name: "I18nLayout",
       ext: "tsx",
       index: false,

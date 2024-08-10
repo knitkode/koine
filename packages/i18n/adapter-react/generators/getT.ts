@@ -4,7 +4,7 @@ import { createGenerator } from "../../compiler/createAdapter";
 export default createGenerator("react", (_arg) => {
   return {
     getT: {
-      dir: "server",
+      dir: createGenerator.dirs.server,
       name: "getT",
       ext: "ts",
       index: true,

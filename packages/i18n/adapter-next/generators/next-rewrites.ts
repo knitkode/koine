@@ -10,6 +10,7 @@ export default createGenerator("next", (arg) => {
   );
   return {
     nextRewrites: {
+      dir: createGenerator.dirs.internal,
       name: "next-rewrites",
       ext: "js",
       index: false,

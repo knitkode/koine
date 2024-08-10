@@ -9,7 +9,7 @@ export default createGenerator("next", (arg) => {
 
   return {
     i18nServer: {
-      dir: "server",
+      dir: createGenerator.dirs.server,
       name: "i18nServer",
       ext: "tsx",
       index: true,

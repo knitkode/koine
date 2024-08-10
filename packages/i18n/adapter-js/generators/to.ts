@@ -43,17 +43,13 @@ const getToFunctions = (
   options: {
     defaultLocale: string;
     locales: string[];
-    modularized: boolean;
-    fnsPrefix: string;
+    fnPrefix: string;
   },
 ) => {
-  const { defaultLocale, locales, modularized, fnsPrefix } = options;
+  const { defaultLocale, locales, fnPrefix } = options;
   const functions: FunctionsCompiler[] = [];
   const hasOneLocale = locales.length === 1;
   const allImports = new Set<ImportsCompiler>();
-  // if the user does not specifiy a custom prefix by default we prepend `t_`
-  // when `modularized` option is true
-  const fnPrefix = fnsPrefix || modularized ? "$to_" : "";
 
   allImports.add(importsMap.formatTo);
   allImports.add(importsMap.types);
@@ -98,7 +94,7 @@ const getToFunctions = (
     );
   }
 
-  return { functions, fnPrefix, allImports };
+  return { functions, allImports };
 };
 
 // TODO: check whether adding /*#__PURE__*/ annotation changes anything
@@ -110,11 +106,13 @@ const $to = ({
     adapter: { modularized },
   },
 }: I18nCompiler.DataCode<"js">): I18nCompiler.AdapterGeneratorResult => {
-  const { functions, fnPrefix, allImports } = getToFunctions(routes, {
+  // if the user does not specifiy a custom prefix by default we prepend `t_`
+  // when `modularized` option is true
+  const fnPrefix = fnsPrefix || modularized ? "$to_" : "";
+  const { functions, allImports } = getToFunctions(routes, {
     defaultLocale: config.defaultLocale,
     locales: config.locales,
-    fnsPrefix,
-    modularized,
+    fnPrefix,
   });
 
   return modularized

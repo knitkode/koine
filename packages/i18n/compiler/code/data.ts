@@ -11,7 +11,7 @@ import type { CodeWriteOptionsResolved } from "./write";
 export const defaultCodeDataOptions = {
   routes: codeDataRoutesOptions,
   translations: codeDataTranslationsOptions,
-} satisfies Omit<CodeDataOptionsResolved<"js">, "adapter">;
+} satisfies Omit<CodeDataOptionsResolved<"js">, "adapter" | "write">;
 
 /**
  * Options for _code data_ generation

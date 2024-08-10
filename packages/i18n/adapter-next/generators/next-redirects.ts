@@ -10,6 +10,7 @@ export default createGenerator("next", (arg) => {
   );
   return {
     nextRedirects: {
+      dir: createGenerator.dirs.internal,
       name: "next-redirects",
       ext: "js",
       index: false,

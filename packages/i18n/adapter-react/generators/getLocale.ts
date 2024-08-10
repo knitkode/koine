@@ -3,7 +3,7 @@ import { createGenerator } from "../../compiler/createAdapter";
 export default createGenerator("react", (_arg) => {
   return {
     getLocale: {
-      dir: "server",
+      dir: createGenerator.dirs.server,
       name: "getLocale",
       ext: "ts",
       index: true,
