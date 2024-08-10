@@ -1,4 +1,5 @@
 import { createGenerator } from "../../compiler/createAdapter";
+import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";
 
 export default createGenerator("react", (_arg) => {
   return {
@@ -50,7 +51,7 @@ function createServerContext() {
       current = value;
       return current;
     },
-    get: () => global.__i18n_locale || current || storage.getStore() || defaultLocale,
+    get: () => global.${GLOBAL_I18N_IDENTIFIER} || current || storage.getStore() || defaultLocale,
   };
 }
 

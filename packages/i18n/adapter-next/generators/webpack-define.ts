@@ -8,6 +8,7 @@ import { tInterpolateParams } from "../../adapter-js/generators/tInterpolatePara
 import { tPluralise } from "../../adapter-js/generators/tPluralise";
 import { getToFunctionBodyWithLocales } from "../../adapter-js/generators/to";
 import { createGenerator } from "../../compiler/createAdapter";
+import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";
 import type { I18nCompiler } from "../../compiler/types";
 
 const getToLookup = (
@@ -176,7 +177,7 @@ declare global {
     },
     /**
      * Some useful webpack DefinePlugin context (`ctx`) object properties
-     * - `ctx.module.layer` one of `"ssr"` | `"rsc"` | ?
+     * - `ctx.module.layer` one of `"ssr"` | `"rsc"` | `"app-pages-browser"` | ?
      * - `ctx.module.buildInfo.rsc`
      * - `ctx.module.resourceResolveData.context`
      *
@@ -205,7 +206,7 @@ module.exports = {
       ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:ctx.module", _ctx.module);` : ``};
       return {
         to: \`(function(routeId, params) {
-          const locale = global.__i18n_locale;
+          const locale = global.${GLOBAL_I18N_IDENTIFIER};
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:to", { locale });` : ``};
 
           const defaultLocale = "${defaultLocale}";
@@ -226,7 +227,7 @@ module.exports = {
           return "missing: " + routeId;
         })\`,
         t: \`(function(i18nKey, params) {
-          const locale = global.__i18n_locale;
+          const locale = global.${GLOBAL_I18N_IDENTIFIER};
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:t", { locale });` : ``};
 
           ${tPluralise().$out("cjs", {

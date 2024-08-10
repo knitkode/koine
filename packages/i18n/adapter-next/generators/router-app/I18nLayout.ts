@@ -1,5 +1,6 @@
 import { getI18nDictionaries_inline } from "../../../adapter-js/generators/getI18nDictionaries_inline";
 import { createGenerator } from "../../../compiler/createAdapter";
+import { GLOBAL_I18N_IDENTIFIER } from "../../../compiler/helpers";
 
 export default createGenerator("next", (arg) => {
   const {
@@ -180,6 +181,17 @@ export const createI18nLayout = <
     default: (
       impl: (
         props: TProps & { locale: I18n.Locale } & React.PropsWithChildren<{
+            /**
+             * Render this in
+             * - \`/app/[${localeParamName}]/layout.tsx\`
+             * - \`/app/not-found.tsx\`
+             */
+            I18nScript: React.ReactNode;
+            /**
+             * Spread this prop on the \`<html {...i18nHtmlAttrs}>\` element in:
+             * - \`/app/[${localeParamName}]/layout.tsx\`
+             * - \`/app/not-found.tsx\`
+             */
             i18nHtmlAttrs: Pick<
               React.ComponentPropsWithoutRef<"html">,
               "lang" | "dir"
@@ -192,7 +204,15 @@ export const createI18nLayout = <
         const { locale } = config;
         const dir = rtlLocales.includes(locale) ? "rtl" : "ltr";
         const i18nHtmlAttrs = { lang: locale, dir };
-        const render = await impl({ locale, i18nHtmlAttrs, ...props });
+        const I18nScript = (
+          <script dangerouslySetInnerHTML={{ __html: \`window.global = window.global || {}; global.${GLOBAL_I18N_IDENTIFIER} = "\${locale}";\`}}></script>
+        );
+        const render = await impl({
+          locale,
+          I18nScript,
+          i18nHtmlAttrs,
+          ...props
+        });
         return <I18nLayout {...config}>{render}</I18nLayout>;
       };
     },
@@ -204,5 +224,3 @@ createI18nLayout.Root = I18nLayoutRoot;
     },
   };
 });
-// TODO: add this:before `const render = ...`
-// const i18nScript = `<script dangerouslySetInnerHTML={{ __html: `window.global = window.global || {}; global.__i18n_locale = "${i18nHtmlAttrs.lang}";`}}></script>`;

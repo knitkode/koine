@@ -1,6 +1,8 @@
 import { minimatch } from "minimatch";
 import type { I18nCompiler } from "./types";
 
+export const GLOBAL_I18N_IDENTIFIER = "__i18n_locale";
+
 export let getImportDots = (folderUp = 0) =>
   (folderUp ? Array(folderUp).fill("..").join("/") : ".") + "/";
 
