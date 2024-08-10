@@ -28,9 +28,13 @@ export type I18nCompilerConfig = {
    */
   trailingSlash?: boolean;
   /**
+   * Possible values:
+   *
+   * `"internal"`: used for developing this library
+   *
    * @default false
    */
-  debug?: boolean;
+  debug?: boolean | "internal";
 };
 
 export type I18nCompilerConfigResolved = Required<I18nCompilerConfig> & {

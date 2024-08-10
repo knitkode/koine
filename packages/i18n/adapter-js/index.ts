@@ -12,6 +12,7 @@ import isLocale from "./generators/isLocale";
 // import loadTranslations from "./generators/loadTranslations";
 import pathnameToRouteId from "./generators/pathnameToRouteId";
 import routes from "./generators/routes";
+import setLocale from "./generators/setLocale";
 import t from "./generators/t";
 import tInterpolateParams from "./generators/tInterpolateParams";
 import tPluralise from "./generators/tPluralise";
@@ -92,6 +93,7 @@ export const adapterJs = createAdapter({
       // loadTranslations,
       pathnameToRouteId,
       routes,
+      setLocale,
       t,
       tInterpolateParams,
       tPluralise,

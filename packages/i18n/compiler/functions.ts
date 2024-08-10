@@ -5,7 +5,7 @@ export type FunctionsCompilerData = {
   /**
    * Code to output before function declaration
    */
-  before?: string;
+  before?: string | ((options: { format: FunctionsCompilerFormat }) => string);
   /**
    * Function JsDoc block comment `/** * /` {@link FunctionsCompilerComment}
    */
@@ -108,12 +108,24 @@ export class FunctionsCompiler {
     };
   }
 
+  static #getBefore(
+    data: FunctionsCompilerData,
+    format: FunctionsCompilerFormat,
+  ) {
+    const { before } = data;
+    return before
+      ? typeof before === "function"
+        ? before({ format })
+        : before
+      : "";
+  }
+
   static #getBody(
     data: FunctionsCompilerData,
     format: FunctionsCompilerFormat,
   ) {
     const { body } = data;
-    return typeof body === "function" ? body({ format }) : body;
+    return (typeof body === "function" ? body({ format }) : body) + "\n\n";
   }
 
   /**
@@ -123,13 +135,13 @@ export class FunctionsCompiler {
     data: FunctionsCompilerData,
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
-    const { imports, before, comment, name, args } = data;
+    const { imports, comment, name, args } = data;
     const { optsIm, optsEx, optsCo } = options;
     let out =
       optsIm && imports.length
         ? imports.map((i) => i.$out("ts", optsIm)).join("\n") + "\n\n"
         : "";
-    out += before ? before + "\n\n" : "";
+    out += this.#getBefore(data, "ts");
     out += optsCo && comment ? this.#comment(comment) : "";
     out += optsEx === "named" || optsEx === "both" ? "export " : "";
     out += `let ${name} = (${this.#args(args, true)}) => `;
@@ -148,13 +160,13 @@ export class FunctionsCompiler {
     data: FunctionsCompilerData,
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
-    const { imports, before, comment, name, args } = data;
+    const { imports, comment, name, args } = data;
     const { optsIm, optsEx, optsCo } = options;
     let out =
       optsIm && imports.length
         ? imports.map((i) => i.$out("cjs", optsIm)).join("\n") + "\n\n"
         : "";
-    out += before ? before + "\n\n" : "";
+    out += this.#getBefore(data, "cjs");
     out += optsCo && comment ? this.#comment(comment) : "";
     out += `let ${name} = (${this.#args(args, false)}) => `;
     out += this.#getBody(data, "cjs") + ";";

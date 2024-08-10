@@ -135,7 +135,7 @@ const getGlobalToType = (routes: I18nCompiler.DataRoutes) => {
 
 export default createGenerator("next", (arg) => {
   const { config, options, routes, translations } = arg;
-  const { defaultLocale, locales } = config;
+  const { defaultLocale, locales, debug } = config;
   const { namespaceDelimiter, dynamicDelimiters } = options.translations.tokens;
   const { globalName } = options.adapter;
   const { cwd, output } = options.write || { cwd: "", output: "" };
@@ -175,9 +175,19 @@ declare global {
       },
     },
     /**
+     * Some useful webpack DefinePlugin context (`ctx`) object properties
+     * - `ctx.module.layer` one of `"ssr"` | `"rsc"` | ?
+     * - `ctx.module.buildInfo.rsc`
+     * - `ctx.module.resourceResolveData.context`
+     *
      * @see
      * - [DefinePlugin / add support for watch mode](https://github.com/webpack/webpack/issues/7717)
      * - [support expressionMemberChain in DefinePlugin](https://github.com/webpack/webpack/pull/15562)
+     *
+     * NOTE: `DefinePlugin.runtimeValue` according to webpack types should return
+     * a `CodeValuePrimitive` (aka a string usually) type but returning an object
+     * also works and allows for a nicer namespaced global api. TODO: Verify that
+     * returning an object here is intentionally supportedas unknown as string;
      */
     webpackDefine: {
       dir: createGenerator.dirs.internal,
@@ -192,9 +202,12 @@ const { DefinePlugin } = require("webpack");
 module.exports = {
   ${globalName}: DefinePlugin.runtimeValue(
     (_ctx) => {
+      ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:ctx.module", _ctx.module);` : ``};
       return {
         to: \`(function(routeId, params) {
           const locale = global.__i18n_locale;
+          ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:to", { locale });` : ``};
+
           const defaultLocale = "${defaultLocale}";
 
           ${formatTo(config).$out("cjs", {
@@ -214,6 +227,7 @@ module.exports = {
         })\`,
         t: \`(function(i18nKey, params) {
           const locale = global.__i18n_locale;
+          ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:t", { locale });` : ``};
 
           ${tPluralise().$out("cjs", {
             exports: false,
@@ -238,7 +252,6 @@ module.exports = {
         })\`,
       }
     },
-    // _runtimeValueOptions:
     {
       fileDependencies: [
         join("${cwd}", "${output}", "internal/webpack-define.js"),
@@ -249,47 +262,5 @@ module.exports = {
 `;
       },
     },
-    //     webpackDefineT: {
-    //       name: "webpack-define-t",
-    //       ext: "js",
-    //       index: false,
-    //       content: () => {
-    //         // const { functions } = getTFunctions(translations, {
-    //         //   defaultLocale,
-    //         //   fnPrefix: "",
-    //         // });
-
-    //         // ${FunctionsCompiler.outMany("cjs", functions, {
-    //         //   imports: false,
-    //         //   exports: false,
-    //         // })}
-    //         return /* j s */ `
-    // const locale = global.__i18n_locale;
-
-    // ${tPluralise().$out("cjs", {
-    //   exports: false,
-    //   imports: false,
-    //   comments: false,
-    // })}
-
-    // ${tInterpolateParams(dynamicDelimiters).$out("cjs", {
-    //   exports: false,
-    //   imports: false,
-    //   comments: false,
-    // })}
-
-    // const lookup = {
-    //   ${getTLookup(translations, { defaultLocale, namespaceDelimiter })}
-    // };
-
-    // module.exports = (i18nKey, params) => {
-    //   const fn = lookup[i18nKey];
-    //   if (fn) return fn(params);
-
-    //   return "Unexisting translation key!";
-    // };
-    // `;
-    //       },
-    //     },
   };
 });

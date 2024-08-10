@@ -45,6 +45,7 @@ import React, { useContext } from "react";
 import { I18nTranslateContext } from "./I18nTranslateContext";
 import { createT } from "./createT";
 import { defaultLocale } from "./defaultLocale";
+import { setGlobalLocale } from "./internal/setGlobalLocale";
 import type { I18n } from "./types";
 
 export type I18nTranslateProviderProps = React.PropsWithChildren<{
@@ -60,6 +61,15 @@ export const I18nTranslateProvider = ({
   dictionaries = {},
   children,
 }: I18nTranslateProviderProps) => {
+
+  // immediately set the current locale, this is needed alongside the same set
+  // operation done in the Next.js adapters' files I18nPage and I18nLayout, as
+  // those are RSC components and set the global locale variable in that context
+  // (the "rsc" webpack layer), while here we set it in a client component (the
+  // "ssr" webpack layer) making the locale available in all client components
+  // and in the webpack-define implementation
+  setGlobalLocale(locale);
+
   const parentCtx = useContext(I18nTranslateContext);
   const pluralRules = new Intl.PluralRules(locale);
   const _d = { ...parentCtx._d, ...dictionaries };

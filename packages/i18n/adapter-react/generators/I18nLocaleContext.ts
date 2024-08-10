@@ -11,6 +11,7 @@ export default createGenerator("react", (_arg) => {
 import React from "react";
 import { AsyncLocalStorage } from "async_hooks";
 import { defaultLocale } from "../defaultLocale";
+import { setGlobalLocale } from "../internal/setGlobalLocale";
 import type { I18n } from "../types";
 
 function createServerContext() {
@@ -32,8 +33,8 @@ function createServerContext() {
       // make sure that in the 'get' method the value from 'storage.getStorage'
       // is used as soon as available and with higher priority compared to 
       // this closure based 'current' value.
-      global.__i18n_locale = value;
       current = undefined;
+      setGlobalLocale(value);
       storage.enterWith(value);
       
       if (process.env.NODE_ENV !== "production") {
@@ -45,7 +46,7 @@ function createServerContext() {
       return children as Promise<React.AwaitedReactNode>;
     },
     set: (value: I18n.Locale) => {
-      global.__i18n_locale = value;
+      setGlobalLocale(value);
       current = value;
       return current;
     },

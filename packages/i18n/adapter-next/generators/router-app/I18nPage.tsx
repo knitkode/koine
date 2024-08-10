@@ -103,11 +103,6 @@ I18nPage.generateMetadata = getMetadata;
  */
 I18nPage.locale = (props: any) => props.${localeParamName};
 
-// declare globalThis {
-declare global {
-  var __i18n_locale: I18n.Locale;
-}
-
 /**
  * This function both sets and return the current locale based on the given
  * _props_ by simply reading the dedicated \`[localeParamName]\` dynamic segment
