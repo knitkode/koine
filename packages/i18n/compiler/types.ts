@@ -164,6 +164,16 @@ export namespace I18nCompiler {
      */
     id: string;
     /**
+     * Namespace of the translation based on the input filename it comes from
+     * e.g. `myDir/myFileName`
+     */
+    namespace: string;
+    /**
+     * Dot spaced path of the translation within the file content data it comes from
+     * e.g. `myObj.nestedKey.myKey`
+     */
+    path: string;
+    /**
      * Translation' value type
      */
     typeValue: "Primitive" | "Array" | "Object";
@@ -309,7 +319,7 @@ export namespace I18nCompiler {
      * Whether the generated file should be added to the automatically generated
      * `index.ts` barrel file
      */
-    index?: boolean;
+    index: boolean;
   };
 
   /**

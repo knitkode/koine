@@ -1,4 +1,4 @@
-import { createGenerator } from "../../compiler/createAdapter";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (arg) => {
   const {
@@ -13,7 +13,7 @@ export default createGenerator("next", (arg) => {
       name: "i18nServer",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { defaultLocale } from "../defaultLocale";
 import { locales } from "../locales";${
         modularized

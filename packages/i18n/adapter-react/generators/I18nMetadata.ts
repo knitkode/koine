@@ -5,7 +5,8 @@ export default createGenerator("react", (_arg) => {
     I18nMetadata: {
       name: "I18nMetadataContext",
       ext: "tsx",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 "use client";
 
 import React, { createContext } from "react";
@@ -26,14 +27,13 @@ export const I18nMetadataContext = createContext<I18nMetadataContextValue>([
   defaultI18nMetadata,
   () => (defaultI18nMetadata),
 ]);
-
-// export default I18nMetadataContext;
 `,
     },
     I18nMetadataProvider: {
       name: "I18nMetadataProvider",
       ext: "tsx",
-      content: () => /* js */ `
+      index: true,
+      content: () => /* j s */ `
 "use client";
 
 import React, { useMemo, useState } from "react";
@@ -45,7 +45,7 @@ type I18nMetadataProviderProps = React.PropsWithChildren<{
 }>;
 
 /**
- * @internal
+ * @internal (when used in Next.js)
  */
 export function I18nMetadataProvider(props: I18nMetadataProviderProps) {
   const { children } = props;
@@ -64,13 +64,14 @@ export function I18nMetadataProvider(props: I18nMetadataProviderProps) {
   );
 }
 
-// export default I18nMetadataProvider;
+export default I18nMetadataProvider;
 `,
     },
     I18nMetadataSetter: {
       name: "I18nMetadataSetter",
       ext: "tsx",
-      content: () => /* js */ `
+      index: true,
+      content: () => /* j s */ `
 "use client";
 
 import React, { useContext, useEffect } from "react";
@@ -81,10 +82,10 @@ type I18nMetadataSetterProps = {
   metadata: I18n.Metadata;
 };
 
+// TODO: verify this double behaviour
 /**
- * NB: Do not use it next.js Pages router
- * 
- * @internal
+ * @public When used in Next.js _pages_ router
+ * @internal When used in Next.js _app_ router
  */
 export const I18nMetadataSetter = (props: I18nMetadataSetterProps) => {
   const { metadata } = props;
@@ -97,14 +98,14 @@ export const I18nMetadataSetter = (props: I18nMetadataSetterProps) => {
   return null as React.ReactNode;
 };
 
-// export default I18nMetadataSetter;
+export default I18nMetadataSetter;
 `,
     },
     useI18nSwitch: {
       name: "useI18nSwitch",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import { useContext } from "react";

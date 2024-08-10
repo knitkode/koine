@@ -2,7 +2,7 @@ import { getTranslationsDir } from "../../compiler/helpers";
 
 export const loadTranslations_inline = (
   folderUp?: number,
-) => /* js */ `const loadTranslations = (
+) => /* j s */ `const loadTranslations = (
   locale: I18n.Locale,
   namespace: I18n.TranslateNamespace,
 ) =>

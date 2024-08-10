@@ -1,4 +1,4 @@
-import { normaliseUrl, objectMergeWithDefaults } from "@koine/utils";
+import { isBoolean, normaliseUrl, objectMergeWithDefaults } from "@koine/utils";
 import type { I18nCompiler } from "./types";
 
 export type I18nCompilerConfig = {
@@ -57,7 +57,7 @@ export const configDefaults: I18nCompilerConfigResolved = {
  * input data
  */
 export let getConfig = (
-  dataInput: I18nCompiler.DataInput,
+  dataInput: Pick<I18nCompiler.DataInput, "localesFolders">,
   options?: I18nCompilerConfig,
 ) => {
   if (options) {
@@ -70,7 +70,9 @@ export let getConfig = (
     options.defaultLocale = options.defaultLocale || options.locales?.[0];
 
     // ensure boolean value
-    options.hideDefaultLocaleInUrl = !!options.hideDefaultLocaleInUrl;
+    options.hideDefaultLocaleInUrl = isBoolean(options.hideDefaultLocaleInUrl)
+      ? options.hideDefaultLocaleInUrl
+      : configDefaults.hideDefaultLocaleInUrl;
   } else if (dataInput) {
     options = {} as I18nCompilerConfig;
 

@@ -1,4 +1,4 @@
-import { createGenerator } from "../../compiler/createAdapter";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (_arg) => {
   return {
@@ -6,7 +6,7 @@ export default createGenerator("next", (_arg) => {
       name: "I18nSetter",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import React, { useContext, useEffect } from "react";

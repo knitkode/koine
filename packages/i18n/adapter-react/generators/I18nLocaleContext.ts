@@ -6,7 +6,8 @@ export default createGenerator("react", (_arg) => {
       dir: "server",
       name: "I18nLocaleContext",
       ext: "tsx",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 import React from "react";
 import { AsyncLocalStorage } from "async_hooks";
 import { defaultLocale } from "../defaultLocale";
@@ -58,8 +59,6 @@ function createServerContext() {
  * @internal
  */
 export const I18nLocaleContext = createServerContext();
-
-// export default I18nLocaleContext;
 `,
     },
   };

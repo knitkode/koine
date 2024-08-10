@@ -239,10 +239,10 @@ const treatFileContent = (
   const { ext } = generatedFile;
   let { content } = generatedFile;
 
-  if (generatedFile.isBarrel) return;
+  // remove empty first/last lines
+  content = content.trim();
 
-  // remove empty first line
-  content = content.replace(/^\s*/m, "");
+  if (generatedFile.isBarrel) return;
 
   if (tsNoCheck && (ext === "d.ts" || ext === "ts" || ext === "tsx")) {
     content = `// @ts-nocheck\n` + content;

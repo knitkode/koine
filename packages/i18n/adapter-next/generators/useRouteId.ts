@@ -18,7 +18,7 @@ export default createGenerator("next", (arg) => {
           : "";
         switch (router) {
           case "app":
-            return /* js */ `
+            return /* j s */ `
 "use client";
 
 import { useContext } from "react";
@@ -29,7 +29,7 @@ export const useRouteId = () => useContext(I18nRouteContext)[0];
 export default useRouteId;
 `;
           case "pages":
-            return /* js */ `
+            return /* j s */ `
 import { useRouter } from "next/router";
 import { pathnameToRouteId } from "./pathnameToRouteId";
 import type { I18n } from "./types";
@@ -41,7 +41,7 @@ export default useRouteId;
 `;
           case "migrating":
           default:
-            return /* js */ `
+            return /* j s */ `
 "use client";
 
 import { useContext } from "react";

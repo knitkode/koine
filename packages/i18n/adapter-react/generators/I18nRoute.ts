@@ -5,7 +5,8 @@ export default createGenerator("react", (_arg) => {
     I18nRouteContext: {
       name: "I18nRouteContext",
       ext: "tsx",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 "use client";
 
 import React, { createContext } from "react";
@@ -18,18 +19,20 @@ type I18nRouteContextValue = readonly [
   React.Dispatch<React.SetStateAction<I18n.RouteId>>,
 ];
 
+/**
+ * @internal
+ */
 export const I18nRouteContext = createContext<I18nRouteContextValue>([
   "" as I18n.RouteId,
   () => "",
 ]);
-
-// export default I18nRouteContext;
 `,
     },
     I18nRouteProvider: {
       name: "I18nRouteProvider",
       ext: "tsx",
-      content: () => /* js */ `
+      index: true,
+      content: () => /* j s */ `
 "use client";
 
 import React, { useMemo, useState } from "react";
@@ -41,7 +44,7 @@ type I18nRouteProviderProps = React.PropsWithChildren<{
 }>;
 
 /**
- * @internal
+ * @internal (when used in Next.js)
  */
 export const I18nRouteProvider = (props: I18nRouteProviderProps) => {
   const { children } = props;
@@ -60,13 +63,14 @@ export const I18nRouteProvider = (props: I18nRouteProviderProps) => {
   );
 }
 
-// export default I18nRouteProvider;
+export default I18nRouteProvider;
 `,
     },
     I18nRouteSetter: {
       name: "I18nRouteSetter",
       ext: "tsx",
-      content: () => /* js */ `
+      index: true,
+      content: () => /* j s */ `
 "use client";
 
 import React, { useContext, useEffect } from "react";
@@ -78,9 +82,8 @@ type I18nRouteSetterProps = {
 };
 
 /**
- * NB: Do not use it next.js Pages router
- *
- * @internal
+ * @public (when used in Next.js _pages_ router)
+ * @internal (when used in Next.js _app_ router)
  */
 export const I18nRouteSetter = (props: I18nRouteSetterProps) => {
   const { id } = props;
@@ -93,22 +96,7 @@ export const I18nRouteSetter = (props: I18nRouteSetterProps) => {
   return null as React.ReactNode;
 };
 
-// export default I18nRouteSetter;
-`,
-    },
-    useRouteId: {
-      name: "useRouteId",
-      ext: "ts",
-      index: true,
-      content: () => /* js */ `
-"use client";
-
-import { useContext } from "react";
-import { I18nRouteContext } from "./I18nRouteContext";
-
-export const useRouteId = () => useContext(I18nRouteContext)[0];
-  
-export default useRouteId;
+export default I18nRouteSetter;
 `,
     },
   };

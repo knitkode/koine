@@ -34,6 +34,8 @@ export type ImportsCompilerOutputOptions = {
   folderUp: number;
 };
 
+type ImportsCompilerOutputFormat = "ts" | "cjs";
+
 export class ImportsCompiler {
   data: ImportsCompilerData;
 
@@ -64,22 +66,48 @@ export class ImportsCompiler {
     return out;
   }
 
-  $out(format: "ts", options: ImportsCompilerOutputOptions) {
-    if (format === "ts") return ImportsCompiler.#ts(this.data, options);
-    return "";
+  static #cjs(
+    data: ImportsCompilerData,
+    options: ImportsCompilerOutputOptions,
+  ) {
+    const { path, defaulT, named = [] } = data;
+    const { folderUp } = options;
+    const dir = getImportDots(folderUp);
+    const partRequire = `= require("${dir + path}")`;
+    let out = "";
+
+    if (defaulT) {
+      out += `const ${defaulT} ${partRequire};`;
+    }
+    if (named.length) {
+      if (defaulT) out += "\n";
+
+      // prettier-ignore
+      out += `const { ${named.filter((e) => !e.type).map((e) => e.name).join(", ")} } ${partRequire};`;
+    }
+
+    return out;
+  }
+
+  $out(
+    format: ImportsCompilerOutputFormat,
+    options: ImportsCompilerOutputOptions,
+  ) {
+    return ImportsCompiler.out(this.data, format, options);
   }
 
   static out(
     data: ImportsCompilerData,
-    format: "ts",
+    format: ImportsCompilerOutputFormat,
     options: ImportsCompilerOutputOptions,
   ) {
     if (format === "ts") return this.#ts(data, options);
+    if (format === "cjs") return this.#cjs(data, options);
     return "";
   }
 
   static outMany(
-    format: "ts",
+    format: ImportsCompilerOutputFormat,
     instances: ImportsCompiler[] | Set<ImportsCompiler>,
     options: ImportsCompilerOutputOptions,
   ) {

@@ -1,17 +1,14 @@
-/* eslint-disable no-useless-escape */
 import { createGenerator } from "../../compiler/createAdapter";
-import { escapeEachChar } from "../../compiler/helpers";
 
 export default createGenerator("js", (arg) => {
   const { options } = arg;
-  const { start, end } = options.translations.tokens.dynamicDelimiters;
 
   return {
     createT: {
       name: "createT",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import type { I18n } from "./types";
 import { defaultLocale } from "./defaultLocale";
 import { tInterpolateParams } from "./tInterpolateParams";
@@ -25,7 +22,7 @@ const allowEmptyStrings = true;
 /**
  * @see https://github.com/aralroca/next-translate/blob/master/src/transCore.tsx
  */
-export function createT<TNamespace extends I18n.TranslateNamespace>(
+export function createT(
   dictionaries: I18n.Dictionaries,
   pluralRules: Intl.PluralRules,
   locale: string = defaultLocale,
@@ -67,6 +64,7 @@ export function createT<TNamespace extends I18n.TranslateNamespace>(
     const empty =
       typeof value === "undefined" ||
       (typeof value === "object" && !Object.keys(value).length) ||
+      (Array.isArray(value) && !value.length) ||
       (value === "" && !allowEmptyStrings);
 
     // no need to try interpolation
@@ -169,10 +167,6 @@ function interpolation(
   if (!text || !query || query === "obj") return text || "";
 
   return tInterpolateParams(text, query);
-  // return Object.keys(query).reduce((all, key) => {
-  //   const regex = new RegExp(\`${escapeEachChar(start)}\\s*\${key}(?:[\\s,]+([\\w-]*))?\\s*\$${escapeEachChar(end)}\`, "gm");
-  //   return all.replace(regex, (_match) => query[key as keyof typeof query] as string);
-  // }, text);
 }
 
 function objectInterpolation(

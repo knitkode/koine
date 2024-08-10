@@ -10,7 +10,7 @@ export default createGenerator("js", (arg) => {
       name: "pathnameToRouteId",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 /**
  * Convert a URL like pathname to a "named route"
  * E.g. it transforms:

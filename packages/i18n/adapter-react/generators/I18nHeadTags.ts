@@ -6,7 +6,7 @@ export default createGenerator("react", (_arg) => {
       name: "I18nHeadTags",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import React from "react";

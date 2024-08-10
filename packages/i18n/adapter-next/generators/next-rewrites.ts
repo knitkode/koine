@@ -12,7 +12,8 @@ export default createGenerator("next", (arg) => {
     nextRewrites: {
       name: "next-rewrites",
       ext: "js",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 /**
  * @type {import("next/dist/lib/load-custom-routes").Rewrite[]}
  */

@@ -1,4 +1,4 @@
-import { createGenerator } from "../../compiler/createAdapter";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 /**
  * We cannot re-use `I18nHeadTags` as NextHead component does needs HTML tags
@@ -11,7 +11,8 @@ export default createGenerator("next", (_arg) => {
     I18nHead: {
       name: "I18nHead",
       ext: "tsx",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 "use client";
 
 import React from "react";

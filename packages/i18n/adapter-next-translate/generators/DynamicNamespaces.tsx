@@ -6,7 +6,7 @@ export default createGenerator("next-translate", (_arg) => {
       name: "DynamicNamespaces",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import _DynamicNamespaces from "next-translate/DynamicNamespaces";

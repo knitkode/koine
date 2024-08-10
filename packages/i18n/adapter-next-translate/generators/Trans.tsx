@@ -6,7 +6,7 @@ export default createGenerator("next-translate", (_arg) => {
       name: "Trans",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import type { TransProps as NextTranslateTransProps } from "next-translate";

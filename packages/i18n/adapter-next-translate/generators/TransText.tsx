@@ -6,7 +6,7 @@ export default createGenerator("next-translate", (_arg) => {
       name: "TransText",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import _TransText from "next-translate/TransText";

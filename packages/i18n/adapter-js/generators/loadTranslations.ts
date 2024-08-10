@@ -6,7 +6,8 @@ export default createGenerator("js", (_arg) => {
     loadTranslations: {
       name: "loadTranslations",
       ext: "ts",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 import type { I18n } from "./types";
 
 /**

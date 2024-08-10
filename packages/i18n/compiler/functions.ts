@@ -3,6 +3,14 @@ import { ImportsCompiler, type ImportsCompilerOutputOptions } from "./imports";
 export type FunctionsCompilerData = {
   imports: ImportsCompiler[];
   /**
+   * Code to output before function declaration
+   */
+  before?: string;
+  /**
+   * Function JsDoc block comment `/** * /` {@link FunctionsCompilerComment}
+   */
+  comment?: FunctionsCompilerComment;
+  /**
    * The function name (`myFn` in `myFn(myArg?: MyArg) { return "x" }`)
    */
   name: string;
@@ -13,7 +21,14 @@ export type FunctionsCompilerData = {
   /**
    * The function body (`return "x";` in `myFn(myArg?: MyArg) { return "x"; }`)
    */
-  body: string;
+  body: string | ((options: { format: FunctionsCompilerFormat }) => string);
+};
+
+type FunctionsCompilerComment = {
+  /**
+   * Add `@internal` comment directive
+   */
+  internal?: boolean;
 };
 
 export type FunctionsCompilerDataArg = {
@@ -40,7 +55,19 @@ type FunctionsCompilerOutputOptions = {
    * How the function is exported
    */
   exports: false | "named" | "default" | "both";
+  /**
+   * Whether to print the function's block comment (if any)
+   *
+   * @default true
+   */
+  comments?: boolean;
 };
+
+type FunctionsCompilerOutputOptionsResolved = ReturnType<
+  typeof FunctionsCompiler.resolveOptions
+>;
+
+type FunctionsCompilerFormat = "ts" | "cjs";
 
 export class FunctionsCompiler {
   name: FunctionsCompilerDataArg["name"];
@@ -52,49 +79,116 @@ export class FunctionsCompiler {
   }
 
   static #args(args: FunctionsCompilerDataArg[], withTypes: boolean) {
-    return args.map((arg) =>
-      withTypes
-        ? `${arg.name}${arg.optional ? "?" : ""}: ${arg.type}`
-        : arg.name,
-    );
+    return args
+      .map((arg) =>
+        withTypes
+          ? `${arg.name}${arg.optional ? "?" : ""}: ${arg.type}`
+          : arg.name,
+      )
+      .join(", ");
   }
 
+  static #comment({ internal }: FunctionsCompilerComment) {
+    let lines = [];
+    if (internal) lines.push("@internal");
+
+    return lines.length ? `/**\n * ${lines.join("\n * ")}\n */\n` : "";
+  }
+
+  static resolveOptions(options: FunctionsCompilerOutputOptions) {
+    const {
+      imports: optsIm,
+      exports: optsEx,
+      comments: optsCo = true,
+    } = options;
+    return {
+      optsIm,
+      optsEx,
+      optsCo,
+    };
+  }
+
+  static #getBody(
+    data: FunctionsCompilerData,
+    format: FunctionsCompilerFormat,
+  ) {
+    const { body } = data;
+    return typeof body === "function" ? body({ format }) : body;
+  }
+
+  /**
+   * TypeScript output
+   */
   static #ts(
     data: FunctionsCompilerData,
-    options: FunctionsCompilerOutputOptions,
+    options: FunctionsCompilerOutputOptionsResolved,
   ) {
-    const { imports, name, args, body } = data;
-    const { imports: optsIm, exports: optsEx } = options;
+    const { imports, before, comment, name, args } = data;
+    const { optsIm, optsEx, optsCo } = options;
     let out =
       optsIm && imports.length
         ? imports.map((i) => i.$out("ts", optsIm)).join("\n") + "\n\n"
         : "";
+    out += before ? before + "\n\n" : "";
+    out += optsCo && comment ? this.#comment(comment) : "";
     out += optsEx === "named" || optsEx === "both" ? "export " : "";
     out += `let ${name} = (${this.#args(args, true)}) => `;
-    out += body;
+    out += this.#getBody(data, "ts") + ";";
     out +=
       optsEx === "default" || optsEx === "both"
-        ? "\n\nexport default " + name
+        ? "\n\nexport default " + name + ";"
         : "";
     return out;
   }
 
-  $out(format: "ts", options: FunctionsCompilerOutputOptions) {
-    if (format === "ts") return FunctionsCompiler.#ts(this.data, options);
-    return "";
+  /**
+   * CommonJS output
+   */
+  static #cjs(
+    data: FunctionsCompilerData,
+    options: FunctionsCompilerOutputOptionsResolved,
+  ) {
+    const { imports, before, comment, name, args } = data;
+    const { optsIm, optsEx, optsCo } = options;
+    let out =
+      optsIm && imports.length
+        ? imports.map((i) => i.$out("cjs", optsIm)).join("\n") + "\n\n"
+        : "";
+    out += before ? before + "\n\n" : "";
+    out += optsCo && comment ? this.#comment(comment) : "";
+    out += `let ${name} = (${this.#args(args, false)}) => `;
+    out += this.#getBody(data, "cjs") + ";";
+    out +=
+      optsEx === "named" || optsEx === "both"
+        ? `\n\nexports.${name} = ${name};`
+        : "";
+    out +=
+      optsEx === "default" || optsEx === "both"
+        ? "\n\nmodule.exports = " + name + ";"
+        : "";
+    return out;
+  }
+
+  $out(
+    format: FunctionsCompilerFormat,
+    options: FunctionsCompilerOutputOptions,
+  ) {
+    return FunctionsCompiler.out(this.data, format, options);
   }
 
   static out(
     data: FunctionsCompilerData,
-    format: "ts",
+    format: FunctionsCompilerFormat,
     options: FunctionsCompilerOutputOptions,
   ) {
-    if (format === "ts") return this.#ts(data, options);
+    const resolvedOptions = this.resolveOptions(options);
+    if (format === "ts") return this.#ts(data, resolvedOptions);
+    if (format === "cjs") return this.#cjs(data, resolvedOptions);
     return "";
   }
 
   static outMany(
-    format: "ts",
+    format: FunctionsCompilerFormat,
     instances: FunctionsCompiler[] | Set<FunctionsCompiler>,
     options: FunctionsCompilerOutputOptions,
   ) {

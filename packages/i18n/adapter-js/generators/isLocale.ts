@@ -6,7 +6,7 @@ export default createGenerator("js", (_arg) => {
       name: "isLocale",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { locales } from "./locales";
 import type { I18n } from "./types";
 

@@ -6,7 +6,7 @@ export default createGenerator("next-translate", (_arg) => {
       name: "I18nProvider",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import _I18nProvider from "next-translate/I18nProvider";

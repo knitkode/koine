@@ -45,8 +45,8 @@ export let getInputDataLocal = async (
           if (rawContent) {
             translationFiles.push({
               path: relativePath,
-              data: JSON.parse(rawContent),
               locale: locale,
+              data: JSON.parse(rawContent),
             });
           }
         }),
@@ -81,8 +81,8 @@ export let getInputDataLocalSync = (
       if (rawContent) {
         translationFiles.push({
           path: relativePath,
-          data: JSON.parse(rawContent),
           locale: locale,
+          data: JSON.parse(rawContent),
         });
       }
     });

@@ -5,15 +5,15 @@
     "@koine/node": "*",
     "@koine/utils": "*",
     "comment-json": "^4.2.4",
-    "glob": "^10.3.10",
-    "minimatch": "^9.0.3",
-    "negotiator": "^0.6.3",
+    "glob": "^11.0.0",
+    "minimatch": "^10.0.1",
     "synckit": "^0.9.0",
     "typescript": "^5.3.3",
     "webpack": "^5.90.1"
   },
   "peerDependencies": {
     "next": "^14.0.4",
+    "next-translate": "^2.6.2",
     "next-translate-plugin": "^2.6.2"
   },
   "peerDependenciesMeta": {

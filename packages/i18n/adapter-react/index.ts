@@ -7,11 +7,12 @@ import I18nMetadata from "./generators/I18nMetadata";
 import I18nRoute from "./generators/I18nRoute";
 import I18nTranslate from "./generators/I18nTranslate";
 import Trans from "./generators/Trans";
-import TransText from "./generators/TransText";
-import formatElements from "./generators/formatElements";
 import getLocale from "./generators/getLocale";
 import getT from "./generators/getT";
 import getTo from "./generators/getTo";
+import useRouteId from "./generators/useRouteId";
+import useTo from "./generators/useTo";
+import useToSpa from "./generators/useToSpa";
 
 // import packageJson from "./generators/packageJson";
 
@@ -21,7 +22,7 @@ export const adapterReact = createAdapter({
   name: "react",
   defaultOptions: {
     ...adapterJs.defaultOptions,
-  } as Options,
+  } satisfies Options,
   getGenerators: (data) => {
     return [
       ...adapterJs.getGenerators(data),
@@ -32,11 +33,12 @@ export const adapterReact = createAdapter({
       I18nRoute,
       I18nTranslate,
       Trans,
-      TransText,
-      formatElements,
       getLocale,
       getT,
       getTo,
+      useRouteId,
+      useTo,
+      useToSpa,
       // packageJson,
     ];
   },

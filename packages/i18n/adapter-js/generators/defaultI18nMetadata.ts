@@ -6,7 +6,8 @@ export default createGenerator("js", (_arg) => {
       // dir: createGenerator.dirs.internal,
       name: "defaultI18nMetadata",
       ext: "ts",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 import type { I18n } from "./types";
 
 /**

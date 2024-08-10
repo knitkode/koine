@@ -20,6 +20,26 @@ import types from "./generators/types";
 
 export type Options = {
   /**
+   * The name of the global variable  defined through the `Webpack.DefinePlugin`
+   * implementation which holds an object with the i18n functions as properties.
+   *
+   * NB: This should be added to your **eslint** configuration, e.g. in your
+   * `eslint.config.js` flat config with:
+   *
+   * ```js
+   * module.exports = [{
+   *   languageOptions: {
+   *     globals: {
+   *       i18n: false,
+   *     }
+   *   },
+   * }];
+   * ```
+   *
+   * @default "i18n"
+   */
+  globalName: string;
+  /**
    * - When `true` it outpus each function in a separate file with a `named` and a
    * `default` export in order to fully support SWC transforms optimization (see
    * Next.js modularizeImports option).
@@ -53,8 +73,9 @@ export type Options = {
 export const adapterJs = createAdapter({
   name: "js",
   defaultOptions: {
+    globalName: "i18n",
     modularized: true,
-  } as Options,
+  } satisfies Options,
   getGenerators: (_data) => {
     return [
       config,

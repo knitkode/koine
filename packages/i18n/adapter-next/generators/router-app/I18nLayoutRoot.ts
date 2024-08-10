@@ -1,4 +1,4 @@
-import { createGenerator } from "../../compiler/createAdapter";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (arg) => {
   const {
@@ -12,7 +12,8 @@ export default createGenerator("next", (arg) => {
       dir: "server",
       name: "I18nLayoutRoot",
       ext: "tsx",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 import React from "react";
 import { I18nMetadataProvider } from "../I18nMetadataProvider";
 import { I18nRouteProvider } from "../I18nRouteProvider";
@@ -36,8 +37,6 @@ export const I18nLayoutRoot = ({ children }: I18nLayoutRootProps) => {
     </I18nRouteProvider>
   );
 };
-
-export default I18nLayoutRoot;
 `,
     },
   };

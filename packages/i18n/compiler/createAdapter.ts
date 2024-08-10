@@ -16,14 +16,20 @@ export function createAdapter<
   name: TName;
   defaultOptions: TOptions;
   getGenerators: TGetGenerators;
+  /**
+   * Create adapter's generated files transformers functions to apply in a second pass
+   * A file id can be set to `false` to disable its generation.
+   */
   getTransformers: (data: I18nCompiler.DataCode<TName>) => Partial<{
     [FileId in keyof UnionToIntersection<
       ReturnType<ReturnType<typeof config.getGenerators>[number]>
-    >]: (
-      file: UnionToIntersection<
-        ReturnType<ReturnType<typeof config.getGenerators>[number]>
-      >[FileId],
-    ) => I18nCompiler.AdapterFile;
+    >]:
+      | false
+      | ((
+          file: UnionToIntersection<
+            ReturnType<ReturnType<typeof config.getGenerators>[number]>
+          >[FileId],
+        ) => I18nCompiler.AdapterFile);
   }>;
   // tranformFile?: <
   //   TFileId extends keyof UnionToIntersection<ReturnType<ReturnType<typeof config.getGenerators>[number]>>,
@@ -50,6 +56,10 @@ export function createAdapter<
 
     return {
       generators,
+      /**
+       * Adapter's files transformers functions to apply in a second pass
+       * A file id can be set to `false` to disable its generation.
+       */
       transformers,
       // files,
     };

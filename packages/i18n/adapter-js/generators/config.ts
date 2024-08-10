@@ -9,7 +9,7 @@ export default createGenerator("js", (arg) => {
       name: "locales",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 export const locales = ${locales} as const;
 
 export default locales;
@@ -19,7 +19,7 @@ export default locales;
       name: "defaultLocale",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import type { I18n } from "./types";
 
 export const defaultLocale: I18n.Locale = "${config.defaultLocale}";
@@ -31,7 +31,7 @@ export default defaultLocale;
       name: "config",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { locales } from "./locales";
 import { defaultLocale } from "./defaultLocale";
 
@@ -49,7 +49,8 @@ export default config;
     configCjs: {
       name: "config.cjs",
       ext: "js",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 const { locales } = require("./locales");
 const { defaultLocale } = require("./defaultLocale");
 

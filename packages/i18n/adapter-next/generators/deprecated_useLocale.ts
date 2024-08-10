@@ -6,7 +6,7 @@ export default createGenerator("next", (_arg) => {
       name: "useLocale",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { useRouter } from "next/router";
 import { defaultLocale } from "./defaultLocale";
 import type { I18n } from "./types";

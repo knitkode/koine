@@ -6,7 +6,7 @@ export default createGenerator("next", (_arg) => {
       name: "useToSpa",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import { toSpa } from "./toSpa";

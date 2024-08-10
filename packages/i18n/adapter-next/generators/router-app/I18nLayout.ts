@@ -1,5 +1,5 @@
-import { getI18nDictionaries_inline } from "../../adapter-js/generators/getI18nDictionaries_inline";
-import { createGenerator } from "../../compiler/createAdapter";
+import { getI18nDictionaries_inline } from "../../../adapter-js/generators/getI18nDictionaries_inline";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (arg) => {
   const {
@@ -13,8 +13,8 @@ export default createGenerator("next", (arg) => {
       dir: "server",
       name: "I18nLayout",
       ext: "tsx",
-      // index: true,
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 import React from "react";
 import type { Metadata } from "next/types";
 import { rtlLocales } from "@koine/i18n";
@@ -200,8 +200,6 @@ export const createI18nLayout = <
 };
 
 createI18nLayout.Root = I18nLayoutRoot;
-
-export default I18nLayout;
 `,
     },
   };

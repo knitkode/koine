@@ -7,7 +7,7 @@ export default createGenerator("js", (_arg) => {
       name: "getI18nAlternatesFromDom",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { createElement, domEach } from "@koine/dom";
 import { defaultLocale } from "./defaultLocale";
 import type { I18n } from "./types";

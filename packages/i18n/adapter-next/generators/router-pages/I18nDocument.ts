@@ -1,4 +1,4 @@
-import { createGenerator } from "../../compiler/createAdapter";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 /**
  * @see https://nextjs.org/docs/pages/building-your-application/routing/custom-document
@@ -10,7 +10,7 @@ export default createGenerator("next", (_arg) => {
       name: "I18nDocument",
       ext: "tsx",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import React from "react";
 import NextDocument, {
   type DocumentContext,

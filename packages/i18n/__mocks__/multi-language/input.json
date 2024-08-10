@@ -3,6 +3,7 @@
   "translationFiles": [
     {
       "path": "~.json",
+      "locale": "en",
       "data": {
         "home": "/",
         "about": "/about",
@@ -45,11 +46,11 @@
             }
           }
         }
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "404.json",
+      "locale": "en",
       "data": {
         "seo": {
           "title": "404 - Not found"
@@ -60,11 +61,11 @@
           "2": "Twice",
           "3": "Three times"
         }
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "$faq.json",
+      "locale": "en",
       "data": {
         "home": [
           {
@@ -72,11 +73,11 @@
             "answer": "That"
           }
         ]
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "~account/~user~profile.json",
+      "locale": "en",
       "data": {
         "boolShouldntBeHereBut": true,
         "title": "Title {{ varName }}",
@@ -132,19 +133,19 @@
             }
           }
         }
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "~account/FormUserLanguages.json",
+      "locale": "en",
       "data": {
         "empty": {},
         "msg": "Some text"
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "~.json",
+      "locale": "it",
       "data": {
         "home": "/",
         "about": "/chi-siamo",
@@ -187,11 +188,11 @@
             }
           }
         }
-      },
-      "locale": "it"
+      }
     },
     {
       "path": "404.json",
+      "locale": "it",
       "data": {
         "seo": {
           "title": "404 - Introvabile"
@@ -202,11 +203,11 @@
           "2": "Due volte",
           "3": "Tre volte"
         }
-      },
-      "locale": "it"
+      }
     },
     {
       "path": "$faq.json",
+      "locale": "it",
       "data": {
         "home": [
           {
@@ -214,11 +215,11 @@
             "answer": "Quello"
           }
         ]
-      },
-      "locale": "it"
+      }
     },
     {
       "path": "~account/~user~profile.json",
+      "locale": "it",
       "data": {
         "boolShouldntBeHereBut": true,
         "title": "Title {{ varName }}",
@@ -274,16 +275,15 @@
             }
           }
         }
-      },
-      "locale": "it"
+      }
     },
     {
       "path": "~account/FormUserLanguages.json",
+      "locale": "it",
       "data": {
         "empty": {},
         "msg": "Del testo"
-      },
-      "locale": "it"
+      }
     }
   ]
 }

@@ -50,7 +50,7 @@ import type { I18nCompiler } from "../../compiler/types";
 //   return key
 // }
 
-const getTranslationValueOutput = (
+export const getTranslationValueOutput = (
   value: I18nCompiler.DataTranslationValue,
 ) => {
   if (isString(value) || isNumber(value)) {
@@ -63,12 +63,12 @@ const getTranslationValueOutput = (
   return `(${JSON.stringify(value)})`;
 };
 
-const areEqualTranslationsValues = (
+export const areEqualTranslationsValues = (
   a: I18nCompiler.DataTranslationValue,
   b: I18nCompiler.DataTranslationValue,
 ) => areEqual(a, b);
 
-const getFunctionBodyWithLocales = (
+export const getFunctionBodyWithLocales = (
   defaultLocale: I18nCompiler.Config["defaultLocale"],
   perLocaleValues: I18nCompiler.DataTranslation["values"],
 ) => {
@@ -104,20 +104,16 @@ const importsMap = {
   }),
 };
 
-const getTFunctions = (
+export const getTFunctions = (
   translations: I18nCompiler.DataTranslations,
   options: {
     defaultLocale: string;
-    modularized: boolean;
-    fnsPrefix: string;
+    fnPrefix: string;
   },
 ) => {
-  const { defaultLocale, modularized, fnsPrefix } = options;
+  const { defaultLocale, fnPrefix } = options;
   const functions: FunctionsCompiler[] = [];
   const allImports: Set<ImportsCompiler> = new Set();
-  // if the user does not specifiy a custom prefix by default we prepend `$t_`
-  // when `modularized` option is true
-  const fnPrefix = fnsPrefix || (modularized ? "$t_" : "");
 
   allImports.add(importsMap.types);
 
@@ -159,9 +155,7 @@ const getTFunctions = (
     }
     if (params) {
       needsImport_tInterpolateParams = true;
-      body = `tInterpolateParams(${body}, params);`;
-    } else {
-      body += ";";
+      body = `tInterpolateParams(${body}, params)`;
     }
 
     if (needsImport_tInterpolateParams) {
@@ -176,7 +170,7 @@ const getTFunctions = (
     functions.push(new FunctionsCompiler({ imports, name, args, body }));
   }
 
-  return { functions, fnPrefix, allImports };
+  return { functions, allImports };
 };
 
 // TODO: check whether adding /*#__PURE__*/ annotation changes anything
@@ -189,10 +183,12 @@ export default createGenerator("js", (data) => {
     },
     translations,
   } = data;
-  const { functions, fnPrefix, allImports } = getTFunctions(translations, {
+  // if the user does not specifiy a custom prefix by default we prepend `$t_`
+  // when `modularized` option is true
+  const fnPrefix = fnsPrefix || (modularized ? "$t_" : "");
+  const { functions, allImports } = getTFunctions(translations, {
     defaultLocale,
-    modularized,
-    fnsPrefix,
+    fnPrefix,
   });
 
   return modularized

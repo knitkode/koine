@@ -8,7 +8,7 @@ export default createGenerator("react", (_arg) => {
       name: "getT",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { createT } from "../createT";
 import type { I18n } from "../types";
 // import { loadTranslations } from "../loadTranslations";

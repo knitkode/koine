@@ -72,7 +72,8 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
 
       const _file = files[fileId];
       const transformerId = fileId as keyof typeof transformers;
-      const file = transformers?.[transformerId]?.(_file as never) ?? _file;
+      const transformer = transformers?.[transformerId];
+      const file = transformer ? transformer(_file as never) : _file;
       const { dir, name, path } = getAdapterFileMeta(file, {});
       const { content } = file;
 

@@ -12,7 +12,8 @@ export default createGenerator("next-translate", (data) => {
     nextTranslateI18n: {
       name: "nextTranslateI18n",
       ext: "js",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 /**
  * Get 'next-translate' configuration
  *

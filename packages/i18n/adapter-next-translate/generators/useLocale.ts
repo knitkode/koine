@@ -6,7 +6,7 @@ export default createGenerator("next-translate", (_arg) => {
       name: "useLocale",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import useTranslation from "next-translate/useTranslation";
 import { defaultLocale } from "./defaultLocale";
 import type { I18n } from "./types";

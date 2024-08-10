@@ -8,8 +8,9 @@ export default createGenerator("js", (arg) => {
     getI18nMetadata: {
       name: "getI18nMetadata",
       ext: "ts",
+      index: false,
       // prettier-ignore
-      content: () => /* js */ `
+      content: () => /* j s */`
 import { defaultI18nMetadata } from "./defaultI18nMetadata";
 import { defaultLocale } from "./defaultLocale";
 import { formatUrl } from "./formatUrl";
@@ -57,8 +58,6 @@ export function getI18nMetadata<TRouteId extends I18n.RouteId | RouteIdError>({
     ),` : dynamicRoutes.length ? `to(id, params, currentLocale)),` : `to(id, currentLocale)),`}
   };
 }
-
-// export default getI18nMetadata;
 `,
     },
   };

@@ -6,7 +6,8 @@ export default createGenerator("js", (arg) => {
     formatTo: {
       name: "formatTo",
       ext: "ts",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 import { defaultLocale } from "./defaultLocale";
 
 /**
@@ -68,8 +69,6 @@ export function formatTo(
   }
   return pathname;
 }
-
-// export default formatTo;
 `,
     },
   };

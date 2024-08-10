@@ -7,7 +7,7 @@ export default createGenerator("react", (_arg) => {
       name: "getLocale",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import React from "react";
 import { I18nLocaleContext } from "./I18nLocaleContext";
 

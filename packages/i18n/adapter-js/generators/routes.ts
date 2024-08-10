@@ -26,22 +26,22 @@ export default createGenerator("js", (arg) => {
     routes: {
       name: "routes",
       ext: "ts",
+      index: false,
       content: () => {
-        return /* js */ `
+        return /* j s */ `
 /**
  * @internal
  */
 export const routes = ${getRoutesValue((dataRoute) => dataRoute.pathnames)} as const;
-
-// export default routes;
 `;
       },
     },
     routesError: {
       name: "routesError",
       ext: "ts",
+      index: false,
       content: () => {
-        return /* js */ `
+        return /* j s */ `
 export type RouteIdError = (typeof routesError)[number];
 
 /**
@@ -58,33 +58,31 @@ export const routesError = [
  */
 export const isErrorRoute = (payload: any): payload is RouteIdError =>
   routesError.includes(payload);
-
-// export default routesError;
 `;
       },
     },
     routesSlim: {
       name: "routesSlim",
       ext: "ts",
+      index: false,
       content: () => {
         const value = getRoutesValue(
           (dataRoute) => dataRoute.pathnamesSlim || dataRoute.pathnames,
         );
-        return /* js */ `
+        return /* j s */ `
 import type { I18n } from "./types";
 
 /**
  * @internal
  */
 export const routesSlim = ${value} as Record<string, string | Partial<Record<I18n.Locale, string>>>;
-
-// export default routesSlim;
 `;
       },
     },
     routesSpa: {
       name: "routesSpa",
       ext: "ts",
+      index: false,
       content: () => {
         const value = JSON.stringify(
           Object.fromEntries(
@@ -96,15 +94,13 @@ export const routesSlim = ${value} as Record<string, string | Partial<Record<I18
           null,
           2,
         );
-        return /* js */ `
+        return /* j s */ `
 import type { I18n } from "./types";
 
 /**
  * @internal
  */
 export const routesSpa = ${value} as Record<string, string | Record<I18n.Locale, string>>;
-
-export default routesSpa;
 `;
       },
     },

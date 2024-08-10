@@ -10,7 +10,7 @@ export default createGenerator("next", (arg) => {
       ext: "ts",
       index: true,
       // prettier-ignore
-      content: () => /* js */ `
+      content: () => /* j s */`
 "use client";
 
 import { to } from "./to";

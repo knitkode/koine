@@ -18,7 +18,7 @@ export const adapterNextTranslate = createAdapter({
   name: "next-translate",
   defaultOptions: {
     ...adapterNext.defaultOptions,
-  } as Options,
+  } satisfies Options,
   getGenerators: (data) => {
     const { loader } = data.options.adapter;
     return [

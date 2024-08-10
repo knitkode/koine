@@ -1,5 +1,5 @@
-import { getI18nDictionaries_inline } from "../../adapter-js/generators/getI18nDictionaries_inline";
-import { createGenerator } from "../../compiler/createAdapter";
+import { getI18nDictionaries_inline } from "../../../adapter-js/generators/getI18nDictionaries_inline";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (arg) => {
   const {
@@ -13,7 +13,7 @@ export default createGenerator("next", (arg) => {
       name: "i18nGet",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import type { GetStaticPathsContext, GetStaticPropsContext } from "next";
 import type { I18nAppPropsData } from "./I18nApp";
 import { defaultI18nMetadata} from "./defaultI18nMetadata";

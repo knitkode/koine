@@ -3,6 +3,7 @@
   "translationFiles": [
     {
       "path": "~.json",
+      "locale": "en",
       "data": {
         "home": "/",
         "about": "/about",
@@ -45,21 +46,21 @@
             }
           }
         }
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "404.json",
+      "locale": "en",
       "data": {
         "seo": {
           "title": "404 - Not found"
         },
         "title": "404, page not found"
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "$faq.json",
+      "locale": "en",
       "data": {
         "home": [
           {
@@ -67,11 +68,11 @@
             "answer": "That"
           }
         ]
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "~account/~user~profile.json",
+      "locale": "en",
       "data": {
         "boolShouldntBeHereBut": true,
         "title": "Title {{ varName }}",
@@ -127,16 +128,15 @@
             }
           }
         }
-      },
-      "locale": "en"
+      }
     },
     {
       "path": "~account/FormUserLanguages.json",
+      "locale": "en",
       "data": {
         "empty": {},
         "msg": "Some text"
-      },
-      "locale": "en"
+      }
     }
   ]
 }

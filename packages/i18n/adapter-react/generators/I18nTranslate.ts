@@ -5,7 +5,8 @@ export default createGenerator("react", (_arg) => {
     I18nTranslateContext: {
       name: "I18nTranslateContext",
       ext: "tsx",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 "use client";
 
 import React, { createContext } from "react";
@@ -36,7 +37,8 @@ export const I18nTranslateContext = createContext<I18nTranslateContextValue>({
     I18nTranslateProvider: {
       name: "I18nTranslateProvider",
       ext: "tsx",
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 "use client";
 
 import React, { useContext } from "react";
@@ -50,6 +52,9 @@ export type I18nTranslateProviderProps = React.PropsWithChildren<{
   dictionaries?: I18n.Dictionaries;
 }>;
 
+/**
+ * @internal
+ */
 export const I18nTranslateProvider = ({
   locale = defaultLocale,
   dictionaries = {},
@@ -66,15 +71,13 @@ export const I18nTranslateProvider = ({
     </I18nTranslateContext.Provider>
   );
 };
-
-export default I18nTranslateProvider;
 `,
     },
     useLocale: {
       name: "useLocale",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import { useContext } from "react";
@@ -90,7 +93,7 @@ export default useLocale;
       name: "useT",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import { useContext, useMemo } from "react";

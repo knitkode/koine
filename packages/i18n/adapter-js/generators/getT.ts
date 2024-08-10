@@ -7,7 +7,7 @@ export default createGenerator("js", (_arg) => {
       name: "getT",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { createT } from "./createT";
 // import { loadTranslations } from "./loadTranslations";
 import type { I18n } from "./types";

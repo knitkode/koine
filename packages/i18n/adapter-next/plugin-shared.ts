@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
-import { ContextReplacementPlugin } from "webpack";
+import { join } from "path";
+import { ContextReplacementPlugin, DefinePlugin } from "webpack";
 import { swcCreateTransform } from "@koine/node/swc";
 import type { I18nCompilerOptions, I18nCompilerReturn } from "../compiler";
 import { generateRedirects } from "./redirects";
@@ -7,18 +8,124 @@ import { generateRewrites } from "./rewrites";
 import { I18nWebpackPlugin } from "./webpackPluginI18n";
 
 export let tweakNextConfig = (
-  options: I18nCompilerOptions,
-  result: I18nCompilerReturn,
-  nextConfig: NextConfig,
+  i18nCompilerOptions: I18nCompilerOptions,
+  i18nCompilerReturn: I18nCompilerReturn,
+  options: NextConfig,
 ) => {
   const {
     config: { defaultLocale, locales },
     code: {
       options: {
+        adapter: { globalName },
         routes: { localeParamName },
+        write,
       },
     },
-  } = result;
+  } = i18nCompilerReturn;
+  const { webpack, i18n, modularizeImports = {}, ...restNextConfig } = options;
+  const nextConfig: NextConfig = {
+    ...restNextConfig,
+    modularizeImports: {
+      ...swcCreateTransform("@koine/i18n"),
+      // automatically create swc transforms based on given options
+      ...(write?.tsconfig ? swcCreateTransform(write.tsconfig.alias) : {}),
+      ...modularizeImports,
+    },
+    webpack: (_webpackConfig, webpackConfigContext) => {
+      const webpackConfig =
+        typeof webpack === "function"
+          ? webpack(_webpackConfig, webpackConfigContext)
+          : _webpackConfig;
+
+      return {
+        ...webpackConfig,
+        plugins: [
+          ...(webpackConfig.plugins || []),
+          new I18nWebpackPlugin(i18nCompilerOptions),
+          // @see https://github.com/date-fns/date-fns/blob/main/docs/webpack.md#removing-unused-languages-from-dynamic-import
+          new ContextReplacementPlugin(
+            /^date-fns[/\\]locale$/,
+            new RegExp(`\\.[/\\\\](${locales.join("|")})[/\\\\]index\\.js$`),
+          ),
+          write &&
+            new DefinePlugin({
+              /**
+               * @see
+               * - [DefinePlugin / add support for watch mode](https://github.com/webpack/webpack/issues/7717)
+               * - [support expressionMemberChain in DefinePlugin](https://github.com/webpack/webpack/pull/15562)
+               */
+              [globalName]: DefinePlugin.runtimeValue(
+                (_ctx) => {
+                  const i18nDir = join(write.cwd, write.output);
+                  // const i18nDir = resolve(__dirname, rel "./i18n");
+                  // const { context, layer, resource } = ctx.module;
+                  // const requirePath = relative(resource, i18nDir);
+                  // console.log({
+                  //   i18nDir,
+                  //   // module: ctx.module,
+                  //   context,
+                  //   layer,
+                  //   resource,
+                  //   requirePath
+                  // });
+
+                  return {
+                    t: `(function(...args) {
+                    const $t = require("${i18nDir}/webppack-define-t");
+                    return $t(...args);
+                  })`,
+                    // tOriginalAttempt: `(function(i18nKey, ...args) {
+                    //   const $t = require("${i18nDir}/webppack-define-t");
+                    //   const locale = global.__i18n_locale;
+
+                    //   /**
+                    //    * Normalise translation key
+                    //    */
+                    //   const normaliseTranslationKey = (key) => {
+                    //     const sep = "/";
+                    //     const slashRegex = new RegExp(sep, "g");
+                    //     const replaced = key
+                    //       // replace tilde with dollar
+                    //       .replace(/~/g, "$")
+                    //       // replace dash with underscore
+                    //       .replace(/-/g, "_")
+                    //       .replace(slashRegex, "_")
+                    //       // collapse consecutive underscores
+                    //       .replace(/_+/g, "_")
+                    //       // ensure valid js identifier, allow only alphanumeric characters and few symbols
+                    //       .replace(/[^a-zA-Z0-9_$]/gi, "");
+
+                    //     // ensure the key does not start with a number (invalid js)
+                    //     return /^[0-9]/.test(replaced) ? "$" + replaced : replaced;
+                    //   };
+                    //   const fnName = normaliseTranslationKey(
+                    //     i18nKey.replace(/:/, ".").split(".")
+                    //       .filter(Boolean)
+                    //       .map(normaliseTranslationKey)
+                    //       .join("_")
+                    //   );
+                    //   // console.log({ fnName });
+                    //   return $t["$t_" + fnName](locale, ...args);
+                    // })`,
+                    // FIXME: webpack wants a CodeValuePrimitive type here but returning
+                    // an object also works and allows for a nicer namespaced global api
+                    // verify that returning an object here is intentionally supported
+                  } as unknown as string;
+                },
+                // _runtimeValueOptions
+                {
+                  fileDependencies: [
+                    join(write.cwd, write.output, "webppack-define-t.js"),
+                  ],
+                },
+              ),
+            }),
+        ].filter(Boolean),
+      };
+    },
+  };
+
+  // const nextConfig =
   if (localeParamName) {
     // NOTE: passing the i18n settings with the app router messes up everything
     // especially while migrating from pages to app router, so opt out from that
@@ -29,28 +136,6 @@ export let tweakNextConfig = (
     nextConfig.i18n.locales = locales;
     nextConfig.i18n.defaultLocale = defaultLocale;
   }
-
-  // automatically create swc transforms based on given options
-  const tsConfig = result.code.options.write?.tsconfig;
-  const tsConfigAlias = tsConfig ? tsConfig.alias : "";
-  nextConfig.modularizeImports = {
-    ...swcCreateTransform("@koine/i18n"),
-    ...(tsConfigAlias ? swcCreateTransform(tsConfigAlias) : {}),
-    ...(nextConfig.modularizeImports || {}),
-  };
-
-  nextConfig.webpack = (webpackConfig) => {
-    // @see https://github.com/date-fns/date-fns/blob/main/docs/webpack.md#removing-unused-languages-from-dynamic-import
-    webpackConfig.plugins.push(
-      new I18nWebpackPlugin(options),
-      new ContextReplacementPlugin(
-        /^date-fns[/\\]locale$/,
-        new RegExp(`\\.[/\\\\](${locales.join("|")})[/\\\\]index\\.js$`),
-      ),
-    );
-
-    return webpackConfig;
-  };
 
   return nextConfig;
 };

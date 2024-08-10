@@ -6,7 +6,7 @@ export default createGenerator("next-translate", (_arg) => {
       name: "getT",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import _getT from "next-translate/getT";
 import type { I18n } from "./types";
 

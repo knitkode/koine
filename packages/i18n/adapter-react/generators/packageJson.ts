@@ -17,13 +17,14 @@ export default createGenerator("react", (_arg) => {
     package: {
       name: "package",
       ext: "json",
+      index: false,
       content: () => JSON.stringify(data, null, 2),
     },
     test: {
       dir: "test",
-      index: true,
       name: "test-client",
       ext: "ts",
+      index: true,
       content: () => `
 export const test = () => console.log("test-client!!!!!!!!!!");
 
@@ -31,9 +32,9 @@ export default test;`,
     },
     "test-server": {
       dir: "test",
-      index: true,
       name: "test-server",
       ext: "ts",
+      index: true,
       content: () => `
 export const test = () => console.log("test-server!!!!!!!!!!");
 

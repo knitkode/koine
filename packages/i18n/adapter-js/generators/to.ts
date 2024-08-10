@@ -183,7 +183,7 @@ export default createGenerator("js", (arg) => {
       name: "to",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { defaultLocale } from "./defaultLocale";${dynamicRoutes.length && staticRoutes.length ? `\nimport { isLocale } from "./isLocale";` : ``}
 import { formatTo } from "./formatTo";
 import { routesSlim } from "./routesSlim";
@@ -249,7 +249,7 @@ export default to;
       name: "toSpa",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { defaultLocale } from "./defaultLocale";
 import { formatTo } from "./formatTo";
 import { isLocale } from "./isLocale";

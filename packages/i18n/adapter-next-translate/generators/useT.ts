@@ -6,7 +6,7 @@ export default createGenerator("next-translate", (_arg) => {
       name: "useT",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 "use client";
 
 import { useMemo } from "react";

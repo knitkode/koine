@@ -1,5 +1,5 @@
-import { getI18nDictionaries_inline } from "../../adapter-js/generators/getI18nDictionaries_inline";
-import { createGenerator } from "../../compiler/createAdapter";
+import { getI18nDictionaries_inline } from "../../../adapter-js/generators/getI18nDictionaries_inline";
+import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (arg) => {
   const {
@@ -13,8 +13,8 @@ export default createGenerator("next", (arg) => {
       dir: "server",
       name: "I18nPage",
       ext: "tsx",
-      // index: true,
-      content: () => /* js */ `
+      index: false,
+      content: () => /* j s */ `
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
@@ -305,8 +305,6 @@ export const createI18nPage = <
     },
   };
 };
-
-export default I18nPage;
 `,
     },
   };

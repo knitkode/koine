@@ -10,7 +10,7 @@ export default createGenerator("react", (arg) => {
       name: "getTo",
       ext: "ts",
       index: true,
-      content: () => /* js */ `
+      content: () => /* j s */ `
 import { defaultLocale } from "../defaultLocale";
 import { formatTo } from "../formatTo";
 import { routesSlim } from "../routesSlim";
