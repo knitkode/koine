@@ -53,8 +53,12 @@ declare global {
     ${Object.keys(translations)
       .map((translationId) => {
         const translation = translations[translationId];
-        const { id, /* name, */ namespace, path, params } = translation;
-        let out = `${tFnPrefix}${id}: (`;
+        const { namespace, path, params } = translation;
+        const { name } = getTFunction(translation, {
+          ...config,
+          fnPrefix: tFnPrefix
+        })
+        let out = `${name}: (`;
         params
           ? (out += `params: ${compileDataParamsToType(params)}, `)
           : (out += ``);
