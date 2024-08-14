@@ -119,7 +119,7 @@ module.exports = {
       return {
         ${Object.keys(routes.byId)
           .map((routeId) => {
-            const { name, body } = getToFunction(routes.byId[routeId], {
+            const { name, args, body } = getToFunction(routes.byId[routeId], {
               ...config,
               fnPrefix: toFnPrefix,
             });
@@ -127,7 +127,7 @@ module.exports = {
               `${name}: ` +
               collapseWhitespaces(
                 [
-                  "`(function(params, locale) {",
+                  "`(function(" + args.map(a => a.name).join(", ") + ") {",
                   "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
                   formatTo(config).$outInline(),
                   "return " + body,
