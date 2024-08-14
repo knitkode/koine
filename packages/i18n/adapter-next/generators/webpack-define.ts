@@ -71,7 +71,7 @@ declare global {
           ...config,
           fnPrefix: toFnPrefix,
         });
-        let out = `${toFnPrefix}${name}: (`;
+        let out = `${name}: (`;
         params
           ? (out += `params: ${compileDataParamsToType(params)}, `)
           : (out += ``);
