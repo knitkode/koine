@@ -234,6 +234,15 @@ export class FunctionsCompiler {
     return FunctionsCompiler.out(this.data, format, options);
   }
 
+  $outInline() {
+    return FunctionsCompiler.out(this.data, "cjs", {
+      exports: false,
+      imports: false,
+      comments: false,
+      style: "function",
+    });
+  }
+
   /**
    * @private To use in tests only
    */

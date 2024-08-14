@@ -22,84 +22,23 @@ import type { I18nCompiler } from "../../compiler/types";
  * If the user does not specifiy a custom prefix by default we prepend `$t_`
  * when `modularized` option is true
  */
-export const getTFunctionsPrefix = (
-  data: Pick<I18nCompiler.DataCode<"js">, "options">,
-) => {
+export function getTFunctionsPrefix(options: {
+  translations: I18nCompiler.DataCode<"js">["options"]["translations"];
+  modularized: I18nCompiler.DataCode<"js">["options"]["adapter"]["modularized"];
+}) {
   const {
-    routes: { fnsPrefix },
-    adapter: { modularized },
-  } = data.options;
+    translations: { fnsPrefix },
+    modularized,
+  } = options;
   return fnsPrefix || modularized ? "$t_" : "";
-};
+}
 
-export const getTranslationValueOutput = (
-  value: I18nCompiler.DataTranslationValue,
-) => {
-  if (isString(value) || isNumber(value)) {
-    return `"${value}"`;
-  } else if (isBoolean(value)) {
-    return `${value}`;
-  } else if (isArray(value)) {
-    return JSON.stringify(value);
-  }
-  return `(${JSON.stringify(value)})`;
-};
-
-export const areEqualTranslationsValues = (
-  a: I18nCompiler.DataTranslationValue,
-  b: I18nCompiler.DataTranslationValue,
-) => areEqual(a, b);
-
-export const getTFunctionBodyWithLocales = (
-  defaultLocale: I18nCompiler.Config["defaultLocale"],
-  perLocaleValues: I18nCompiler.DataTranslation["values"],
-) => {
-  let output = "";
-
-  for (const locale in perLocaleValues) {
-    const value = perLocaleValues[locale];
-    if (
-      locale !== defaultLocale &&
-      !areEqualTranslationsValues(value, perLocaleValues[defaultLocale])
-    ) {
-      output += `locale === "${locale}" ? ${getTranslationValueOutput(value)} : `;
-    }
-  }
-
-  output += getTranslationValueOutput(perLocaleValues[defaultLocale]);
-
-  return output;
-};
-
-const importsMap = {
-  types: new ImportsCompiler({
-    path: "types",
-    named: [{ name: "I18n", type: true }],
-    // fn: false
-  }),
-  tInterpolateParams: new ImportsCompiler({
-    path: "tInterpolateParams",
-    named: [{ name: "tInterpolateParams" }],
-    // fn: tInterpolateParams
-  }),
-  tInterpolateParamsDeep: new ImportsCompiler({
-    path: "tInterpolateParamsDeep",
-    named: [{ name: "tInterpolateParamsDeep" }],
-    // fn: tInterpolateParamsDeep
-  }),
-  tPluralise: new ImportsCompiler({
-    path: "tPluralise",
-    named: [{ name: "tPluralise" }],
-    // fn: tPluralise
-  }),
-};
-
-export const getTFunction = (
+export function getTFunction(
   translation: I18nCompiler.DataTranslation,
   options: Pick<I18nCompiler.Config, "defaultLocale"> & {
     fnPrefix: string;
   },
-) => {
+) {
   const { defaultLocale, fnPrefix } = options;
   let { id, values, params, plural, typeValue } = translation;
   const args: FunctionsCompilerDataArg[] = [];
@@ -156,6 +95,68 @@ export const getTFunction = (
   }
 
   return { name, body, args, imports };
+}
+
+function getTranslationValueOutput(value: I18nCompiler.DataTranslationValue) {
+  if (isString(value) || isNumber(value)) {
+    return `"${value}"`;
+  } else if (isBoolean(value)) {
+    return `${value}`;
+  } else if (isArray(value)) {
+    return JSON.stringify(value);
+  }
+  return `(${JSON.stringify(value)})`;
+}
+
+function areEqualTranslationsValues(
+  a: I18nCompiler.DataTranslationValue,
+  b: I18nCompiler.DataTranslationValue,
+) {
+  return areEqual(a, b);
+}
+
+function getTFunctionBodyWithLocales(
+  defaultLocale: I18nCompiler.Config["defaultLocale"],
+  perLocaleValues: I18nCompiler.DataTranslation["values"],
+) {
+  let output = "";
+
+  for (const locale in perLocaleValues) {
+    const value = perLocaleValues[locale];
+    if (
+      locale !== defaultLocale &&
+      !areEqualTranslationsValues(value, perLocaleValues[defaultLocale])
+    ) {
+      output += `locale === "${locale}" ? ${getTranslationValueOutput(value)} : `;
+    }
+  }
+
+  output += getTranslationValueOutput(perLocaleValues[defaultLocale]);
+
+  return output;
+}
+
+const importsMap = {
+  types: new ImportsCompiler({
+    path: "types",
+    named: [{ name: "I18n", type: true }],
+    // fn: false
+  }),
+  tInterpolateParams: new ImportsCompiler({
+    path: "tInterpolateParams",
+    named: [{ name: "tInterpolateParams" }],
+    // fn: tInterpolateParams
+  }),
+  tInterpolateParamsDeep: new ImportsCompiler({
+    path: "tInterpolateParamsDeep",
+    named: [{ name: "tInterpolateParamsDeep" }],
+    // fn: tInterpolateParamsDeep
+  }),
+  tPluralise: new ImportsCompiler({
+    path: "tPluralise",
+    named: [{ name: "tPluralise" }],
+    // fn: tPluralise
+  }),
 };
 
 const getTFunctions = (
@@ -198,11 +199,15 @@ export default createGenerator("js", (data) => {
   const {
     config: { defaultLocale },
     options: {
+      translations: optionsTranslations,
       adapter: { modularized },
     },
     translations,
   } = data;
-  const fnPrefix = getTFunctionsPrefix(data);
+  const fnPrefix = getTFunctionsPrefix({
+    modularized,
+    translations: optionsTranslations,
+  });
   const { functions, allImports } = getTFunctions(translations, {
     defaultLocale,
     fnPrefix,

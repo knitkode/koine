@@ -7,6 +7,21 @@ import {
 import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
+/**
+ * If the user does not specifiy a custom prefix by default we prepend `$to_`
+ * when `modularized` option is true
+ */
+export function getToFunctionsPrefix(options: {
+  routes: I18nCompiler.DataCode<"js">["options"]["routes"];
+  modularized: I18nCompiler.DataCode<"js">["options"]["adapter"]["modularized"];
+}) {
+  const {
+    routes: { fnsPrefix },
+    modularized,
+  } = options;
+  return fnsPrefix || modularized ? "$to_" : "";
+}
+
 export function getToFunction(
   route: I18nCompiler.DataRoute,
   options: Pick<I18nCompiler.Config, "defaultLocale" | "single"> & {
@@ -30,21 +45,6 @@ export function getToFunction(
   args.push({ name: "locale", type: "I18n.Locale", optional: true });
 
   return { name, body, args };
-}
-
-/**
- * If the user does not specifiy a custom prefix by default we prepend `$to_`
- * when `modularized` option is true
- */
-export function getToFunctionsPrefix(options: {
-  routes: I18nCompiler.DataCode<"js">["options"]["routes"];
-  modularized: I18nCompiler.DataCode<"js">["options"]["adapter"]["modularized"];
-}) {
-  const {
-    routes: { fnsPrefix },
-    modularized,
-  } = options;
-  return fnsPrefix || modularized ? "$to_" : "";
 }
 
 function getToFunctionName(prefix: string, id: string) {
@@ -155,21 +155,19 @@ function $to(
 
   return modularized
     ? (functions.reduce((map, fn) => {
+        // TODO: weak point: we strip the trailing underscore but the user
+        // might defined a different prefix for these functions
+        const dir = fnPrefix.replace(/_*$/, "");
         map[fn.name] = {
-          // TODO: weak point: we strip the trailing underscore but the user
-          // might defined a different prefix for these functions
-          dir: fnPrefix.replace(/_*$/, ""),
+          dir,
           name: fn.name,
           ext: "ts",
           index: true,
           content: () => {
-            let output = "";
-            output += fn.$out("ts", {
+            return fn.$out("ts", {
               imports: { folderUp: 1 },
               exports: "both",
             });
-
-            return output;
           },
         };
         return map;

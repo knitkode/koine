@@ -1,16 +1,15 @@
 import { createGenerator } from "../../compiler/createAdapter";
 import { FunctionsCompiler } from "../../compiler/functions";
-import { tInterpolateParams } from "./tInterpolateParams";
+import { ImportsCompiler } from "../../compiler/imports";
 
-export const tInterpolateParamsDeep = ({
-  start,
-  end,
-}: {
-  start: string;
-  end: string;
-}) =>
+export const tInterpolateParamsDeep = () =>
   new FunctionsCompiler({
-    imports: [],
+    imports: [
+      new ImportsCompiler({
+        path: "tInterpolateParams",
+        named: [{ name: "tInterpolateParams" }],
+      }),
+    ],
     comment: { internal: true },
     name: "tInterpolateParamsDeep",
     args: [
@@ -23,14 +22,8 @@ export const tInterpolateParamsDeep = ({
     //   comments: false,
     //   style: "arrow",
     // }),
-    body: ({ format }) =>
+    body: () =>
       [
-        tInterpolateParams({ start, end }).$out(format, {
-          exports: false,
-          imports: false,
-          comments: false,
-          style: "arrow",
-        }),
         `if (Array.isArray(value)) {`,
         `  for (let i = 0; i < value.length; i++) {`,
         `    value[i] = tInterpolateParamsDeep(value[i], params);`,
@@ -46,18 +39,15 @@ export const tInterpolateParamsDeep = ({
       ].join(" "),
   });
 
-export default createGenerator("js", (arg) => {
-  const { options } = arg;
-  const { dynamicDelimiters } = options.translations.tokens;
-
+export default createGenerator("js", (_arg) => {
   return {
     tInterpolateParamsDeep: {
       name: "tInterpolateParamsDeep",
       ext: "ts",
       index: false,
       content: () =>
-        tInterpolateParamsDeep(dynamicDelimiters).$out("ts", {
-          imports: false,
+        tInterpolateParamsDeep().$out("ts", {
+          imports: { folderUp: 0 },
           exports: "named",
           style: "function",
         }),

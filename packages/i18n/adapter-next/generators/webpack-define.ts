@@ -1,10 +1,10 @@
-import { isPrimitive } from "@koine/utils";
 import { formatTo } from "../../adapter-js/generators/formatTo";
 import {
-  getTFunctionBodyWithLocales,
-  getTranslationValueOutput,
+  getTFunction,
+  getTFunctionsPrefix,
 } from "../../adapter-js/generators/t";
 import { tInterpolateParams } from "../../adapter-js/generators/tInterpolateParams";
+import { tInterpolateParamsDeep } from "../../adapter-js/generators/tInterpolateParamsDeep";
 import { tPluralise } from "../../adapter-js/generators/tPluralise";
 import {
   getToFunction,
@@ -15,109 +15,31 @@ import {
   GLOBAL_I18N_IDENTIFIER,
   compileDataParamsToType,
 } from "../../compiler/helpers";
-import type { I18nCompiler } from "../../compiler/types";
 
 function collapseWhitespaces(input: string) {
   return input.replace(/\s+/g, " ");
 }
 
-const getTLookup = (
-  translations: I18nCompiler.DataTranslations,
-  options: Pick<I18nCompiler.Config, "defaultLocale"> & {
-    namespaceDelimiter: string;
-  },
-) => {
-  const { defaultLocale, namespaceDelimiter } = options;
-  const lines = [];
-
-  for (const translationId in translations) {
-    let { namespace, path, values, params, plural } =
-      translations[translationId];
-
-    if (plural) {
-      if (params) {
-        params = { ...params, count: "number" };
-      } else {
-        params = { count: "number" };
-      }
-    }
-    const args: string[] = [];
-    if (params) {
-      args.push("params");
-    }
-
-    let body = "";
-
-    if (isPrimitive(values)) {
-      body += getTranslationValueOutput(values);
-    } else {
-      body += getTFunctionBodyWithLocales(defaultLocale, values);
-    }
-    if (plural) {
-      body = `tPluralise(${body}, params.count)`;
-    }
-    if (params) {
-      body = `tInterpolateParams(${body}, params)`;
-    }
-
-    lines.push(
-      `"${namespace}${namespaceDelimiter}${path}": (${args.join(", ")}) => ${body}`,
-    );
-  }
-
-  return lines.join(",\n  ");
-};
-
-const getGlobalToType = (routes: I18nCompiler.DataRoutes) => {
-  const { dynamicRoutes, staticRoutes } = routes;
-  const I18n = `import("../types").I18n`;
-  let out = `
-  /**
-   * Global to function (allows to select any of the all available routes)
-   */
-  type GlobalTo = <Id extends ${I18n}.RouteId>(`;
-
-  if (dynamicRoutes.length && staticRoutes.length) {
-    out += `
-      id: Id,
-      ...args: Id extends ${I18n}.RouteIdDynamic
-        ?
-            | [${I18n}.RouteParams[Id]]
-            | [${I18n}.RouteParams[Id], ${I18n}.Locale]
-        : [] | [${I18n}.Locale]
-    ) => ${I18n}.RoutePathnames[Id];`;
-  } else if (dynamicRoutes.length) {
-    out += `
-    id: Id,
-    ...args:
-      | [${I18n}.RouteParams[Id]]
-      | [${I18n}.RouteParams[Id], ${I18n}.Locale]
-  ) => ${I18n}.RoutePathnames[Id];`;
-  } else {
-    out += `
-    id: Id,
-    locale?: ${I18n}.Locale
-  ) => ${I18n}.RoutePathnames[Id];`;
-  }
-
-  return out;
-};
-
+// prettier-ignore
 export default createGenerator("next", (arg) => {
   const { config, options, routes, translations } = arg;
   const { defaultLocale, debug } = config;
   const { namespaceDelimiter, dynamicDelimiters } = options.translations.tokens;
   const { globalName } = options.adapter;
   const { cwd, output } = options.write || { cwd: "", output: "" };
+  const tFnPrefix = getTFunctionsPrefix({
+    translations: arg.options.translations,
+    modularized: arg.options.adapter.modularized,
+  });
   const toFnPrefix = getToFunctionsPrefix({
     routes: arg.options.routes,
     modularized: arg.options.adapter.modularized,
   });
 
   return {
-    webpackGlobalDefinitionGranular: {
+    webpackDefineGranularTypes: {
       dir: createGenerator.dirs.internal,
-      name: "i18n-globals",
+      name: "webpack-define-granular-types",
       ext: "d.ts",
       index: false,
       content: () => {
@@ -127,19 +49,20 @@ export default createGenerator("next", (arg) => {
 export {};
 
 declare global {
-
-  /**
-   * Global t function (allows to select any of the all available translations)
-   *
-   * @param path e.g. \`"myNamespace${namespaceDelimiter}myPath.nestedKey"\`
-   */
-  type GlobalT = <TPath extends import("../types").I18n.TranslationsAllPaths>(
-    path: TPath,
-    query?: object,
-  ) => import("../types").I18n.TranslationAtPath<TPath>;
-
   var ${globalName}: {
-    t: GlobalT;
+    ${Object.keys(translations)
+      .map((translationId) => {
+        const translation = translations[translationId];
+        const { id, /* name, */ namespace, path, params } = translation;
+        let out = `${tFnPrefix}${id}: (`;
+        params
+          ? (out += `params: ${compileDataParamsToType(params)}, `)
+          : (out += ``);
+
+        out += `locale?: ${I18n}.Locale) => ${I18n}.TranslationAtPath<"${namespace}${arg.options.translations.tokens.namespaceDelimiter}${path}">`;
+        return out;
+      })
+      .join(";\n    ")},
     ${Object.keys(routes.byId)
       .map((routeId) => {
         const route = routes.byId[routeId];
@@ -148,7 +71,7 @@ declare global {
           ...config,
           fnPrefix: toFnPrefix,
         });
-        let out = `${name}: (`;
+        let out = `${toFnPrefix}${name}: (`;
         params
           ? (out += `params: ${compileDataParamsToType(params)}, `)
           : (out += ``);
@@ -200,15 +123,32 @@ module.exports = {
               `"i18n.${name}": ` +
               collapseWhitespaces(
                 [
-                  "`(function(params, customLocale) {",
-                  "const locale = customLocale || global." +
-                    GLOBAL_I18N_IDENTIFIER +
-                    ";",
-                  formatTo(config).$out("cjs", {
-                    exports: false,
-                    imports: false,
-                    comments: false,
-                  }),
+                  "`(function(params, locale) {",
+                  "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
+                  formatTo(config).$outInline(),
+                  "return " + body,
+                  "})`",
+                ].join(" "),
+              )
+            );
+          })
+          .join(",\n        ")},
+        ${Object.keys(translations)
+          .map((translationId) => {
+            const translation = translations[translationId];
+            const { name, args, body } = getTFunction(translation, {
+              ...config,
+              fnPrefix: tFnPrefix,
+            });
+            return (
+              `"i18n.${name}": ` +
+              collapseWhitespaces(
+                [
+                  "`(function(" + args.map(a => a.name).join(", ") + ") {",
+                  "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
+                  translation.params ? tInterpolateParams(arg.options.translations.tokens.dynamicDelimiters).$outInline() : "",
+                  translation.typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline(),
+                  translation.plural ? tPluralise().$outInline() : "",
                   "return " + body,
                   "})`",
                 ].join(" "),
@@ -222,54 +162,42 @@ module.exports = {
 };
 `;
       },
-      //       content: () => {
-      //         return /* j s */ `
-      // const { join } = require("path");
-      // const { DefinePlugin } = require("webpack");
-
-      // module.exports = {
-      //   ${globalName}: DefinePlugin.runtimeValue(
-      //     (_ctx) => {
-      //       return {
-      //         ${Object.keys(routes).map((routeId) => {
-      //           const { name, args, body } = getToFunction(routes.byId[routeId], {
-      //               ...config,
-      //             fnPrefix: toFnPrefix
-      //           });
-      //           return `` +
-      //         `${name}: DefinePlugin.runtimeValue(
-      //           (_ctx) => {
-      //             const locale = global.${GLOBAL_I18N_IDENTIFIER};
-      //             const defaultLocale = "${defaultLocale}";
-
-      //             ${formatTo(config).$out("cjs", {
-      //               exports: false,
-      //               imports: false,
-      //               comments: false,
-      //             })}
-      //             return (${args.map((a) => a.name).join(", ")}) => ${body};
-      //           },
-      //           {
-      //             fileDependencies: [
-      //               join("${cwd}", "${output}", "internal/webpack-define.js"),
-      //             ],
-      //           },
-      //         )`;
-      //         }).join(",        \n")},
-      //       };
-      //     }
-      //   ),
-      // };
-      // `;
-      //       },
     },
-    webpackGlobalDefinitionCompact: {
+    webpackDefineCompactTypes: {
       disabled: true,
       dir: createGenerator.dirs.internal,
-      name: "i18n-globals",
+      name: "webpack-define-compact-types",
       ext: "d.ts",
       index: false,
       content: () => {
+        const { dynamicRoutes, staticRoutes } = routes;
+        const I18n = `import("../types").I18n`;
+        let GlobalTo = `
+  type GlobalTo = <Id extends ${I18n}.RouteId>(`;
+
+  if (dynamicRoutes.length && staticRoutes.length) {
+    GlobalTo += `
+      id: Id,
+      ...args: Id extends ${I18n}.RouteIdDynamic
+        ?
+            | [${I18n}.RouteParams[Id]]
+            | [${I18n}.RouteParams[Id], ${I18n}.Locale]
+        : [] | [${I18n}.Locale]
+    ) => ${I18n}.RoutePathnames[Id];`;
+  } else if (dynamicRoutes.length) {
+    GlobalTo += `
+    id: Id,
+    ...args:
+      | [${I18n}.RouteParams[Id]]
+      | [${I18n}.RouteParams[Id], ${I18n}.Locale]
+  ) => ${I18n}.RoutePathnames[Id];`;
+  } else {
+    GlobalTo += `
+    id: Id,
+    locale?: ${I18n}.Locale
+  ) => ${I18n}.RoutePathnames[Id];`;
+        }
+
         return `
 export {};
 
@@ -287,7 +215,11 @@ declare global {
     path: TPath,
     query?: object,
   ) => TReturn;
-  ${getGlobalToType(routes)}
+
+  /**
+   * Global to function (allows to select any of the all available routes)
+   */
+  ${GlobalTo}
 
   var ${globalName}: {
     t: GlobalT;
@@ -315,7 +247,7 @@ module.exports = {
       return {
         to: \`(function(routeId, params) {
           const locale = global.${GLOBAL_I18N_IDENTIFIER};
-          ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:to", { locale });` : ``};
+          ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:to", { locale });` : ``}
 
           const defaultLocale = "${defaultLocale}";
 
@@ -332,7 +264,7 @@ module.exports = {
                   ...config,
                   fnPrefix: toFnPrefix,
                 });
-                return `"${routeId}": (${args.map((a) => a.name).join(", ")}) => ${body}`;
+                return `"${routeId}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
               })
               .join(",\n  ")}
           };
@@ -344,22 +276,23 @@ module.exports = {
         })\`,
         t: \`(function(i18nKey, params) {
           const locale = global.${GLOBAL_I18N_IDENTIFIER};
-          ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:t", { locale });` : ``};
+          ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:t", { locale });` : ``}
 
-          ${tPluralise().$out("cjs", {
-            exports: false,
-            imports: false,
-            comments: false,
-          })}
-
-          ${tInterpolateParams(dynamicDelimiters).$out("cjs", {
-            exports: false,
-            imports: false,
-            comments: false,
-          })}
+          ${tPluralise().$outInline()}
+          ${tInterpolateParams(dynamicDelimiters).$outInline()}
+          ${tInterpolateParamsDeep().$outInline()}
 
           const lookup = {
-            ${getTLookup(translations, { defaultLocale, namespaceDelimiter })}
+            ${Object.keys(translations)
+              .map((translationId) => {
+                const { namespace, path } = translations[translationId];
+                const { args, body } = getTFunction(translations[translationId], {
+                  ...config,
+                  fnPrefix: tFnPrefix,
+                });
+                return `"${namespace}${arg.options.translations.tokens.namespaceDelimiter}${path}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
+              })
+              .join(",\n  ")}
           };
 
           const fn = lookup[i18nKey];
