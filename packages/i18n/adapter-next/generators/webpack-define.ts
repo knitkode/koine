@@ -124,7 +124,7 @@ module.exports = {
               fnPrefix: toFnPrefix,
             });
             return (
-              `"i18n.${name}": ` +
+              `${name}: ` +
               collapseWhitespaces(
                 [
                   "`(function(params, locale) {",
@@ -145,7 +145,7 @@ module.exports = {
               fnPrefix: tFnPrefix,
             });
             return (
-              `"i18n.${name}": ` +
+              `${name}: ` +
               collapseWhitespaces(
                 [
                   "`(function(" + args.map(a => a.name).join(", ") + ") {",
