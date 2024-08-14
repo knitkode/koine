@@ -11,44 +11,26 @@ import {
   FunctionsCompiler,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
-import { dataParamsToTsInterfaceBody } from "../../compiler/helpers";
+import { compileDataParamsToType } from "../../compiler/helpers";
 import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
-// /**
-//  * Control plural keys depending the {{count}} variable
-//  */
-// function plural(
-//   pluralRules: Intl.PluralRules,
-//   dic: I18nDictionary,
-//   key: string,
-//   config: I18nConfig,
-//   query?: TranslationQuery | null,
-//   options?: {
-//     returnObjects?: boolean
-//     fallback?: string | string[]
-//   }
-// ): string {
-//   if (!query || typeof query.count !== 'number') return key
+// import { tInterpolateParams } from "./tInterpolateParams";
+// import { tPluralise } from "./tPluralise";
 
-//   const numKey = `${key}_${query.count}`
-//   if (getDicValue(dic, numKey, config, options) !== undefined) return numKey
-
-//   const pluralKey = `${key}_${pluralRules.select(query.count)}`
-//   if (getDicValue(dic, pluralKey, config, options) !== undefined) {
-//     return pluralKey
-//   }
-
-//   const nestedNumKey = `${key}.${query.count}`
-//   if (getDicValue(dic, nestedNumKey, config, options) !== undefined)
-//     return nestedNumKey
-
-//   const nestedKey = `${key}.${pluralRules.select(query.count)}`
-//   if (getDicValue(dic, nestedKey, config, options) !== undefined)
-//     return nestedKey
-
-//   return key
-// }
+/**
+ * If the user does not specifiy a custom prefix by default we prepend `$t_`
+ * when `modularized` option is true
+ */
+export const getTFunctionsPrefix = (
+  data: Pick<I18nCompiler.DataCode<"js">, "options">,
+) => {
+  const {
+    routes: { fnsPrefix },
+    adapter: { modularized },
+  } = data.options;
+  return fnsPrefix || modularized ? "$t_" : "";
+};
 
 export const getTranslationValueOutput = (
   value: I18nCompiler.DataTranslationValue,
@@ -93,99 +75,134 @@ const importsMap = {
   types: new ImportsCompiler({
     path: "types",
     named: [{ name: "I18n", type: true }],
+    // fn: false
   }),
   tInterpolateParams: new ImportsCompiler({
     path: "tInterpolateParams",
     named: [{ name: "tInterpolateParams" }],
+    // fn: tInterpolateParams
+  }),
+  tInterpolateParamsDeep: new ImportsCompiler({
+    path: "tInterpolateParamsDeep",
+    named: [{ name: "tInterpolateParamsDeep" }],
+    // fn: tInterpolateParamsDeep
   }),
   tPluralise: new ImportsCompiler({
     path: "tPluralise",
     named: [{ name: "tPluralise" }],
+    // fn: tPluralise
   }),
 };
 
-export const getTFunctions = (
-  translations: I18nCompiler.DataTranslations,
-  options: {
-    defaultLocale: string;
+export const getTFunction = (
+  translation: I18nCompiler.DataTranslation,
+  options: Pick<I18nCompiler.Config, "defaultLocale"> & {
     fnPrefix: string;
   },
 ) => {
   const { defaultLocale, fnPrefix } = options;
+  let { id, values, params, plural, typeValue } = translation;
+  const args: FunctionsCompilerDataArg[] = [];
+  const name = `${fnPrefix}${id}`;
+  const pluralCountProperty = "count";
+
+  if (plural) {
+    if (params) {
+      params = { ...params, [pluralCountProperty]: "number" };
+    } else {
+      params = { [pluralCountProperty]: "number" };
+    }
+  }
+
+  if (params) {
+    args.push({
+      name: "params",
+      type: compileDataParamsToType(params),
+      optional: false,
+    });
+  }
+  // for ergonomy always allow the user to pass the locale
+  args.push({ name: "locale", type: "I18n.Locale", optional: true });
+  const imports = [importsMap.types];
+
+  let body = "";
+
+  if (isPrimitive(values)) {
+    body += getTranslationValueOutput(values);
+  } else {
+    body += getTFunctionBodyWithLocales(defaultLocale, values);
+  }
+  if (plural) {
+    imports.push(importsMap.tPluralise);
+    body = `tPluralise(${body}, params.${pluralCountProperty})`;
+  }
+
+  if (
+    params &&
+    (!plural ||
+      // check that params isn't just about the plural count property, in that
+      // case we do not need to interpolate anything, see output in __mocks__
+      // where $t_$account_$user$profile_pluralAsObject should not need the
+      // presence of `tInterpolateParamsDeep`
+      (plural && !Object.keys(params).every((k) => k === pluralCountProperty)))
+  ) {
+    if (typeValue === "Primitive") {
+      imports.push(importsMap.tInterpolateParams);
+      body = `tInterpolateParams(${body}, params)`;
+    } else if (typeValue === "Array" || typeValue === "Object") {
+      imports.push(importsMap.tInterpolateParamsDeep);
+      body = `tInterpolateParamsDeep(${body}, params)`;
+    }
+  }
+
+  return { name, body, args, imports };
+};
+
+const getTFunctions = (
+  translations: I18nCompiler.DataTranslations,
+  options: Pick<I18nCompiler.Config, "defaultLocale"> & {
+    fnPrefix: string;
+  },
+) => {
   const functions: FunctionsCompiler[] = [];
   const allImports: Set<ImportsCompiler> = new Set();
 
   allImports.add(importsMap.types);
 
   for (const translationId in translations) {
-    let needsImport_tInterpolateParams = false;
-    let needsImport_tPluralise = false;
-    let { values, params, plural } = translations[translationId];
+    const { imports, name, args, body } = getTFunction(
+      translations[translationId],
+      options,
+    );
 
-    const name = `${fnPrefix}${translationId}`;
-    if (plural) {
-      if (params) {
-        params["count"] = "number";
-      } else {
-        params = { count: "number" };
-      }
-    }
-    const args: FunctionsCompilerDataArg[] = [];
-    if (params) {
-      args.push({
-        name: "params",
-        type: `{ ${dataParamsToTsInterfaceBody(params)} }`,
-        optional: false,
-      });
-    }
-    // for ergonomy always allow the user to pass the locale
-    args.push({ name: "locale", type: "I18n.Locale", optional: true });
+    imports.forEach((imp) => allImports.add(imp));
 
-    let body = "";
-    const imports = [importsMap.types];
-
-    if (isPrimitive(values)) {
-      body += getTranslationValueOutput(values);
-    } else {
-      body += getTFunctionBodyWithLocales(defaultLocale, values);
-    }
-    if (plural) {
-      needsImport_tPluralise = true;
-      body = `tPluralise(${body}, params.count)`;
-    }
-    if (params) {
-      needsImport_tInterpolateParams = true;
-      body = `tInterpolateParams(${body}, params)`;
-    }
-
-    if (needsImport_tInterpolateParams) {
-      imports.push(importsMap.tInterpolateParams);
-      allImports.add(importsMap.tInterpolateParams);
-    }
-    if (needsImport_tPluralise) {
-      imports.push(importsMap.tPluralise);
-      allImports.add(importsMap.tPluralise);
-    }
-
-    functions.push(new FunctionsCompiler({ imports, name, args, body }));
+    functions.push(
+      new FunctionsCompiler({
+        imports,
+        name,
+        args,
+        body,
+        implicitReturn: true,
+      }),
+    );
   }
 
   return { functions, allImports };
 };
 
-// TODO: check whether adding /*#__PURE__*/ annotation changes anything
+// TODO: check whether adding these annotations change anything:
+// /* @__NO_SIDE_EFFECTS__ */
+// /*#__PURE__*/
 export default createGenerator("js", (data) => {
   const {
     config: { defaultLocale },
     options: {
       adapter: { modularized },
-      translations: { fnsPrefix },
     },
     translations,
   } = data;
-  // if the user does not specifiy a custom prefix by default we prepend `$t_`
-  // when `modularized` option is true
-  const fnPrefix = fnsPrefix || (modularized ? "$t_" : "");
+  const fnPrefix = getTFunctionsPrefix(data);
   const { functions, allImports } = getTFunctions(translations, {
     defaultLocale,
     fnPrefix,
@@ -196,7 +213,6 @@ export default createGenerator("js", (data) => {
         // TODO: weak point: we strip the trailing underscore but the user
         // might defined a different prefix for these functions
         const dir = fnPrefix.replace(/_*$/, "");
-
         map[fn.name] = {
           dir,
           name: fn.name,

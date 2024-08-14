@@ -71,6 +71,9 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
       previousAdaptersGeneratedFilesIds[fileId] = 1;
 
       const _file = files[fileId];
+      // bail if generator is disabled
+      if (_file.disabled) return;
+
       const transformerId = fileId as keyof typeof transformers;
       const transformer = transformers?.[transformerId];
       const file = transformer ? transformer(_file as never) : _file;

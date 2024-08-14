@@ -17,6 +17,12 @@ export type InputDataSharedOptions = {
    * - github absolute URL (when data is on a separated repo that implements our `knitkode/koine/actions/i18n`)
    */
   source: InputDataLocalSource | InputDataRemoteSource;
+  /**
+   * A list of glob patterns to ignore (checked with `minimatch`)
+   *
+   * @default []
+   */
+  ignore?: string[];
 };
 
 export type InputDataRemoteSource = LiteralUnion<
@@ -25,27 +31,34 @@ export type InputDataRemoteSource = LiteralUnion<
   string
 >;
 
-export type InputDataRemoteOptions = {
-  /**
-   * Optionally pass a list of glob patterns to ignore (checked with `minimatch`)
-   */
-  ignore?: string[];
-};
+export type InputDataRemoteOptions = Pick<
+  InputDataSharedOptions,
+  "ignore"
+> & {};
 
 export type InputDataLocalSource = LiteralUnion<
   `.${string}` | `/${string}`,
   string
 >;
 
-export type InputDataLocalOptions = {
+export type InputDataLocalOptions = Pick<InputDataSharedOptions, "ignore"> & {
   /**
-   * When `source` is a filesystem path that is resolved from this value
+   * When `source` {@link InputDataSharedOptions} is a filesystem path that is resolved from this value
    *
    * @default process.cwd()
    */
   cwd?: string;
-  /**
-   * Optionally pass a list of glob patterns to ignore (checked with `minimatch`)
-   */
-  ignore?: string[];
+  // TODO: think about how and why the watch commented option, we could even
+  // implement this for remote source files with a polling mechanism followed
+  // by a deep comparison
+  // /**
+  //  * The watch implementation and the default value of this option varies
+  //  * based on the adapter in use and the phase of the bundling/building tool
+  //  * in use in your project.
+  //  *
+  //  * Use this option only to forcely override the automatic behaviour, when
+  //  * `true` i18n input source files are watch and upon change compiled files
+  //  * get re-generated.
+  //  */
+  // watch?: boolean;
 };

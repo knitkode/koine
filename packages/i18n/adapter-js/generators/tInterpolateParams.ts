@@ -11,6 +11,7 @@ export const tInterpolateParams = ({
 }) =>
   new FunctionsCompiler({
     imports: [],
+    comment: { internal: true },
     name: "tInterpolateParams",
     args: [
       { name: "value", type: "string", optional: false },
@@ -21,6 +22,7 @@ export const tInterpolateParams = ({
     (_, key) =>
       params[key.trim()${format === "ts" ? " as keyof typeof params" : ""}] + "",
   ) : value`,
+    implicitReturn: true,
   });
 
 export default createGenerator("js", (arg) => {
@@ -33,12 +35,11 @@ export default createGenerator("js", (arg) => {
       name: "tInterpolateParams",
       ext: "ts",
       index: false,
-      content: () => `
-/**
- * @internal
- */
-${tInterpolateParams(dynamicDelimiters).$out("ts", { imports: false, exports: "named" })}
-`,
+      content: () =>
+        tInterpolateParams(dynamicDelimiters).$out("ts", {
+          imports: false,
+          exports: "named",
+        }),
       // TODO: cleanup commented old impl
       // content: () => /* j s */`
       // /**

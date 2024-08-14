@@ -1,3 +1,4 @@
+// import { FunctionsCompiler } from "./functions";
 import { getImportDots } from "./helpers";
 
 export type ImportsCompilerData = {
@@ -14,6 +15,7 @@ export type ImportsCompilerData = {
    * `myPath` in `import type { MyType } from "../myPath"`;
    */
   named?: ImportsCompilerDataNamed[];
+  // fn: false | FunctionsCompiler;
 };
 
 type ImportsCompilerDataNamed = {

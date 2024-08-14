@@ -277,7 +277,8 @@ export namespace I18nCompiler {
   /**
    * Built in adapters names
    */
-  export type AdapterName = keyof AdaptersOptionsMap;
+  // export type AdapterName = keyof AdaptersOptionsMap;
+  export type AdapterName = "js" | "react" | "next" | "next-translate";
 
   /**
    * A generator within an {@link Adapter}, responsible for generating one or
@@ -320,6 +321,10 @@ export namespace I18nCompiler {
      * `index.ts` barrel file
      */
     index: boolean;
+    /**
+     * Optionally disable a generator, useful for testing, developing and experiments
+     */
+    disabled?: boolean;
   };
 
   /**

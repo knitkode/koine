@@ -1,6 +1,6 @@
 // import { jestCreateExpectedThrownError } from "@koine/node/jest";
 import * as t from "./__mocks__/multi-language/.code/$t";
-// import { to } from "./__mocks__/multi-language/.code/to";
+import { to } from "./__mocks__/multi-language/.code/to";
 import { createT } from "./__mocks__/multi-language/.code/createT";
 // import { getI18nDictionaries } from "./__mocks__/multi-language/.code/getI18nDictionaries";
 import * as multiTo from "./__mocks__/multi-language/.code/$to";
@@ -11,19 +11,23 @@ import * as dictionaries_accountUserProfile from "./__mocks__/multi-language/.co
 
 describe("generated code: to", () => {
   test("all routes urls", () => {
-    expect(singleTo.$to_about()).toEqual("/about");
+    expect(to("about")).toEqual("/about");
+    expect(to("about", "it")).toEqual("/it/chi-siamo");
+    expect(to("account.user.[id]", { id: "a" })).toEqual("/account/user/a");
+    
     expect(multiTo.$to_about()).toEqual("/about");
-    // expect(to("about")).toEqual("/about");
     expect(multiTo.$to_about("it")).toEqual("/it/chi-siamo");
-    // expect(to("about", "it")).toEqual("/it/chi-siamo");
-
-    // @ts-expect-error test wrong implementation
-    singleTo.about("it");
-    // @ts-expect-error test wrong implementation
-    singleTo.about("en");
-
     expect(multiTo.$to_account_user_id({ id: "a" })).toEqual("/account/user/a");
-    // expect(to("account.user.[id]", { id: "a" })).toEqual("/account/user/a");
+    
+    expect(singleTo.$to_about()).toEqual("/about");
+    singleTo.$to_about(
+      // @ts-expect-error test wrong implementation
+      "it"
+    );
+    // test right implementation
+    singleTo.$to_about("en");
+    singleTo.$to_about();
+
   });
 });
 
@@ -63,20 +67,34 @@ describe("generated code: t", () => {
 
     expect(t.$t_$account_$user$profile_dontConsiderMeAPluralIDontHaveOther_$1()).toEqual("One");
     expect(t.$t_$account_$user$profile_dontConsiderMeAPluralIDontHaveOther("it")[1]).toEqual("Uno");
+
+    // TODO: jest seems to encounter a limit in filename length when writing
+    // the files, hence for instance the following t function's file does not get
+    // written to disk... Check whether we can overcome this limitation
+    // t.$t_$account_$user$profile_obj_objNested_listComplexNested({ })
+  });
+
+  test("translations as data", () => {
+    expect(t.$t_$account_$user$profile_obj_objNested_objNested2().listFlatNested22[0]).toEqual("v1");
   });
 });
 
 describe("createT", () => {
+  const ns = "~account/~user~profile" as const;
+  const dictionaries = { [ns]: dictionaries_accountUserProfile };
+  // const dictionaries = await getI18nDictionaries({ locale: "en", namespaces: [
+  //   ns
+  // ]})
+  const t = createT(dictionaries as any, new Intl.PluralRules());
+
   test("should return t function that interpolates", async () => {
-    const ns = "~account/~user~profile" as const;
-    const dictionaries = { [ns]: dictionaries_accountUserProfile };
-    // const dictionaries = await getI18nDictionaries({ locale: "en", namespaces: [
-    //   ns
-    // ]})
-    const t = createT(dictionaries as any, new Intl.PluralRules());
 
     expect(typeof t).toBe("function");
     expect(t(`${ns}:title`, { varName: "here" })).toBe("Title here");
     // expect(t("", null, { returnObjects: true })).toEqual(nsRootKeys)
+  })
+  
+  test("should be able to use a non-plural related value in a plural defined object", async () => {
+    expect(t(`~account/~user~profile:pluralAsObjectWithExtraKeys.noPluralRelated`)).toBe("Yes")
   })
 })

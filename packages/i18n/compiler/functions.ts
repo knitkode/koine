@@ -22,6 +22,13 @@ export type FunctionsCompilerData = {
    * The function body (`return "x";` in `myFn(myArg?: MyArg) { return "x"; }`)
    */
   body: string | ((options: { format: FunctionsCompilerFormat }) => string);
+  /**
+   * Whether the function body should automatically prepend a `return ` statement
+   * in case of a **traditional** function expression or by using [an _expression body_
+   * rather than a _block body_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#function_body)
+   * in case of an **arrow** function expression
+   */
+  implicitReturn?: boolean;
 };
 
 type FunctionsCompilerComment = {
@@ -61,6 +68,10 @@ type FunctionsCompilerOutputOptions = {
    * @default true
    */
   comments?: boolean;
+  /**
+   * @default "arrow"
+   */
+  style?: "arrow" | "function";
 };
 
 type FunctionsCompilerOutputOptionsResolved = ReturnType<
@@ -97,14 +108,16 @@ export class FunctionsCompiler {
 
   static resolveOptions(options: FunctionsCompilerOutputOptions) {
     const {
-      imports: optsIm,
-      exports: optsEx,
-      comments: optsCo = true,
+      imports: opts_imports,
+      exports: opts_exports,
+      comments: opts_comments = true,
+      style: opts_style = "arrow",
     } = options;
     return {
-      optsIm,
-      optsEx,
-      optsCo,
+      opts_imports,
+      opts_exports,
+      opts_comments,
+      opts_style,
     };
   }
 
@@ -122,10 +135,23 @@ export class FunctionsCompiler {
 
   static #getBody(
     data: FunctionsCompilerData,
+    options: FunctionsCompilerOutputOptionsResolved,
     format: FunctionsCompilerFormat,
   ) {
-    const { body } = data;
-    return (typeof body === "function" ? body({ format }) : body) + "\n\n";
+    const { body, implicitReturn } = data;
+    const { opts_style } = options;
+    let out = typeof body === "function" ? body({ format }) : body;
+    if (implicitReturn) {
+      if (opts_style === "function") {
+        out = " return " + out + ";";
+      }
+    } else {
+      if (opts_style === "arrow") {
+        out = "{ " + out + "}";
+      }
+    }
+
+    return out;
   }
 
   /**
@@ -136,18 +162,28 @@ export class FunctionsCompiler {
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
     const { imports, comment, name, args } = data;
-    const { optsIm, optsEx, optsCo } = options;
+    const { opts_imports, opts_exports, opts_comments, opts_style } = options;
     let out =
-      optsIm && imports.length
-        ? imports.map((i) => i.$out("ts", optsIm)).join("\n") + "\n\n"
+      opts_imports && imports.length
+        ? imports.map((i) => i.$out("ts", opts_imports)).join("\n") + "\n\n"
         : "";
     out += this.#getBefore(data, "ts");
-    out += optsCo && comment ? this.#comment(comment) : "";
-    out += optsEx === "named" || optsEx === "both" ? "export " : "";
-    out += `let ${name} = (${this.#args(args, true)}) => `;
-    out += this.#getBody(data, "ts") + ";";
+    out += opts_comments && comment ? this.#comment(comment) : "";
+
+    // maybe add named export
+    out += opts_exports === "named" || opts_exports === "both" ? "export " : "";
+
+    if (opts_style === "arrow") {
+      out += `let ${name} = (${this.#args(args, true)}) => `;
+      out += this.#getBody(data, options, "ts") + ";";
+    } else if (opts_style === "function") {
+      out += `function ${name}(${this.#args(args, true)}) {`;
+      out += this.#getBody(data, options, "ts") + "}";
+    }
+
+    // maybe add default export
     out +=
-      optsEx === "default" || optsEx === "both"
+      opts_exports === "default" || opts_exports === "both"
         ? "\n\nexport default " + name + ";"
         : "";
     return out;
@@ -161,21 +197,31 @@ export class FunctionsCompiler {
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
     const { imports, comment, name, args } = data;
-    const { optsIm, optsEx, optsCo } = options;
+    const { opts_imports, opts_exports, opts_comments, opts_style } = options;
     let out =
-      optsIm && imports.length
-        ? imports.map((i) => i.$out("cjs", optsIm)).join("\n") + "\n\n"
+      opts_imports && imports.length
+        ? imports.map((i) => i.$out("cjs", opts_imports)).join("\n") + "\n\n"
         : "";
     out += this.#getBefore(data, "cjs");
-    out += optsCo && comment ? this.#comment(comment) : "";
-    out += `let ${name} = (${this.#args(args, false)}) => `;
-    out += this.#getBody(data, "cjs") + ";";
+    out += opts_comments && comment ? this.#comment(comment) : "";
+
+    if (opts_style === "arrow") {
+      out += `let ${name} = (${this.#args(args, false)}) => `;
+      out += this.#getBody(data, options, "cjs") + ";";
+    } else if (opts_style === "function") {
+      out += `function ${name}(${this.#args(args, false)}) {`;
+      out += this.#getBody(data, options, "cjs") + "}";
+    }
+
+    // maybe add named export
     out +=
-      optsEx === "named" || optsEx === "both"
+      opts_exports === "named" || opts_exports === "both"
         ? `\n\nexports.${name} = ${name};`
         : "";
+
+    // maybe add default export
     out +=
-      optsEx === "default" || optsEx === "both"
+      opts_exports === "default" || opts_exports === "both"
         ? "\n\nmodule.exports = " + name + ";"
         : "";
     return out;
@@ -186,6 +232,19 @@ export class FunctionsCompiler {
     options: FunctionsCompilerOutputOptions,
   ) {
     return FunctionsCompiler.out(this.data, format, options);
+  }
+
+  /**
+   * @private To use in tests only
+   */
+  $createTestableFn() {
+    const source = this.$out("cjs", {
+      exports: false,
+      imports: false,
+      comments: false,
+      style: "function",
+    });
+    return new Function("return " + source)();
   }
 
   static out(

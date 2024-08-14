@@ -16,6 +16,7 @@ describe("functions compilation", () => {
       { name: "n2", type: "number", optional: false },
     ],
     body: `round(n1 + n2)`,
+    implicitReturn: true,
   });
 
   const comment = `/**
@@ -47,6 +48,16 @@ export default sum;`,
 
     expect(functions.$out("ts", { imports: false, exports: false })).toEqual(
       `${comment}let sum = (n1: number, n2: number) => round(n1 + n2);`,
+    );
+
+    expect(
+      functions.$out("ts", {
+        imports: false,
+        exports: false,
+        style: "function",
+      }),
+    ).toEqual(
+      `${comment}function sum(n1: number, n2: number) { return round(n1 + n2);}`,
     );
   });
 

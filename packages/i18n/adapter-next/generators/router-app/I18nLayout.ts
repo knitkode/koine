@@ -189,8 +189,8 @@ export const createI18nLayout = <
             I18nScript: React.ReactNode;
             /**
              * Spread this prop on the \`<html {...i18nHtmlAttrs}>\` element in:
-             * - \`/app/[${localeParamName}]/layout.tsx\`
-             * - \`/app/not-found.tsx\`
+             * - \`app/[${localeParamName}]/layout.tsx\`
+             * - \`app/not-found.tsx\`
              */
             i18nHtmlAttrs: Pick<
               React.ComponentPropsWithoutRef<"html">,

@@ -10,7 +10,7 @@ import {
 } from "../compiler/summary/data";
 import { writeSummary } from "../compiler/summary/write";
 
-type I18nActionOptions = Partial<InputDataOptions> & {
+type I18nActionOptions = Omit<InputDataOptions, "source"> & {
   /**
    * Typically the current repo URL read on the `process.env` variables
    *
@@ -30,15 +30,14 @@ type I18nActionOptions = Partial<InputDataOptions> & {
 export let i18nAction = async (options: I18nActionOptions) => {
   const {
     cwd,
-    // defaults for github action where locales folders are at the root
-    source = ".",
     url,
     output: { input, summaryJson, summaryMarkdown },
     ...inputDataOptions
   } = options;
   const dataInput = await getInputDataLocal({
     cwd,
-    source,
+    // defaults for github action where locales folders are at the root
+    source: ".",
     ...inputDataOptions,
   });
   const writables: Promise<any>[] = [];

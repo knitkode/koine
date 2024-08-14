@@ -1,5 +1,6 @@
 import { createGenerator } from "../../compiler/createAdapter";
 
+// TODO: reuse here tInterpolateParamsDeep and tPluralise
 export default createGenerator("js", (arg) => {
   const { options } = arg;
 

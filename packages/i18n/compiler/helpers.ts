@@ -19,10 +19,9 @@ export let getTranslationsDir = (folderUp = 0, folderName = "translations") => {
 /**
  * TODO: maybe use `params` to determine the right type with some kind of special
  * token used in the route id
- *
- * NB: wrap the output of this function, e.g. `type A = {${dataParamsToTsInterfaceBody(params)}}`
  */
-export let dataParamsToTsInterfaceBody = (params: I18nCompiler.DataParams) =>
+export let compileDataParamsToType = (params: I18nCompiler.DataParams) =>
+  "{ " +
   Object.keys(params)
     .reduce((pairs, paramName) => {
       const value = params[paramName];
@@ -41,7 +40,8 @@ export let dataParamsToTsInterfaceBody = (params: I18nCompiler.DataParams) =>
       pairs.push(`${paramName}: ${type};`);
       return pairs;
     }, [] as string[])
-    .join(" ");
+    .join(" ") +
+  " }";
 
 export let escapeEachChar = (input: string) =>
   input

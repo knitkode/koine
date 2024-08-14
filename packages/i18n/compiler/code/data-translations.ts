@@ -1,6 +1,5 @@
 import { basename, dirname, extname, join, sep } from "node:path";
 import {
-  forin,
   isArray,
   isObject,
   isPrimitive,
@@ -12,6 +11,7 @@ import {
   type PluralKey,
   type PluralSuffix,
   getPluralSuffix,
+  hasOnlyPluralKeys,
   isPluralKey,
   removePluralSuffix,
 } from "../pluralisation";
@@ -71,9 +71,9 @@ export type CodeDataTranslationsOptions = typeof codeDataTranslationsOptions;
 const slashRegex = new RegExp(sep, "g");
 
 /**
- * Normalise translation key
+ * Transform translation key to function name
  */
-const normaliseTranslationKey = (key: string) => {
+function translationKeyToFnName(key: string) {
   const replaced = key
     // replace tilde with dollar
     .replace(/~/g, "$")
@@ -87,12 +87,15 @@ const normaliseTranslationKey = (key: string) => {
 
   // ensure the key does not start with a number (invalid js)
   return /^[0-9]/.test(replaced) ? "$" + replaced : replaced;
-};
+}
 
-const extractTranslationParamsFromPrimitive = (
+/**
+ * Extract params to interpolate from flat translation's value
+ */
+function extractTranslationParamsFromPrimitive(
   options: CodeDataTranslationsOptions,
   value: Extract<I18nCompiler.DataTranslationValue, string | number | boolean>,
-) => {
+) {
   if (isString(value)) {
     const { start, end } = options.tokens.dynamicDelimiters;
     const regex = new RegExp(`${start}(.*?)${end}`, "gm");
@@ -109,32 +112,29 @@ const extractTranslationParamsFromPrimitive = (
     }
   }
   return;
-};
+}
 
 /**
- * This was an experiment to extract params to interpolate from non-flat
- * translations values, but that does not seem really needed as one
- * can always use `tInterpolateParams` directly on whatever string
- *
- * @deprecated
+ * Extract params to interpolate from non-flat translation's values
  */
-const extractTranslationParamsFromValue = (
+function extractTranslationParamsFromValue(
   options: CodeDataTranslationsOptions,
   value: I18nCompiler.DataTranslationValue,
-  params: I18nCompiler.DataParams = {},
-) => {
+  params?: I18nCompiler.DataParams,
+) {
   if (isPrimitive(value)) {
     const extracted = extractTranslationParamsFromPrimitive(options, value);
-    if (extracted) params = { ...params, ...extracted };
+    if (extracted) params = { ...(params || {}), ...extracted };
 
     return params;
   } else if (isArray(value)) {
     for (let i = 0; i < value.length; i++) {
-      const extracted = extractTranslationParamsFromPrimitive(
+      const extracted = extractTranslationParamsFromValue(
         options,
         value[i],
+        params,
       );
-      if (extracted) params = { ...params, ...extracted };
+      if (extracted) params = { ...(params || {}), ...extracted };
     }
   } else {
     for (const key in value) {
@@ -143,19 +143,20 @@ const extractTranslationParamsFromValue = (
         value[key],
         params,
       );
-      if (extracted) params = { ...params, ...extracted };
+      if (extracted) params = { ...(params || {}), ...extracted };
     }
   }
-  return {};
-};
 
-// const addDataTranslationEntryForObjectValue = (
+  return params;
+}
+
+// function addDataTranslationEntryForObjectValue(
 //   options: CodeDataTranslationsOptions,
 //   id: string,
 //   locale: I18nCompiler.Locale,
 //   value: Exclude<Extract<I18nCompiler.DataTranslationValue, object>, string[]>,
 //   dataTranslations: I18nCompiler.DataTranslations,
-// ) => {
+// ) {
 //   // if (hasOnlyPluralKeys(value)) {
 //   //   return `'${key}': string;`;
 //   // }
@@ -168,7 +169,7 @@ const extractTranslationParamsFromValue = (
 //   //   }
 //   // }
 //   // return `'${key}': ${buildTypeForValue(value)}`;
-// };
+// }
 
 /**
  * At this point the data translations have been calculated, this happens in a
@@ -177,10 +178,10 @@ const extractTranslationParamsFromValue = (
  *
  * NB: we mutate the `dataTranslations`
  */
-const manageDataTranslationsPlurals = (
+function manageDataTranslationsPlurals(
   options: CodeDataTranslationsOptions,
   dataTranslations: I18nCompiler.DataTranslations,
-) => {
+) {
   const pluralTranslationIds =
     Object.keys(dataTranslations).filter<PluralKey>(isPluralKey);
 
@@ -198,28 +199,37 @@ const manageDataTranslationsPlurals = (
     // object structure for `values`
     if (pluralisedTranslation) {
       if (!translationExists) {
-        dataTranslations[id].namespace = pluralisedTranslation.namespace;
-        // remove the suffix as here the path of the existing pluralised
-        // translation will always be something like `myKey_one` or `myKey_other`
-        // etc. Since we are creating a new translation entry we need to give it
-        // the proper namespace and path by tweaking the existing translation
-        // entry's data. See `pluralNoDefault` in mocks test data.json output.
-        dataTranslations[id].path = removePluralSuffix(
-          pluralisedTranslation.path as PluralKey,
-        );
+        dataTranslations[id] = createTranslationEntry(options, {
+          id,
+          namespace: pluralisedTranslation.namespace,
+          // remove the suffix as here the path of the existing pluralised
+          // translation will always be something like `myKey_one` or `myKey_other`
+          // etc. Since we are creating a new translation entry we need to give it
+          // the proper namespace and path by tweaking the existing translation
+          // entry's data. See `pluralNoDefault` in mocks test data.json output.
+          path: removePluralSuffix(pluralisedTranslation.path as PluralKey),
+          // plural values need always to be treated as Primitive values, despite
+          // the data structure looks like an object (e.g. { "plural_one": "One", "plural_other": "Some" })
+          typeValue: "Primitive",
+          // we add this in the for loop here below
+          locale: null,
+          // we add this in the for loop here below
+          value: null,
+        });
       }
 
       const values = dataTranslations[id].values || {};
 
-      forin(pluralisedTranslation.values, (locale, value) => {
+      for (const locale in pluralisedTranslation.values) {
+        const value = pluralisedTranslation.values[locale];
         // we need to ensure the value is an object for pluralisation, so if
         // we encounter this structure:
         // { "plural": "Plural", "plural_one": "One", "plural_other": "Some" }
         // we just remove the first `plural` value as that key is instead used
         // to grab the right pluralised version from the object value we build
         // from the other plural-suffixed keys. TODO: maybe we could warn the
-        // developer of improper usage of `plural` translation key, which is
-        // simply useless
+        // developer of improper usage of the `plural` translation key, which is
+        // simply useless and will be unusable
         // prettier-ignore
         values[locale] = isObject(values[locale]) ? values[locale] : {};
         // prettier-ignore
@@ -232,11 +242,18 @@ const manageDataTranslationsPlurals = (
             ...params,
           };
         }
-      });
-
+      }
       if (Object.keys(values).length) {
         dataTranslations[id].values = values;
         dataTranslations[id].plural = true;
+
+        // @see data.json:code.translations.$account_$user$profile_pluralAsObject
+        const firstLocale = Object.keys(values)[0];
+        if (hasOnlyPluralKeys(values[firstLocale] as {})) {
+          // plural values need always to be treated as Primitive values, despite
+          // the data structure looks like an object (e.g. { "plural_one": "One", "plural_other": "Some" })
+          dataTranslations[id].typeValue = "Primitive";
+        }
       }
 
       // TODO: probaly here we should remove the non-plural keys from `values`
@@ -250,12 +267,54 @@ const manageDataTranslationsPlurals = (
   });
 
   return dataTranslations;
-};
+}
+
+function createTranslationEntry(
+  options: CodeDataTranslationsOptions,
+  {
+    id,
+    namespace,
+    path,
+    locale,
+    value,
+    typeValue,
+  }: Pick<
+    I18nCompiler.DataTranslation,
+    "id" | "namespace" | "path" | "typeValue" | "params"
+  > & {
+    locale: null | I18nCompiler.Locale;
+    value: null | I18nCompiler.DataTranslationValue;
+  },
+  existingTranslation?: I18nCompiler.DataTranslation,
+) {
+  const params =
+    value === null ? null : extractTranslationParamsFromValue(options, value);
+  const translation: I18nCompiler.DataTranslation = {
+    ...existingTranslation,
+    id,
+    namespace,
+    path,
+    typeValue,
+    values: existingTranslation?.values || {},
+  };
+
+  // extend values with localised value
+  if (locale !== null && value !== null) {
+    translation.values[locale] = value;
+  }
+
+  // maybe add params
+  if (params && Object.keys(params).length) {
+    translation.params = params;
+  }
+
+  return translation;
+}
 
 /**
  * Add entry to translations data
  */
-const addDataTranslationEntry = (
+function addDataTranslationEntry(
   options: CodeDataTranslationsOptions,
   dataTranslations: I18nCompiler.DataTranslations,
   {
@@ -268,28 +327,36 @@ const addDataTranslationEntry = (
     locale: I18nCompiler.Locale;
     value: I18nCompiler.DataTranslationValue;
   },
-) => {
+) {
+  const existingTranslation = dataTranslations[id] || {};
+
   if (isPrimitive(value)) {
-    dataTranslations[id] = dataTranslations[id] || {};
-    dataTranslations[id].namespace = namespace;
-    dataTranslations[id].path = path;
-    dataTranslations[id].values = dataTranslations[id].values || {};
-    dataTranslations[id].values[locale] = value;
-    dataTranslations[id].typeValue = "Primitive";
-    const params = extractTranslationParamsFromPrimitive(options, value);
-    if (params) dataTranslations[id].params = params;
+    dataTranslations[id] = createTranslationEntry(
+      options,
+      {
+        id,
+        namespace,
+        path,
+        typeValue: "Primitive",
+        locale,
+        value,
+      },
+      existingTranslation,
+    );
   } else {
     if (options.fnsAsDataCodes) {
-      const typeValue = isArray(value) ? "Array" : "Object";
-      dataTranslations[id] = dataTranslations[id] || {};
-      dataTranslations[id].namespace = namespace;
-      dataTranslations[id].path = path;
-      dataTranslations[id].values = dataTranslations[id].values || {};
-      dataTranslations[id].values[locale] = value;
-      dataTranslations[id].typeValue = typeValue;
-      // @see comment on `extractTranslationParamsFromValue`
-      // const params = extractTranslationParamsFromValue(options, value);
-      // if (params) dataTranslations[id].params = params;
+      dataTranslations[id] = createTranslationEntry(
+        options,
+        {
+          id,
+          namespace,
+          path,
+          typeValue: isArray(value) ? "Array" : "Object",
+          locale,
+          value,
+        },
+        existingTranslation,
+      );
     }
 
     if (isArray(value)) {
@@ -308,7 +375,7 @@ const addDataTranslationEntry = (
     } else {
       for (const key in value) {
         addDataTranslationEntry(options, dataTranslations, {
-          id: id + "_" + normaliseTranslationKey(key),
+          id: id + "_" + translationKeyToFnName(key),
           namespace,
           path: path + "." + key,
           locale,
@@ -319,7 +386,7 @@ const addDataTranslationEntry = (
   }
 
   return dataTranslations;
-};
+}
 
 /**
  * Given a file with `path` like `~account/~profile/edit.json` we obtain:
@@ -327,33 +394,33 @@ const addDataTranslationEntry = (
  * - `id`: `"$account_$profile_edit"`
  * - `namespace`: `"~account/~profile/edit"`
  */
-const getIdAndNamespaceFromFile = (
+function getIdAndNamespaceFromFile(
   file: I18nCompiler.DataInputTranslationFile,
-) => {
+) {
   const { path } = file;
   const pathWithoutExt = join(dirname(path), basename(path, extname(path)));
-  const id = normaliseTranslationKey(pathWithoutExt);
+  const id = translationKeyToFnName(pathWithoutExt);
 
   return {
     namespace: pathWithoutExt,
     id,
   };
-};
+}
 
 /**
  * Get translation data recursively starting from a specific file
  */
-const getCodeDataTranslationsFromFile = (
+function getCodeDataTranslationsFromFile(
   options: CodeDataTranslationsOptions,
   dataTranslations: I18nCompiler.DataTranslations,
   file: I18nCompiler.DataInputTranslationFile,
-): I18nCompiler.DataTranslations => {
+): I18nCompiler.DataTranslations {
   const { locale } = file;
   let { namespace, id } = getIdAndNamespaceFromFile(file);
 
   for (const key in file.data) {
     const value = file.data[key];
-    if (key) id = normaliseTranslationKey(namespace + "_" + key);
+    if (key) id = translationKeyToFnName(namespace + "_" + key);
 
     addDataTranslationEntry(options, dataTranslations, {
       id,
@@ -365,7 +432,7 @@ const getCodeDataTranslationsFromFile = (
   }
 
   return dataTranslations;
-};
+}
 
 /**
  * Get translations data

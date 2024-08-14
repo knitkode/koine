@@ -58,6 +58,7 @@ export const adapterNext = createAdapter({
         ? {
             I18nEffects: false,
             I18nMetadataSetter: (file) => ({ ...file, index: false }),
+            I18nRouteSetter: (file) => ({ ...file, index: false }),
           }
         : {
             I18nEffects: (file) => ({ ...file, index: false }),

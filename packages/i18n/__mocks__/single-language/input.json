@@ -59,18 +59,6 @@
       }
     },
     {
-      "path": "$faq.json",
-      "locale": "en",
-      "data": {
-        "home": [
-          {
-            "question": "What is?",
-            "answer": "That"
-          }
-        ]
-      }
-    },
-    {
       "path": "~account/~user~profile.json",
       "locale": "en",
       "data": {
@@ -136,6 +124,18 @@
       "data": {
         "empty": {},
         "msg": "Some text"
+      }
+    },
+    {
+      "path": "$faq.json",
+      "locale": "en",
+      "data": {
+        "home": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
       }
     }
   ]

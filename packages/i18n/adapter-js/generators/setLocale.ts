@@ -15,12 +15,14 @@ export const setGlobalLocale = (_options?: never) =>
     args: [{ name: "value", type: "string", optional: false }],
     before: ({ format }) =>
       format === "ts"
-        ? `
-declare global {
+        ? `declare global {
   var ${GLOBAL_I18N_IDENTIFIER}: I18n.Locale;
-}`
+}
+`
         : "",
-    body: `global.${GLOBAL_I18N_IDENTIFIER} = value;`,
+    comment: { internal: true },
+    body: `global.${GLOBAL_I18N_IDENTIFIER} = value`,
+    implicitReturn: true,
   });
 
 export default createGenerator("js", (_arg) => {
@@ -31,9 +33,6 @@ export default createGenerator("js", (_arg) => {
       ext: "ts",
       index: false,
       content: () => `
-/**
- * @internal
- */
 ${setGlobalLocale().$out("ts", { imports: { folderUp: 1 }, exports: "named" })}
 `,
     },

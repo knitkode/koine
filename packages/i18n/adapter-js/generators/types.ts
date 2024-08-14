@@ -2,7 +2,7 @@ import { isArray, isBoolean, isObject, isString } from "@koine/utils";
 import type { CodeDataOptionsResolved } from "../../compiler/code";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
-  dataParamsToTsInterfaceBody,
+  compileDataParamsToType,
   filterInputTranslationFiles,
 } from "../../compiler/helpers";
 import {
@@ -99,7 +99,7 @@ const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {
   for (const routeId in routes.byId) {
     const { params } = routes.byId[routeId];
     if (params) {
-      out.push(`"${routeId}": { ${dataParamsToTsInterfaceBody(params)} };`);
+      out.push(`"${routeId}": ${compileDataParamsToType(params)};`);
     }
   }
 
@@ -226,6 +226,53 @@ export default createGenerator("js", (arg) => {
   const types = getTypes(arg);
 
   return {
+    globalTypes: {
+      dir: createGenerator.dirs.internal,
+      name: "globals",
+      ext: "d.ts",
+      index: false,
+      // TODO: think about the implications of this within a monorepo
+      // where different instances of this library compiled output need
+      // to cohexist
+      disabled: true,
+      content: () => /* j s */ `
+declare namespace I18n {
+  type Alternates = import("../types").I18n.Alternates;
+  type Dictionaries = import("../types").I18n.Dictionaries;
+  type Locale = import("../types").I18n.Locale;
+  type LocalesMap = import("../types").I18n.LocalesMap;
+  type Metadata = import("../types").I18n.Metadata;
+  type Params = import("../types").I18n.Params;
+  type Props = import("../types").I18n.Props;
+  type RouteArgs = import("../types").I18n.RouteArgs;
+  type RouteId = import("../types").I18n.RouteId;
+  type RouteIdDynamic = import("../types").I18n.RouteIdDynamic;
+  type RouteIdStatic = import("../types").I18n.RouteIdStatic;
+  type RouteJoinedId = import("../types").I18n.RouteJoinedId;
+  type RouteParams = import("../types").I18n.RouteParams;
+  type RoutePathnames = import("../types").I18n.RoutePathnames;
+  type RouteSpa = import("../types").I18n.RouteSpa;
+  type RoutesChildrenOf = import("../types").I18n.RoutesChildrenOf;
+  type Translate = import("../types").I18n.Translate;
+  type TranslateDefault = import("../types").I18n.TranslateDefault;
+  type TranslateLoose = import("../types").I18n.TranslateLoose;
+  type TranslateLoosest = import("../types").I18n.TranslateLoosest;
+  type TranslateNamespace = import("../types").I18n.TranslateNamespace;
+  type TranslateNamespaced = import("../types").I18n.TranslateNamespaced;
+  type TranslationAtPath = import("../types").I18n.TranslationAtPath;
+  type TranslationAtPathFromNamespace = import("../types").I18n.TranslationAtPathFromNamespace;
+  type TranslationAtPathGeneric = import("../types").I18n.TranslationAtPathGeneric;
+  type TranslationOptions = import("../types").I18n.TranslationOptions;
+  type TranslationQuery = import("../types").I18n.TranslationQuery;
+  type TranslationsAllPaths = import("../types").I18n.TranslationsAllPaths;
+  type TranslationsDictionary = import("../types").I18n.TranslationsDictionary;
+  type TranslationsDictionaryLoose = import("../types").I18n.TranslationsDictionaryLoose;
+  type TranslationsPaths = import("../types").I18n.TranslationsPaths;
+  type TranslationsPathsAncestors = import("../types").I18n.TranslationsPathsAncestors;
+  type TranslationsPathsFrom = import("../types").I18n.TranslationsPathsFrom;
+}
+`,
+    },
     types: {
       name: "types",
       ext: "ts",

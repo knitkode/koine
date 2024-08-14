@@ -15,6 +15,7 @@ import routes from "./generators/routes";
 import setLocale from "./generators/setLocale";
 import t from "./generators/t";
 import tInterpolateParams from "./generators/tInterpolateParams";
+import tInterpolateParamsDeep from "./generators/tInterpolateParamsDeep";
 import tPluralise from "./generators/tPluralise";
 import to from "./generators/to";
 import types from "./generators/types";
@@ -96,6 +97,7 @@ export const adapterJs = createAdapter({
       setLocale,
       t,
       tInterpolateParams,
+      tInterpolateParamsDeep,
       tPluralise,
       to,
       types,

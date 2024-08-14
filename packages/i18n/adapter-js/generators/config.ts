@@ -31,6 +31,8 @@ export default defaultLocale;
       name: "config",
       ext: "ts",
       index: true,
+      // TODO: decide whether enabling this generator
+      disabled: true,
       content: () => /* j s */ `
 import { locales } from "./locales";
 import { defaultLocale } from "./defaultLocale";
@@ -50,6 +52,8 @@ export default config;
       name: "config.cjs",
       ext: "js",
       index: false,
+      // TODO: decide whether enabling this generator
+      disabled: true,
       content: () => /* j s */ `
 const { locales } = require("./locales");
 const { defaultLocale } = require("./defaultLocale");

@@ -12,6 +12,7 @@ export const tPluralise = () =>
       { name: "count", type: "number", optional: false },
     ],
     body: `values[count] || values[pluralRules.select(count)] || (count === 0 ? values.zero : values["other"])`,
+    implicitReturn: true,
   });
 
 export default createGenerator("js", (_arg) => {
@@ -20,10 +21,8 @@ export default createGenerator("js", (_arg) => {
       name: "tPluralise",
       ext: "ts",
       index: false,
-      content: () => `
-
-${tPluralise().$out("ts", { imports: false, exports: "named" })}
-`,
+      content: () =>
+        tPluralise().$out("ts", { imports: false, exports: "named" }),
       // TODO: cleanup commented old impl
       // content: () => /* j s */`
       // let pluralRules = new Intl.PluralRules();

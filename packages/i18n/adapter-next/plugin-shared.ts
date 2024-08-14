@@ -48,7 +48,14 @@ export let tweakNextConfig = (
           ),
           write &&
             new DefinePlugin(
-              require(join(write.cwd, write.output, "internal/webpack-define")),
+              // require(join(write.cwd, write.output, "internal/webpack-define-compact")),
+              require(
+                join(
+                  write.cwd,
+                  write.output,
+                  "internal/webpack-define-granular",
+                ),
+              ),
             ),
         ].filter(Boolean),
       };

@@ -1,17 +1,25 @@
 import { createGenerator } from "../../compiler/createAdapter";
 import { FunctionsCompiler } from "../../compiler/functions";
-import { ImportsCompiler } from "../../compiler/imports";
+// import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
-export const formatTo = ({
-  hideDefaultLocaleInUrl,
-}: Pick<I18nCompiler.Config, "hideDefaultLocaleInUrl">) =>
+export const formatTo = (
+  {
+    defaultLocale,
+    hideDefaultLocaleInUrl,
+    // trailingSlash TODO: implement trailingSlash option
+  }: Pick<
+    I18nCompiler.Config,
+    "defaultLocale" | "hideDefaultLocaleInUrl" | "trailingSlash"
+  >,
+  devDebug?: boolean,
+) =>
   new FunctionsCompiler({
     imports: [
-      new ImportsCompiler({
-        path: "defaultLocale",
-        named: [{ name: "defaultLocale" }],
-      }),
+      // new ImportsCompiler({
+      //   path: "defaultLocale",
+      //   named: [{ name: "defaultLocale" }],
+      // }),
     ],
     comment: { internal: true },
     name: "formatTo",
@@ -20,8 +28,12 @@ export const formatTo = ({
       { name: "pathname", type: "string", optional: false },
       { name: "params", type: "object", optional: true },
     ],
-    body: ({ format }) => `{
-  locale = locale || defaultLocale;
+    body: ({ format }) =>
+      `
+  locale = locale || "${defaultLocale}";
+      ${
+        devDebug
+          ? `
   if (process.env["NODE_ENV"] === "development") {
     if (params) {
       pathname.replace(/\\[(.*?)\\]/g, (_, dynamicKey) => {
@@ -53,25 +65,24 @@ export const formatTo = ({
       });
     }
   }
-
+`
+          : ``
+      }` +
+      `
   if (params) {
-    pathname = pathname.replace(
-        /\\[(.*?)\\]/g,
-        (_, key) =>
-          params[key${format === "ts" ? " as keyof typeof params" : ""}] + "",
-      )
+    pathname = pathname.replace(/\\[(.*?)\\]/g, (_, key) => params[key${format === "ts" ? " as keyof typeof params" : ""}] + "")
   }
   ${
     hideDefaultLocaleInUrl
       ? `
-  if (locale !== defaultLocale) {
+  if (locale !== "${defaultLocale}") {
     return "/" + locale + (pathname === "/" ? "" : pathname);
   }
   `
       : ``
   }
   return pathname;
-}`,
+`,
   });
 
 export default createGenerator("js", (arg) => {
@@ -81,11 +92,13 @@ export default createGenerator("js", (arg) => {
       name: "formatTo",
       ext: "ts",
       index: false,
-      content: () => /* j s */ `
-${formatTo(config).$out("ts", { imports: { folderUp: 0 }, exports: "named" })}
-`,
+      content: () =>
+        formatTo(config, true).$out("ts", {
+          imports: { folderUp: 0 },
+          exports: "named",
+        }),
       // TODO: cleanup commented old impl
-      // content: () => /* j s */ `
+      //       content: () => /* j s */ `
       // import { defaultLocale } from "./defaultLocale";
 
       // /**
