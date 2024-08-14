@@ -246,14 +246,14 @@ export class FunctionsCompiler {
   /**
    * @private To use in tests only
    */
-  $createTestableFn() {
+  $createTestableFn(before = "") {
     const source = this.$out("cjs", {
       exports: false,
       imports: false,
       comments: false,
       style: "function",
     });
-    return new Function("return " + source)();
+    return new Function(before + " return " + source)();
   }
 
   static out(

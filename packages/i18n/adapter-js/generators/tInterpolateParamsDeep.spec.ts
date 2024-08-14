@@ -1,10 +1,13 @@
+import { tInterpolateParams } from "./tInterpolateParams";
 import { tInterpolateParamsDeep } from "./tInterpolateParamsDeep";
 
 describe("tInterpolateParamsDeep", () => {
-  const fn = tInterpolateParamsDeep({
-    start: "{{",
-    end: "}}",
-  }).$createTestableFn();
+  const fn = tInterpolateParamsDeep().$createTestableFn(
+    tInterpolateParams({
+      start: "{{",
+      end: "}}",
+    }).$createTestableFn(),
+  );
 
   test("interpolate simple string", () => {
     expect(fn("a")).toEqual("a");
