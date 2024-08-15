@@ -1,4 +1,7 @@
-import { adapterReact } from "../adapter-react";
+import {
+  type Options as AdapterReactOptions,
+  adapterReact,
+} from "../adapter-react";
 import { createAdapter } from "../compiler/createAdapter";
 import nextRedirects from "./generators/next-redirects";
 import nextRewrites from "./generators/next-rewrites";
@@ -16,18 +19,87 @@ import i18nGet from "./generators/router-pages/i18nGet";
 import useRouteId from "./generators/useRouteId";
 import webpackDefine from "./generators/webpack-define";
 
-export type Options = typeof adapterReact.defaultOptions & {
+// export type Options = typeof adapterReact.defaultOptions & {
+export type Options = AdapterReactOptions & {
   /**
    * @default "app"
    */
   router: "app" | "pages" | "migrating";
+  /**
+   * Configure the generation of globally exposed api
+   */
+  // TODO: here we could add options like generating only by matching a custom
+  // filter (function or regex), tweak the "styling" in which the globals are
+  // generated
+  globalize: {
+    /**
+     * The name of the global variable  defined through the `Webpack.DefinePlugin`
+     * implementation which holds an object with the i18n functions as properties.
+     *
+     * NB: This should be added to your **eslint** configuration, e.g. in your
+     * `eslint.config.js` flat config with:
+     *
+     * ```js
+     * module.exports = [{
+     *   languageOptions: {
+     *     globals: {
+     *       i18n: false,
+     *     }
+     *   },
+     * }];
+     * ```
+     *
+     * @default "i18n"
+     */
+    prefix: string;
+    /**
+     * Configure the generation of globally exposed functions.
+     * In this adapter these functions are created through [`Webpack.DefinePlugin`](https://webpack.js.org/plugins/define-plugin/).
+     *
+     * You can generate all-or-nothing by passing a `boolean` or handpick which
+     * categories of functions to generate.
+     *
+     * @default true
+     */
+    functions:
+      | boolean
+      | {
+          /**
+           * Configure generation of _routes_' `to` functions
+           */
+          routes: boolean;
+          /**
+           * Configure generation of _translations_' `t` functions
+           */
+          translations: boolean;
+        };
+  };
 };
+
+export function resolveGlobalizeOption(globalize: Options["globalize"]) {
+  const { functions, prefix } = globalize;
+
+  return {
+    prefix,
+    functions:
+      typeof functions === "boolean"
+        ? {
+            routes: true,
+            translations: true,
+          }
+        : functions,
+  } satisfies Options["globalize"];
+}
 
 export const adapterNext = createAdapter({
   name: "next",
   defaultOptions: {
     ...adapterReact.defaultOptions,
     router: "app",
+    globalize: {
+      prefix: "i18n",
+      functions: true,
+    },
   } satisfies Options,
   getGenerators: (data) => {
     const { router } = data.options.adapter;

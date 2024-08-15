@@ -14,11 +14,9 @@ export let tweakNextConfig = (
 ) => {
   const {
     config: { defaultLocale, locales },
-    code: {
-      options: {
-        routes: { localeParamName },
-        write,
-      },
+    options: {
+      routes: { localeParamName },
+      write,
     },
   } = i18nCompilerReturn;
   const { webpack, i18n, modularizeImports = {}, ...restNextConfig } = options;
@@ -83,8 +81,8 @@ export let getRedirects = async (
 ) => {
   const defaultRedirects = generateRedirects(
     i18nResult.config,
-    i18nResult.code.options.routes,
-    i18nResult.code.routes.byId,
+    i18nResult.options.routes,
+    i18nResult.routes.byId,
   );
 
   if (prevRedirects) {
@@ -100,8 +98,8 @@ export let getRewrites = async (
 ) => {
   const defaultRewrites = generateRewrites(
     i18nResult.config,
-    i18nResult.code.options.routes,
-    i18nResult.code.routes.byId,
+    i18nResult.options.routes,
+    i18nResult.routes.byId,
   );
   if (prevRewrites) {
     const custom = await prevRewrites();

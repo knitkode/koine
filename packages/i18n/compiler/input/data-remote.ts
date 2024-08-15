@@ -1,20 +1,24 @@
 // import { execSync } from "node:child_process";
 import { request } from "node:https";
 import { minimatch } from "minimatch";
+import { isAbsoluteUrl, isString } from "@koine/utils";
 // import requestSync from "sync-request-curl";
 // import { isString } from "@koine/utils";
 import type { I18nCompiler } from "../types";
-import type { InputDataRemoteOptions, InputDataSharedOptions } from "./types";
+import type { InputDataOptions, InputDataOptionsRemote } from "./types";
 
 const GITHUB_RAW_URL = "https://raw.githubusercontent.com";
+
+export let isInputDataRemote = (
+  data: InputDataOptions,
+): data is InputDataOptionsRemote => {
+  return isString(data.source) && isAbsoluteUrl(data.source);
+};
 
 /**
  * Same for sync or async version
  */
-const onResponseData = (
-  options: InputDataSharedOptions & InputDataRemoteOptions,
-  result: string,
-) => {
+const onResponseData = (options: InputDataOptionsRemote, result: string) => {
   const { ignore = [], source } = options;
 
   try {
@@ -42,9 +46,7 @@ const onResponseData = (
  * Our github action `knitkode/koine/actions/i18n` creates a JSON file we can
  * read here, github serves it as text
  */
-export let getInputDataRemote = async (
-  options: InputDataSharedOptions & InputDataRemoteOptions,
-) =>
+export let getInputDataRemote = async (options: InputDataOptionsRemote) =>
   new Promise<I18nCompiler.DataInput>((resolve, reject) => {
     const { ignore = [], source } = options;
     const isGithubUrl = source.startsWith(GITHUB_RAW_URL);
@@ -103,9 +105,7 @@ export let getInputDataRemote = async (
  * Our github action `knitkode/koine/actions/i18n` creates a JSON file we can
  * read here, github serves it as text
  */
-export let getInputDataRemoteSync = (
-  options: InputDataSharedOptions & InputDataRemoteOptions,
-) => {
+export let getInputDataRemoteSync = (options: InputDataOptionsRemote) => {
   // const { source } = options;
   // const isGithubUrl = source.startsWith(GITHUB_RAW_URL);
 

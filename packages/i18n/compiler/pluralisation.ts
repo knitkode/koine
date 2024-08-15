@@ -107,6 +107,14 @@ export let transformKeysForPlurals = (keys: string[]) => {
 };
 
 /**
+ * Transform any key adding the required plural suffix
+ */
+export let getRequiredPluralSuffix = (key: string) =>
+  (key +
+    "_" +
+    requiredPluralSuffix) as `${string}_${typeof requiredPluralSuffix}`;
+
+/**
  * Check if the given key has the required plural suffix
  */
 export let hasRequiredPluralSuffix = (key: string) =>

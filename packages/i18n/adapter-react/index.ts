@@ -1,4 +1,4 @@
-import { adapterJs } from "../adapter-js";
+import { type Options as AdapterJsOptions, adapterJs } from "../adapter-js";
 import { createAdapter } from "../compiler/createAdapter";
 import I18nEffects from "./generators/I18nEffects";
 import I18nHeadTags from "./generators/I18nHeadTags";
@@ -16,7 +16,8 @@ import useToSpa from "./generators/useToSpa";
 
 // import packageJson from "./generators/packageJson";
 
-export type Options = typeof adapterJs.defaultOptions & {};
+// export type Options = typeof adapterJs.defaultOptions & {};
+export type Options = AdapterJsOptions & {};
 
 export const adapterReact = createAdapter({
   name: "react",

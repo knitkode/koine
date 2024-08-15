@@ -115,14 +115,18 @@ type Configurator = {
  * 
  * // 3a) in /app/[${localeParamName}]/layout.tsx)
  * 
- * // only thing to do is to spread the i18nHtmlAttrs prop on the <html> element
+ * // first spread the i18nHtmlAttrs prop on the <html> element, then render
+ * // the {I18nScript} node in the <body>
  * export default layout.default((props) => {
  *   const { i18nHtmlAttrs, children } = props;
  * 
  *   return (
  *     <html {...i18nHtmlAttrs}>
  *       <head />
- *       <body>{children}</body>
+ *       <body>
+ *         {I18nScript}
+ *         {children}
+ *       </body>
  *     </html>
  *   );
  * });

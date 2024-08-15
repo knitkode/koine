@@ -14,6 +14,16 @@ export const defaultCodeDataOptions = {
 } satisfies Omit<CodeDataOptionsResolved<"js">, "adapter" | "write">;
 
 /**
+ * Options for `routes` _code data_ generation handling
+ */
+export type CodeDataOptionsRoutes = typeof codeDataRoutesOptions;
+
+/**
+ * Options for `translations` _code data_ generation handling
+ */
+export type CodeDataOptionsTranslations = typeof codeDataTranslationsOptions;
+
+/**
  * Options for _code data_ generation
  */
 export type CodeDataOptions /* <TAdapterName extends I18nCompiler.AdapterName> */ =
@@ -24,21 +34,27 @@ export type CodeDataOptions /* <TAdapterName extends I18nCompiler.AdapterName> *
      */
     adapter: I18nCompiler.AnyAdapterConfiguration;
     /**
-     * Options for `routes` code data generation handling
+     * User defined {@link CodeDataOptionsRoutes}
      */
-    routes?: PartialDeep<typeof codeDataRoutesOptions>;
+    routes?: PartialDeep<CodeDataOptionsRoutes>;
     /**
-     * Options for `translations` code data generation handling
+     * User defined {@link CodeDataOptionsTranslations}
      */
-    translations?: PartialDeep<typeof codeDataTranslationsOptions>;
+    translations?: PartialDeep<CodeDataOptionsTranslations>;
   };
 
 export type CodeDataOptionsResolved<
   TAdapterName extends I18nCompiler.AdapterName = I18nCompiler.AdapterName,
 > = {
   adapter: I18nCompiler.AdapterConfigurationResolved<TAdapterName>;
-  routes: typeof codeDataRoutesOptions;
-  translations: typeof codeDataTranslationsOptions;
+  /**
+   * Resolved {@link CodeDataOptionsRoutes}
+   */
+  routes: CodeDataOptionsRoutes;
+  /**
+   * Resolved {@link CodeDataOptionsTranslations}
+   */
+  translations: CodeDataOptionsTranslations;
   /**
    * Only here if the compiler actually `write`s
    */

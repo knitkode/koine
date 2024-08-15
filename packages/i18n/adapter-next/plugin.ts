@@ -31,9 +31,7 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
   nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
 
   const {
-    code: {
-      options: { adapter },
-    },
+    options: { adapter },
   } = i18nResult;
 
   if (adapter.name === "next-translate") {
@@ -46,7 +44,7 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
         // when using the locale param name structure just force to opt-out from
         // next.js built in i18n support for pages router, this should also
         // ease the cohexistence of pages and app router
-        if (i18nResult.code.options.routes.localeParamName) {
+        if (i18nResult.options.routes.localeParamName) {
           delete nextConfig.i18n;
         }
       } catch (_e) {

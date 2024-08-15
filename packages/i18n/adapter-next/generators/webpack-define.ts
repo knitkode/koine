@@ -1,18 +1,16 @@
 import { formatTo } from "../../adapter-js/generators/formatTo";
-import { getTFunction, getTFunctionsMeta } from "../../adapter-js/generators/t";
+import { getTFunction } from "../../adapter-js/generators/t";
 import { tInterpolateParams } from "../../adapter-js/generators/tInterpolateParams";
 import { tInterpolateParamsDeep } from "../../adapter-js/generators/tInterpolateParamsDeep";
 import { tPluralise } from "../../adapter-js/generators/tPluralise";
-import {
-  getToFunction,
-  getToFunctionsMeta,
-} from "../../adapter-js/generators/to";
+import { getToFunction } from "../../adapter-js/generators/to";
 import { getTypeLocale } from "../../adapter-js/generators/types";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   GLOBAL_I18N_IDENTIFIER,
   compileDataParamsToType,
 } from "../../compiler/helpers";
+import { resolveGlobalizeOption } from "../index";
 
 function collapseWhitespaces(input: string) {
   return input.replace(/\s+/g, " ");
@@ -35,19 +33,12 @@ function collapseWhitespaces(input: string) {
  */
 // prettier-ignore
 export default createGenerator("next", (arg) => {
-  const { config, options, routes, translations } = arg;
-  const { defaultLocale, debug } = config;
-  const { namespaceDelimiter, dynamicDelimiters } = options.translations.tokens;
-  const { globalName } = options.adapter;
+  const { config, options } = arg;
+  const { debug } = config;
   const { cwd, output } = options.write || { cwd: "", output: "" };
-  const tMeta = getTFunctionsMeta({
-    translations: arg.options.translations,
-    modularized: arg.options.adapter.modularized,
-  });
-  const toMeta = getToFunctionsMeta({
-    routes: arg.options.routes,
-    modularized: arg.options.adapter.modularized,
-  });
+  const globalize = resolveGlobalizeOption(options.adapter.globalize);
+  const routesToGlobalize = globalize.functions.routes ? arg.routes.byId : {};
+  const translationsToGlobalize = globalize.functions.translations ? arg.translations : {};
 
   return {
     webpackDefineGranularTypes: {
@@ -65,15 +56,11 @@ export default createGenerator("next", (arg) => {
 export {};
 
 declare global {
-  ${Object.keys(routes.byId)
-    .map((routeId) => {
-      const route = routes.byId[routeId];
-      const { id, params } = route;
-      const { name } = getToFunction(route, {
-        ...config,
-        fnPrefix: toMeta.prefix,
-      });
-      let out = `var ${globalName}_${name}: (`;
+  ${Object.keys(routesToGlobalize)
+    .map((key) => {
+      const route = routesToGlobalize[key];
+      const { id, fnName, params } = route;
+      let out = `var ${globalize.prefix}_${fnName}: (`;
       params
         ? (out += `params: ${compileDataParamsToType(params)}, `)
         : (out += ``);
@@ -82,21 +69,17 @@ declare global {
       return out;
     })
     .join(";\n  ")};
-  ${Object.keys(translations)
-    .map((translationId) => {
-      const translation = translations[translationId];
-      const { /* namespace, path, */ params, values } = translation;
-      const { name } = getTFunction(translation, {
-        ...config,
-        fnPrefix: tMeta.prefix
-      })
-      let out = `var ${globalName}_${name}: (`;
+  ${Object.keys(translationsToGlobalize)
+    .map((key) => {
+      const translation = translationsToGlobalize[key];
+      const { fnName, params, values } = translation;
+      let out = `var ${globalize.prefix}_${fnName}: (`;
       params
         ? (out += `params: ${compileDataParamsToType(params)}, `)
         : (out += ``);
 
       // use of more advanced types to extract the value from the dictionary
-      // out += `locale?: ${Locale}) => ${I18n}.TranslationAtPath<"${namespace}${arg.options.translations.tokens.namespaceDelimiter}${path}">`;
+      // out += `locale?: ${Locale}) => ${I18n}.TranslationAtPath<"${fullKey}">`;
       // use of a hardcoded return type nice to read when overing the function in the IDE
       out += `locale?: ${Locale}) => ${JSON.stringify(values[config.defaultLocale])}`;
       return out;
@@ -117,46 +100,51 @@ const { join } = require("path");
 const { DefinePlugin } = require("webpack");
 
 module.exports = {
-  ${Object.keys(routes.byId)
-    .map((routeId) => {
-      const { name, args, body } = getToFunction(routes.byId[routeId], {
-        ...config,
-        fnPrefix: toMeta.prefix,
-      });
+  ${Object.keys(routesToGlobalize)
+    .map((key) => {
+      const route = routesToGlobalize[key];
+      const { fnName } = route;
+      const { args, body } = getToFunction(route, config);
       return (
-        `${globalName}_${name}: DefinePlugin.runtimeValue(() => ` +
+        `${globalize.prefix}_${fnName}: DefinePlugin.runtimeValue(() => ` +
         collapseWhitespaces(
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
-            "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
-            formatTo(config).$outInline(),
-            "return " + body,
+              "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
+              formatTo(config).$outInline(),
+              "return " + body,
             "})`",
-          ].join(" ") +
-          `, { fileDependencies: [join("${cwd}", "${output}", "${toMeta.dir}", "${name}.ts")] }`,
+          ].join(" ") + ", { fileDependencies: [" +
+            options.adapter.modularize ?
+              `join("${cwd}", "${output}", "${options.routes.functions.dir}", "${fnName}.ts")`
+            :
+              `join("${cwd}", "${output}", "$to.ts")`
+            + "] }",
         )
       );
     }).join("),\n  ")}),
-  ${Object.keys(translations)
-    .map((translationId) => {
-      const translation = translations[translationId];
-      const { name, args, body } = getTFunction(translation, {
-        ...config,
-        fnPrefix: tMeta.prefix,
-      });
+  ${Object.keys(translationsToGlobalize)
+    .map((key) => {
+      const translation = translationsToGlobalize[key];
+      const { fnName, params, typeValue, plural } = translation;
+      const { args, body } = getTFunction(translation, config);
       return (
-        `${globalName}_${name}: DefinePlugin.runtimeValue(() => ` +
+        `${globalize.prefix}_${fnName}: DefinePlugin.runtimeValue(() => ` +
         collapseWhitespaces(
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
-            "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
-            translation.params ? tInterpolateParams(arg.options.translations.tokens.dynamicDelimiters).$outInline() : "",
-            translation.typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline(),
-            translation.plural ? tPluralise().$outInline() : "",
-            "return " + body,
+              "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
+              params ? tInterpolateParams(options.translations.tokens.dynamicDelimiters).$outInline() : "",
+              typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline(),
+              plural ? tPluralise().$outInline() : "",
+              "return " + body,
             "})`",
-          ].join(" ") +
-          `, { fileDependencies: [join("${cwd}", "${output}", "${tMeta.dir}", "${name}.ts")] }`,
+          ].join(" ") + ", { fileDependencies: [" +
+            options.adapter.modularize ?
+              `join("${cwd}", "${output}", "${options.translations.functions.dir}", "${fnName}.ts")`
+            :
+              `join("${cwd}", "${output}", "$t.ts")`
+            + "] }",
         )
       );
     }).join(`),\n  `)}),
@@ -171,7 +159,8 @@ module.exports = {
       ext: "d.ts",
       index: false,
       content: () => {
-        const { dynamicRoutes, staticRoutes } = routes;
+        // TODO: here split in the two groups routesToGlobalize rather than arg.routes
+        const { dynamicRoutes, staticRoutes } = arg.routes;
         const I18n = `import("../types").I18n`;
         let GlobalTo = `
   type GlobalTo = <Id extends ${I18n}.RouteId>(`;
@@ -207,7 +196,7 @@ declare global {
   /**
    * Global t function (allows to select any of the all available translations)
    *
-   * @param path e.g. \`"myNamespace${namespaceDelimiter}myPath.nestedKey"\`
+   * @param path e.g. \`"myNamespace${options.translations.tokens.namespaceDelimiter}myPath.nestedKey"\`
    */
   type GlobalT = <
     TPath extends import("../types").I18n.TranslationsAllPaths,
@@ -222,7 +211,7 @@ declare global {
    */
   ${GlobalTo}
 
-  var ${globalName}: {
+  var ${globalize.prefix}: {
     t: GlobalT;
     to: GlobalTo;
   }
@@ -242,7 +231,7 @@ const { join } = require("path");
 const { DefinePlugin } = require("webpack");
 
 module.exports = {
-  ${globalName}: DefinePlugin.runtimeValue(
+  ${globalize.prefix}: DefinePlugin.runtimeValue(
     (_ctx) => {
       ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:ctx.module", _ctx.module);` : ``};
       return {
@@ -250,7 +239,7 @@ module.exports = {
           const locale = global.${GLOBAL_I18N_IDENTIFIER};
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:to", { locale });` : ``}
 
-          const defaultLocale = "${defaultLocale}";
+          const defaultLocale = "${config.defaultLocale}";
 
           ${formatTo(config).$out("cjs", {
             exports: false,
@@ -259,13 +248,10 @@ module.exports = {
           })}
 
           const lookup = {
-            ${Object.keys(routes.byId)
-              .map((routeId) => {
-                const { args, body } = getToFunction(routes.byId[routeId], {
-                  ...config,
-                  fnPrefix: toMeta.prefix,
-                });
-                return `"${routeId}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
+            ${Object.keys(routesToGlobalize)
+              .map((key) => {
+                const { args, body } = getToFunction(routesToGlobalize[key], config);
+                return `"${key}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
               })
               .join(",\n  ")}
           };
@@ -280,18 +266,16 @@ module.exports = {
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:t", { locale });` : ``}
 
           ${tPluralise().$outInline()}
-          ${tInterpolateParams(dynamicDelimiters).$outInline()}
+          ${tInterpolateParams(options.translations.tokens.dynamicDelimiters).$outInline()}
           ${tInterpolateParamsDeep().$outInline()}
 
           const lookup = {
-            ${Object.keys(translations)
-              .map((translationId) => {
-                const { namespace, path } = translations[translationId];
-                const { args, body } = getTFunction(translations[translationId], {
-                  ...config,
-                  fnPrefix: tMeta.prefix,
-                });
-                return `"${namespace}${arg.options.translations.tokens.namespaceDelimiter}${path}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
+            ${Object.keys(translationsToGlobalize)
+              .map((key) => {
+                const translation = translationsToGlobalize[key];
+                const { fullKey } = translation;
+                const { args, body } = getTFunction(translation, config);
+                return `"${fullKey}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
               })
               .join(",\n  ")}
           };

@@ -1,5 +1,8 @@
 import type { I18nConfig } from "next-translate";
-import { adapterNext } from "../adapter-next";
+import {
+  type Options as AdapterNextOptions,
+  adapterNext,
+} from "../adapter-next";
 import { createAdapter } from "../compiler/createAdapter";
 import type { I18nCompiler } from "../compiler/types";
 import DynamicNamespaces from "./generators/DynamicNamespaces";
@@ -13,6 +16,7 @@ import useT from "./generators/useT";
 
 export type Options = typeof adapterNext.defaultOptions &
   Partial<Pick<I18nConfig, "loader">>;
+// export type Options = AdapterNextOptions & Partial<Pick<I18nConfig, "loader">>;
 
 export const adapterNextTranslate = createAdapter({
   name: "next-translate",

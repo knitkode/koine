@@ -52,7 +52,6 @@ export let escapeEachChar = (input: string) =>
 /**
  * @param ignore List of paths to be ignored (using `minimatch`)
  * @param otherCondition Optionally pass another condition
- * @returns
  */
 export let filterInputTranslationFiles = (
   files: I18nCompiler.DataInput["translationFiles"],

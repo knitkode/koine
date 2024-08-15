@@ -144,21 +144,6 @@
       }
     },
     {
-      "path": "404.json",
-      "locale": "it",
-      "data": {
-        "seo": {
-          "title": "404 - Introvabile"
-        },
-        "title": "404, pagina non trovata",
-        "onlyNumberKeys": {
-          "1": "Una volta",
-          "2": "Due volte",
-          "3": "Tre volte"
-        }
-      }
-    },
-    {
       "path": "~.json",
       "locale": "it",
       "data": {
@@ -206,6 +191,21 @@
       }
     },
     {
+      "path": "404.json",
+      "locale": "it",
+      "data": {
+        "seo": {
+          "title": "404 - Introvabile"
+        },
+        "title": "404, pagina non trovata",
+        "onlyNumberKeys": {
+          "1": "Una volta",
+          "2": "Due volte",
+          "3": "Tre volte"
+        }
+      }
+    },
+    {
       "path": "$faq.json",
       "locale": "it",
       "data": {
@@ -215,14 +215,6 @@
             "answer": "Quello"
           }
         ]
-      }
-    },
-    {
-      "path": "~account/FormUserLanguages.json",
-      "locale": "it",
-      "data": {
-        "empty": {},
-        "msg": "Del testo"
       }
     },
     {
@@ -283,6 +275,14 @@
             }
           }
         }
+      }
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "locale": "it",
+      "data": {
+        "empty": {},
+        "msg": "Del testo"
       }
     }
   ]

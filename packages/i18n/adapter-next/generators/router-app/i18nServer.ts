@@ -3,7 +3,7 @@ import { createGenerator } from "../../../compiler/createAdapter";
 export default createGenerator("next", (arg) => {
   const {
     options: {
-      adapter: { modularized },
+      adapter: { modularize },
     },
   } = arg;
 
@@ -16,7 +16,7 @@ export default createGenerator("next", (arg) => {
       content: () => /* j s */ `
 import { defaultLocale } from "../defaultLocale";
 import { locales } from "../locales";${
-        modularized
+        modularize
           ? `
 import * as $to from "../$to";
 import * as $t from "../$t";`
@@ -67,7 +67,7 @@ export const i18nServer = {
   getT,
   /** {@link getTo} */
   getTo,${
-    modularized
+    modularize
       ? `
   /** {@link $t} */
   $t,

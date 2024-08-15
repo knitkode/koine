@@ -5,6 +5,7 @@ import {
   compileDataParamsToType,
   filterInputTranslationFiles,
 } from "../../compiler/helpers";
+import { ImportsCompiler } from "../../compiler/imports";
 import {
   hasOnlyPluralKeys,
   hasPlurals,
@@ -229,6 +230,12 @@ function getTypes(data: I18nCompiler.DataCode<I18nCompiler.AdapterName>) {
   };
 }
 
+export const getImportTypes = () =>
+  new ImportsCompiler({
+    path: "types",
+    named: [{ name: "I18n", type: true }],
+  });
+
 // TODO: maybe move the Translate types into the various adapters unless we
 // will use the same api for all of them
 export default createGenerator("js", (arg) => {
@@ -253,6 +260,14 @@ export default createGenerator("js", (arg) => {
       // where different instances of this library compiled output need
       // to cohexist
       disabled: true,
+      // TODO: checkthis global namespacing styling (now it is disabled anyway)
+      //  An import alias would allow the following?
+      // export {};
+
+      // declare global {
+      //     import I18n = import("../types").I18n;
+      // }
+      //  @follow [Import aliases are not permitted in a global augmentation](https://github.com/microsoft/TypeScript/issues/13175)
       content: () => /* j s */ `
 declare namespace I18n {
   type Alternates = import("../types").I18n.Alternates;

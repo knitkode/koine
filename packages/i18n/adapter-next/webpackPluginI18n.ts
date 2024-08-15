@@ -1,7 +1,8 @@
 import { resolve } from "path";
 import type { Compilation, Compiler } from "webpack";
-import { debounce, isAbsoluteUrl } from "@koine/utils";
+import { debounce } from "@koine/utils";
 import { type I18nCompilerOptions, i18nCompiler } from "../compiler";
+import { isInputDataLocal } from "../compiler/input/data-local";
 
 const PLUGIN_NAME = "I18nWebpackPlugin";
 
@@ -14,10 +15,10 @@ export class I18nWebpackPlugin {
 
   apply(compiler: Compiler) {
     const { debug, input } = this.opts;
+
+    if (!isInputDataLocal(input)) return;
+
     const { cwd = process.cwd(), source } = input;
-
-    if (isAbsoluteUrl(source)) return;
-
     const i18nInputFolder = resolve(cwd, source);
 
     if (compiler.hooks) {

@@ -2,10 +2,17 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { glob, globSync } from "glob";
+import { isAbsoluteUrl, isString } from "@koine/utils";
 import type { I18nCompiler } from "../types";
-import type { InputDataLocalOptions, InputDataSharedOptions } from "./types";
+import type { InputDataOptions, InputDataOptionsLocal } from "./types";
 
-const getLocalesFolders = (options: Required<InputDataLocalOptions>) => {
+export let isInputDataLocal = (
+  data: InputDataOptions,
+): data is InputDataOptionsLocal => {
+  return isString(data.source) && !isAbsoluteUrl(data.source);
+};
+
+const getLocalesFolders = (options: Required<InputDataOptionsLocal>) => {
   const { cwd, ignore } = options;
   const folders = glob
     .sync("*", {
@@ -23,11 +30,11 @@ const getLocalesFolders = (options: Required<InputDataLocalOptions>) => {
 };
 
 export let getInputDataLocal = async (
-  options: InputDataSharedOptions & InputDataLocalOptions,
+  options: InputDataOptionsLocal,
 ): Promise<I18nCompiler.DataInput> => {
   const { cwd = process.cwd(), ignore = [], source } = options;
   const path = join(cwd, source);
-  const localesFolders = getLocalesFolders({ cwd: path, ignore });
+  const localesFolders = getLocalesFolders({ cwd: path, ignore, source });
   const translationFiles: I18nCompiler.DataInputTranslationFile[] = [];
 
   await Promise.all(
@@ -61,11 +68,11 @@ export let getInputDataLocal = async (
 };
 
 export let getInputDataLocalSync = (
-  options: InputDataSharedOptions & InputDataLocalOptions,
+  options: InputDataOptionsLocal,
 ): I18nCompiler.DataInput => {
   const { cwd = process.cwd(), ignore = [], source } = options;
   const path = join(cwd, source);
-  const localesFolders = getLocalesFolders({ cwd: path, ignore });
+  const localesFolders = getLocalesFolders({ cwd: path, ignore, source });
   const translationFiles: I18nCompiler.DataInputTranslationFile[] = [];
 
   localesFolders.forEach((locale) => {

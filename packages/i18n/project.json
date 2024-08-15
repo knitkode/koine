@@ -20,9 +20,9 @@
         ]
       }
     },
-    "build-modularized-cjs": {},
-    "build-modularized-esm": {},
-    "build-modularized": {},
+    "build-modularize-cjs": {},
+    "build-modularize-esm": {},
+    "build-modularize": {},
     "build-bundle": {
       "options": {
         "additionalEntryPoints": [

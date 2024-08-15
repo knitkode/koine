@@ -11,6 +11,7 @@ import {
   type PluralKey,
   type PluralSuffix,
   getPluralSuffix,
+  getRequiredPluralSuffix,
   hasOnlyPluralKeys,
   isPluralKey,
   removePluralSuffix,
@@ -23,6 +24,8 @@ export const codeDataTranslationsOptions = {
    * ignored
    *
    * @see https://www.npmjs.com/package/minimatch
+   *
+   * @default []
    */
   ignorePaths: [] as string[],
   /**
@@ -35,25 +38,37 @@ export const codeDataTranslationsOptions = {
    *
    * @default false
    */
-  createArrayIndexBasedFns: false,
+  createArrayIndexBasedFns: false as boolean,
   // TODO: add pluralisation config
   /**
-   * It creates `t_` functions that returns objects and arrays to use as
-   * data source.
-   *
-   * NB: this greatly increased the generated code, tree shaking will still
-   * apply though.
-   *
-   * @default true
+   * Functions generation options
    */
-  fnsAsDataCodes: true,
-  /**
-   * Generated `namespace_tKey()` functions prefix, prepended to the automatically
-   * generated function names.
-   *
-   * @default ""
-   */
-  fnsPrefix: "",
+  functions: {
+    /**
+     * The directory name relative within the code `output` path where the
+     * generated functions are written.
+     *
+     * @default "$t"
+     */
+    dir: "$t",
+    /**
+     * Generated `namespace_tKey()` functions prefix, prepended to the automatically
+     * generated function names.
+     *
+     * @default "$t_"
+     */
+    prefix: "$t_",
+    /**
+     * It creates `t_` functions that returns objects and arrays to use as
+     * data source.
+     *
+     * NB: this greatly increased the generated code, tree shaking will still
+     * apply though.
+     *
+     * @default true
+     */
+    asData: true as boolean,
+  },
   tokens: {
     /** @default ":" */
     namespaceDelimiter: ":",
@@ -67,27 +82,6 @@ export const codeDataTranslationsOptions = {
 };
 
 export type CodeDataTranslationsOptions = typeof codeDataTranslationsOptions;
-
-const slashRegex = new RegExp(sep, "g");
-
-/**
- * Transform translation key to function name
- */
-function translationKeyToFnName(key: string) {
-  const replaced = key
-    // replace tilde with dollar
-    .replace(/~/g, "$")
-    // replace dash with underscore
-    .replace(/-/g, "_")
-    .replace(slashRegex, "_")
-    // collapse consecutive underscores
-    .replace(/_+/g, "_")
-    // ensure valid js identifier, allow only alphanumeric characters and few symbols
-    .replace(/[^a-zA-Z0-9_$]/gi, "");
-
-  // ensure the key does not start with a number (invalid js)
-  return /^[0-9]/.test(replaced) ? "$" + replaced : replaced;
-}
 
 /**
  * Extract params to interpolate from flat translation's value
@@ -185,22 +179,29 @@ function manageDataTranslationsPlurals(
   const pluralTranslationIds =
     Object.keys(dataTranslations).filter<PluralKey>(isPluralKey);
 
-  pluralTranslationIds.forEach((translationIdPluralised) => {
-    const id = removePluralSuffix(translationIdPluralised);
-    const pluralSuffix = getPluralSuffix(translationIdPluralised);
-    const pluralisedTranslation = dataTranslations[translationIdPluralised];
+  pluralTranslationIds.forEach((pluralisedId) => {
+    const nonPluralisedId = removePluralSuffix(pluralisedId);
+    const pluralSuffix = getPluralSuffix(pluralisedId);
+    const pluralisedTranslation = dataTranslations[pluralisedId];
+    const requiredPluralisedId = getRequiredPluralSuffix(nonPluralisedId);
+
+    // bail if we miss the required pluralised key, which means we have some
+    // translations that use seemingly pluralised forms but are not really meant
+    // to be pluralised, TODO: we could log this to the user
+    if (!pluralTranslationIds.includes(requiredPluralisedId)) {
+      return;
+    }
 
     // we need to create it if we only have `x_one` `x_other` but not `x`
-    const translationExists = !!dataTranslations[id];
-    dataTranslations[id] = dataTranslations[id] || {};
+    const nonPluralisedTranslationExists = !!dataTranslations[nonPluralisedId];
 
     // we only need to rearrange plurals defined as `x_one`, `x_other`, if plurals
     // are instead defined as objects `{ one: "", other: "" }` we just keep that
     // object structure for `values`
     if (pluralisedTranslation) {
-      if (!translationExists) {
-        dataTranslations[id] = createTranslationEntry(options, {
-          id,
+      if (!nonPluralisedTranslationExists) {
+        dataTranslations[nonPluralisedId] = createTranslationEntry(options, {
+          id: nonPluralisedId,
           namespace: pluralisedTranslation.namespace,
           // remove the suffix as here the path of the existing pluralised
           // translation will always be something like `myKey_one` or `myKey_other`
@@ -218,7 +219,7 @@ function manageDataTranslationsPlurals(
         });
       }
 
-      const values = dataTranslations[id].values || {};
+      const values = dataTranslations[nonPluralisedId].values || {};
 
       for (const locale in pluralisedTranslation.values) {
         const value = pluralisedTranslation.values[locale];
@@ -237,22 +238,22 @@ function manageDataTranslationsPlurals(
 
         const params = extractTranslationParamsFromValue(options, value);
         if (params) {
-          dataTranslations[id].params = {
-            ...(dataTranslations[id].params || {}),
+          dataTranslations[nonPluralisedId].params = {
+            ...(dataTranslations[nonPluralisedId].params || {}),
             ...params,
           };
         }
       }
       if (Object.keys(values).length) {
-        dataTranslations[id].values = values;
-        dataTranslations[id].plural = true;
+        dataTranslations[nonPluralisedId].values = values;
+        dataTranslations[nonPluralisedId].plural = true;
 
         // @see data.json:code.translations.$account_$user$profile_pluralAsObject
         const firstLocale = Object.keys(values)[0];
         if (hasOnlyPluralKeys(values[firstLocale] as {})) {
           // plural values need always to be treated as Primitive values, despite
           // the data structure looks like an object (e.g. { "plural_one": "One", "plural_other": "Some" })
-          dataTranslations[id].typeValue = "Primitive";
+          dataTranslations[nonPluralisedId].typeValue = "Primitive";
         }
       }
 
@@ -262,11 +263,35 @@ function manageDataTranslationsPlurals(
       // `withPluralAndOtherKeys_nonPluralKey()` => "Yes"
 
       // delete ids that we re-arranged in the plural-ready object value
-      delete dataTranslations[translationIdPluralised];
+      delete dataTranslations[pluralisedId];
     }
   });
 
   return dataTranslations;
+}
+
+const slashRegex = new RegExp(sep, "g");
+
+function getTranslationFunctionName(
+  options: CodeDataTranslationsOptions,
+  fullKey: string,
+) {
+  // return options.functions.prefix + changeCaseSnake(fullKey);
+  let replaced = fullKey
+    // replace tilde
+    .replace(/~/g, "_")
+    // replace dash, dots, semicolon
+    .replace(/-|\.|:/g, "_")
+    // replce slashes
+    .replace(slashRegex, "_")
+    // ensure valid js identifier, allow only alphanumeric characters and few symbols
+    .replace(/[^a-zA-Z0-9_$]/gi, "");
+
+  // ensure the key does not start with a number (invalid js)
+  replaced = /^[0-9]/.test(replaced) ? "_" + replaced : replaced;
+
+  // collapse consecutive underscores
+  return (options.functions.prefix + replaced).replace(/_+/g, "_");
 }
 
 function createTranslationEntry(
@@ -285,17 +310,20 @@ function createTranslationEntry(
     locale: null | I18nCompiler.Locale;
     value: null | I18nCompiler.DataTranslationValue;
   },
-  existingTranslation?: I18nCompiler.DataTranslation,
+  existing?: I18nCompiler.DataTranslation,
 ) {
   const params =
     value === null ? null : extractTranslationParamsFromValue(options, value);
+  const fullKey = namespace + options.tokens.namespaceDelimiter + path;
   const translation: I18nCompiler.DataTranslation = {
-    ...existingTranslation,
+    ...existing,
     id,
+    fnName: getTranslationFunctionName(options, fullKey),
     namespace,
     path,
+    fullKey,
     typeValue,
-    values: existingTranslation?.values || {},
+    values: existing?.values || {},
   };
 
   // extend values with localised value
@@ -328,7 +356,7 @@ function addDataTranslationEntry(
     value: I18nCompiler.DataTranslationValue;
   },
 ) {
-  const existingTranslation = dataTranslations[id] || {};
+  const existing = dataTranslations[id];
 
   if (isPrimitive(value)) {
     dataTranslations[id] = createTranslationEntry(
@@ -341,10 +369,10 @@ function addDataTranslationEntry(
         locale,
         value,
       },
-      existingTranslation,
+      existing,
     );
   } else {
-    if (options.fnsAsDataCodes) {
+    if (options.functions.asData) {
       dataTranslations[id] = createTranslationEntry(
         options,
         {
@@ -355,7 +383,7 @@ function addDataTranslationEntry(
           locale,
           value,
         },
-        existingTranslation,
+        existing,
       );
     }
 
@@ -375,7 +403,7 @@ function addDataTranslationEntry(
     } else {
       for (const key in value) {
         addDataTranslationEntry(options, dataTranslations, {
-          id: id + "_" + translationKeyToFnName(key),
+          id: id + "_" + key,
           namespace,
           path: path + "." + key,
           locale,
@@ -389,25 +417,6 @@ function addDataTranslationEntry(
 }
 
 /**
- * Given a file with `path` like `~account/~profile/edit.json` we obtain:
- *
- * - `id`: `"$account_$profile_edit"`
- * - `namespace`: `"~account/~profile/edit"`
- */
-function getIdAndNamespaceFromFile(
-  file: I18nCompiler.DataInputTranslationFile,
-) {
-  const { path } = file;
-  const pathWithoutExt = join(dirname(path), basename(path, extname(path)));
-  const id = translationKeyToFnName(pathWithoutExt);
-
-  return {
-    namespace: pathWithoutExt,
-    id,
-  };
-}
-
-/**
  * Get translation data recursively starting from a specific file
  */
 function getCodeDataTranslationsFromFile(
@@ -415,12 +424,17 @@ function getCodeDataTranslationsFromFile(
   dataTranslations: I18nCompiler.DataTranslations,
   file: I18nCompiler.DataInputTranslationFile,
 ): I18nCompiler.DataTranslations {
-  const { locale } = file;
-  let { namespace, id } = getIdAndNamespaceFromFile(file);
+  const { locale, path } = file;
+  // from `path` `~account/~profile/edit.json` we get `"~account/~profile/edit"`
+  const namespace = join(dirname(path), basename(path, extname(path)));
+  let id = namespace;
 
   for (const key in file.data) {
     const value = file.data[key];
-    if (key) id = translationKeyToFnName(namespace + "_" + key);
+    // this is just an id we use internally, we do not really care about appling
+    // the user option, actually that would make the id inconsistent for nothing
+    // if (key) id = namespace + options.tokens.namespaceDelimiter + key;
+    if (key) id = namespace + ":" + key;
 
     addDataTranslationEntry(options, dataTranslations, {
       id,

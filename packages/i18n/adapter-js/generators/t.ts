@@ -11,42 +11,21 @@ import {
   FunctionsCompiler,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
-import { compileDataParamsToType } from "../../compiler/helpers";
+import {
+  GLOBAL_I18N_IDENTIFIER,
+  compileDataParamsToType,
+} from "../../compiler/helpers";
 import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
-
-/**
- * If the user does not specifiy a custom prefix by default we prepend a default
- * prefix and store in a sub directory when `modularized` option is true
- */
-export function getTFunctionsMeta(options: {
-  translations: I18nCompiler.DataCode<"js">["options"]["translations"];
-  modularized: I18nCompiler.DataCode<"js">["options"]["adapter"]["modularized"];
-}) {
-  const {
-    translations: { fnsPrefix },
-    modularized,
-  } = options;
-  const prefix = fnsPrefix || modularized ? "$t_" : "";
-
-  return {
-    prefix,
-    // TODO: weak point: we strip the trailing underscore but the user
-    // might defined a different prefix for these functions
-    dir: prefix ? prefix.replace(/_*$/, "") : undefined,
-  };
-}
+import { getImportTypes } from "./types";
 
 export function getTFunction(
   translation: I18nCompiler.DataTranslation,
-  options: Pick<I18nCompiler.Config, "defaultLocale"> & {
-    fnPrefix: string;
-  },
+  options: Pick<I18nCompiler.Config, "defaultLocale">,
 ) {
-  const { defaultLocale, fnPrefix } = options;
-  let { id, values, params, plural, typeValue } = translation;
+  const { defaultLocale } = options;
+  let { values, params, plural, typeValue } = translation;
   const args: FunctionsCompilerDataArg[] = [];
-  const name = `${fnPrefix}${id}`;
   const pluralCountProperty = "count";
 
   if (plural) {
@@ -68,16 +47,19 @@ export function getTFunction(
   args.push({ name: "locale", type: "I18n.Locale", optional: true });
   const imports = [importsMap.types];
 
-  let body = "";
+  // let body = ""; // with implicitReturn: true
+  let body =
+    "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; return ";
+  let returns = "";
 
   if (isPrimitive(values)) {
-    body += getTranslationValueOutput(values);
+    returns += getTranslationValueOutput(values);
   } else {
-    body += getTFunctionBodyWithLocales(defaultLocale, values);
+    returns += getTFunctionBodyWithLocales(defaultLocale, values);
   }
   if (plural) {
     imports.push(importsMap.tPluralise);
-    body = `tPluralise(${body}, params.${pluralCountProperty})`;
+    returns = `tPluralise(${returns}, params.${pluralCountProperty})`;
   }
 
   if (
@@ -91,14 +73,14 @@ export function getTFunction(
   ) {
     if (typeValue === "Primitive") {
       imports.push(importsMap.tInterpolateParams);
-      body = `tInterpolateParams(${body}, params)`;
+      returns = `tInterpolateParams(${returns}, params)`;
     } else if (typeValue === "Array" || typeValue === "Object") {
       imports.push(importsMap.tInterpolateParamsDeep);
-      body = `tInterpolateParamsDeep(${body}, params)`;
+      returns = `tInterpolateParamsDeep(${returns}, params)`;
     }
   }
 
-  return { name, body, args, imports };
+  return { body: body + returns, args, imports };
 }
 
 function getTranslationValueOutput(value: I18nCompiler.DataTranslationValue) {
@@ -141,33 +123,24 @@ function getTFunctionBodyWithLocales(
 }
 
 const importsMap = {
-  types: new ImportsCompiler({
-    path: "types",
-    named: [{ name: "I18n", type: true }],
-    // fn: false
-  }),
+  types: getImportTypes(),
   tInterpolateParams: new ImportsCompiler({
     path: "internal/tInterpolateParams",
     named: [{ name: "tInterpolateParams" }],
-    // fn: tInterpolateParams
   }),
   tInterpolateParamsDeep: new ImportsCompiler({
     path: "internal/tInterpolateParamsDeep",
     named: [{ name: "tInterpolateParamsDeep" }],
-    // fn: tInterpolateParamsDeep
   }),
   tPluralise: new ImportsCompiler({
     path: "internal/tPluralise",
     named: [{ name: "tPluralise" }],
-    // fn: tPluralise
   }),
 };
 
 const getTFunctions = (
   translations: I18nCompiler.DataTranslations,
-  options: Pick<I18nCompiler.Config, "defaultLocale"> & {
-    fnPrefix: string;
-  },
+  options: Pick<I18nCompiler.Config, "defaultLocale">,
 ) => {
   const functions: FunctionsCompiler[] = [];
   const allImports: Set<ImportsCompiler> = new Set();
@@ -175,20 +148,22 @@ const getTFunctions = (
   allImports.add(importsMap.types);
 
   for (const translationId in translations) {
-    const { imports, name, args, body } = getTFunction(
-      translations[translationId],
-      options,
-    );
+    const translation = translations[translationId];
+    const { imports, args, body } = getTFunction(translation, options);
 
     imports.forEach((imp) => allImports.add(imp));
 
     functions.push(
       new FunctionsCompiler({
         imports,
-        name,
+        name: translation.fnName,
         args,
         body,
-        implicitReturn: true,
+        // implicitReturn: true,
+        comment: {
+          title: `translation key \`${translation.fullKey}\``,
+          returns: `\`${JSON.stringify(translation.values[options.defaultLocale])}\` (for locale _${options.defaultLocale}_)`,
+        },
       }),
     );
   }
@@ -201,23 +176,17 @@ const getTFunctions = (
 // /*#__PURE__*/
 export default createGenerator("js", (data) => {
   const {
-    config: { defaultLocale },
+    config,
     options: {
       translations: optionsTranslations,
-      adapter: { modularized },
+      adapter: { modularize },
     },
     translations,
   } = data;
-  const { dir, prefix } = getTFunctionsMeta({
-    modularized,
-    translations: optionsTranslations,
-  });
-  const { functions, allImports } = getTFunctions(translations, {
-    defaultLocale,
-    fnPrefix: prefix,
-  });
+  const { dir } = optionsTranslations.functions;
+  const { functions, allImports } = getTFunctions(translations, config);
 
-  return modularized
+  return modularize
     ? (functions.reduce((map, fn) => {
         map[fn.name] = {
           dir,
@@ -228,6 +197,9 @@ export default createGenerator("js", (data) => {
             return fn.$out("ts", {
               imports: { folderUp: 1 },
               exports: "both",
+              style: "function",
+              comments: true,
+              pure: true,
             });
           },
         };
@@ -236,9 +208,9 @@ export default createGenerator("js", (data) => {
       }, {} as I18nCompiler.AdapterGeneratorResult) as never)
     : {
         $t: {
-          name: "$t",
+          name: dir,
           ext: "ts",
-          index: true,
+          index: false,
           content: () => {
             let output = "";
             output += ImportsCompiler.outMany("ts", allImports, {
@@ -247,6 +219,9 @@ export default createGenerator("js", (data) => {
             output += FunctionsCompiler.outMany("ts", functions, {
               imports: false,
               exports: "named",
+              style: "function",
+              comments: true,
+              pure: true,
             });
 
             return output;

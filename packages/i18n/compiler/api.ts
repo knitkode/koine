@@ -20,40 +20,34 @@ import {
   writeSummary, // writeSummarySync,
 } from "./summary";
 
-type InputOptions = InputDataOptions & {
-  /**
-   * Options for _input_ writing
-   */
-  write?: InputWriteOptions;
-};
-
-type CodeOptions = CodeDataOptions & {
-  /**
-   * Options for _code_ writing
-   */
-  write?: CodeWriteOptions;
-};
-
-type SummaryOptions = SummaryDataOptions & {
-  /**
-   * Options for _summary_ writing
-   */
-  write?: SummaryWriteOptions;
-};
-
 export type I18nCompilerOptions = I18nCompilerConfig & {
   /**
    * Options for _input_ data generation and writing
    */
-  input: InputOptions;
+  input: InputDataOptions & {
+    /**
+     * Options for _input_ writing
+     */
+    write?: InputWriteOptions;
+  };
   /**
    * Options for _code_ data generation and writing
    */
-  code: CodeOptions;
+  code: CodeDataOptions & {
+    /**
+     * Options for _code_ writing
+     */
+    write?: CodeWriteOptions;
+  };
   /**
    * Options for _summary_ data generation and writing
    */
-  summary?: SummaryOptions;
+  summary?: SummaryDataOptions & {
+    /**
+     * Options for _summary_ writing
+     */
+    write?: SummaryWriteOptions;
+  };
 };
 
 export type I18nCompilerReturn = Awaited<ReturnType<typeof i18nCompiler>>;
@@ -99,7 +93,7 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
 
   await Promise.all(writables);
 
-  return { config, input, code };
+  return code;
 };
 
 // /**
@@ -138,5 +132,5 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
 //     );
 //   }
 
-//   return { config, input, code };
+//   return code;
 // };

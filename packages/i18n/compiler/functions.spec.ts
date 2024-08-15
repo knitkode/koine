@@ -21,6 +21,8 @@ describe("functions compilation", () => {
 
   const comment = `/**
  * @internal
+ * @param {number} n1
+ * @param {number} n2
  */\n`;
 
   test("to 'ts' format", () => {

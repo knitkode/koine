@@ -1,43 +1,19 @@
-import { changeCaseSnake, isString } from "@koine/utils";
+import { isString } from "@koine/utils";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   FunctionsCompiler,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
+import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";
 import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
-
-/**
- * If the user does not specifiy a custom prefix by default we prepend a default
- * prefix and store in a sub directory when `modularized` option is true
- */
-export function getToFunctionsMeta(options: {
-  routes: I18nCompiler.DataCode<"js">["options"]["routes"];
-  modularized: I18nCompiler.DataCode<"js">["options"]["adapter"]["modularized"];
-}) {
-  const {
-    routes: { fnsPrefix },
-    modularized,
-  } = options;
-  const prefix = fnsPrefix || modularized ? "$to_" : "";
-
-  return {
-    prefix,
-    // TODO: weak point: we strip the trailing underscore but the user
-    // might defined a different prefix for these functions
-    dir: prefix ? prefix.replace(/_*$/, "") : undefined,
-  };
-}
+import { getImportTypes } from "./types";
 
 export function getToFunction(
   route: I18nCompiler.DataRoute,
-  options: Pick<I18nCompiler.Config, "defaultLocale" | "single"> & {
-    fnPrefix: string;
-  },
+  options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) {
-  const { fnPrefix } = options;
   const routeId = route.id;
-  const name = getToFunctionName(fnPrefix, routeId);
   const body = getToFunctionBody(route, options);
   const args: FunctionsCompilerDataArg[] = [];
 
@@ -51,11 +27,7 @@ export function getToFunction(
   // for ergonomy always allow the user to pass the locale
   args.push({ name: "locale", type: "I18n.Locale", optional: true });
 
-  return { name, body, args };
-}
-
-function getToFunctionName(prefix: string, id: string) {
-  return prefix + changeCaseSnake(id);
+  return { body, args };
 }
 
 function getToFunctionBody(
@@ -64,19 +36,23 @@ function getToFunctionBody(
 ) {
   const { params, pathnames } = route;
   const { defaultLocale, single } = options;
-  let body = "";
   const formatArgLocale = single ? `""` : "locale";
   const formatArgParams = params ? ", params" : "";
 
+  // let body = ""; // with implicitReturn: true
+  let body =
+    "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; return ";
+  let returns = "";
+
   if (isString(pathnames)) {
-    body += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams});`;
+    returns += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams})`;
   } else {
-    body += `formatTo(${formatArgLocale}, ${getToFunctionBodyWithLocales(
+    returns += `formatTo(${formatArgLocale}, ${getToFunctionBodyWithLocales(
       defaultLocale,
       pathnames,
-    )}${formatArgParams});`;
+    )}${formatArgParams})`;
   }
-  return body;
+  return body + returns;
 }
 
 function getToFunctionBodyWithLocales(
@@ -101,20 +77,13 @@ const importsMap = {
   formatTo: new ImportsCompiler({
     path: "internal/formatTo",
     named: [{ name: "formatTo" }],
-    // fn: formatTo
   }),
-  types: new ImportsCompiler({
-    path: "types",
-    named: [{ name: "I18n", type: true }],
-    // fn: false
-  }),
+  types: getImportTypes(),
 };
 
 function getToFunctions(
   routes: I18nCompiler.DataRoutes,
-  options: Pick<I18nCompiler.Config, "defaultLocale" | "single"> & {
-    fnPrefix: string;
-  },
+  options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) {
   const functions: FunctionsCompiler[] = [];
   const allImports = new Set<ImportsCompiler>();
@@ -123,15 +92,20 @@ function getToFunctions(
   allImports.add(importsMap.types);
 
   for (const routeId in routes.byId) {
-    const { name, args, body } = getToFunction(routes.byId[routeId], options);
+    const route = routes.byId[routeId];
+    const { args, body } = getToFunction(route, options);
 
     functions.push(
       new FunctionsCompiler({
         imports: [importsMap.formatTo, importsMap.types],
-        name,
+        name: route.fnName,
         args,
         body,
-        implicitReturn: true,
+        // implicitReturn: true,
+        comment: {
+          title: `to route id \`${routeId}\``,
+          returns: `\`"${route.pathnames[options.defaultLocale]}"\` (for locale _${options.defaultLocale}_)`,
+        },
       }),
     );
   }
@@ -150,20 +124,13 @@ function $to(
     routes,
     options: {
       routes: optionsRoutes,
-      adapter: { modularized },
+      adapter: { modularize },
     },
   } = data;
-  const { dir, prefix } = getToFunctionsMeta({
-    modularized,
-    routes: optionsRoutes,
-  });
-  const { functions, allImports } = getToFunctions(routes, {
-    defaultLocale: config.defaultLocale,
-    single: config.single,
-    fnPrefix: prefix,
-  });
+  const { dir } = optionsRoutes.functions;
+  const { functions, allImports } = getToFunctions(routes, config);
 
-  return modularized
+  return modularize
     ? (functions.reduce((map, fn) => {
         map[fn.name] = {
           dir,
@@ -174,6 +141,9 @@ function $to(
             return fn.$out("ts", {
               imports: { folderUp: 1 },
               exports: "both",
+              style: "function",
+              comments: true,
+              pure: true,
             });
           },
         };
@@ -182,9 +152,9 @@ function $to(
       }, {} as I18nCompiler.AdapterGeneratorResult) as never)
     : {
         $to: {
-          name: "$to",
+          name: dir,
           ext: "ts",
-          index: true,
+          index: false,
           content: () => {
             let output = "";
             output += ImportsCompiler.outMany("ts", allImports, {
@@ -193,6 +163,9 @@ function $to(
             output += FunctionsCompiler.outMany("ts", functions, {
               imports: false,
               exports: "named",
+              style: "function",
+              comments: true,
+              pure: true,
             });
 
             return output;

@@ -32,10 +32,13 @@ export type FunctionsCompilerData = {
 };
 
 type FunctionsCompilerComment = {
+  title?: string;
+  body?: string;
   /**
    * Add `@internal` comment directive
    */
   internal?: boolean;
+  returns?: string;
 };
 
 export type FunctionsCompilerDataArg = {
@@ -72,6 +75,14 @@ type FunctionsCompilerOutputOptions = {
    * @default "arrow"
    */
   style?: "arrow" | "function";
+  /**
+   * Whether to add bundler's comments hint [`__NO_SIDE_EFFECTS__`](https://github.com/javascript-compiler-hints/compiler-notations-spec/blob/main/no-side-effects-notation-spec.md)
+   *
+   * NOTE: [`__PURE__` can only annotate function calls](https://github.com/javascript-compiler-hints/compiler-notations-spec/blob/main/pure-notation-spec.md)
+   *
+   * @default false
+   */
+  pure?: boolean;
 };
 
 type FunctionsCompilerOutputOptionsResolved = ReturnType<
@@ -79,6 +90,15 @@ type FunctionsCompilerOutputOptionsResolved = ReturnType<
 >;
 
 type FunctionsCompilerFormat = "ts" | "cjs";
+
+function splitTextLines(text: string, lineMaxChars: number) {
+  const regex = new RegExp(
+    `\\b\\w(?:[\\w\\s]{${lineMaxChars - 1},}?(?=\\s)|.*$)`,
+    "g",
+  );
+
+  return text.match(regex);
+}
 
 export class FunctionsCompiler {
   name: FunctionsCompilerDataArg["name"];
@@ -99,11 +119,32 @@ export class FunctionsCompiler {
       .join(", ");
   }
 
-  static #comment({ internal }: FunctionsCompilerComment) {
+  static #comment(data: FunctionsCompilerData) {
+    const { args, comment = {} } = data;
+    const { title, body, internal, returns } = comment;
     let lines = [];
+
+    if (title) {
+      lines.push("### " + title);
+      lines.push("");
+    }
+    if (body) {
+      splitTextLines(body, 80)?.forEach((l) => lines.push(l));
+      lines.push("");
+    }
+
     if (internal) lines.push("@internal");
 
+    args.forEach((arg) => {
+      lines.push(`@param {${arg.type}${arg.optional ? "?" : ""}} ${arg.name}`);
+    });
+    if (returns) lines.push("@return " + returns);
+
     return lines.length ? `/**\n * ${lines.join("\n * ")}\n */\n` : "";
+  }
+
+  static #pure(options: FunctionsCompilerOutputOptionsResolved) {
+    return options.opts_pure ? "/* @__NO_SIDE_EFFECTS__ */\n" : "";
   }
 
   static resolveOptions(options: FunctionsCompilerOutputOptions) {
@@ -112,12 +153,14 @@ export class FunctionsCompiler {
       exports: opts_exports,
       comments: opts_comments = true,
       style: opts_style = "arrow",
+      pure: opts_pure,
     } = options;
     return {
       opts_imports,
       opts_exports,
       opts_comments,
       opts_style,
+      opts_pure,
     };
   }
 
@@ -161,14 +204,15 @@ export class FunctionsCompiler {
     data: FunctionsCompilerData,
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
-    const { imports, comment, name, args } = data;
+    const { imports, name, args } = data;
     const { opts_imports, opts_exports, opts_comments, opts_style } = options;
     let out =
       opts_imports && imports.length
         ? imports.map((i) => i.$out("ts", opts_imports)).join("\n") + "\n\n"
         : "";
     out += this.#getBefore(data, "ts");
-    out += opts_comments && comment ? this.#comment(comment) : "";
+    out += opts_comments ? this.#comment(data) : "";
+    out += this.#pure(options);
 
     // maybe add named export
     out += opts_exports === "named" || opts_exports === "both" ? "export " : "";
@@ -196,14 +240,15 @@ export class FunctionsCompiler {
     data: FunctionsCompilerData,
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
-    const { imports, comment, name, args } = data;
+    const { imports, name, args } = data;
     const { opts_imports, opts_exports, opts_comments, opts_style } = options;
     let out =
       opts_imports && imports.length
         ? imports.map((i) => i.$out("cjs", opts_imports)).join("\n") + "\n\n"
         : "";
     out += this.#getBefore(data, "cjs");
-    out += opts_comments && comment ? this.#comment(comment) : "";
+    out += opts_comments ? this.#comment(data) : "";
+    out += this.#pure(options);
 
     if (opts_style === "arrow") {
       out += `let ${name} = (${this.#args(args, false)}) => `;
@@ -274,7 +319,7 @@ export class FunctionsCompiler {
   ) {
     const list = Array.from(instances);
     return list.length
-      ? list.map((i) => this.out(i.data, format, options)).join("\n")
+      ? list.map((i) => this.out(i.data, format, options)).join("\n\n")
       : "";
   }
 }

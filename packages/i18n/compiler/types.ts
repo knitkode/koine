@@ -104,28 +104,48 @@ export namespace I18nCompiler {
   }[AdapterName];
 
   /**
-   * {@link DataRoute}
+   * All **routes** related data
    */
   export type DataRoutes = {
+    /**
+     * Flat collection of {@link DataRoute}
+     */
     byId: Record<RouteId, DataRoute>;
-    wildcardIds: RouteId[];
     /**
      * Whether there are only static routes
      */
     onlyStaticRoutes: boolean;
-    dynamicRoutes: RouteId[];
-    staticRoutes: RouteId[];
+    /**
+     * Whether there are some SPA routes
+     */
     haveSpaRoutes: boolean;
+    /**
+     * List of _wildcarded_ routes ids
+     */
+    wildcardIds: RouteId[];
+    /**
+     * List of _dynamic_ routes ids
+     */
+    dynamicRoutes: RouteId[];
+    /**
+     * List of _static_ routes ids
+     */
+    staticRoutes: RouteId[];
   };
 
   /**
-   * A route metadata
+   * The data shape for a single **route** entry
    */
   export type DataRoute = {
     /**
      * Unique identifier of the route
      */
     id: RouteId;
+    /**
+     * Function name of the route, e.g. `account_edit`
+     * according to the {@link CodeDataOptionsRoutes}
+     */
+    fnName: string;
     /**
      * Dictionary with route ids as keys each one holding a dictionary of its
      * pathnames by locale
@@ -153,11 +173,12 @@ export namespace I18nCompiler {
   };
 
   /**
-   * {@link DataTranslation}
+   * Flat collection of {@link DataTranslation}
    */
   export type DataTranslations = Record<string, DataTranslation>;
 
   /**
+   * The data shape for a single **translation** entry
    */
   export type DataTranslation = {
     /**
@@ -174,6 +195,18 @@ export namespace I18nCompiler {
      * e.g. `myObj.nestedKey.myKey`
      */
     path: string;
+    /**
+     * The concatenation of:
+     * - `namespace`
+     * - `namespaceDelimiter` from {@link CodeDataOptionsTranslations}
+     * - `path`
+     */
+    fullKey: string;
+    /**
+     * Function name of the translation, e.g. `myDir_myFileName_myObj_nestedKey`
+     * according to the {@link CodeDataOptionsTranslations}
+     */
+    fnName: string;
     /**
      * Translation' value type
      */

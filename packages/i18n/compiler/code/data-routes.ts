@@ -1,5 +1,6 @@
 import {
   type JsonObject,
+  changeCaseSnake,
   escapeRegExp,
   objectFlat,
   objectSort,
@@ -8,6 +9,9 @@ import {
 import { formatRoutePathname } from "../../formatRoutePathname";
 import type { I18nCompiler } from "../types";
 
+/**
+ * Options for `routes` code data generation handling
+ */
 export const codeDataRoutesOptions = {
   /**
    * Set this to true once your routing setup is ready for production.
@@ -25,12 +29,24 @@ export const codeDataRoutesOptions = {
   /** @default  "~.json" */
   translationJsonFileName: "~.json",
   /**
-   * Generated `route_id()` functions prefix, prepended to the automatically
-   * generated function names.
-   *
-   * @default ""
+   * Functions generation options
    */
-  fnsPrefix: "",
+  functions: {
+    /**
+     * The directory name relative within the code `output` path where the
+     * generated functions are written.
+     *
+     * @default "$to"
+     */
+    dir: "$to",
+    /**
+     * Generated `route_id()` functions prefix, prepended to the automatically
+     * generated function names.
+     *
+     * @default "$to_"
+     */
+    prefix: "$to_",
+  },
   tokens: {
     /** @default  "^" */
     parentReference: "^",
@@ -61,10 +77,10 @@ export type CodeDataRoutesOptions = typeof codeDataRoutesOptions;
 
 type CodeDataRoutesUtils = ReturnType<typeof getCodeDataRoutesUtils>;
 
-const getCodeDataRoutesUtils = (
+function getCodeDataRoutesUtils(
   config: I18nCompiler.Config,
   options: CodeDataRoutesOptions,
-) => {
+) {
   const { idDelimiter, parentReference, catchAll, optionalCatchAll } =
     options.tokens;
   return {
@@ -82,17 +98,17 @@ const getCodeDataRoutesUtils = (
       ),
     },
   };
-};
+}
 
 /**
  * Normalise user defined route id
  *
  * 1) remove ending `.index`
  */
-const parseUserDefinedRouteId = (
+function parseUserDefinedRouteId(
   userRouteId: string,
   { reg }: CodeDataRoutesUtils,
-) => {
+) {
   let routeId = userRouteId.replace(reg.indexEnd, "");
   const isOptionalCatchAll = reg.optionalCatchAll.test(userRouteId);
   const isCatchAll = reg.catchAll.test(userRouteId);
@@ -107,7 +123,7 @@ const parseUserDefinedRouteId = (
     isCatchAll,
     isOptionalCatchAll,
   };
-};
+}
 
 /**
  * Normalise user defined route pathname
@@ -126,11 +142,11 @@ const parseUserDefinedRouteId = (
  *
  * TODO: support also `/my/:id` syntax?
  */
-const normaliseUserDefinedRoutePathname = (
+function normaliseUserDefinedRoutePathname(
   routePathname: string,
   options: Pick<I18nCompiler.Config, "trailingSlash">,
-) =>
-  formatRoutePathname(
+) {
+  return formatRoutePathname(
     routePathname
       .replace(/\*/g, "")
       .replace(
@@ -139,12 +155,13 @@ const normaliseUserDefinedRoutePathname = (
       ),
     options,
   );
+}
 
 /**
  * Gathers a dictionary with the params extracted from the given (normalised)
  * route id
  */
-const extractRouteParamsFromRouteId = (routeId: string) => {
+function extractRouteParamsFromRouteId(routeId: string) {
   const matches = routeId.match(/\[.*?\]/g);
   if (matches) {
     return matches
@@ -157,12 +174,12 @@ const extractRouteParamsFromRouteId = (routeId: string) => {
       }, {} as I18nCompiler.DataParams);
   }
   return;
-};
+}
 
 /**
  * Recursively replace `/^` references with the parent route value
  */
-const replaceRouteParentTokens = (
+function replaceRouteParentTokens(
   dataRoutes: I18nCompiler.DataRoutes,
   utils: CodeDataRoutesUtils,
   locale: I18nCompiler.Locale,
@@ -171,7 +188,7 @@ const replaceRouteParentTokens = (
     currentRoute: I18nCompiler.DataRoute,
     parentRouteId: I18nCompiler.RouteId,
   ) => boolean | undefined,
-) => {
+) {
   const {
     tokens: { parentReference, idDelimiter },
     reg,
@@ -205,16 +222,16 @@ const replaceRouteParentTokens = (
     }
   }
   return pathname;
-};
+}
 
 /**
  * Mutate the routes data replacing the parent route tokens
  * NB: it mutates the data
  */
-const replaceRoutesPathnamesParentTokens = (
+function replaceRoutesPathnamesParentTokens(
   dataRoutes: I18nCompiler.DataRoutes,
   utils: CodeDataRoutesUtils,
-) => {
+) {
   for (const routeId in dataRoutes.byId) {
     for (const locale in dataRoutes.byId[routeId].pathnames) {
       dataRoutes.byId[routeId].pathnames[locale] = replaceRouteParentTokens(
@@ -225,16 +242,16 @@ const replaceRoutesPathnamesParentTokens = (
       );
     }
   }
-};
+}
 
 /**
  * Mutate the routes data replacing the parent route tokens
  * NB: it mutates the data
  */
-const manageRoutesSpaPathnames = (
+function manageRoutesSpaPathnames(
   dataRoutes: I18nCompiler.DataRoutes,
   utils: CodeDataRoutesUtils,
-) => {
+) {
   const continueWhen = (
     currentRoute: I18nCompiler.DataRoute,
     parentRouteId: I18nCompiler.RouteId,
@@ -261,7 +278,7 @@ const manageRoutesSpaPathnames = (
       delete dataRoutes.byId[routeId].pathnamesSpa;
     }
   }
-};
+}
 
 /**
  * Optimize the route map by collapsing pathnames that are equal to the one for
@@ -269,7 +286,7 @@ const manageRoutesSpaPathnames = (
  *
  * NB: It mutates the data
  *
- * ```json
+ * ```js
  * {
  *   // from
  *   "about": {
@@ -290,10 +307,10 @@ const manageRoutesSpaPathnames = (
  * }
  * ```
  */
-const addRoutesSlimPathnames = (
+function addRoutesSlimPathnames(
   dataRoutes: I18nCompiler.DataRoutes,
   utils: CodeDataRoutesUtils,
-) => {
+) {
   const { defaultLocale, locales } = utils;
 
   for (const routeId in dataRoutes.byId) {
@@ -327,14 +344,14 @@ const addRoutesSlimPathnames = (
       dataRoutes.byId[routeId].pathnamesSlim = defaultLocalePathname;
     }
   }
-};
+}
 
 /**
  * Flag routes that are children of wildcards, a.k.a. child SPA routes
  *
  * NB: It mutates the data
  */
-const addInWildcardFlags = (dataRoutes: I18nCompiler.DataRoutes) => {
+function addInWildcardFlags(dataRoutes: I18nCompiler.DataRoutes) {
   if (dataRoutes.wildcardIds.length) {
     for (const routeId in dataRoutes.byId) {
       const inWildcard = dataRoutes.wildcardIds.some(
@@ -344,61 +361,99 @@ const addInWildcardFlags = (dataRoutes: I18nCompiler.DataRoutes) => {
       if (inWildcard) dataRoutes.byId[routeId].inWildcard = true;
     }
   }
-};
+}
 
-const buildDataRoutesFromJsonData = (
+function getRouteFunctionName(options: CodeDataRoutesOptions, id: string) {
+  return options.functions.prefix + changeCaseSnake(id);
+}
+
+function createRouteEntry(
+  options: CodeDataRoutesOptions,
+  utils: CodeDataRoutesUtils,
+  {
+    value,
+    locale,
+    routeId,
+    isCatchAll,
+    isOptionalCatchAll,
+  }: {
+    value: I18nCompiler.RoutePathname;
+    locale: I18nCompiler.Locale;
+  } & ReturnType<typeof parseUserDefinedRouteId>,
+  existing?: I18nCompiler.DataRoute,
+) {
+  const pathnames = objectSortByKeysMatching(
+    {
+      ...(existing?.pathnames || {}),
+      [locale]: normaliseUserDefinedRoutePathname(value, utils),
+    },
+    utils.defaultLocale,
+  );
+  const route: I18nCompiler.DataRoute = {
+    ...(existing || {}),
+    id: routeId,
+    fnName: getRouteFunctionName(options, routeId),
+    pathnames,
+    // just copy them for now, the difference treatment happens when resolving
+    // the parent tokens
+    pathnamesSpa: { ...pathnames },
+  };
+
+  // if is the first pass for this routeId
+  if (!existing) {
+    const params = extractRouteParamsFromRouteId(routeId);
+    if (params) {
+      route.params = params;
+    }
+    if (isCatchAll || isOptionalCatchAll) {
+      route.wildcard = true;
+    }
+  }
+
+  return route;
+}
+
+function buildDataRoutesFromJsonData(
+  options: CodeDataRoutesOptions,
   json: JsonObject,
   locale: I18nCompiler.Locale,
   utils: CodeDataRoutesUtils,
   data: I18nCompiler.DataRoutes,
-) => {
+) {
   const routes = objectFlat<Record<I18nCompiler.RouteId, string>>(
     json,
     utils.tokens.idDelimiter,
   );
 
-  for (const _key in routes) {
-    const key = _key as keyof typeof routes;
-    const routePathname = routes[key]; // as I18nCompiler.RoutePathname;
-    const { routeId, isCatchAll, isOptionalCatchAll } = parseUserDefinedRouteId(
-      key,
+  for (const key in routes) {
+    const parsed = parseUserDefinedRouteId(key, utils);
+    const existing = data.byId[parsed.routeId];
+    const route = createRouteEntry(
+      options,
       utils,
+      { value: routes[key], locale, ...parsed },
+      existing,
     );
 
-    // if (isCatchAll || isOptionalCatchAll) console.log({ routeId, key });
+    data.byId[route.id] = route;
 
-    // if is the first pass for this routeId
-    if (!data.byId[routeId]) {
-      data.byId[routeId] = data.byId[routeId] || {};
-      const params = extractRouteParamsFromRouteId(routeId);
-      data.byId[routeId].id = routeId;
-      if (params) {
-        data.byId[routeId].params = params;
-        data.dynamicRoutes.push(routeId);
+    // if is the first pass for this route
+    if (!existing) {
+      if (route.params) {
+        data.dynamicRoutes.push(route.id);
         data.onlyStaticRoutes = false;
       } else {
-        data.staticRoutes.push(routeId);
+        data.staticRoutes.push(route.id);
       }
-      if (isCatchAll || isOptionalCatchAll) {
-        data.byId[routeId].wildcard = true;
-        data.wildcardIds.push(routeId);
+      if (route.wildcard) {
+        data.wildcardIds.push(route.id);
       }
     }
-
-    data.byId[routeId].pathnames = data.byId[routeId].pathnames || {};
-    // prettier-ignore
-    data.byId[routeId].pathnames[locale] = normaliseUserDefinedRoutePathname(routePathname, utils);
-    // prettier-ignore
-    data.byId[routeId].pathnames = objectSortByKeysMatching(data.byId[routeId].pathnames, utils.defaultLocale);
-
-    // just copy them for now, the difference treatment happens when resolving
-    // the parent tokens
-    data.byId[routeId].pathnamesSpa = { ...data.byId[routeId].pathnames };
   }
 
   // sort by route name
   data.byId = objectSort(data.byId);
-};
+}
 
 /**
  * Get routes data
@@ -422,7 +477,7 @@ export let getCodeDataRoutes = (
     const { path, locale, data } = translationFiles[i];
 
     if (path === options.translationJsonFileName) {
-      buildDataRoutesFromJsonData(data, locale, utils, dataRoutes);
+      buildDataRoutesFromJsonData(options, data, locale, utils, dataRoutes);
     }
   }
 

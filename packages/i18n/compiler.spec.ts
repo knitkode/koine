@@ -1,11 +1,86 @@
 import { join } from "path";
+import { wait } from "@koine/utils";
 import { fsWrite } from "@koine/node";
-import { i18nCompiler } from "./compiler";
+import { type I18nCompiler, i18nCompiler } from "./compiler";
+import type { InputDataOptions } from "./compiler/input/types";
 
 const mocksPath = (folder: string) =>
   join(process.cwd(), "/packages/i18n/__mocks__/", folder);
 
-describe("test write", () => {
+describe("test in memory output", () => {
+  const runCompiler = async (input: InputDataOptions) =>
+    i18nCompiler({
+      baseUrl: "https://example.com",
+      defaultLocale: "en",
+      hideDefaultLocaleInUrl: true,
+      input,
+      code: {
+        adapter: {
+          name: "next",
+          options: {
+            modularize: false,
+          },
+        },
+      },
+    });
+
+  const inputData: I18nCompiler.DataInput = {
+    localesFolders: ["en"],
+    translationFiles: [
+      {
+        path: "test.json",
+        locale: "en",
+        data: {},
+      },
+    ],
+  };
+
+  test("input source: direct as object or function sync/async", async () => {
+    expect((await runCompiler({ source: inputData })).config.locales).toEqual([
+      "en",
+    ]);
+    expect(
+      (await runCompiler({ source: () => inputData })).config.locales,
+    ).toEqual(["en"]);
+    expect(
+      (
+        await runCompiler({
+          source: async () => {
+            wait(100);
+            return inputData;
+          },
+        })
+      ).config.locales,
+    ).toEqual(["en"]);
+    try {
+      // @ts-expect-error wrong implementation
+      await runCompiler({ source: {} });
+    } catch (_e) {
+      // nothing
+    }
+  });
+
+  test("empty data set should not break", async () => {
+    const emptyData = await runCompiler({
+      source: {
+        localesFolders: ["en"],
+        translationFiles: [
+          {
+            path: "test.json",
+            locale: "en",
+            data: {},
+          },
+        ],
+      },
+    });
+    expect(emptyData.config.locales).toEqual(["en"]);
+    expect(emptyData.config.defaultLocale).toEqual("en");
+    expect(emptyData.routes.byId).toEqual({});
+    expect(emptyData.translations).toEqual({});
+  });
+});
+
+describe("test written output", () => {
   test("single-language setup", async () => {
     const data = await i18nCompiler({
       baseUrl: "https://example.com",
@@ -23,10 +98,11 @@ describe("test write", () => {
       code: {
         adapter: {
           name: "next",
-          // options: {
-          //   modularized: false
-          // },
+          options: {
+            modularize: false,
+          },
         },
+        routes: {},
         write: {
           cwd: mocksPath("single-language"),
           output: ".code",
@@ -70,6 +146,9 @@ describe("test write", () => {
       code: {
         adapter: {
           name: "next",
+          options: {
+            modularize: false,
+          },
         },
         write: {
           cwd: mocksPath("multi-language"),

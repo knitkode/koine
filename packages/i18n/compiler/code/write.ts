@@ -134,6 +134,8 @@ export let writeCode = async <TAdapterName extends I18nCompiler.AdapterName>(
   writeCompiledTypescriptFiles(writeConfig, code);
   await writeTranslationsFiles(writeConfig, data.input);
   writeGitignore(writeConfig);
+
+  return writeConfig;
 };
 
 export let writeCodeSync = <TAdapterName extends I18nCompiler.AdapterName>(
@@ -150,6 +152,8 @@ export let writeCodeSync = <TAdapterName extends I18nCompiler.AdapterName>(
   writeCompiledTypescriptFiles(writeConfig, code);
   writeTranslationsFilesSync(writeConfig, data.input);
   writeGitignore(writeConfig);
+
+  return writeConfig;
 };
 
 export function resolveWriteCodeOptions(options: CodeWriteOptions) {

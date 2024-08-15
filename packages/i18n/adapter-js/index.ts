@@ -22,29 +22,9 @@ import types from "./generators/types";
 
 export type Options = {
   /**
-   * The name of the global variable  defined through the `Webpack.DefinePlugin`
-   * implementation which holds an object with the i18n functions as properties.
-   *
-   * NB: This should be added to your **eslint** configuration, e.g. in your
-   * `eslint.config.js` flat config with:
-   *
-   * ```js
-   * module.exports = [{
-   *   languageOptions: {
-   *     globals: {
-   *       i18n: false,
-   *     }
-   *   },
-   * }];
-   * ```
-   *
-   * @default "i18n"
-   */
-  globalName: string;
-  /**
    * - When `true` it outpus each function in a separate file with a `named` and a
    * `default` export in order to fully support SWC transforms optimization (see
-   * Next.js modularizeImports option).
+   * _Next.js_ **modularizeImports** option).
    * You will use these functions with named exports from `@/i18n/$t`, e.g.
    * ```ts
    * import { $t_myMessage_key } from "@/i18n/$t";
@@ -52,7 +32,6 @@ export type Options = {
    * $t_myMessage_key();
    * ```
    * This import is transformed into `import $t_myMessage_key from "@/i18n/$t/$t_myMessage_key";`
-   *
    *
    * - When `false` usage is:
    * ```ts
@@ -69,14 +48,13 @@ export type Options = {
    *
    * @default true
    */
-  modularized: boolean;
+  modularize: boolean;
 };
 
 export const adapterJs = createAdapter({
   name: "js",
   defaultOptions: {
-    globalName: "i18n",
-    modularized: true,
+    modularize: true,
   } satisfies Options,
   getGenerators: (_data) => {
     return [

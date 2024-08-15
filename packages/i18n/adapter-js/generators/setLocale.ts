@@ -1,16 +1,11 @@
 import { createGenerator } from "../../compiler/createAdapter";
 import { FunctionsCompiler } from "../../compiler/functions";
 import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";
-import { ImportsCompiler } from "../../compiler/imports";
+import { getImportTypes } from "./types";
 
 export const setGlobalLocale = (_options?: never) =>
   new FunctionsCompiler({
-    imports: [
-      new ImportsCompiler({
-        path: "types",
-        named: [{ name: "I18n", type: true }],
-      }),
-    ],
+    imports: [getImportTypes()],
     name: "setGlobalLocale",
     args: [{ name: "value", type: "I18n.Locale", optional: false }],
     before: ({ format }) =>
@@ -27,8 +22,19 @@ export const setGlobalLocale = (_options?: never) =>
 
 export default createGenerator("js", (_arg) => {
   return {
+    globals: {
+      dir: createGenerator.dirs.internal,
+      name: "globals",
+      ext: "d.ts",
+      index: false,
+      content: () => `
+declare global {
+  var ${GLOBAL_I18N_IDENTIFIER}: import("../types").I18n.Locale;
+}
+`,
+    },
     setGlobalLocale: {
-      dir: "internal",
+      dir: createGenerator.dirs.internal,
       name: "setGlobalLocale",
       ext: "ts",
       index: false,
