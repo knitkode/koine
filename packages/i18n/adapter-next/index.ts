@@ -76,11 +76,17 @@ export type Options = AdapterReactOptions & {
   };
 };
 
+/**
+ * We add `safePrefix`: when `prefix` is present we add an underscore after it
+ * and remove consecutive underscores in case the user defined prefix already
+ * had an ending underscore.
+ */
 export function resolveGlobalizeOption(globalize: Options["globalize"]) {
   const { functions, prefix } = globalize;
 
   return {
-    prefix,
+    prefix: prefix || "",
+    prefixSafe: prefix ? (prefix + "_").replace(/_+$/, "_") : "",
     functions:
       typeof functions === "boolean"
         ? {
@@ -88,7 +94,9 @@ export function resolveGlobalizeOption(globalize: Options["globalize"]) {
             translations: true,
           }
         : functions,
-  } satisfies Options["globalize"];
+  } satisfies Options["globalize"] & {
+    prefixSafe: string;
+  };
 }
 
 export const adapterNext = createAdapter({

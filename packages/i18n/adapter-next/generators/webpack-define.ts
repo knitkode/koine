@@ -60,7 +60,7 @@ declare global {
     .map((key) => {
       const route = routesToGlobalize[key];
       const { id, fnName, params } = route;
-      let out = `var ${globalize.prefix}_${fnName}: (`;
+      let out = `var ${globalize.prefixSafe}${fnName}: (`;
       params
         ? (out += `params: ${compileDataParamsToType(params)}, `)
         : (out += ``);
@@ -73,7 +73,7 @@ declare global {
     .map((key) => {
       const translation = translationsToGlobalize[key];
       const { fnName, params, values } = translation;
-      let out = `var ${globalize.prefix}_${fnName}: (`;
+      let out = `var ${globalize.prefixSafe}${fnName}: (`;
       params
         ? (out += `params: ${compileDataParamsToType(params)}, `)
         : (out += ``);
@@ -106,20 +106,16 @@ module.exports = {
       const { fnName } = route;
       const { args, body } = getToFunction(route, config);
       return (
-        `${globalize.prefix}_${fnName}: DefinePlugin.runtimeValue(() => ` +
+        `${globalize.prefixSafe}${fnName}: DefinePlugin.runtimeValue(() => ` +
         collapseWhitespaces(
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
               "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
               formatTo(config).$outInline(),
               "return " + body,
-            "})`",
-          ].join(" ") + ", { fileDependencies: [" +
-            options.adapter.modularize ?
-              `join("${cwd}", "${output}", "${options.routes.functions.dir}", "${fnName}.ts")`
-            :
-              `join("${cwd}", "${output}", "$to.ts")`
-            + "] }",
+            "})`,",
+            `{ fileDependencies: [join("${cwd}", "${output}", "${options.routes.functions.dir}"${options.adapter.modularize ? `, "${fnName}.ts"` : ``})] }`
+          ].join(" ")
         )
       );
     }).join("),\n  ")}),
@@ -129,7 +125,7 @@ module.exports = {
       const { fnName, params, typeValue, plural } = translation;
       const { args, body } = getTFunction(translation, config);
       return (
-        `${globalize.prefix}_${fnName}: DefinePlugin.runtimeValue(() => ` +
+        `${globalize.prefixSafe}${fnName}: DefinePlugin.runtimeValue(() => ` +
         collapseWhitespaces(
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
@@ -138,13 +134,9 @@ module.exports = {
               typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline(),
               plural ? tPluralise().$outInline() : "",
               "return " + body,
-            "})`",
-          ].join(" ") + ", { fileDependencies: [" +
-            options.adapter.modularize ?
-              `join("${cwd}", "${output}", "${options.translations.functions.dir}", "${fnName}.ts")`
-            :
-              `join("${cwd}", "${output}", "$t.ts")`
-            + "] }",
+            "})`,",
+            `{ fileDependencies: [join("${cwd}", "${output}", "${options.translations.functions.dir}"${options.adapter.modularize ? `, "${fnName}.ts"` : ``})] }`
+          ].join(" ")
         )
       );
     }).join(`),\n  `)}),
