@@ -31,7 +31,7 @@ export const codeDataTranslationsOptions = {
   /**
    * Given a translation value as `"myKey": ["two", "words"]`:
    * - when `true`: it outputs `t_myKey_0`  and `t_myKey_1` functions
-   * - when `false`: if `fnsAsDataCodes` is `true` it outputs `t_myKey` otherwise
+   * - when `false`: if `functions.asData` is `true` it outputs `t_myKey` otherwise
    * it outputs nothing (TODO: maybe we could log this info in this case)
    *
    * NB: It is quite unlikely that you want to set this to `true`.
