@@ -99,7 +99,7 @@ function getToFunctionBodyWithLocales(
 
 const importsMap = {
   formatTo: new ImportsCompiler({
-    path: createGenerator.dirs.internal + "/formatTo",
+    path: "internal/formatTo",
     named: [{ name: "formatTo" }],
     // fn: formatTo
   }),

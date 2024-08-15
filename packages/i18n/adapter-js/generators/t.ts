@@ -147,17 +147,17 @@ const importsMap = {
     // fn: false
   }),
   tInterpolateParams: new ImportsCompiler({
-    path: "tInterpolateParams",
+    path: "internal/tInterpolateParams",
     named: [{ name: "tInterpolateParams" }],
     // fn: tInterpolateParams
   }),
   tInterpolateParamsDeep: new ImportsCompiler({
-    path: "tInterpolateParamsDeep",
+    path: "internal/tInterpolateParamsDeep",
     named: [{ name: "tInterpolateParamsDeep" }],
     // fn: tInterpolateParamsDeep
   }),
   tPluralise: new ImportsCompiler({
-    path: "tPluralise",
+    path: "internal/tPluralise",
     named: [{ name: "tPluralise" }],
     // fn: tPluralise
   }),
