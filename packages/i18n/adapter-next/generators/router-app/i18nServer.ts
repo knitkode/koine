@@ -1,12 +1,6 @@
 import { createGenerator } from "../../../compiler/createAdapter";
 
-export default createGenerator("next", (arg) => {
-  const {
-    options: {
-      adapter: { modularize },
-    },
-  } = arg;
-
+export default createGenerator("next", (_arg) => {
   return {
     i18nServer: {
       dir: createGenerator.dirs.server,
@@ -15,13 +9,7 @@ export default createGenerator("next", (arg) => {
       index: true,
       content: () => /* j s */ `
 import { defaultLocale } from "../defaultLocale";
-import { locales } from "../locales";${
-        modularize
-          ? `
-import * as $to from "../$to";
-import * as $t from "../$t";`
-          : ``
-      }
+import { locales } from "../locales";
 import { getLocale } from "./getLocale";
 import { getTo } from "./getTo";
 import { getT } from "./getT";
@@ -66,15 +54,7 @@ export const i18nServer = {
   /** {@link getT} */
   getT,
   /** {@link getTo} */
-  getTo,${
-    modularize
-      ? `
-  /** {@link $t} */
-  $t,
-  /** {@link $to} */
-  $to,`
-      : ``
-  }
+  getTo,
 };
 
 export default i18nServer;
