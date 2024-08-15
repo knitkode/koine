@@ -13,10 +13,14 @@ import {
 } from "../../compiler/pluralisation";
 import type { I18nCompiler } from "../../compiler/types";
 
-const buildTypeForObjectValue = (
+export function getTypeLocale(config: Pick<I18nCompiler.Config, "locales">) {
+  return buildUnionType(config.locales);
+}
+
+function buildTypeForObjectValue(
   key: string | number,
   value: I18nCompiler.DataTranslationValue,
-) => {
+) {
   if (!isArray(value) && isObject(value)) {
     if (hasPlurals(value)) {
       return hasOnlyPluralKeys(value)
@@ -26,9 +30,9 @@ const buildTypeForObjectValue = (
   }
 
   return `"${key}": ${buildTypeForValue(value)}`;
-};
+}
 
-const buildTypeForValue = (value: I18nCompiler.DataTranslationValue) => {
+function buildTypeForValue(value: I18nCompiler.DataTranslationValue) {
   let out = "";
   let primitiveType = "";
 
@@ -64,11 +68,11 @@ const buildTypeForValue = (value: I18nCompiler.DataTranslationValue) => {
   out = out.replace(/;+/g, ";");
 
   return out;
-};
+}
 
-const buildTranslationsDictionary = (
+function buildTranslationsDictionary(
   data: I18nCompiler.DataCode<I18nCompiler.AdapterName>,
-) => {
+) {
   const {
     config: { defaultLocale },
     input: { translationFiles },
@@ -91,9 +95,9 @@ const buildTranslationsDictionary = (
   }
 
   return out.sort();
-};
+}
 
-const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {
+function buildRouteParams(routes: I18nCompiler.DataRoutes) {
   const out: string[] = [];
 
   for (const routeId in routes.byId) {
@@ -104,29 +108,40 @@ const buildRouteParams = (routes: I18nCompiler.DataRoutes) => {
   }
 
   return out;
-};
+}
 
-const buildUnionType = (values: string[]) =>
-  values
-    .sort()
-    .map((routeId) => `"${routeId}"`)
+/**
+ * Output a type union frm a given array of strings
+ *
+ * @param values Union possible values
+ * @param sort Whether to sort the values with native `[].sort()`
+ * @returns e.g. `"a" | "b" | "b"`
+ */
+function buildUnionType(values: string[], sort = true) {
+  return (sort ? values.sort() : values)
+    .filter(isString)
+    .map((value) => `"${value}"`)
     .join(" | ");
+}
 
-const buildRoutesUnion = (
+function buildRoutesUnion(
   routes: I18nCompiler.DataRoutes,
   filterFn: (
     routeId: keyof I18nCompiler.DataRoutes["byId"],
     routeData: I18nCompiler.DataRoutes["byId"][string],
   ) => undefined | boolean,
-) =>
-  buildUnionType(
-    Object.keys(routes.byId).filter((routeId) =>
-      filterFn(routeId, routes.byId[routeId]),
-    ),
-  ) || "never";
+) {
+  return (
+    buildUnionType(
+      Object.keys(routes.byId).filter((routeId) =>
+        filterFn(routeId, routes.byId[routeId]),
+      ),
+    ) || "never"
+  );
+}
 
-const groupRoutesSpa = (routes: I18nCompiler.DataRoutes) =>
-  Object.keys(routes.byId).reduce(
+function groupRoutesSpa(routes: I18nCompiler.DataRoutes) {
+  return Object.keys(routes.byId).reduce(
     (map, routeId) => {
       const route = routes.byId[routeId];
       if (route.inWildcard) {
@@ -143,12 +158,13 @@ const groupRoutesSpa = (routes: I18nCompiler.DataRoutes) =>
     },
     {} as Record<I18nCompiler.RouteId, I18nCompiler.RouteId[]>,
   );
+}
 
-const buildRoutesSpa = (
+function buildRoutesSpa(
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes,
   options: CodeDataOptionsResolved,
-) => {
+) {
   const map = groupRoutesSpa(routes);
   const output: string[] = [];
 
@@ -176,12 +192,12 @@ const buildRoutesSpa = (
   }
 
   return output;
-};
+}
 
-const buildRoutesPathnames = (
+function buildRoutesPathnames(
   config: I18nCompiler.Config,
   routes: I18nCompiler.DataRoutes,
-) => {
+) {
   const output: string[] = [];
 
   for (const routeId in routes.byId) {
@@ -190,17 +206,19 @@ const buildRoutesPathnames = (
   }
 
   return output;
-};
+}
 
-const toTypeObj = (typeBodyLines: string[]) => `{
+function toTypeObj(typeBodyLines: string[]) {
+  return `{
     ${typeBodyLines.join("\n    ")}
   }`;
+}
 
-const getTypes = (data: I18nCompiler.DataCode<I18nCompiler.AdapterName>) => {
+function getTypes(data: I18nCompiler.DataCode<I18nCompiler.AdapterName>) {
   const { config, routes, options } = data;
 
   return {
-    Locale: config.locales.map((l) => `"${l}"`).join(" | "),
+    Locale: getTypeLocale(config),
     RouteIdStatic: buildRoutesUnion(routes, (_, { params }) => !params),
     RouteIdDynamic: buildRoutesUnion(routes, (_, { params }) => !!params),
     // RouteIdSpa: buildRoutesUnion(routes, (_, { inWildcard }) => inWildcard),
@@ -209,7 +227,7 @@ const getTypes = (data: I18nCompiler.DataCode<I18nCompiler.AdapterName>) => {
     RouteParams: toTypeObj(buildRouteParams(routes)),
     TranslationsDictionary: toTypeObj(buildTranslationsDictionary(data)),
   };
-};
+}
 
 // TODO: maybe move the Translate types into the various adapters unless we
 // will use the same api for all of them

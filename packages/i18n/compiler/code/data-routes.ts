@@ -244,6 +244,8 @@ const manageRoutesSpaPathnames = (
     const { inWildcard } = dataRoutes.byId[routeId];
 
     if (inWildcard && dataRoutes.byId[routeId].pathnamesSpa) {
+      dataRoutes.haveSpaRoutes = true;
+
       for (const locale in dataRoutes.byId[routeId].pathnamesSpa) {
         dataRoutes.byId[routeId].pathnamesSpa![locale] =
           replaceRouteParentTokens(
@@ -412,6 +414,7 @@ export let getCodeDataRoutes = (
     onlyStaticRoutes: true,
     dynamicRoutes: [],
     staticRoutes: [],
+    haveSpaRoutes: false,
   };
   const utils = getCodeDataRoutesUtils(config, options);
 

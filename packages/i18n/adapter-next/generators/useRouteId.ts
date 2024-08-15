@@ -22,7 +22,7 @@ export default createGenerator("next", (arg) => {
 "use client";
 
 import { useContext } from "react";
-import { I18nRouteContext } from "./I18nRouteContext";
+import { I18nRouteContext } from "./internal/I18nRouteContext";
 
 export const useRouteId = () => useContext(I18nRouteContext)[0];
   

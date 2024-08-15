@@ -3,12 +3,12 @@ import { createGenerator } from "../../compiler/createAdapter";
 export default createGenerator("js", (_arg) => {
   return {
     defaultI18nMetadata: {
-      // dir: createGenerator.dirs.internal,
+      dir: createGenerator.dirs.internal,
       name: "defaultI18nMetadata",
       ext: "ts",
       index: false,
       content: () => /* j s */ `
-import type { I18n } from "./types";
+import type { I18n } from "../types";
 
 /**
  * @internal

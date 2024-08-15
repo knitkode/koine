@@ -207,8 +207,8 @@
           "alias": "@/i18n"
         },
         "typescriptCompilation": false,
-        "tsNoCheck": true,
-        "eslintDisable": true,
+        "tsNoCheck": false,
+        "eslintDisable": false,
         "copyTranslations": true,
         "gitignore": "all"
       }
@@ -536,7 +536,8 @@
         "products",
         "apps.tool",
         "apps.tool.things"
-      ]
+      ],
+      "haveSpaRoutes": true
     },
     "translations": {
       "$404_seo": {

@@ -1,11 +1,12 @@
 import { createGenerator } from "../../compiler/createAdapter";
 
-export default createGenerator("next", (_arg) => {
+export default createGenerator("react", (arg) => {
   return {
     useToSpa: {
       name: "useToSpa",
       ext: "ts",
       index: true,
+      disabled: !arg.routes.haveSpaRoutes,
       content: () => /* j s */ `
 "use client";
 

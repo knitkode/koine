@@ -1,4 +1,3 @@
-import { getI18nDictionaries_inline } from "../../../adapter-js/generators/getI18nDictionaries_inline";
 import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (arg) => {
@@ -22,14 +21,13 @@ import { defaultLocale } from "../defaultLocale";
 import { isLocale } from "../isLocale";
 import { locales } from "../locales";
 import type { I18n } from "../types";
-import { I18nLocaleContext } from "./I18nLocaleContext";
-import { I18nMetadataSetter } from "../I18nMetadataSetter";
-import { I18nTranslateProvider } from "../I18nTranslateProvider";
-import { I18nRouteSetter } from "../I18nRouteSetter";
-// import { getI18nDictionaries } from "../getI18nDictionaries";
-import { getI18nMetadata } from "../getI18nMetadata";
+import { getI18nDictionaries } from "../internal/getI18nDictionaries";
+import { getI18nMetadata } from "../internal/getI18nMetadata";
+import { I18nMetadataSetter } from "../internal/I18nMetadataSetter";
+import { I18nRouteSetter } from "../internal/I18nRouteSetter";
+import { I18nTranslateProvider } from "../internal/I18nTranslateProvider";
 import { getLocale } from "./getLocale";
-${getI18nDictionaries_inline(1)}
+import { I18nLocaleContext } from "./I18nLocaleContext";
 
 export type I18nPageProps<TRouteId extends I18n.RouteId> =
   React.PropsWithChildren<

@@ -11,12 +11,12 @@ export default createGenerator("next", (_arg) => {
 
 import React from "react";
 import type { AppProps } from "next/app";
-import { defaultI18nMetadata } from "./defaultI18nMetadata";
+import { defaultI18nMetadata } from "./internal/defaultI18nMetadata";
+import { I18nHead } from "./internal/I18nHead";
+import { I18nMetadataProvider } from "./internal/I18nMetadataProvider";
+import { I18nTranslateProvider } from "./internal/I18nTranslateProvider";
 import { defaultLocale } from "./defaultLocale";
 import { I18nEffects } from "./I18nEffects";
-import { I18nHead } from "./I18nHead";
-import { I18nMetadataProvider } from "./I18nMetadataProvider";
-import { I18nTranslateProvider } from "./I18nTranslateProvider";
 import type { I18n } from "./types";
 
 /**

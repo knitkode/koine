@@ -3,18 +3,19 @@ import { createGenerator } from "../../compiler/createAdapter";
 export default createGenerator("react", (_arg) => {
   return {
     I18nEffects: {
+      dir: createGenerator.dirs.internal,
       name: "I18nEffects",
       ext: "tsx",
-      index: true,
+      index: false,
       content: () => /* j s */ `
 "use client";
 
 import React, { useEffect } from "react";
 import { dom } from "@koine/dom";
-import { useLocale } from "./useLocale";
+import { useLocale } from "../useLocale";
 
 /**
- * @internal (when used in Next.js)
+ * @internal
  */
 export const I18nEffects = () => {
   const currentLocale = useLocale();
@@ -28,8 +29,6 @@ export const I18nEffects = () => {
 
   return null as React.ReactNode;
 };
-
-export default I18nEffects;
 `,
     },
   };

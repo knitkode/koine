@@ -4,15 +4,11 @@ import { getAdapter, getAdapterFileMeta, getAdapterSync } from "./adapters";
 const getBarrelFileContent = (
   generatedFiles: I18nCompiler.AdapterFileGenerated[],
 ) => {
-  let content = "";
-
-  generatedFiles
+  return generatedFiles
     .filter((generatedFile) => generatedFile.index)
     .sort((a, b) => a.name.localeCompare(b.name))
-    .forEach((generatedFile) => {
-      content += `export * from "./${generatedFile.name}";\n`;
-    });
-  return content;
+    .map((generatedFile) => `export * from "./${generatedFile.name}";`)
+    .join("\n");
 };
 
 const getBarrelFiles = (
@@ -71,12 +67,20 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
       previousAdaptersGeneratedFilesIds[fileId] = 1;
 
       const _file = files[fileId];
-      // bail if generator is disabled
-      if (_file.disabled) return;
-
       const transformerId = fileId as keyof typeof transformers;
       const transformer = transformers?.[transformerId];
-      const file = transformer ? transformer(_file as never) : _file;
+
+      // bail if transformer is set to `false`
+      if (transformer === false) return;
+
+      const file =
+        transformer === true || !transformer
+          ? _file
+          : transformer(_file as never);
+
+      // bail if generator is disabled
+      if (file.disabled) return;
+
       const { dir, name, path } = getAdapterFileMeta(file, {});
       const { content } = file;
 

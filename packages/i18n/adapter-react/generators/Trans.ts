@@ -3,6 +3,7 @@ import { createGenerator } from "../../compiler/createAdapter";
 export default createGenerator("react", (_arg) => {
   return {
     formatElements: {
+      dir: createGenerator.dirs.internal,
       name: "formatElements",
       ext: "tsx",
       index: false,
@@ -73,7 +74,7 @@ export function formatElements(
 "use client";
 
 import React, { useMemo } from "react";
-import { formatElements } from "./formatElements";
+import { formatElements } from "./internal/formatElements";
 import type { I18n } from "./types";
 import { useT } from "./useT";
 
@@ -128,7 +129,7 @@ export default Trans;
 
 import React, { useMemo } from "react";
 import type { TransProps } from "./Trans";
-import { formatElements } from "./formatElements";
+import { formatElements } from "./internal/formatElements";
 
 export type TransTextProps = Pick<TransProps, "components"> & {
   text: string;

@@ -9,6 +9,7 @@ import { createGenerator } from "../../../compiler/createAdapter";
 export default createGenerator("next", (_arg) => {
   return {
     I18nHead: {
+      dir: createGenerator.dirs.internal,
       name: "I18nHead",
       ext: "tsx",
       index: false,
@@ -18,7 +19,7 @@ export default createGenerator("next", (_arg) => {
 import React from "react";
 import Head from "next/head";
 import { defaultI18nMetadata } from "./defaultI18nMetadata";
-import type { I18nHeadTagsProps } from "./I18nHeadTags";
+import type { I18nHeadTagsProps } from "../I18nHeadTags";
 
 export type I18nHeadProps = I18nHeadTagsProps;
 
@@ -51,8 +52,6 @@ export const I18nHead = (props: I18nHeadProps) => {
     </Head>
   );
 };
-
-// export default I18nHead;
 `,
     },
   };

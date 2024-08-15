@@ -24,6 +24,7 @@ export default createGenerator("js", (arg) => {
 
   return {
     routes: {
+      dir: createGenerator.dirs.internal,
       name: "routes",
       ext: "ts",
       index: false,
@@ -37,6 +38,7 @@ export const routes = ${getRoutesValue((dataRoute) => dataRoute.pathnames)} as c
       },
     },
     routesError: {
+      dir: createGenerator.dirs.internal,
       name: "routesError",
       ext: "ts",
       index: false,
@@ -62,6 +64,7 @@ export const isErrorRoute = (payload: any): payload is RouteIdError =>
       },
     },
     routesSlim: {
+      dir: createGenerator.dirs.internal,
       name: "routesSlim",
       ext: "ts",
       index: false,
@@ -70,7 +73,7 @@ export const isErrorRoute = (payload: any): payload is RouteIdError =>
           (dataRoute) => dataRoute.pathnamesSlim || dataRoute.pathnames,
         );
         return /* j s */ `
-import type { I18n } from "./types";
+import type { I18n } from "../types";
 
 /**
  * @internal
@@ -80,6 +83,7 @@ export const routesSlim = ${value} as Record<string, string | Partial<Record<I18
       },
     },
     routesSpa: {
+      dir: createGenerator.dirs.internal,
       name: "routesSpa",
       ext: "ts",
       index: false,
@@ -95,7 +99,7 @@ export const routesSlim = ${value} as Record<string, string | Partial<Record<I18
           2,
         );
         return /* j s */ `
-import type { I18n } from "./types";
+import type { I18n } from "../types";
 
 /**
  * @internal

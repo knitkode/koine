@@ -59,33 +59,6 @@
         }
       },
       {
-        "path": "404.json",
-        "locale": "en",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
-          }
-        }
-      },
-      {
-        "path": "$faq.json",
-        "locale": "en",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        }
-      },
-      {
         "path": "~account/~user~profile.json",
         "locale": "en",
         "data": {
@@ -142,6 +115,33 @@
                 "str2b4": "v"
               }
             }
+          }
+        }
+      },
+      {
+        "path": "$faq.json",
+        "locale": "en",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
+        }
+      },
+      {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
           }
         }
       },
@@ -354,8 +354,8 @@
           "alias": "@/i18n"
         },
         "typescriptCompilation": false,
-        "tsNoCheck": true,
-        "eslintDisable": true,
+        "tsNoCheck": false,
+        "eslintDisable": false,
         "copyTranslations": true,
         "gitignore": "all"
       }
@@ -408,33 +408,6 @@
                 }
               }
             }
-          }
-        },
-        {
-          "path": "404.json",
-          "locale": "en",
-          "data": {
-            "seo": {
-              "title": "404 - Not found"
-            },
-            "title": "404, page not found",
-            "onlyNumberKeys": {
-              "1": "Once",
-              "2": "Twice",
-              "3": "Three times"
-            }
-          }
-        },
-        {
-          "path": "$faq.json",
-          "locale": "en",
-          "data": {
-            "home": [
-              {
-                "question": "What is?",
-                "answer": "That"
-              }
-            ]
           }
         },
         {
@@ -494,6 +467,33 @@
                   "str2b4": "v"
                 }
               }
+            }
+          }
+        },
+        {
+          "path": "$faq.json",
+          "locale": "en",
+          "data": {
+            "home": [
+              {
+                "question": "What is?",
+                "answer": "That"
+              }
+            ]
+          }
+        },
+        {
+          "path": "404.json",
+          "locale": "en",
+          "data": {
+            "seo": {
+              "title": "404 - Not found"
+            },
+            "title": "404, page not found",
+            "onlyNumberKeys": {
+              "1": "Once",
+              "2": "Twice",
+              "3": "Three times"
             }
           }
         },
@@ -857,7 +857,8 @@
         "products",
         "apps.tool",
         "apps.tool.things"
-      ]
+      ],
+      "haveSpaRoutes": true
     },
     "translations": {
       "$404_onlyNumberKeys": {

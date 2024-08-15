@@ -1,4 +1,3 @@
-import { getI18nDictionaries_inline } from "../../../adapter-js/generators/getI18nDictionaries_inline";
 import { createGenerator } from "../../../compiler/createAdapter";
 
 export default createGenerator("next", (arg) => {
@@ -16,15 +15,14 @@ export default createGenerator("next", (arg) => {
       content: () => /* j s */ `
 import type { GetStaticPathsContext, GetStaticPropsContext } from "next";
 import type { I18nAppPropsData } from "./I18nApp";
-import { defaultI18nMetadata} from "./defaultI18nMetadata";
 import { defaultLocale } from "./defaultLocale";
-import { getI18nMetadata } from "./getI18nMetadata";
-// import { getI18nDictionaries } from "./getI18nDictionaries";
+import { defaultI18nMetadata} from "./internal/defaultI18nMetadata";
+import { getI18nDictionaries } from "./internal/getI18nDictionaries";
+import { getI18nMetadata } from "./internal/getI18nMetadata";
+import { type RouteIdError, isErrorRoute } from "./internal/routesError";
 import { isLocale } from "./isLocale";
 import { locales } from "./locales";
-import { type RouteIdError, isErrorRoute } from "./routesError";
 import type { I18n } from "./types";
-${getI18nDictionaries_inline()}
 
 /**
  * Get current _locale_ from \`getStaticProps\` context data (its first argument)

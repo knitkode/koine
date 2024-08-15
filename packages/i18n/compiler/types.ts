@@ -115,6 +115,7 @@ export namespace I18nCompiler {
     onlyStaticRoutes: boolean;
     dynamicRoutes: RouteId[];
     staticRoutes: RouteId[];
+    haveSpaRoutes: boolean;
   };
 
   /**

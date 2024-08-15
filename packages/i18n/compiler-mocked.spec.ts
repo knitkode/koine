@@ -1,8 +1,7 @@
 // import { jestCreateExpectedThrownError } from "@koine/node/jest";
 import * as t from "./__mocks__/multi-language/.code/$t";
 import { to } from "./__mocks__/multi-language/.code/to";
-import { createT } from "./__mocks__/multi-language/.code/createT";
-// import { getI18nDictionaries } from "./__mocks__/multi-language/.code/getI18nDictionaries";
+import { createT } from "./__mocks__/multi-language/.code/internal/createT";
 import * as multiTo from "./__mocks__/multi-language/.code/$to";
 import * as singleTo from "./__mocks__/single-language/.code/$to";
 import * as dictionaries_accountUserProfile from "./__mocks__/multi-language/.code/translations/en/~account/~user~profile.json";
@@ -82,9 +81,6 @@ describe("generated code: t", () => {
 describe("createT", () => {
   const ns = "~account/~user~profile" as const;
   const dictionaries = { [ns]: dictionaries_accountUserProfile };
-  // const dictionaries = await getI18nDictionaries({ locale: "en", namespaces: [
-  //   ns
-  // ]})
   const t = createT(dictionaries as any, new Intl.PluralRules());
 
   test("should return t function that interpolates", async () => {

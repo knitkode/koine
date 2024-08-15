@@ -1,5 +1,4 @@
 import { createGenerator } from "../../compiler/createAdapter";
-import { loadTranslations_inline } from "./loadTranslations_inline";
 
 export default createGenerator("js", (_arg) => {
   return {
@@ -8,11 +7,9 @@ export default createGenerator("js", (_arg) => {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
-import { createT } from "./createT";
-// import { loadTranslations } from "./loadTranslations";
+import { createT } from "./internal/createT";
+import { loadTranslations } from "./internal/loadTranslations";
 import type { I18n } from "./types";
-
-${loadTranslations_inline()}
 
 export async function getT<TNamespace extends I18n.TranslateNamespace>(
   locale: I18n.Locale,

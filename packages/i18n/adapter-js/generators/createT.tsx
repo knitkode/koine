@@ -6,12 +6,13 @@ export default createGenerator("js", (arg) => {
 
   return {
     createT: {
+      dir: createGenerator.dirs.internal,
       name: "createT",
       ext: "ts",
-      index: true,
+      index: false,
       content: () => /* j s */ `
-import type { I18n } from "./types";
-import { defaultLocale } from "./defaultLocale";
+import type { I18n } from "../types";
+import { defaultLocale } from "../defaultLocale";
 import { tInterpolateParams } from "./tInterpolateParams";
 
 // An optional parameter allowEmptyStrings - true as default.

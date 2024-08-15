@@ -12,8 +12,8 @@ export default createGenerator("react", (arg) => {
       index: true,
       content: () => /* j s */ `
 import { defaultLocale } from "../defaultLocale";
-import { formatTo } from "../formatTo";
-import { routesSlim } from "../routesSlim";
+import { formatTo } from "../internal/formatTo";
+import { routesSlim } from "../internal/routesSlim";
 import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
 

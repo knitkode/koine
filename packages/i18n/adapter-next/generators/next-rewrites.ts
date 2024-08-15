@@ -14,6 +14,7 @@ export default createGenerator("next", (arg) => {
       name: "next-rewrites",
       ext: "js",
       index: false,
+      disabled: arg.config.debug === "internal",
       content: () => /* j s */ `
 /**
  * @type {import("next/dist/lib/load-custom-routes").Rewrite[]}

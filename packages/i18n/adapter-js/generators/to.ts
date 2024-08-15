@@ -8,10 +8,10 @@ import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
 /**
- * If the user does not specifiy a custom prefix by default we prepend `$to_`
- * when `modularized` option is true
+ * If the user does not specifiy a custom prefix by default we prepend a default
+ * prefix and store in a sub directory when `modularized` option is true
  */
-export function getToFunctionsPrefix(options: {
+export function getToFunctionsMeta(options: {
   routes: I18nCompiler.DataCode<"js">["options"]["routes"];
   modularized: I18nCompiler.DataCode<"js">["options"]["adapter"]["modularized"];
 }) {
@@ -19,7 +19,14 @@ export function getToFunctionsPrefix(options: {
     routes: { fnsPrefix },
     modularized,
   } = options;
-  return fnsPrefix || modularized ? "$to_" : "";
+  const prefix = fnsPrefix || modularized ? "$to_" : "";
+
+  return {
+    prefix,
+    // TODO: weak point: we strip the trailing underscore but the user
+    // might defined a different prefix for these functions
+    dir: prefix ? prefix.replace(/_*$/, "") : undefined,
+  };
 }
 
 export function getToFunction(
@@ -92,7 +99,7 @@ function getToFunctionBodyWithLocales(
 
 const importsMap = {
   formatTo: new ImportsCompiler({
-    path: "formatTo",
+    path: createGenerator.dirs.internal + "/formatTo",
     named: [{ name: "formatTo" }],
     // fn: formatTo
   }),
@@ -146,18 +153,18 @@ function $to(
       adapter: { modularized },
     },
   } = data;
-  const fnPrefix = getToFunctionsPrefix({ modularized, routes: optionsRoutes });
+  const { dir, prefix } = getToFunctionsMeta({
+    modularized,
+    routes: optionsRoutes,
+  });
   const { functions, allImports } = getToFunctions(routes, {
     defaultLocale: config.defaultLocale,
     single: config.single,
-    fnPrefix,
+    fnPrefix: prefix,
   });
 
   return modularized
     ? (functions.reduce((map, fn) => {
-        // TODO: weak point: we strip the trailing underscore but the user
-        // might defined a different prefix for these functions
-        const dir = fnPrefix.replace(/_*$/, "");
         map[fn.name] = {
           dir,
           name: fn.name,
@@ -188,14 +195,6 @@ function $to(
               exports: "named",
             });
 
-            // TODO: verify the impact of the following on bundle size, its
-            // relation to modularizeImports and maybe make this controllable
-            // through an adapter option
-            // output += `\n\n`;
-            // output += `export const $to = {\n  ${functions.map((f) => f.name).join(",\n  ")}\n};`;
-            // output += `\n\n`;
-            // output += `export default $to;`;
-
             return output;
           },
         },
@@ -219,8 +218,8 @@ export default createGenerator("js", (arg) => {
       index: true,
       content: () => /* j s */ `
 import { defaultLocale } from "./defaultLocale";${dynamicRoutes.length && staticRoutes.length ? `\nimport { isLocale } from "./isLocale";` : ``}
-import { formatTo } from "./formatTo";
-import { routesSlim } from "./routesSlim";
+import { formatTo } from "./internal/formatTo";
+import { routesSlim } from "./internal/routesSlim";
 import type { I18n } from "./types";
 
 /**
@@ -283,11 +282,12 @@ export default to;
       name: "toSpa",
       ext: "ts",
       index: true,
+      disabled: !arg.routes.haveSpaRoutes,
       content: () => /* j s */ `
 import { defaultLocale } from "./defaultLocale";
-import { formatTo } from "./formatTo";
+import { formatTo } from "./internal/formatTo";
+import { routesSpa } from "./internal/routesSpa";
 import { isLocale } from "./isLocale";
-import { routesSpa } from "./routesSpa";
 import type { I18n } from "./types";
 
 /**

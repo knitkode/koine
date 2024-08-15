@@ -10,7 +10,7 @@ export default createGenerator("react", (_arg) => {
 "use client";
 
 import React from "react";
-import { defaultI18nMetadata } from "./defaultI18nMetadata";
+import { defaultI18nMetadata } from "./internal/defaultI18nMetadata";
 import type { I18n } from "./types";
 
 export type I18nHeadTagsProps = {

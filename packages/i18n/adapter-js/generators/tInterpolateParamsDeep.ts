@@ -13,7 +13,7 @@ export const tInterpolateParamsDeep = () =>
     comment: { internal: true },
     name: "tInterpolateParamsDeep",
     args: [
-      { name: "value", type: "string | object | Array", optional: false },
+      { name: "value", type: "string | object | unknown[]", optional: false },
       { name: "params", type: "object", optional: true },
     ],
     // before: ({ format }) => tInterpolateParams({ start, end }).$out(format, {
@@ -42,6 +42,7 @@ export const tInterpolateParamsDeep = () =>
 export default createGenerator("js", (_arg) => {
   return {
     tInterpolateParamsDeep: {
+      dir: createGenerator.dirs.internal,
       name: "tInterpolateParamsDeep",
       ext: "ts",
       index: false,

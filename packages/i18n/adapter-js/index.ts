@@ -9,7 +9,7 @@ import getI18nDictionaries from "./generators/getI18nDictionaries";
 import getI18nMetadata from "./generators/getI18nMetadata";
 import getT from "./generators/getT";
 import isLocale from "./generators/isLocale";
-// import loadTranslations from "./generators/loadTranslations";
+import loadTranslations from "./generators/loadTranslations";
 import pathnameToRouteId from "./generators/pathnameToRouteId";
 import routes from "./generators/routes";
 import setLocale from "./generators/setLocale";
@@ -91,7 +91,7 @@ export const adapterJs = createAdapter({
       // getI18nAlternatesFromDom,
       getT,
       isLocale,
-      // loadTranslations,
+      loadTranslations,
       pathnameToRouteId,
       routes,
       setLocale,

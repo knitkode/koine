@@ -28,10 +28,10 @@ export const tInterpolateParams = ({
 export default createGenerator("js", (arg) => {
   const { options } = arg;
   const { dynamicDelimiters } = options.translations.tokens;
-  // const { start, end } = dynamicDelimiters;
 
   return {
     tInterpolateParams: {
+      dir: createGenerator.dirs.internal,
       name: "tInterpolateParams",
       ext: "ts",
       index: false,
@@ -40,23 +40,6 @@ export default createGenerator("js", (arg) => {
           imports: false,
           exports: "named",
         }),
-      // TODO: cleanup commented old impl
-      // content: () => /* j s */`
-      // /**
-      //  * @internal
-      //  */
-      // export let tInterpolateParams = (
-      //   value: string,
-      //   params?: object,
-      // ) =>
-      //   params ? value.replace(
-      //     /${escapeEachChar(start)}(.*?)${escapeEachChar(end)}/g,
-      //     (_, key) =>
-      //       params[key.trim() as keyof typeof params] + "",
-      //   ) : value;
-
-      // // export default tInterpolateParams;
-      // `,
     },
   };
 });

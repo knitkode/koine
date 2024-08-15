@@ -3,6 +3,7 @@ import { createGenerator } from "../../compiler/createAdapter";
 export default createGenerator("react", (_arg) => {
   return {
     I18nTranslateContext: {
+      dir: createGenerator.dirs.internal,
       name: "I18nTranslateContext",
       ext: "tsx",
       index: false,
@@ -10,8 +11,8 @@ export default createGenerator("react", (_arg) => {
 "use client";
 
 import React, { createContext } from "react";
-import { defaultLocale } from "./defaultLocale";
-import type { I18n } from "./types";
+import { defaultLocale } from "../defaultLocale";
+import type { I18n } from "../types";
 
 export type I18nTranslateContextValue = {
   t: I18n.Translate;
@@ -30,11 +31,10 @@ export const I18nTranslateContext = createContext<I18nTranslateContextValue>({
   locale: defaultLocale,
   _d: {} as I18n.Dictionaries
 });
-
-// export default I18nTranslateContext;
 `,
     },
     I18nTranslateProvider: {
+      dir: createGenerator.dirs.internal,
       name: "I18nTranslateProvider",
       ext: "tsx",
       index: false,
@@ -42,11 +42,11 @@ export const I18nTranslateContext = createContext<I18nTranslateContextValue>({
 "use client";
 
 import React, { useContext } from "react";
-import { I18nTranslateContext } from "./I18nTranslateContext";
+import { defaultLocale } from "../defaultLocale";
+import type { I18n } from "../types";
 import { createT } from "./createT";
-import { defaultLocale } from "./defaultLocale";
-import { setGlobalLocale } from "./internal/setGlobalLocale";
-import type { I18n } from "./types";
+import { I18nTranslateContext } from "./I18nTranslateContext";
+import { setGlobalLocale } from "./setGlobalLocale";
 
 export type I18nTranslateProviderProps = React.PropsWithChildren<{
   locale?: I18n.Locale;
@@ -92,7 +92,7 @@ export const I18nTranslateProvider = ({
 
 import { useContext } from "react";
 import { defaultLocale } from "./defaultLocale";
-import { I18nTranslateContext } from "./I18nTranslateContext";
+import { I18nTranslateContext } from "./internal/I18nTranslateContext";
 
 export const useLocale = () => useContext(I18nTranslateContext).locale || defaultLocale;
 
@@ -107,7 +107,7 @@ export default useLocale;
 "use client";
 
 import { useContext, useMemo } from "react";
-import { I18nTranslateContext } from "./I18nTranslateContext";
+import { I18nTranslateContext } from "./internal/I18nTranslateContext";
 import type { I18n } from "./types";
 
 export const useT = <T extends I18n.TranslateNamespace>(namespace: T) => {

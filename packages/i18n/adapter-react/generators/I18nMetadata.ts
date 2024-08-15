@@ -2,7 +2,8 @@ import { createGenerator } from "../../compiler/createAdapter";
 
 export default createGenerator("react", (_arg) => {
   return {
-    I18nMetadata: {
+    I18nMetadataContext: {
+      dir: createGenerator.dirs.internal,
       name: "I18nMetadataContext",
       ext: "tsx",
       index: false,
@@ -11,7 +12,7 @@ export default createGenerator("react", (_arg) => {
 
 import React, { createContext } from "react";
 import { defaultI18nMetadata } from "./defaultI18nMetadata";
-import type { I18n } from "./types";
+import type { I18n } from "../types";
 
 type I18nMetadataContextValue = readonly [
   /** metadata */
@@ -30,24 +31,25 @@ export const I18nMetadataContext = createContext<I18nMetadataContextValue>([
 `,
     },
     I18nMetadataProvider: {
+      dir: createGenerator.dirs.internal,
       name: "I18nMetadataProvider",
       ext: "tsx",
-      index: true,
+      index: false,
       content: () => /* j s */ `
 "use client";
 
 import React, { useMemo, useState } from "react";
 import { I18nMetadataContext } from "./I18nMetadataContext";
-import type { I18n } from "./types";
+import type { I18n } from "../types";
 
 type I18nMetadataProviderProps = React.PropsWithChildren<{
   metadata?: I18n.Metadata;
 }>;
 
 /**
- * @internal (when used in Next.js)
+ * @internal
  */
-export function I18nMetadataProvider(props: I18nMetadataProviderProps) {
+export const I18nMetadataProvider = (props: I18nMetadataProviderProps) =>{
   const { children } = props;
   const [metadata, setMetadata] = useState<I18n.Metadata>(
     props.metadata || ({} as I18n.Metadata),
@@ -63,29 +65,26 @@ export function I18nMetadataProvider(props: I18nMetadataProviderProps) {
     </I18nMetadataContext.Provider>
   );
 }
-
-export default I18nMetadataProvider;
 `,
     },
     I18nMetadataSetter: {
+      dir: createGenerator.dirs.internal,
       name: "I18nMetadataSetter",
       ext: "tsx",
-      index: true,
+      index: false,
       content: () => /* j s */ `
 "use client";
 
 import React, { useContext, useEffect } from "react";
 import { I18nMetadataContext } from "./I18nMetadataContext";
-import type { I18n } from "./types";
+import type { I18n } from "../types";
 
 type I18nMetadataSetterProps = {
   metadata: I18n.Metadata;
 };
 
-// TODO: verify this double behaviour
 /**
- * @public When used in Next.js _pages_ router
- * @internal When used in Next.js _app_ router
+ * @internal
  */
 export const I18nMetadataSetter = (props: I18nMetadataSetterProps) => {
   const { metadata } = props;
@@ -97,8 +96,6 @@ export const I18nMetadataSetter = (props: I18nMetadataSetterProps) => {
 
   return null as React.ReactNode;
 };
-
-export default I18nMetadataSetter;
 `,
     },
     useI18nSwitch: {
@@ -109,7 +106,7 @@ export default I18nMetadataSetter;
 "use client";
 
 import { useContext } from "react";
-import { I18nMetadataContext } from "./I18nMetadataContext";
+import { I18nMetadataContext } from "./internal/I18nMetadataContext";
 
 export const useI18nSwitch = (
   absolute?: boolean,

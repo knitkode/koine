@@ -24,7 +24,7 @@ export function createAdapter<
     [FileId in keyof UnionToIntersection<
       ReturnType<ReturnType<typeof config.getGenerators>[number]>
     >]:
-      | false
+      | boolean
       | ((
           file: UnionToIntersection<
             ReturnType<ReturnType<typeof config.getGenerators>[number]>

@@ -15,14 +15,11 @@ import { compileDataParamsToType } from "../../compiler/helpers";
 import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 
-// import { tInterpolateParams } from "./tInterpolateParams";
-// import { tPluralise } from "./tPluralise";
-
 /**
- * If the user does not specifiy a custom prefix by default we prepend `$t_`
- * when `modularized` option is true
+ * If the user does not specifiy a custom prefix by default we prepend a default
+ * prefix and store in a sub directory when `modularized` option is true
  */
-export function getTFunctionsPrefix(options: {
+export function getTFunctionsMeta(options: {
   translations: I18nCompiler.DataCode<"js">["options"]["translations"];
   modularized: I18nCompiler.DataCode<"js">["options"]["adapter"]["modularized"];
 }) {
@@ -30,7 +27,14 @@ export function getTFunctionsPrefix(options: {
     translations: { fnsPrefix },
     modularized,
   } = options;
-  return fnsPrefix || modularized ? "$t_" : "";
+  const prefix = fnsPrefix || modularized ? "$t_" : "";
+
+  return {
+    prefix,
+    // TODO: weak point: we strip the trailing underscore but the user
+    // might defined a different prefix for these functions
+    dir: prefix ? prefix.replace(/_*$/, "") : undefined,
+  };
 }
 
 export function getTFunction(
@@ -204,20 +208,17 @@ export default createGenerator("js", (data) => {
     },
     translations,
   } = data;
-  const fnPrefix = getTFunctionsPrefix({
+  const { dir, prefix } = getTFunctionsMeta({
     modularized,
     translations: optionsTranslations,
   });
   const { functions, allImports } = getTFunctions(translations, {
     defaultLocale,
-    fnPrefix,
+    fnPrefix: prefix,
   });
 
   return modularized
     ? (functions.reduce((map, fn) => {
-        // TODO: weak point: we strip the trailing underscore but the user
-        // might defined a different prefix for these functions
-        const dir = fnPrefix.replace(/_*$/, "");
         map[fn.name] = {
           dir,
           name: fn.name,
@@ -247,13 +248,6 @@ export default createGenerator("js", (data) => {
               imports: false,
               exports: "named",
             });
-            // TODO: verify the impact of the following on bundle size, its
-            // relation to modularizeImports and maybe make this controllable
-            // through an adapter option
-            // output += `\n\n`;
-            // output += `export const $t = {\n  ${functions.map((f) => f.name).join(",\n  ")}\n};`;
-            // output += `\n\n`;
-            // output += `export default $t;`;
 
             return output;
           },

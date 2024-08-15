@@ -12,7 +12,7 @@ export const setGlobalLocale = (_options?: never) =>
       }),
     ],
     name: "setGlobalLocale",
-    args: [{ name: "value", type: "string", optional: false }],
+    args: [{ name: "value", type: "I18n.Locale", optional: false }],
     before: ({ format }) =>
       format === "ts"
         ? `declare global {
@@ -32,9 +32,11 @@ export default createGenerator("js", (_arg) => {
       name: "setGlobalLocale",
       ext: "ts",
       index: false,
-      content: () => `
-${setGlobalLocale().$out("ts", { imports: { folderUp: 1 }, exports: "named" })}
-`,
+      content: () =>
+        setGlobalLocale().$out("ts", {
+          imports: { folderUp: 1 },
+          exports: "named",
+        }),
     },
   };
 });

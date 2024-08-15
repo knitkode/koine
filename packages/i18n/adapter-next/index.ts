@@ -33,8 +33,6 @@ export const adapterNext = createAdapter({
     const { router } = data.options.adapter;
     return [
       ...adapterReact.getGenerators(data),
-      // TODO: maybe remove these generators, they are useful for debugging for
-      // now but probably will be useless
       ...[nextRedirects, nextRewrites],
       ...(router === "app" || router === "migrating"
         ? [I18nLayout, I18nLayoutRoot, I18nPage, i18nServer]
@@ -51,18 +49,13 @@ export const adapterNext = createAdapter({
 
     return {
       I18nHeadTags: false,
-      // remove a parent adapter ("react") file from the index
-      I18nMetadataProvider: (file) => ({ ...file, index: false }),
-      I18nRouteProvider: (file) => ({ ...file, index: false }),
+      // e.g. remove a parent adapter ("react") file from the index
+      // SomeFileId: (file) => ({ ...file, index: false }),
       ...(router === "app"
         ? {
             I18nEffects: false,
-            I18nMetadataSetter: (file) => ({ ...file, index: false }),
-            I18nRouteSetter: (file) => ({ ...file, index: false }),
           }
-        : {
-            I18nEffects: (file) => ({ ...file, index: false }),
-          }),
+        : {}),
     };
   },
 });

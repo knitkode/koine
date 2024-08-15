@@ -15,9 +15,9 @@ export default createGenerator("next", (arg) => {
       index: false,
       content: () => /* j s */ `
 import React from "react";
-import { I18nMetadataProvider } from "../I18nMetadataProvider";
-import { I18nRouteProvider } from "../I18nRouteProvider";
-import { defaultI18nMetadata } from "../defaultI18nMetadata";
+import { I18nMetadataProvider } from "../internal/I18nMetadataProvider";
+import { I18nRouteProvider } from "../internal/I18nRouteProvider";
+import { defaultI18nMetadata } from "../internal/defaultI18nMetadata";
 import type { I18n } from "../types";
 
 type I18nLayoutRootProps = React.PropsWithChildren;

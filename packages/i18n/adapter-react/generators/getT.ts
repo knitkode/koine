@@ -1,4 +1,3 @@
-import { loadTranslations_inline } from "../../adapter-js/generators/loadTranslations_inline";
 import { createGenerator } from "../../compiler/createAdapter";
 
 export default createGenerator("react", (_arg) => {
@@ -9,12 +8,10 @@ export default createGenerator("react", (_arg) => {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
-import { createT } from "../createT";
+import { createT } from "../internal/createT";
+import { loadTranslations } from "../internal/loadTranslations";
 import type { I18n } from "../types";
-// import { loadTranslations } from "../loadTranslations";
 import { getLocale } from "./getLocale";
-
-${loadTranslations_inline(1)}
 
 /**
  * **For React RSC only**

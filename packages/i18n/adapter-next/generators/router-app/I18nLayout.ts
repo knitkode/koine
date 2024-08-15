@@ -1,4 +1,3 @@
-import { getI18nDictionaries_inline } from "../../../adapter-js/generators/getI18nDictionaries_inline";
 import { createGenerator } from "../../../compiler/createAdapter";
 import { GLOBAL_I18N_IDENTIFIER } from "../../../compiler/helpers";
 
@@ -19,15 +18,14 @@ export default createGenerator("next", (arg) => {
 import React from "react";
 import type { Metadata } from "next/types";
 import { rtlLocales } from "@koine/i18n";
-// import { getI18nDictionaries } from "../getI18nDictionaries";
+import { getI18nDictionaries } from "../internal/getI18nDictionaries";
+import { I18nTranslateProvider } from "../internal/I18nTranslateProvider";
 import { defaultLocale } from "../defaultLocale";
-import { I18nTranslateProvider } from "../I18nTranslateProvider";
 import { locales } from "../locales";
 import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
 import { I18nLayoutRoot } from "./I18nLayoutRoot";
 import { I18nLocaleContext } from "./I18nLocaleContext";
-${getI18nDictionaries_inline(1)}
 
 export type I18nLayoutProps = React.PropsWithChildren<Configurator>;
 

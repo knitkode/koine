@@ -6,18 +6,19 @@ export default createGenerator("js", (arg) => {
   } = arg;
   return {
     getI18nMetadata: {
+      dir: createGenerator.dirs.internal,
       name: "getI18nMetadata",
       ext: "ts",
       index: false,
       // prettier-ignore
       content: () => /* j s */`
+import { defaultLocale } from "../defaultLocale";
+import { formatUrl } from "../formatUrl";
+import { locales } from "../locales";
+import { to } from "../to";
+import type { I18n } from "../types";
 import { defaultI18nMetadata } from "./defaultI18nMetadata";
-import { defaultLocale } from "./defaultLocale";
-import { formatUrl } from "./formatUrl";
-import { locales } from "./locales";
 import { type RouteIdError, isErrorRoute } from "./routesError";
-import { to } from "./to";
-import type { I18n } from "./types";
 
 type GetI18nMetadataOptions<TRouteId extends I18n.RouteId | RouteIdError> = {
   locale: I18n.Locale;

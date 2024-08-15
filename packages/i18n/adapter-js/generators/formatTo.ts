@@ -15,12 +15,10 @@ export const formatTo = (
   devDebug?: boolean,
 ) =>
   new FunctionsCompiler({
-    imports: [
-      // new ImportsCompiler({
-      //   path: "defaultLocale",
-      //   named: [{ name: "defaultLocale" }],
-      // }),
-    ],
+    // NOTE: we could import `defaultLocale` but it's cleaner and easier to
+    // manage by inlining it, especially when we want to inline the outut of this
+    // compiled function
+    imports: [],
     comment: { internal: true },
     name: "formatTo",
     args: [
@@ -89,6 +87,7 @@ export default createGenerator("js", (arg) => {
   const { config } = arg;
   return {
     formatTo: {
+      dir: createGenerator.dirs.internal,
       name: "formatTo",
       ext: "ts",
       index: false,
@@ -97,70 +96,6 @@ export default createGenerator("js", (arg) => {
           imports: { folderUp: 0 },
           exports: "named",
         }),
-      // TODO: cleanup commented old impl
-      //       content: () => /* j s */ `
-      // import { defaultLocale } from "./defaultLocale";
-
-      // /**
-      //  * @internal
-      //  */
-      // export function formatTo(
-      //   locale: string | undefined,
-      //   pathname: string,
-      //   params?: object,
-      // ) {
-      //   locale = locale || defaultLocale;
-      //   if (process.env["NODE_ENV"] === "development") {
-      //     if (params) {
-      //       pathname.replace(/\\[(.*?)\\]/g, (_, dynamicKey) => {
-      //         const key = dynamicKey as Extract<keyof typeof params, string>;
-
-      //         if (!(key in params)) {
-      //           console.warn(
-      //             "[@koine/i18n]::formatTo, using '" +
-      //               pathname +
-      //               "' without param '" +
-      //               key +
-      //               "'",
-      //               { params }
-      //           );
-      //         }
-
-      //         if (!["string", "number"].includes(typeof params[key])) {
-      //           console.warn(
-      //             "[@koine/i18n]::formatTo, using '" +
-      //               pathname +
-      //               "' with unserializable param  '" +
-      //               key +
-      //               "' (type '" +
-      //               Object.prototype.toString.call((params[key])).slice(8, -1) +
-      //               "')",
-      //           );
-      //         }
-      //         return "";
-      //       });
-      //     }
-      //   }
-
-      //   if (params) {
-      //     pathname = pathname.replace(
-      //         /\\[(.*?)\\]/g,
-      //         (_, key) =>
-      //           params[key as keyof typeof params] + "",
-      //       )
-      //   }
-      //   ${
-      //     config.hideDefaultLocaleInUrl
-      //       ? `
-      //   if (locale !== defaultLocale) {
-      //     return "/" + locale + (pathname === "/" ? "" : pathname);
-      //   }
-      //   `
-      //       : ``
-      //   }
-      //   return pathname;
-      // }
-      // `,
     },
   };
 });

@@ -10,9 +10,9 @@ export default createGenerator("next", (_arg) => {
 "use client";
 
 import React, { useContext, useEffect } from "react";
-import { I18nHead } from "./I18nHead";
-import { I18nMetadataContext } from "./I18nMetadataContext";
-import { getI18nMetadata } from "./getI18nMetadata";
+import { getI18nMetadata } from "./internal/getI18nMetadata";
+import { I18nHead } from "./internal/I18nHead";
+import { I18nMetadataContext } from "./internal/I18nMetadataContext";
 import type { I18n } from "./types";
 import { useLocale } from "./useLocale";
 

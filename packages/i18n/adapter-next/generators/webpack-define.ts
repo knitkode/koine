@@ -1,15 +1,13 @@
 import { formatTo } from "../../adapter-js/generators/formatTo";
-import {
-  getTFunction,
-  getTFunctionsPrefix,
-} from "../../adapter-js/generators/t";
+import { getTFunction, getTFunctionsMeta } from "../../adapter-js/generators/t";
 import { tInterpolateParams } from "../../adapter-js/generators/tInterpolateParams";
 import { tInterpolateParamsDeep } from "../../adapter-js/generators/tInterpolateParamsDeep";
 import { tPluralise } from "../../adapter-js/generators/tPluralise";
 import {
   getToFunction,
-  getToFunctionsPrefix,
+  getToFunctionsMeta,
 } from "../../adapter-js/generators/to";
+import { getTypeLocale } from "../../adapter-js/generators/types";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   GLOBAL_I18N_IDENTIFIER,
@@ -20,6 +18,21 @@ function collapseWhitespaces(input: string) {
   return input.replace(/\s+/g, " ");
 }
 
+/**
+ * Some useful webpack DefinePlugin context (`ctx`) object properties
+ * - `ctx.module.layer` one of `"ssr"` | `"rsc"` | `"app-pages-browser"` | ?
+ * - `ctx.module.buildInfo.rsc`
+ * - `ctx.module.resourceResolveData.context`
+ *
+ * @see
+ * - [DefinePlugin / add support for watch mode](https://github.com/webpack/webpack/issues/7717)
+ * - [support expressionMemberChain in DefinePlugin](https://github.com/webpack/webpack/pull/15562)
+ *
+ * NOTE: `DefinePlugin.runtimeValue` according to webpack types should return
+ * a `CodeValuePrimitive` (aka a string usually) type but returning an object
+ * also works and allows for a nicer namespaced global api. TODO: Verify that
+ * returning an object here is intentionally supportedas unknown as string;
+ */
 // prettier-ignore
 export default createGenerator("next", (arg) => {
   const { config, options, routes, translations } = arg;
@@ -27,11 +40,11 @@ export default createGenerator("next", (arg) => {
   const { namespaceDelimiter, dynamicDelimiters } = options.translations.tokens;
   const { globalName } = options.adapter;
   const { cwd, output } = options.write || { cwd: "", output: "" };
-  const tFnPrefix = getTFunctionsPrefix({
+  const tMeta = getTFunctionsMeta({
     translations: arg.options.translations,
     modularized: arg.options.adapter.modularized,
   });
-  const toFnPrefix = getToFunctionsPrefix({
+  const toMeta = getToFunctionsMeta({
     routes: arg.options.routes,
     modularized: arg.options.adapter.modularized,
   });
@@ -44,66 +57,55 @@ export default createGenerator("next", (arg) => {
       index: false,
       content: () => {
         const I18n = `import("../types").I18n`;
+        // const Locale = `${I18n}.Locale`;
+        /** a.k.a. `I18n.Locale`, inlined for better visualization on hover in IDE */
+        const Locale = getTypeLocale(config);
 
         return `
 export {};
 
 declare global {
-  var ${globalName}: {
-    ${Object.keys(translations)
-      .map((translationId) => {
-        const translation = translations[translationId];
-        const { namespace, path, params } = translation;
-        const { name } = getTFunction(translation, {
-          ...config,
-          fnPrefix: tFnPrefix
-        })
-        let out = `${name}: (`;
-        params
-          ? (out += `params: ${compileDataParamsToType(params)}, `)
-          : (out += ``);
+  ${Object.keys(routes.byId)
+    .map((routeId) => {
+      const route = routes.byId[routeId];
+      const { id, params } = route;
+      const { name } = getToFunction(route, {
+        ...config,
+        fnPrefix: toMeta.prefix,
+      });
+      let out = `var ${globalName}_${name}: (`;
+      params
+        ? (out += `params: ${compileDataParamsToType(params)}, `)
+        : (out += ``);
 
-        out += `locale?: ${I18n}.Locale) => ${I18n}.TranslationAtPath<"${namespace}${arg.options.translations.tokens.namespaceDelimiter}${path}">`;
-        return out;
+      out += `locale?: ${Locale}) => ${I18n}.RoutePathnames["${id}"]`;
+      return out;
+    })
+    .join(";\n  ")};
+  ${Object.keys(translations)
+    .map((translationId) => {
+      const translation = translations[translationId];
+      const { /* namespace, path, */ params, values } = translation;
+      const { name } = getTFunction(translation, {
+        ...config,
+        fnPrefix: tMeta.prefix
       })
-      .join(";\n    ")},
-    ${Object.keys(routes.byId)
-      .map((routeId) => {
-        const route = routes.byId[routeId];
-        const { id, params } = route;
-        const { name } = getToFunction(route, {
-          ...config,
-          fnPrefix: toFnPrefix,
-        });
-        let out = `${name}: (`;
-        params
-          ? (out += `params: ${compileDataParamsToType(params)}, `)
-          : (out += ``);
+      let out = `var ${globalName}_${name}: (`;
+      params
+        ? (out += `params: ${compileDataParamsToType(params)}, `)
+        : (out += ``);
 
-        out += `locale?: ${I18n}.Locale) => ${I18n}.RoutePathnames["${id}"]`;
-        return out;
-      })
-      .join(";\n    ")},
-  }
+      // use of more advanced types to extract the value from the dictionary
+      // out += `locale?: ${Locale}) => ${I18n}.TranslationAtPath<"${namespace}${arg.options.translations.tokens.namespaceDelimiter}${path}">`;
+      // use of a hardcoded return type nice to read when overing the function in the IDE
+      out += `locale?: ${Locale}) => ${JSON.stringify(values[config.defaultLocale])}`;
+      return out;
+    })
+    .join(";\n  ")};
 }
 `;
       },
     },
-    /**
-     * Some useful webpack DefinePlugin context (`ctx`) object properties
-     * - `ctx.module.layer` one of `"ssr"` | `"rsc"` | `"app-pages-browser"` | ?
-     * - `ctx.module.buildInfo.rsc`
-     * - `ctx.module.resourceResolveData.context`
-     *
-     * @see
-     * - [DefinePlugin / add support for watch mode](https://github.com/webpack/webpack/issues/7717)
-     * - [support expressionMemberChain in DefinePlugin](https://github.com/webpack/webpack/pull/15562)
-     *
-     * NOTE: `DefinePlugin.runtimeValue` according to webpack types should return
-     * a `CodeValuePrimitive` (aka a string usually) type but returning an object
-     * also works and allows for a nicer namespaced global api. TODO: Verify that
-     * returning an object here is intentionally supportedas unknown as string;
-     */
     webpackDefineGranular: {
       dir: createGenerator.dirs.internal,
       name: "webpack-define-granular",
@@ -111,58 +113,53 @@ declare global {
       index: false,
       content: () => {
         return /* j s */ `
+const { join } = require("path");
 const { DefinePlugin } = require("webpack");
 
 module.exports = {
-  ${globalName}: DefinePlugin.runtimeValue(
-    (_ctx) => {
-      return {
-        ${Object.keys(routes.byId)
-          .map((routeId) => {
-            const { name, args, body } = getToFunction(routes.byId[routeId], {
-              ...config,
-              fnPrefix: toFnPrefix,
-            });
-            return (
-              `${name}: ` +
-              collapseWhitespaces(
-                [
-                  "`(function(" + args.map(a => a.name).join(", ") + ") {",
-                  "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
-                  formatTo(config).$outInline(),
-                  "return " + body,
-                  "})`",
-                ].join(" "),
-              )
-            );
-          })
-          .join(",\n        ")},
-        ${Object.keys(translations)
-          .map((translationId) => {
-            const translation = translations[translationId];
-            const { name, args, body } = getTFunction(translation, {
-              ...config,
-              fnPrefix: tFnPrefix,
-            });
-            return (
-              `${name}: ` +
-              collapseWhitespaces(
-                [
-                  "`(function(" + args.map(a => a.name).join(", ") + ") {",
-                  "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
-                  translation.params ? tInterpolateParams(arg.options.translations.tokens.dynamicDelimiters).$outInline() : "",
-                  translation.typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline(),
-                  translation.plural ? tPluralise().$outInline() : "",
-                  "return " + body,
-                  "})`",
-                ].join(" "),
-              )
-            );
-          })
-          .join(",\n        ")},
-      };
-    }
-  ),
+  ${Object.keys(routes.byId)
+    .map((routeId) => {
+      const { name, args, body } = getToFunction(routes.byId[routeId], {
+        ...config,
+        fnPrefix: toMeta.prefix,
+      });
+      return (
+        `${globalName}_${name}: DefinePlugin.runtimeValue(() => ` +
+        collapseWhitespaces(
+          [
+            "`(function(" + args.map(a => a.name).join(", ") + ") {",
+            "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
+            formatTo(config).$outInline(),
+            "return " + body,
+            "})`",
+          ].join(" ") +
+          `, { fileDependencies: [join("${cwd}", "${output}", "${toMeta.dir}", "${name}.ts")] }`,
+        )
+      );
+    }).join("),\n  ")}),
+  ${Object.keys(translations)
+    .map((translationId) => {
+      const translation = translations[translationId];
+      const { name, args, body } = getTFunction(translation, {
+        ...config,
+        fnPrefix: tMeta.prefix,
+      });
+      return (
+        `${globalName}_${name}: DefinePlugin.runtimeValue(() => ` +
+        collapseWhitespaces(
+          [
+            "`(function(" + args.map(a => a.name).join(", ") + ") {",
+            "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
+            translation.params ? tInterpolateParams(arg.options.translations.tokens.dynamicDelimiters).$outInline() : "",
+            translation.typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline(),
+            translation.plural ? tPluralise().$outInline() : "",
+            "return " + body,
+            "})`",
+          ].join(" ") +
+          `, { fileDependencies: [join("${cwd}", "${output}", "${tMeta.dir}", "${name}.ts")] }`,
+        )
+      );
+    }).join(`),\n  `)}),
 };
 `;
       },
@@ -266,7 +263,7 @@ module.exports = {
               .map((routeId) => {
                 const { args, body } = getToFunction(routes.byId[routeId], {
                   ...config,
-                  fnPrefix: toFnPrefix,
+                  fnPrefix: toMeta.prefix,
                 });
                 return `"${routeId}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
               })
@@ -292,7 +289,7 @@ module.exports = {
                 const { namespace, path } = translations[translationId];
                 const { args, body } = getTFunction(translations[translationId], {
                   ...config,
-                  fnPrefix: tFnPrefix,
+                  fnPrefix: tMeta.prefix,
                 });
                 return `"${namespace}${arg.options.translations.tokens.namespaceDelimiter}${path}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
               })
