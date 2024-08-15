@@ -36,6 +36,7 @@ export default createGenerator("next", (arg) => {
   const { config, options } = arg;
   const { debug } = config;
   const { cwd, output } = options.write || { cwd: "", output: "" };
+  const { modularize } = options.adapter;
   const globalize = resolveGlobalizeOption(options.adapter.globalize);
   const routesToGlobalize = globalize.functions.routes ? arg.routes.byId : {};
   const translationsToGlobalize = globalize.functions.translations ? arg.translations : {};
@@ -99,22 +100,24 @@ declare global {
 const { join } = require("path");
 const { DefinePlugin } = require("webpack");
 
+const base = join("${cwd}", "${output}");
+
 module.exports = {
   ${Object.keys(routesToGlobalize)
     .map((key) => {
       const route = routesToGlobalize[key];
       const { fnName } = route;
       const { args, body } = getToFunction(route, config);
+      const { dir } = options.routes.functions;
       return (
         `${globalize.prefixSafe}${fnName}: DefinePlugin.runtimeValue(() => ` +
         collapseWhitespaces(
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
-              "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
               formatTo(config).$outInline(),
-              "return " + body,
+              body,
             "})`,",
-            `{ fileDependencies: [join("${cwd}", "${output}", "${options.routes.functions.dir}"${options.adapter.modularize ? `, "${fnName}.ts"` : ``})] }`
+            `{ fileDependencies: [join(base, ${modularize ? `"${dir}", "${fnName}.ts"` : `"${dir}.ts"`})] }`
           ].join(" ")
         )
       );
@@ -124,18 +127,18 @@ module.exports = {
       const translation = translationsToGlobalize[key];
       const { fnName, params, typeValue, plural } = translation;
       const { args, body } = getTFunction(translation, config);
+      const { dir } = options.translations.functions;
       return (
         `${globalize.prefixSafe}${fnName}: DefinePlugin.runtimeValue(() => ` +
         collapseWhitespaces(
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
-              "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + ";",
               params ? tInterpolateParams(options.translations.tokens.dynamicDelimiters).$outInline() : "",
-              typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline(),
+              params ? (typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline()) : "",
               plural ? tPluralise().$outInline() : "",
-              "return " + body,
+              body,
             "})`,",
-            `{ fileDependencies: [join("${cwd}", "${output}", "${options.translations.functions.dir}"${options.adapter.modularize ? `, "${fnName}.ts"` : ``})] }`
+            `{ fileDependencies: [join(base, ${modularize ? `"${dir}", "${fnName}.ts"` : `"${dir}.ts"`})] }`
           ].join(" ")
         )
       );
@@ -243,7 +246,7 @@ module.exports = {
             ${Object.keys(routesToGlobalize)
               .map((key) => {
                 const { args, body } = getToFunction(routesToGlobalize[key], config);
-                return `"${key}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
+                return `"${key}": (${args.map((a) => a.name).join(", ")}) => { ${body} }`;
               })
               .join(",\n  ")}
           };
@@ -267,7 +270,7 @@ module.exports = {
                 const translation = translationsToGlobalize[key];
                 const { fullKey } = translation;
                 const { args, body } = getTFunction(translation, config);
-                return `"${fullKey}": (${args.map((a) => a.name === "locale" ? "locale = locale" : a.name).join(", ")}) => ${body}`;
+                return `"${fullKey}": (${args.map((a) => a.name).join(", ")}) => { ${body} }`;
               })
               .join(",\n  ")}
           };

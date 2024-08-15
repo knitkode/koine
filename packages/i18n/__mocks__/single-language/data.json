@@ -428,7 +428,8 @@
             "answer": "That"
           }
         ]
-      }
+      },
+      "equalValues": true
     },
     "404:seo": {
       "id": "404:seo",
@@ -441,7 +442,8 @@
         "en": {
           "title": "404 - Not found"
         }
-      }
+      },
+      "equalValues": true
     },
     "404:seo_title": {
       "id": "404:seo_title",
@@ -452,7 +454,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "404 - Not found"
-      }
+      },
+      "equalValues": true
     },
     "404:title": {
       "id": "404:title",
@@ -463,7 +466,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "404, page not found"
-      }
+      },
+      "equalValues": true
     },
     "~account/FormUserLanguages:empty": {
       "id": "~account/FormUserLanguages:empty",
@@ -474,7 +478,8 @@
       "typeValue": "Object",
       "values": {
         "en": {}
-      }
+      },
+      "equalValues": true
     },
     "~account/FormUserLanguages:msg": {
       "id": "~account/FormUserLanguages:msg",
@@ -485,7 +490,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "Some text"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:boolShouldntBeHereBut": {
       "id": "~account/~user~profile:boolShouldntBeHereBut",
@@ -496,7 +502,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": true
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther": {
       "id": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther",
@@ -511,7 +518,8 @@
           "2": "Two",
           "3": "Three"
         }
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther_1": {
       "id": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther_1",
@@ -522,7 +530,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "One"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther_2": {
       "id": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther_2",
@@ -533,7 +542,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "Two"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther_3": {
       "id": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther_3",
@@ -544,7 +554,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "Three"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:listComplex": {
       "id": "~account/~user~profile:listComplex",
@@ -560,7 +571,8 @@
             "k2": "v2"
           }
         ]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:listFlat": {
       "id": "~account/~user~profile:listFlat",
@@ -571,7 +583,8 @@
       "typeValue": "Array",
       "values": {
         "en": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj": {
       "id": "~account/~user~profile:obj",
@@ -610,7 +623,8 @@
       "params": {
         "nestedVarName1": "stringOrNumber",
         "nestedVarName2": "stringOrNumber"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested": {
       "id": "~account/~user~profile:obj_objNested",
@@ -647,7 +661,8 @@
       "params": {
         "nestedVarName1": "stringOrNumber",
         "nestedVarName2": "stringOrNumber"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_listComplexNested": {
       "id": "~account/~user~profile:obj_objNested_listComplexNested",
@@ -667,7 +682,8 @@
       "params": {
         "nestedVarName1": "stringOrNumber",
         "nestedVarName2": "stringOrNumber"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_listFlatNested": {
       "id": "~account/~user~profile:obj_objNested_listFlatNested",
@@ -678,7 +694,8 @@
       "typeValue": "Array",
       "values": {
         "en": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2": {
       "id": "~account/~user~profile:obj_objNested_objNested2",
@@ -695,7 +712,8 @@
           "listFlatNested22": ["v1", "v2"],
           "str3": "v"
         }
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_listFlatNested22": {
       "id": "~account/~user~profile:obj_objNested_objNested2_listFlatNested22",
@@ -706,7 +724,8 @@
       "typeValue": "Array",
       "values": {
         "en": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_objNested21": {
       "id": "~account/~user~profile:obj_objNested_objNested2_objNested21",
@@ -719,7 +738,8 @@
         "en": {
           "k": "v"
         }
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_objNested21_k": {
       "id": "~account/~user~profile:obj_objNested_objNested2_objNested21_k",
@@ -730,7 +750,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_str3": {
       "id": "~account/~user~profile:obj_objNested_objNested2_str3",
@@ -741,7 +762,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b": {
       "id": "~account/~user~profile:obj_objNested_objNested2b",
@@ -757,7 +779,8 @@
           "listFlatNested2b3": ["v1", "v2"],
           "str2b4": "v"
         }
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_listFlatNested2b3": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_listFlatNested2b3",
@@ -768,7 +791,8 @@
       "typeValue": "Array",
       "values": {
         "en": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_str2b1": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_str2b1",
@@ -779,7 +803,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_str2b2": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_str2b2",
@@ -790,7 +815,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_str2b4": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_str2b4",
@@ -801,7 +827,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_str": {
       "id": "~account/~user~profile:obj_objNested_str",
@@ -812,7 +839,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:plural": {
       "id": "~account/~user~profile:plural",
@@ -828,7 +856,8 @@
           "zero": "Zero"
         }
       },
-      "plural": true
+      "plural": true,
+      "equalValues": true
     },
     "~account/~user~profile:pluralAsObject": {
       "id": "~account/~user~profile:pluralAsObject",
@@ -843,7 +872,8 @@
           "other": "Others"
         }
       },
-      "plural": true
+      "plural": true,
+      "equalValues": true
     },
     "~account/~user~profile:pluralAsObjectWithExtraKeys": {
       "id": "~account/~user~profile:pluralAsObjectWithExtraKeys",
@@ -859,7 +889,8 @@
           "noPluralRelated": "Yes"
         }
       },
-      "plural": true
+      "plural": true,
+      "equalValues": true
     },
     "~account/~user~profile:pluralAsObjectWithExtraKeys_noPluralRelated": {
       "id": "~account/~user~profile:pluralAsObjectWithExtraKeys_noPluralRelated",
@@ -870,7 +901,8 @@
       "typeValue": "Primitive",
       "values": {
         "en": "Yes"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:pluralNoDefault": {
       "id": "~account/~user~profile:pluralNoDefault",
@@ -885,7 +917,8 @@
           "other": "Some"
         }
       },
-      "plural": true
+      "plural": true,
+      "equalValues": true
     },
     "~account/~user~profile:title": {
       "id": "~account/~user~profile:title",
@@ -899,7 +932,8 @@
       },
       "params": {
         "varName": "stringOrNumber"
-      }
+      },
+      "equalValues": true
     }
   }
 }

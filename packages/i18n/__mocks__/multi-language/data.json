@@ -136,18 +136,6 @@
         }
       },
       {
-        "path": "$faq.json",
-        "locale": "en",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        }
-      },
-      {
         "path": "~account/~user~profile.json",
         "locale": "en",
         "data": {
@@ -205,6 +193,18 @@
               }
             }
           }
+        }
+      },
+      {
+        "path": "$faq.json",
+        "locale": "en",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
         }
       },
       {
@@ -716,7 +716,8 @@
       "values": {
         "en": {},
         "it": {}
-      }
+      },
+      "equalValues": true
     },
     "~account/FormUserLanguages:msg": {
       "id": "~account/FormUserLanguages:msg",
@@ -740,7 +741,8 @@
       "values": {
         "en": true,
         "it": true
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther": {
       "id": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther",
@@ -818,7 +820,8 @@
             "k2": "v2"
           }
         ]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:listFlat": {
       "id": "~account/~user~profile:listFlat",
@@ -830,7 +833,8 @@
       "values": {
         "en": ["v1", "v2"],
         "it": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj": {
       "id": "~account/~user~profile:obj",
@@ -992,7 +996,8 @@
       "values": {
         "en": ["v1", "v2"],
         "it": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2": {
       "id": "~account/~user~profile:obj_objNested_objNested2",
@@ -1016,7 +1021,8 @@
           "listFlatNested22": ["v1", "v2"],
           "str3": "v"
         }
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_listFlatNested22": {
       "id": "~account/~user~profile:obj_objNested_objNested2_listFlatNested22",
@@ -1028,7 +1034,8 @@
       "values": {
         "en": ["v1", "v2"],
         "it": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_objNested21": {
       "id": "~account/~user~profile:obj_objNested_objNested2_objNested21",
@@ -1044,7 +1051,8 @@
         "it": {
           "k": "v"
         }
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_objNested21_k": {
       "id": "~account/~user~profile:obj_objNested_objNested2_objNested21_k",
@@ -1056,7 +1064,8 @@
       "values": {
         "en": "v",
         "it": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2_str3": {
       "id": "~account/~user~profile:obj_objNested_objNested2_str3",
@@ -1068,7 +1077,8 @@
       "values": {
         "en": "v",
         "it": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b": {
       "id": "~account/~user~profile:obj_objNested_objNested2b",
@@ -1090,7 +1100,8 @@
           "listFlatNested2b3": ["v1", "v2"],
           "str2b4": "v"
         }
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_listFlatNested2b3": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_listFlatNested2b3",
@@ -1102,7 +1113,8 @@
       "values": {
         "en": ["v1", "v2"],
         "it": ["v1", "v2"]
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_str2b1": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_str2b1",
@@ -1114,7 +1126,8 @@
       "values": {
         "en": "v",
         "it": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_str2b2": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_str2b2",
@@ -1126,7 +1139,8 @@
       "values": {
         "en": "v",
         "it": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_objNested2b_str2b4": {
       "id": "~account/~user~profile:obj_objNested_objNested2b_str2b4",
@@ -1138,7 +1152,8 @@
       "values": {
         "en": "v",
         "it": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:obj_objNested_str": {
       "id": "~account/~user~profile:obj_objNested_str",
@@ -1150,7 +1165,8 @@
       "values": {
         "en": "v",
         "it": "v"
-      }
+      },
+      "equalValues": true
     },
     "~account/~user~profile:plural": {
       "id": "~account/~user~profile:plural",
@@ -1260,7 +1276,8 @@
       },
       "params": {
         "varName": "stringOrNumber"
-      }
+      },
+      "equalValues": true
     }
   }
 }

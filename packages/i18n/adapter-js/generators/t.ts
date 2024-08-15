@@ -21,10 +21,11 @@ import { getImportTypes } from "./types";
 
 export function getTFunction(
   translation: I18nCompiler.DataTranslation,
-  options: Pick<I18nCompiler.Config, "defaultLocale">,
+  options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) {
-  const { defaultLocale } = options;
-  let { values, params, plural, typeValue } = translation;
+  const { defaultLocale, single } = options;
+  let { values, params, plural, typeValue, equalValues } = translation;
+  const hasValuableTranslations = !single && !equalValues;
   const args: FunctionsCompilerDataArg[] = [];
   const pluralCountProperty = "count";
 
@@ -43,19 +44,27 @@ export function getTFunction(
       optional: false,
     });
   }
-  // for ergonomy always allow the user to pass the locale
+  // for ergonomy always allow the user to pass the locale even if
+  // hasValuableTranslations is false
   args.push({ name: "locale", type: "I18n.Locale", optional: true });
   const imports = [importsMap.types];
 
   // let body = ""; // with implicitReturn: true
-  let body =
-    "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; return ";
+  let body = hasValuableTranslations
+    ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
+    : "";
+  body += "return ";
+
   let returns = "";
 
   if (isPrimitive(values)) {
     returns += getTranslationValueOutput(values);
   } else {
-    returns += getTFunctionBodyWithLocales(defaultLocale, values);
+    returns += getTFunctionBodyWithLocales(
+      defaultLocale,
+      values,
+      hasValuableTranslations,
+    );
   }
   if (plural) {
     imports.push(importsMap.tPluralise);
@@ -94,26 +103,22 @@ function getTranslationValueOutput(value: I18nCompiler.DataTranslationValue) {
   return `(${JSON.stringify(value)})`;
 }
 
-function areEqualTranslationsValues(
-  a: I18nCompiler.DataTranslationValue,
-  b: I18nCompiler.DataTranslationValue,
-) {
-  return areEqual(a, b);
-}
-
 function getTFunctionBodyWithLocales(
   defaultLocale: I18nCompiler.Config["defaultLocale"],
   perLocaleValues: I18nCompiler.DataTranslation["values"],
+  hasValuableTranslations: boolean,
 ) {
   let output = "";
 
-  for (const locale in perLocaleValues) {
-    const value = perLocaleValues[locale];
-    if (
-      locale !== defaultLocale &&
-      !areEqualTranslationsValues(value, perLocaleValues[defaultLocale])
-    ) {
-      output += `locale === "${locale}" ? ${getTranslationValueOutput(value)} : `;
+  if (hasValuableTranslations) {
+    for (const locale in perLocaleValues) {
+      const value = perLocaleValues[locale];
+      if (
+        locale !== defaultLocale &&
+        !areEqual(value, perLocaleValues[defaultLocale])
+      ) {
+        output += `locale === "${locale}" ? ${getTranslationValueOutput(value)} : `;
+      }
     }
   }
 
@@ -140,7 +145,7 @@ const importsMap = {
 
 const getTFunctions = (
   translations: I18nCompiler.DataTranslations,
-  options: Pick<I18nCompiler.Config, "defaultLocale">,
+  options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) => {
   const functions: FunctionsCompiler[] = [];
   const allImports: Set<ImportsCompiler> = new Set();

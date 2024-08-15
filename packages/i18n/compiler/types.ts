@@ -216,6 +216,11 @@ export namespace I18nCompiler {
      */
     values: Record<Locale, DataTranslationValue>;
     /**
+     * Flag as `true` when all values for all locales have the same value (a.k.a.
+     * there are no real translations...)
+     */
+    equalValues?: boolean;
+    /**
      * Dictionary of the plural versions of the translations' values
      * {@link DataTranslationValue} for each plural suffix mapped by locale
      */

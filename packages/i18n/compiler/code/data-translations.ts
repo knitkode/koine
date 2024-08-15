@@ -1,5 +1,6 @@
 import { basename, dirname, extname, join, sep } from "node:path";
 import {
+  areEqual,
   isArray,
   isObject,
   isPrimitive,
@@ -98,8 +99,8 @@ function extractTranslationParamsFromPrimitive(
       return matches
         .map((match) => match.replace(start, "").replace(end, "").trim())
         .reduce((map, paramName) => {
-          // TODO: maybe determine the more specific type with some kind of special
-          // token used in the route id `[dynamicParam]` portion
+          // TODO: maybe determine the more specific type with some kind of
+          // special token used in the route id `[dynamicParam]` portion
           map[paramName] = "stringOrNumber";
           return map;
         }, {} as I18nCompiler.DataParams);
@@ -144,26 +145,37 @@ function extractTranslationParamsFromValue(
   return params;
 }
 
-// function addDataTranslationEntryForObjectValue(
-//   options: CodeDataTranslationsOptions,
-//   id: string,
-//   locale: I18nCompiler.Locale,
-//   value: Exclude<Extract<I18nCompiler.DataTranslationValue, object>, string[]>,
-//   dataTranslations: I18nCompiler.DataTranslations,
-// ) {
-//   // if (hasOnlyPluralKeys(value)) {
-//   //   return `'${key}': string;`;
-//   // }
-//   // if (!isArray(value) && isObject(value)) {
-//   //   if (hasOnlyPluralKeys(value)) {
-//   //     return `'${key}': string;`;
-//   //   }
-//   //   if (hasPlurals(value)) {
-//   //     return `'${key}': string | ${buildTypeForValue(pickNonPluralValue(value))}`;
-//   //   }
-//   // }
-//   // return `'${key}': ${buildTypeForValue(value)}`;
-// }
+/**
+ * We flag translations that have always the same output to optimize the
+ * `t` functions implementation since in those cases we do not need to check
+ * the current locale.
+ *
+ * NB: we mutate the `dataTranslations`
+ */
+function flagDataTranslationsEqualValues(
+  _options: CodeDataTranslationsOptions,
+  dataTranslations: I18nCompiler.DataTranslations,
+) {
+  for (const key in dataTranslations) {
+    const translation = dataTranslations[key];
+    let lastCompared: (typeof translation.values)[string] | null = null;
+    let areAllEqual = true;
+
+    for (const locale in translation.values) {
+      if (lastCompared) {
+        if (!areEqual(lastCompared, translation.values[locale])) {
+          areAllEqual = false;
+          continue;
+        }
+      }
+      lastCompared = translation.values[locale];
+    }
+
+    if (areAllEqual) dataTranslations[key].equalValues = true;
+  }
+
+  return dataTranslations;
+}
 
 /**
  * At this point the data translations have been calculated, this happens in a
@@ -464,6 +476,8 @@ export let getCodeDataTranslations = (
   );
 
   dataTranslations = manageDataTranslationsPlurals(options, dataTranslations);
+
+  dataTranslations = flagDataTranslationsEqualValues(options, dataTranslations);
 
   // sort
   dataTranslations = objectSort(dataTranslations);
