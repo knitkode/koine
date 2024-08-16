@@ -5,8 +5,8 @@
     "outDir": "../../../dist/out-tsc",
     "types": ["node"],
     "target": "es2015",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ES2015",
+    "moduleResolution": "Bundler",
     // "esModuleInterop": true,
     // for @vercel/ncc:
     "jsx": "react-jsx",

@@ -93,6 +93,9 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
   const config = getConfig(input, configOptions);
   const code = await getCodeData(config, optsCode, input);
 
+  // configure logger level, docs https://www.npmjs.com/package/consola#log-level
+  i18nLogger.level = config.logLevel;
+
   if (optsInput?.write) {
     writables.push(writeInput(optsInput.write, input));
   }
@@ -143,6 +146,9 @@ let i18nCompilerSync = (options: I18nCompilerOptions) => {
   const input = getInputDataSync(optsInput);
   const config = getConfig(input, configOptions);
   const code = getCodeDataSync(config, optsCode, input);
+
+  // configure logger level, docs https://www.npmjs.com/package/consola#log-level
+  i18nLogger.level = config.logLevel;
 
   if (optsInput?.write) {
     writeInputSync(optsInput.write, input);

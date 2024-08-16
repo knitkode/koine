@@ -13,4 +13,5 @@ export const i18nLogger = createConsola({
     // compact: false,
     date: false,
   },
-});
+  // FIXME: type stupid build error with ncc, missing fancy??
+} as never);
