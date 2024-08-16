@@ -55,19 +55,3 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
 
   return nextConfig;
 };
-
-// import { I18nWebpackPlugin } from "./webpackPluginI18n";
-// TODO: move to next-translate adapter?
-// return withTranslate(newNextConfig);
-
-// nextConfig.webpack = (webpackConfig) => {
-//   // nextConfig.webpack = (_config, options) => {
-//   //   const webpackConfig =
-//   //     typeof nextConfig.webpack === "function"
-//   //       ? nextConfig.webpack(_config, options)
-//   //       : _config;
-
-//   webpackConfig.plugins.push(new I18nWebpackPlugin(config));
-
-//   return webpackConfig;
-// };
