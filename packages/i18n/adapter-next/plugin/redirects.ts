@@ -1,9 +1,9 @@
 import type { Redirect } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, escapeRegExp } from "@koine/utils";
-import type { CodeDataRoutesOptions } from "../compiler/code/data-routes";
-import type { I18nCompiler } from "../compiler/types";
-import { formatRoutePathname } from "../formatRoutePathname";
-import { transformPathname } from "./transformPathname";
+import type { CodeDataRoutesOptions } from "../../compiler/code/data-routes";
+import type { I18nCompiler } from "../../compiler/types";
+import { formatRoutePathname } from "../../formatRoutePathname";
+import { transformPathname } from "./utils";
 
 function generatePathRedirect(arg: {
   localeSource?: I18nCompiler.Locale;

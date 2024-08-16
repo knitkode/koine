@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
-import { type I18nCompilerOptions, i18nCompiler } from "../compiler";
-import { getRedirects, getRewrites, tweakNextConfig } from "./plugin-shared";
+import { type I18nCompilerOptions, i18nCompiler } from "../../compiler";
+import {
+  getRedirects,
+  getRewrites,
+  shouldIgnoreNextJsConfigRun,
+  tweakNextConfig,
+} from "./utils";
 
 type NextConfigFn = (
   phase: string,
@@ -8,6 +13,9 @@ type NextConfigFn = (
 ) => Promise<NextConfig> | NextConfig;
 
 export type WithI18nAsyncOptions = NextConfig & {
+  /**
+   * Configure the {@link I18nCompilerOptions I18nCompiler}
+   */
   i18nCompiler?: I18nCompilerOptions;
 };
 
@@ -38,6 +46,8 @@ export let withI18nAsync =
     // bail if user has not defined the compiler options object
     if (!i18nCompilerOptions) return nextConfig;
 
+    if (shouldIgnoreNextJsConfigRun()) return nextConfig;
+
     const i18nResult = await i18nCompiler(i18nCompilerOptions);
 
     nextConfig = tweakNextConfig(i18nCompilerOptions, i18nResult, nextConfig);
@@ -62,9 +72,9 @@ export let withI18nAsync =
           // when using the locale param name structure just force to opt-out from
           // next.js built in i18n support for pages router, this should also
           // ease the cohexistence of pages and app router
-          // if (i18nResult.code.options.routes.localeParamName) {
-          //   delete nextConfig.i18n;
-          // }
+          if (i18nResult.options.routes.localeParamName) {
+            delete nextConfig.i18n;
+          }
         } catch (_e) {
           // console.log()
         }

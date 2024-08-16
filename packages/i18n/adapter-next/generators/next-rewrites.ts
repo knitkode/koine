@@ -1,5 +1,5 @@
 import { createGenerator } from "../../compiler/createAdapter";
-import { generateRewrites } from "../rewrites";
+import { generateRewrites } from "../plugin/rewrites";
 
 export default createGenerator("next", (arg) => {
   const { config, routes, options } = arg;

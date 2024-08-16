@@ -1,8 +1,8 @@
 import { resolve } from "path";
 import type { Compilation, Compiler } from "webpack";
 import { debounce } from "@koine/utils";
-import { type I18nCompilerOptions, i18nCompiler } from "../compiler";
-import { isInputDataLocal } from "../compiler/input/data-local";
+import { type I18nCompilerOptions, i18nCompiler } from "../../compiler";
+import { isInputDataLocal } from "../../compiler/input/data-local";
 
 const PLUGIN_NAME = "I18nWebpackPlugin";
 

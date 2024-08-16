@@ -1,5 +1,5 @@
 import { createGenerator } from "../../compiler/createAdapter";
-import { generateRedirects } from "../redirects";
+import { generateRedirects } from "../plugin/redirects";
 
 export default createGenerator("next", (arg) => {
   const { config, options, routes } = arg;

@@ -2,10 +2,61 @@ import type { NextConfig } from "next";
 import { join } from "path";
 import { ContextReplacementPlugin, DefinePlugin } from "webpack";
 import { swcCreateTransform } from "@koine/node/swc";
-import type { I18nCompilerOptions, I18nCompilerReturn } from "../compiler";
+import type { I18nCompilerOptions, I18nCompilerReturn } from "../../compiler";
 import { generateRedirects } from "./redirects";
 import { generateRewrites } from "./rewrites";
 import { I18nWebpackPlugin } from "./webpackPluginI18n";
+
+/**
+ * `next.config` runs twice, running the compiler only once is enough, the condition
+ * is dependent on the environment as
+ *
+ * - [paraglide version](https://github.com/opral/monorepo/blob/main/inlang/source-code/paraglide/paraglide-next/src/plugin/index.ts#L55)
+ */
+export function shouldIgnoreNextJsConfigRun() {
+  return (
+    // while developing we need the private worker process, so ignore this:
+    (process.env.NODE_ENV === "development" &&
+      !process.env["NEXT_PRIVATE_WORKER"]) ||
+    // while building we need the main process, so ignore this:
+    (process.env.NODE_ENV === "production" &&
+      process.env["NEXT_PRIVATE_WORKER"])
+  );
+}
+
+/**
+ * Transform the route translated either into a `pathname` or a `template`.
+ *
+ * Here we add the wildcard flag maybe found in the pathname to the template
+ * name too.
+ *
+ * @see https://nextjs.org/docs/messages/invalid-multi-match
+ */
+export function transformPathname(
+  rawPathnameOrTemplate: string,
+  wildcard?: boolean,
+) {
+  return (
+    "/" +
+    rawPathnameOrTemplate
+      .split("/")
+      .filter(Boolean)
+      .map((part) => {
+        if (part.startsWith("[[...")) {
+          return `:${encodeURIComponent(part.slice(5, -2))}`;
+        }
+        if (part.startsWith("[[")) {
+          return `:${encodeURIComponent(part.slice(2, -2))}`;
+        }
+        if (part.startsWith("[")) {
+          return `:${encodeURIComponent(part.slice(1, -1))}`;
+        }
+        return `${encodeURIComponent(part)}`;
+      })
+      .join("/") +
+    (wildcard ? "/:wildcard*" : "")
+  );
+}
 
 export let tweakNextConfig = (
   i18nCompilerOptions: I18nCompilerOptions,

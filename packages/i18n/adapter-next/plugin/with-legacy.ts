@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 import type { Redirect, Rewrite } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, objectMergeWithDefaults } from "@koine/utils";
-import type { CodeDataRoutesOptions } from "../compiler/code/data-routes";
-import type { I18nCompilerConfig } from "../compiler/config";
+import type { CodeDataRoutesOptions } from "../../compiler/code/data-routes";
+import type { I18nCompilerConfig } from "../../compiler/config";
 import { generateRedirectForPathname } from "./redirects";
 import { generateRewriteForPathname } from "./rewrites";
 
@@ -66,7 +66,7 @@ function transformRoute(route: RoutesMapRoute) {
         part = part.replace("*", "");
         const isDynamic = part.startsWith("{{") && part.endsWith("}}");
         const asValue = isDynamic
-          ? part.match(/{{(.+)}}/)?.[1].trim() ?? ""
+          ? (part.match(/{{(.+)}}/)?.[1].trim() ?? "")
           : part.trim();
         const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
 
@@ -84,7 +84,7 @@ function transformRoute(route: RoutesMapRoute) {
       .map((part) => {
         const isDynamic = part.startsWith("[") && part.endsWith("]");
         const asValue = isDynamic
-          ? part.match(/\[(.+)\]/)?.[1].trim() ?? ""
+          ? (part.match(/\[(.+)\]/)?.[1].trim() ?? "")
           : part.trim();
         const hasWildcard = mapPartsByIdx[asValue]?.hasWildcard;
         const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
