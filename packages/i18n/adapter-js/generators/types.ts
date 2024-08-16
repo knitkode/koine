@@ -313,7 +313,7 @@ declare namespace I18n {
       content: () => /* j s */ `
 import type { Split } from "@koine/utils";
 import type { I18nUtils } from "@koine/i18n";
-import type { RouteIdError } from "./routesError";
+import type { RouteIdError } from "./internal/routesError";
 
 export namespace I18n {
   /**
