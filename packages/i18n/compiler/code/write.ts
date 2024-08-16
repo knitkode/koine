@@ -427,7 +427,7 @@ function writeCompiledTypescriptFiles(
   // CommonJs output
   tsCompile(cwd, output, tsFilesPaths, {
     module: ts.ModuleKind.CommonJS,
-    moduleResolution: ts.ModuleResolutionKind.NodeNext,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
   });
 
   // TODO: check whether we need both esm and commonjs output, commonjs seems
