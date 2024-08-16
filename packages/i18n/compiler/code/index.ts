@@ -9,4 +9,5 @@ export {
   type CodeDataOptions,
   type CodeDataOptionsResolved,
   getCodeData,
+  getCodeDataSync,
 } from "./data";
