@@ -1,4 +1,5 @@
 import { isArray, isFunction, isPromise, isString } from "@koine/utils";
+import { i18nLogger } from "../logger";
 import type { I18nCompiler } from "../types";
 import type { InputDataOptions, InputDataOptionsDirect } from "./types";
 
@@ -24,8 +25,8 @@ export let getInputDataDirect = async (
       const res = await source();
       return res;
     } catch (e) {
-      console.error(e);
-      throw Error("[@koine/i18n]: Failed retrieving source!");
+      i18nLogger.fatal("Failed retrieving source!");
+      throw e;
     }
   }
 
@@ -42,14 +43,13 @@ export let getInputDataDirectSync = (
       const res = source();
 
       if (isPromise(res)) {
-        throw Error(
-          "[@koine/i18n]: source needs to be a synchronous function.",
-        );
+        i18nLogger.fatal("source needs to be a synchronous function");
+        throw Error;
       }
       return res;
     } catch (e) {
-      console.error(e);
-      throw Error("[@koine/i18n]: Failed retrieving source!");
+      i18nLogger.fatal("Failed retrieving source!");
+      throw e;
     }
   }
 

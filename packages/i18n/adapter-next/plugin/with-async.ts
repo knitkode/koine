@@ -76,7 +76,7 @@ export let withI18nAsync =
             delete nextConfig.i18n;
           }
         } catch (_e) {
-          // console.log()
+          //
         }
       }
     }

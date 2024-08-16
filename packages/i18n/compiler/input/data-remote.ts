@@ -1,9 +1,8 @@
-// import { execSync } from "node:child_process";
 import { request } from "node:https";
 import { minimatch } from "minimatch";
 import { isAbsoluteUrl, isString } from "@koine/utils";
+import { i18nLogger } from "../logger";
 // import requestSync from "sync-request-curl";
-// import { isString } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import type { InputDataOptions, InputDataOptionsRemote } from "./types";
 
@@ -94,7 +93,7 @@ export let getInputDataRemote = async (options: InputDataOptionsRemote) =>
     );
 
     req.on("error", (e) => {
-      console.error(e);
+      i18nLogger.error(e);
       reject("");
     });
 

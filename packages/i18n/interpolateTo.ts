@@ -47,7 +47,7 @@ export function interpolateTo<
 
         if (!(key in params)) {
           throw new Error(
-            "[@koine/i18n]::interpolateTo, using '" +
+            "[@koine/i18n]:interpolateTo, using '" +
               value +
               "' without param '" +
               key +
@@ -57,7 +57,7 @@ export function interpolateTo<
 
         if (!["string", "number"].includes(typeof params[key])) {
           throw new Error(
-            "[@koine/i18n]::interpolateTo, using '" +
+            "[@koine/i18n]:interpolateTo, using '" +
               value +
               "' with unserializable param  '" +
               key +

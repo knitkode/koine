@@ -39,7 +39,7 @@ export const formatTo = (
 
         if (!(key in params)) {
           console.warn(
-            "[@koine/i18n]::formatTo, using '" +
+            "[@koine/i18n]:formatTo, using '" +
               pathname +
               "' without param '" +
               key +
@@ -50,7 +50,7 @@ export const formatTo = (
 
         if (!["string", "number"].includes(typeof params[key])) {
           console.warn(
-            "[@koine/i18n]::formatTo, using '" +
+            "[@koine/i18n]:formatTo, using '" +
               pathname +
               "' with unserializable param  '" +
               key +

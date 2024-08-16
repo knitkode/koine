@@ -17,6 +17,7 @@ import {
   writeInput,
   writeInputSync,
 } from "./input";
+import { i18nLogger } from "./logger";
 import {
   type SummaryDataOptions,
   type SummaryWriteOptions,
@@ -79,6 +80,8 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
    * and we do not want to throw an error because it looks less understanble
    * from the terminal, we need to use `process.kill(process.pid);`
    */
+  const start = performance.now();
+  i18nLogger.start("Compiling code from sources...");
   const {
     input: optsInput,
     code: optsCode,
@@ -111,6 +114,9 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
 
   await Promise.all(writables);
 
+  i18nLogger.success(
+    `Code generated (${Math.round(performance.now() - start)}ms)${optsCode.write ? ` in ./${optsCode.write.output}` : ""}`,
+  );
   return code;
 };
 
@@ -126,6 +132,8 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
 // working
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let i18nCompilerSync = (options: I18nCompilerOptions) => {
+  const start = performance.now();
+  i18nLogger.start("Compiling code from sources...");
   const {
     input: optsInput,
     code: optsCode,
@@ -153,5 +161,8 @@ let i18nCompilerSync = (options: I18nCompilerOptions) => {
     );
   }
 
+  i18nLogger.success(
+    `Code generated (${Math.round(performance.now() - start)}ms)${optsCode.write ? ` in ./${optsCode.write.output}` : ""}`,
+  );
   return code;
 };

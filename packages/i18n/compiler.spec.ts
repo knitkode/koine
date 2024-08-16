@@ -4,8 +4,13 @@ import { fsWrite } from "@koine/node";
 import { type I18nCompiler, i18nCompiler } from "./compiler";
 import type { InputDataOptions } from "./compiler/input/types";
 
-const mocksPath = (folder: string) =>
-  join(process.cwd(), "/packages/i18n/__mocks__/", folder);
+// jest.unmock('mock-stdin');
+// describe("test CLI", () => {
+//   let stdin;
+//   beforeEach(() => {
+//     stdin = require('mock-stdin').stdin();
+//   });
+// })
 
 describe("test in memory output", () => {
   const runCompiler = async (input: InputDataOptions) =>
@@ -79,6 +84,9 @@ describe("test in memory output", () => {
     expect(emptyData.translations).toEqual({});
   });
 });
+
+const mocksPath = (folder: string) =>
+  join(process.cwd(), "/packages/i18n/__mocks__/", folder);
 
 describe("test written output", () => {
   test("single-language setup", async () => {

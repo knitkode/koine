@@ -3,6 +3,7 @@ import type { Compilation, Compiler } from "webpack";
 import { debounce } from "@koine/utils";
 import { type I18nCompilerOptions, i18nCompiler } from "../../compiler";
 import { isInputDataLocal } from "../../compiler/input/data-local";
+import { i18nLogger } from "../../compiler/logger";
 
 const PLUGIN_NAME = "I18nWebpackPlugin";
 
@@ -14,7 +15,7 @@ export class I18nWebpackPlugin {
   }
 
   apply(compiler: Compiler) {
-    const { debug, input } = this.opts;
+    const { input } = this.opts;
 
     if (!isInputDataLocal(input)) return;
 
@@ -24,14 +25,11 @@ export class I18nWebpackPlugin {
     if (compiler.hooks) {
       const addI18nFolderDeps = debounce(
         (compilation: Compilation) => {
-          // const logger = compilation.getLogger(PLUGIN_NAME);
           if (!compilation.contextDependencies.has(i18nInputFolder)) {
             compilation.contextDependencies.add(i18nInputFolder);
-            if (debug === "internal") {
-              console.log(
-                "[@koine/i18n]:I18nWebpackPlugin:apply, input folder added to context deps",
-              );
-            }
+            i18nLogger.debug(
+              "I18nWebpackPlugin:apply, input folder added to context deps",
+            );
             // } else {
             //   console.log("i18nCompiler input folder already added to context deps",);
           }
@@ -46,11 +44,13 @@ export class I18nWebpackPlugin {
         async (compiler: Compiler, callback: () => void) => {
           const isI18nInputFile = compiler.modifiedFiles?.has(i18nInputFolder);
           if (isI18nInputFile) {
-            // console.log("i18nCompiler should compile now.");
+            i18nLogger.debug(
+              "found a change in input folder, it should compile",
+            );
             try {
               await i18nCompiler(this.opts);
             } catch (_e) {
-              // console.log("i18nCompiler failed to compile.");
+              i18nLogger.debug("compilation failed");
             }
           }
 

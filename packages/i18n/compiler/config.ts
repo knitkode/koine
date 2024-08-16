@@ -1,4 +1,6 @@
+import { type LogLevel } from "consola";
 import { isBoolean, normaliseUrl, objectMergeWithDefaults } from "@koine/utils";
+import { i18nLogger } from "./logger";
 import type { I18nCompiler } from "./types";
 
 export type I18nCompilerConfig = {
@@ -28,6 +30,11 @@ export type I18nCompilerConfig = {
    */
   trailingSlash?: boolean;
   /**
+   * @see {@link LogLevel Consola.LogLevel}
+   * @default ""
+   */
+  logLevel?: 0 | 1 | 2 | 3 | 4 | 5;
+  /**
    * Possible values:
    *
    * `"internal"`: used for developing this library
@@ -52,6 +59,7 @@ export const configDefaults: I18nCompilerConfigResolved = {
   defaultLocale: "en",
   hideDefaultLocaleInUrl: true,
   trailingSlash: false,
+  logLevel: 3,
   debug: false,
   single: true,
 };
@@ -93,6 +101,9 @@ export let getConfig = (
 
   // compute single
   merged.single = merged.locales.length === 1;
+
+  // configure logger level, docs https://www.npmjs.com/package/consola#log-level
+  i18nLogger.level = merged.logLevel;
 
   return merged;
 };

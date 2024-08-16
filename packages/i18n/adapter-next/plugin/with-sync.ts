@@ -69,7 +69,7 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
           delete nextConfig.i18n;
         }
       } catch (_e) {
-        // console.log()
+        //
       }
     }
   }

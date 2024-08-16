@@ -11,7 +11,8 @@ import { I18nWebpackPlugin } from "./webpackPluginI18n";
  * `next.config` runs twice, running the compiler only once is enough, the condition
  * is dependent on the environment as
  *
- * - [paraglide version](https://github.com/opral/monorepo/blob/main/inlang/source-code/paraglide/paraglide-next/src/plugin/index.ts#L55)
+ * - [next.config.js executes multiple times?](https://github.com/vercel/next.js/discussions/11863)
+ * - [paraglide solution](https://github.com/opral/monorepo/blob/main/inlang/source-code/paraglide/paraglide-next/src/plugin/index.ts#L55)
  */
 export function shouldIgnoreNextJsConfigRun() {
   return (

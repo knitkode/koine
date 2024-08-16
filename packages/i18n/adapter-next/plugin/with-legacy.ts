@@ -183,7 +183,7 @@ function generateRedirects(arg: I18nRoutesOptionsResolved) {
   );
 
   if (debug)
-    console.info("[@koine/i18n/plugin-legacy:generateRedirects]", cleaned);
+    console.info("[@koine/i18n]:next-with-legacy:generateRedirects]", cleaned);
 
   return cleaned;
 }
@@ -230,7 +230,7 @@ function generateRewrites(arg: I18nRoutesOptionsResolved) {
   );
 
   if (debug)
-    console.info("[@koine/i18n/plugin-legacy:generateRewrites]", cleaned);
+    console.info("[@koine/i18n]:next-plugin-legacy:generateRewrites]", cleaned);
 
   return cleaned;
 }

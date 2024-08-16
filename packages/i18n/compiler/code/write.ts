@@ -13,6 +13,7 @@ import type { RequiredDeep, SetRequired } from "@koine/utils";
 import type { TsConfigJson } from "@koine/utils";
 import { fsWrite, fsWriteSync } from "@koine/node";
 import { getTranslationsDir } from "../helpers";
+import { i18nLogger } from "../logger";
 import type { I18nCompiler } from "../types";
 import {
   type CodeGenerateReturn,
@@ -381,8 +382,10 @@ function writeTsconfigFile(config: CodeWriteConfig) {
         newData = tweakedData;
       }
     } catch (_e) {
-      console.log(`Failed to read tsconfig at given ${tsconfig.path}`);
-      console.log(`a tsconfig.json file will be created at the given path.`);
+      i18nLogger.info(`Failed to read tsconfig at given ${tsconfig.path}`);
+      i18nLogger.info(
+        `a tsconfig.json file will be created at the given path.`,
+      );
     }
   } else {
     const tweakedData = tweakTsconfigJsonData(config, newData);
@@ -397,13 +400,13 @@ function writeTsconfigFile(config: CodeWriteConfig) {
   if (hasChanged) {
     writeFileSync(tsconfigPath, newContent + EOL);
     if (debug || process.env["JEST_WORKER_ID"]) {
-      console.log(
+      i18nLogger.log(
         `i18n: tsconfig.json updated. You need to manually check 'paths' are setup correctly.`,
       );
     }
   } else {
     if (debug || process.env["JEST_WORKER_ID"]) {
-      console.log(`i18n: tsconfig.json is up to date.`);
+      i18nLogger.info(`i18n: tsconfig.json is up to date.`);
     }
   }
 }
