@@ -19,6 +19,7 @@ export let tsCompile = (
     allowJs: false,
     esModuleInterop: true,
     jsx: ts.JsxEmit.ReactJSX,
+    target: ts.ScriptTarget.ESNext,
     // outDir: join(cwd, output, ".tmp"),
     // outDir: join(cwd, "dist"),
     skipLibCheck: true,
