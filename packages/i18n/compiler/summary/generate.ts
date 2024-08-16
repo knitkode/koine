@@ -1,4 +1,4 @@
-import { forin, objectMergeWithDefaults, objectSort } from "@koine/utils";
+import { objectMergeWithDefaults, objectSort } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import { type SummaryDataOptions, summaryDataOptions } from "./data";
 
@@ -8,7 +8,8 @@ const getSummaryDataByPath = (data: I18nCompiler.DataSummary) => {
     Record<I18nCompiler.Locale, I18nCompiler.DataSummaryFile>
   > = {};
 
-  forin(data, (locale, dataPerLocale) => {
+  for (const locale in data) {
+    const dataPerLocale = data[locale];
     const { files } = dataPerLocale;
 
     for (let i = 0; i < files.length; i++) {
@@ -18,7 +19,7 @@ const getSummaryDataByPath = (data: I18nCompiler.DataSummary) => {
       out[path] = out[path] || {};
       out[path][locale] = file;
     }
-  });
+  }
 
   out = objectSort(out);
 
@@ -32,11 +33,14 @@ const generateSummaryMarkdownByPath = (data: I18nCompiler.DataSummary) => {
   const locales: I18nCompiler.Locale[] = [];
   const styleBorder = `style="border-right:1px solid grey"`;
 
-  forin(dataByPath, (path, dataPerPath) => {
+  for (const path in dataByPath) {
+    const dataPerPath = dataByPath[path];
+
     body += `<tr>`;
     body += `<td ${styleBorder}>${path}</td>`;
 
-    forin(dataPerPath, (locale, file) => {
+    for (const locale in dataPerPath) {
+      const file = dataPerPath[locale];
       const { characters, words, url } = file;
 
       if (!locales.includes(locale)) locales.push(locale);
@@ -44,10 +48,10 @@ const generateSummaryMarkdownByPath = (data: I18nCompiler.DataSummary) => {
       body += `<td><a href="${url}">${locale}</a></td>`;
       body += `<td>${words}</td>`;
       body += `<td ${styleBorder}>${characters}</td>`;
-    });
+    }
 
     body += `</tr>`;
-  });
+  }
 
   output += `<table><thead><tr>`;
   output += `<th ${styleBorder}>file path</th>`;
@@ -66,7 +70,8 @@ const generateSummaryMarkdownByLocale = (
   let output = "";
   let body = "";
 
-  forin(data, (locale, dataPerLocale) => {
+  for (const locale in data) {
+    const dataPerLocale = data[locale];
     const { files, characters, words } = dataPerLocale;
     const url = `${options.sourceUrl}/${locale}`;
     body += `<tr>`;
@@ -75,7 +80,7 @@ const generateSummaryMarkdownByLocale = (
     body += `<td>${words}</td>`;
     body += `<td>${characters}</td>`;
     body += `</tr>`;
-  });
+  }
 
   output += `<table><thead><tr>`;
   output += `<th>locale</th><th>files</th><th>words</th><th>chars</th>`;

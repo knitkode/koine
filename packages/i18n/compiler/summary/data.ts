@@ -1,9 +1,4 @@
-import {
-  arraySum,
-  forin,
-  objectSort,
-  objectSortByKeysMatching,
-} from "@koine/utils";
+import { arraySum, objectSort, objectSortByKeysMatching } from "@koine/utils";
 import type { I18nCompiler } from "../types";
 
 const getWords = (
@@ -79,7 +74,9 @@ export let getSummaryData = (
   // sort by default locale
   dataSummary = objectSortByKeysMatching(dataSummary, defaultLocale);
 
-  forin(dataSummary, (locale, dataPerLocale) => {
+  for (const locale in dataSummary) {
+    const dataPerLocale = dataSummary[locale];
+
     dataSummary[locale].characters = arraySum(
       dataPerLocale.files.map((f) => f.characters),
     );
@@ -97,7 +94,7 @@ export let getSummaryData = (
     dataSummary[locale] = objectSort(
       dataSummary[locale],
     ) as I18nCompiler.DataSummary[I18nCompiler.Locale];
-  });
+  }
 
   return dataSummary;
 };

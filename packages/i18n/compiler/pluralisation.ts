@@ -5,7 +5,6 @@
  * @see https://cldr.unicode.org/index/cldr-spec/plural-rules
  */
 import {
-  forin,
   isNumericLiteral,
   objectPick,
   split,
@@ -87,7 +86,9 @@ export let transformKeysForPlurals = (keys: string[]) => {
       let transformedKeys: string[] = [...keys];
       const groupedPlurals = groupPluralsKeysByRoot(pluralKeys);
 
-      forin(groupedPlurals, (pluralRoot, pluralKeys) => {
+      for (const pluralRoot in groupedPlurals) {
+        const pluralKeys = groupedPlurals[pluralRoot];
+
         // add the plural root
         if (!keys.includes(pluralRoot)) {
           transformedKeys.push(pluralRoot);
@@ -98,7 +99,7 @@ export let transformKeysForPlurals = (keys: string[]) => {
             transformedKeys = transformedKeys.filter((k) => k !== pluralKey);
           }
         });
-      });
+      }
       return transformedKeys;
     }
   }
