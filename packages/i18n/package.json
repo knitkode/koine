@@ -1,6 +1,9 @@
 {
   "name": "@koine/i18n",
   "sideEffects": false,
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0"
+  },
   "dependencies": {
     "@koine/node": "*",
     "@koine/utils": "*",
