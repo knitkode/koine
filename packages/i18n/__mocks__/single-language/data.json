@@ -5,6 +5,7 @@
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
+    "logLevel": 3,
     "debug": false,
     "single": true
   },
@@ -31,7 +32,7 @@
       }
     },
     "translations": {
-      "ignorePaths": ["~.json"],
+      "ignorePaths": ["~.json", "~.json", "~.json", "~.json", "~.json"],
       "createArrayIndexBasedFns": false,
       "functions": {
         "dir": "$t",
@@ -47,12 +48,12 @@
       }
     },
     "adapter": {
-      "modularize": false,
-      "router": "app",
       "globalize": {
         "prefix": "i18n",
         "functions": true
       },
+      "modularize": false,
+      "router": "app",
       "name": "next"
     },
     "write": {
@@ -219,7 +220,8 @@
         "fnName": "$to_about",
         "pathnames": {
           "en": "/about"
-        }
+        },
+        "equalValues": true
       },
       "account.user.[id]": {
         "id": "account.user.[id]",
@@ -229,28 +231,32 @@
         },
         "params": {
           "id": "stringOrNumber"
-        }
+        },
+        "equalValues": true
       },
       "account.user.profile": {
         "id": "account.user.profile",
         "fnName": "$to_account_user_profile",
         "pathnames": {
           "en": "/account/user"
-        }
+        },
+        "equalValues": true
       },
       "account.user.settings": {
         "id": "account.user.settings",
         "fnName": "$to_account_user_settings",
         "pathnames": {
           "en": "/account/user/settings"
-        }
+        },
+        "equalValues": true
       },
       "account.user.settings.personal": {
         "id": "account.user.settings.personal",
         "fnName": "$to_account_user_settings_personal",
         "pathnames": {
           "en": "/account/user/settings/personal"
-        }
+        },
+        "equalValues": true
       },
       "apps.tool": {
         "id": "apps.tool",
@@ -258,7 +264,8 @@
         "pathnames": {
           "en": "/apps/tool"
         },
-        "wildcard": true
+        "wildcard": true,
+        "equalValues": true
       },
       "apps.tool.things": {
         "id": "apps.tool.things",
@@ -269,7 +276,8 @@
         "pathnamesSpa": {
           "en": "/things"
         },
-        "inWildcard": true
+        "inWildcard": true,
+        "equalValues": true
       },
       "apps.tool.things.[id]": {
         "id": "apps.tool.things.[id]",
@@ -283,7 +291,8 @@
         "params": {
           "id": "stringOrNumber"
         },
-        "inWildcard": true
+        "inWildcard": true,
+        "equalValues": true
       },
       "apps.tool.things.[id].detail": {
         "id": "apps.tool.things.[id].detail",
@@ -297,7 +306,8 @@
         "params": {
           "id": "stringOrNumber"
         },
-        "inWildcard": true
+        "inWildcard": true,
+        "equalValues": true
       },
       "apps.tool.things.[id].detail.[detailId]": {
         "id": "apps.tool.things.[id].detail.[detailId]",
@@ -312,7 +322,8 @@
           "id": "stringOrNumber",
           "detailId": "stringOrNumber"
         },
-        "inWildcard": true
+        "inWildcard": true,
+        "equalValues": true
       },
       "apps.tool.things.[id].detail.[detailId].edit": {
         "id": "apps.tool.things.[id].detail.[detailId].edit",
@@ -327,7 +338,8 @@
           "id": "stringOrNumber",
           "detailId": "stringOrNumber"
         },
-        "inWildcard": true
+        "inWildcard": true,
+        "equalValues": true
       },
       "apps.tool.things.[id].detail.new": {
         "id": "apps.tool.things.[id].detail.new",
@@ -341,21 +353,24 @@
         "params": {
           "id": "stringOrNumber"
         },
-        "inWildcard": true
+        "inWildcard": true,
+        "equalValues": true
       },
       "home": {
         "id": "home",
         "fnName": "$to_home",
         "pathnames": {
           "en": "/"
-        }
+        },
+        "equalValues": true
       },
       "products": {
         "id": "products",
         "fnName": "$to_products",
         "pathnames": {
           "en": "/products"
-        }
+        },
+        "equalValues": true
       },
       "products.[id]": {
         "id": "products.[id]",
@@ -365,7 +380,8 @@
         },
         "params": {
           "id": "stringOrNumber"
-        }
+        },
+        "equalValues": true
       },
       "products.[id].edit": {
         "id": "products.[id].edit",
@@ -375,7 +391,8 @@
         },
         "params": {
           "id": "stringOrNumber"
-        }
+        },
+        "equalValues": true
       },
       "products.[id].edit.details": {
         "id": "products.[id].edit.details",
@@ -385,7 +402,8 @@
         },
         "params": {
           "id": "stringOrNumber"
-        }
+        },
+        "equalValues": true
       }
     },
     "wildcardIds": ["apps.tool"],

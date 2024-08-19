@@ -245,7 +245,8 @@ module.exports = {
           const lookup = {
             ${Object.keys(routesToGlobalize)
               .map((key) => {
-                const { args, body } = getToFunction(routesToGlobalize[key], config);
+                const route = routesToGlobalize[key];
+                const { args, body } = getToFunction(route, config);
                 return `"${key}": (${args.map((a) => a.name).join(", ")}) => { ${body} }`;
               })
               .join(",\n  ")}

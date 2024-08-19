@@ -150,11 +150,11 @@ function extractTranslationParamsFromValue(
  * `t` functions implementation since in those cases we do not need to check
  * the current locale.
  *
- * NB: we mutate the `dataTranslations`
+ * NB: it mutates the data
  */
 function flagDataTranslationsEqualValues(
-  _options: CodeDataTranslationsOptions,
   dataTranslations: I18nCompiler.DataTranslations,
+  _options: CodeDataTranslationsOptions,
 ) {
   for (const key in dataTranslations) {
     const translation = dataTranslations[key];
@@ -165,7 +165,7 @@ function flagDataTranslationsEqualValues(
       if (lastCompared) {
         if (!areEqual(lastCompared, translation.values[locale])) {
           areAllEqual = false;
-          continue;
+          break;
         }
       }
       lastCompared = translation.values[locale];
@@ -182,11 +182,11 @@ function flagDataTranslationsEqualValues(
  * second pass as we need to know all the translations keys to look for plural
  * variations.
  *
- * NB: we mutate the `dataTranslations`
+ * NB: it mutates the data
  */
 function manageDataTranslationsPlurals(
-  options: CodeDataTranslationsOptions,
   dataTranslations: I18nCompiler.DataTranslations,
+  options: CodeDataTranslationsOptions,
 ) {
   const pluralTranslationIds =
     Object.keys(dataTranslations).filter<PluralKey>(isPluralKey);
@@ -278,8 +278,6 @@ function manageDataTranslationsPlurals(
       delete dataTranslations[pluralisedId];
     }
   });
-
-  return dataTranslations;
 }
 
 const slashRegex = new RegExp(sep, "g");
@@ -469,18 +467,22 @@ export let getCodeDataTranslations = (
   { translationFiles }: I18nCompiler.DataInput,
 ) => {
   const { ignorePaths } = options;
+  const filteredFiles = filterInputTranslationFiles(
+    translationFiles,
+    ignorePaths,
+  );
   let dataTranslations: I18nCompiler.DataTranslations = {};
 
-  filterInputTranslationFiles(translationFiles, ignorePaths).forEach((file) =>
-    getCodeDataTranslationsFromFile(options, dataTranslations, file),
-  );
+  for (let i = 0; i < filteredFiles.length; i++) {
+    getCodeDataTranslationsFromFile(
+      options,
+      dataTranslations,
+      filteredFiles[i],
+    );
+  }
 
-  dataTranslations = manageDataTranslationsPlurals(options, dataTranslations);
+  manageDataTranslationsPlurals(dataTranslations, options);
+  flagDataTranslationsEqualValues(dataTranslations, options);
 
-  dataTranslations = flagDataTranslationsEqualValues(options, dataTranslations);
-
-  // sort
-  dataTranslations = objectSort(dataTranslations);
-
-  return dataTranslations;
+  return objectSort(dataTranslations);
 };

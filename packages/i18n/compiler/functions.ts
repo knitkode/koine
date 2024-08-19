@@ -31,21 +31,16 @@ export type FunctionsCompilerData = {
   implicitReturn?: boolean;
 };
 
-type FunctionsCompilerComment = {
-  title?: string;
-  body?: string;
-  /**
-   * Add `@internal` comment directive
-   */
-  internal?: boolean;
-  returns?: string;
-};
-
 export type FunctionsCompilerDataArg = {
   /**
    * The argument name value (`myArg` in `myFn(myArg?: MyArg) {}`)
    */
   name: string;
+  /**
+   * The argument description to show in the optionally generated `@param`
+   * line in {@link FunctionsCompilerComment comment}
+   */
+  description?: string;
   /**
    * The argument type value (as string) (`MyArg` in `myFn(myArg?: MyArg) {}`)
    */
@@ -54,6 +49,47 @@ export type FunctionsCompilerDataArg = {
    * Whether the argument is optional (`?` in `myFn(myArg?: MyArg) {}`)
    */
   optional: boolean;
+  /**
+   * Optional argument default value (eventually displayed in the generated {@link FunctionsCompilerComment comment})
+   */
+  defaults?: string;
+};
+
+/**
+ * A comment tag is made of a key that is prepended by a `@` sign and a string value that describes it.
+ * E.g. `{ key: "see", val: "Text"}` produces the comment line
+ * @see Text
+ */
+type FunctionsCompilerCommentTag = {
+  key: string;
+  val: string;
+};
+
+/**
+ * Anatomy a [JSDoc](https://jsdoc.app/) based block comment
+ */
+type FunctionsCompilerComment = {
+  /**
+   * Displayed as first line of the comment as H3 heading, prepended by `###`
+   * markdown tag.
+   */
+  title?: string;
+  /**
+   * Displayed as body text of the comment after an empty line after the `title`
+   */
+  body?: string;
+  /**
+   * Renders `@internal` comment directive
+   */
+  internal?: boolean;
+  /**
+   * List of {@link FunctionsCompilerCommentTag comment `@...` tags}
+   */
+  tags?: FunctionsCompilerCommentTag[];
+  /**
+   * `someVal` in `@returns someVal` comment directive
+   */
+  returns?: string;
 };
 
 type FunctionsCompilerOutputOptions = {
@@ -100,6 +136,10 @@ function splitTextLines(text: string, lineMaxChars: number) {
   return text.match(regex);
 }
 
+/**
+ * Compiler class to represent and output a TypeScript/JavaScript function's
+ * source code
+ */
 export class FunctionsCompiler {
   name: FunctionsCompilerDataArg["name"];
   data: FunctionsCompilerData;
@@ -109,6 +149,10 @@ export class FunctionsCompiler {
     this.data = data;
   }
 
+  /**
+   * @param withTypes Optionally output TypeScript type for each argument
+   * @returns function's arguments to surround with `(` brackets `)`
+   */
   static #args(args: FunctionsCompilerDataArg[], withTypes: boolean) {
     return args
       .map((arg) =>
@@ -119,9 +163,40 @@ export class FunctionsCompiler {
       .join(", ");
   }
 
+  /**
+   * @see https://jsdoc.app/tags-param
+   * @private
+   */
+  static #commentParam(arg: FunctionsCompilerDataArg) {
+    const { type, name, optional, defaults, description } = arg;
+    let out = `@param {${type}} `;
+
+    out += optional ? "[" + name + "]" : name;
+
+    if (description || optional) {
+      out += " - "; // required hyphen
+
+      if (optional) {
+        out += "(**optional**";
+        if (defaults) {
+          out += ", **default**: " + defaults + "";
+        }
+        out += ")";
+      }
+
+      out += description ? " " + description : "";
+    }
+
+    return out;
+  }
+
+  /**
+   * @private
+   * @returns block comment string based on the given {@link FunctionsCompilerComment data}
+   */
   static #comment(data: FunctionsCompilerData) {
     const { args, comment = {} } = data;
-    const { title, body, internal, returns } = comment;
+    const { title, body, internal, tags, returns } = comment;
     let lines = [];
 
     if (title) {
@@ -135,14 +210,20 @@ export class FunctionsCompiler {
 
     if (internal) lines.push("@internal");
 
+    if (tags) tags.forEach((tag) => lines.push(`@${tag.key} ${tag.val}`));
+
     args.forEach((arg) => {
-      lines.push(`@param {${arg.type}${arg.optional ? "?" : ""}} ${arg.name}`);
+      lines.push(this.#commentParam(arg));
     });
-    if (returns) lines.push("@return " + returns);
+    if (returns) lines.push("@returns " + returns);
 
     return lines.length ? `/**\n * ${lines.join("\n * ")}\n */\n` : "";
   }
 
+  /**
+   * @private
+   * @returns Rollup based no side effects bundler hint
+   */
   static #pure(options: FunctionsCompilerOutputOptionsResolved) {
     return options.opts_pure ? "/* @__NO_SIDE_EFFECTS__ */\n" : "";
   }
@@ -272,15 +353,23 @@ export class FunctionsCompiler {
     return out;
   }
 
+  /**
+   * @returns function's source based on the given {@link FunctionsCompilerFormat format}
+   * and {@link FunctionsCompilerOutputOptions options}
+   */
   $out(
     format: FunctionsCompilerFormat,
     options: FunctionsCompilerOutputOptions,
   ) {
-    return FunctionsCompiler.out(this.data, format, options);
+    return FunctionsCompiler.#out(this.data, format, options);
   }
 
+  /**
+   * @returns function's source in the output format more suitable to inline the
+   * function within a piece of source code
+   */
   $outInline() {
-    return FunctionsCompiler.out(this.data, "cjs", {
+    return FunctionsCompiler.#out(this.data, "cjs", {
       exports: false,
       imports: false,
       comments: false,
@@ -301,7 +390,10 @@ export class FunctionsCompiler {
     return new Function(before + " return " + source)();
   }
 
-  static out(
+  /**
+   * @private
+   */
+  static #out(
     data: FunctionsCompilerData,
     format: FunctionsCompilerFormat,
     options: FunctionsCompilerOutputOptions,
@@ -312,6 +404,9 @@ export class FunctionsCompiler {
     return "";
   }
 
+  /**
+   * @public
+   */
   static outMany(
     format: FunctionsCompilerFormat,
     instances: FunctionsCompiler[] | Set<FunctionsCompiler>,
@@ -319,7 +414,7 @@ export class FunctionsCompiler {
   ) {
     const list = Array.from(instances);
     return list.length
-      ? list.map((i) => this.out(i.data, format, options)).join("\n\n")
+      ? list.map((i) => this.#out(i.data, format, options)).join("\n\n")
       : "";
   }
 }

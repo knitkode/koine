@@ -13,19 +13,26 @@ export function getToFunction(
   route: I18nCompiler.DataRoute,
   options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) {
-  const routeId = route.id;
+  const { id, params } = route;
   const body = getToFunctionBody(route, options);
   const args: FunctionsCompilerDataArg[] = [];
 
-  if (route.params) {
+  if (params) {
     args.push({
       name: "params",
-      type: `I18n.RouteParams["${routeId}"]`,
+      type: `I18n.RouteParams["${id}"]`,
       optional: false,
+      description: "Dynamic values to interpolate in the output URL pathname",
     });
   }
   // for ergonomy always allow the user to pass the locale
-  args.push({ name: "locale", type: "I18n.Locale", optional: true });
+  args.push({
+    name: "locale",
+    type: "I18n.Locale",
+    optional: true,
+    description: "Use this to override the current locale",
+    defaults: "current locale",
+  });
 
   return { body, args };
 }
@@ -34,14 +41,18 @@ function getToFunctionBody(
   route: I18nCompiler.DataRoute,
   options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) {
-  const { params, pathnames } = route;
+  const { params, pathnames, equalValues } = route;
   const { defaultLocale, single } = options;
+  const hasValuableLocalisation = !single && !equalValues;
   const formatArgLocale = single ? `""` : "locale";
   const formatArgParams = params ? ", params" : "";
 
   // let body = ""; // with implicitReturn: true
-  let body =
-    "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; return ";
+  let body = hasValuableLocalisation
+    ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
+    : "";
+  body += "return ";
+
   let returns = "";
 
   if (isString(pathnames)) {
@@ -103,8 +114,16 @@ function getToFunctions(
         body,
         // implicitReturn: true,
         comment: {
-          title: `to route id \`${routeId}\``,
-          returns: `\`"${route.pathnames[options.defaultLocale]}"\` (for locale _${options.defaultLocale}_)`,
+          tags: [
+            {
+              key: "i18nRouteId",
+              val: `\`${routeId}\``,
+            },
+            {
+              key: "i18nDefaultValue", // + defaultLocale,
+              val: `\`"${route.pathnames[options.defaultLocale]}"\``,
+            },
+          ],
         },
       }),
     );
@@ -113,9 +132,6 @@ function getToFunctions(
   return { functions, allImports };
 }
 
-// TODO: check whether adding these annotations change anything:
-// /* @__NO_SIDE_EFFECTS__ */
-// /*#__PURE__*/
 function $to(
   data: I18nCompiler.DataCode<"js">,
 ): I18nCompiler.AdapterGeneratorResult {

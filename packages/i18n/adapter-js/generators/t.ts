@@ -19,38 +19,62 @@ import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 import { getImportTypes } from "./types";
 
+// TODO: make this property name configurable through `translations` options?
+const PLURAL_COUNT_PROPERTY = "count";
+
 export function getTFunction(
   translation: I18nCompiler.DataTranslation,
   options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) {
-  const { defaultLocale, single } = options;
-  let { values, params, plural, typeValue, equalValues } = translation;
-  const hasValuableTranslations = !single && !equalValues;
+  const { params: rawParams, plural } = translation;
+  const { body, imports } = getTFunctionBodyAndImports(translation, options);
   const args: FunctionsCompilerDataArg[] = [];
-  const pluralCountProperty = "count";
-
-  if (plural) {
-    if (params) {
-      params = { ...params, [pluralCountProperty]: "number" };
-    } else {
-      params = { [pluralCountProperty]: "number" };
-    }
-  }
+  // add the plural realted param wihtout mutating the translation params data
+  const params = rawParams
+    ? plural
+      ? { ...rawParams, [PLURAL_COUNT_PROPERTY]: "number" as const }
+      : rawParams
+    : plural
+      ? {
+          [PLURAL_COUNT_PROPERTY]: "number" as const,
+        }
+      : null;
 
   if (params) {
     args.push({
       name: "params",
       type: compileDataParamsToType(params),
       optional: false,
+      description:
+        "Dynamic values to interpolate in the translation string" +
+        (plural ? " (pass `count` to determine the plural version)" : ""),
     });
   }
+
   // for ergonomy always allow the user to pass the locale even if
-  // hasValuableTranslations is false
-  args.push({ name: "locale", type: "I18n.Locale", optional: true });
+  // hasValuableLocalisation is false
+  args.push({
+    name: "locale",
+    type: "I18n.Locale",
+    optional: true,
+    description: "Use this to override the current locale",
+    defaults: "current locale",
+  });
+
+  return { body, args, imports };
+}
+
+function getTFunctionBodyAndImports(
+  translation: I18nCompiler.DataTranslation,
+  options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
+) {
+  const { values, params, plural, typeValue, equalValues } = translation;
+  const { defaultLocale, single } = options;
+  const hasValuableLocalisation = !single && !equalValues;
   const imports = [importsMap.types];
 
   // let body = ""; // with implicitReturn: true
-  let body = hasValuableTranslations
+  let body = hasValuableLocalisation
     ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
     : "";
   body += "return ";
@@ -63,23 +87,18 @@ export function getTFunction(
     returns += getTFunctionBodyWithLocales(
       defaultLocale,
       values,
-      hasValuableTranslations,
+      hasValuableLocalisation,
     );
   }
   if (plural) {
     imports.push(importsMap.tPluralise);
-    returns = `tPluralise(${returns}, params.${pluralCountProperty})`;
+    returns = `tPluralise(${returns}, params.${PLURAL_COUNT_PROPERTY})`;
   }
 
-  if (
-    params &&
-    (!plural ||
-      // check that params isn't just about the plural count property, in that
-      // case we do not need to interpolate anything, see output in __mocks__
-      // where $t_$account_$user$profile_pluralAsObject should not need the
-      // presence of `tInterpolateParamsDeep`
-      (plural && !Object.keys(params).every((k) => k === pluralCountProperty)))
-  ) {
+  // NOTE: here params does not have `count`, that does not need to be
+  // interpolated, see output in __mocks__ where $t_account_user_profile_pluralAsObject
+  // should not need the presence of `tInterpolateParamsDeep`
+  if (params) {
     if (typeValue === "Primitive") {
       imports.push(importsMap.tInterpolateParams);
       returns = `tInterpolateParams(${returns}, params)`;
@@ -89,7 +108,7 @@ export function getTFunction(
     }
   }
 
-  return { body: body + returns, args, imports };
+  return { body: body + returns, imports };
 }
 
 function getTranslationValueOutput(value: I18nCompiler.DataTranslationValue) {
@@ -106,11 +125,11 @@ function getTranslationValueOutput(value: I18nCompiler.DataTranslationValue) {
 function getTFunctionBodyWithLocales(
   defaultLocale: I18nCompiler.Config["defaultLocale"],
   perLocaleValues: I18nCompiler.DataTranslation["values"],
-  hasValuableTranslations: boolean,
+  hasValuableLocalisation: boolean,
 ) {
   let output = "";
 
-  if (hasValuableTranslations) {
+  if (hasValuableLocalisation) {
     for (const locale in perLocaleValues) {
       const value = perLocaleValues[locale];
       if (
@@ -147,6 +166,7 @@ const getTFunctions = (
   translations: I18nCompiler.DataTranslations,
   options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) => {
+  const { defaultLocale } = options;
   const functions: FunctionsCompiler[] = [];
   const allImports: Set<ImportsCompiler> = new Set();
 
@@ -166,8 +186,16 @@ const getTFunctions = (
         body,
         // implicitReturn: true,
         comment: {
-          title: `translation key \`${translation.fullKey}\``,
-          returns: `\`${JSON.stringify(translation.values[options.defaultLocale])}\` (for locale _${options.defaultLocale}_)`,
+          tags: [
+            {
+              key: "i18nKey",
+              val: `\`${translation.fullKey}\``,
+            },
+            {
+              key: "i18nDefaultValue", // + defaultLocale,
+              val: `\`${JSON.stringify(translation.values[defaultLocale])}\``,
+            },
+          ],
         },
       }),
     );
@@ -176,9 +204,6 @@ const getTFunctions = (
   return { functions, allImports };
 };
 
-// TODO: check whether adding these annotations change anything:
-// /* @__NO_SIDE_EFFECTS__ */
-// /*#__PURE__*/
 export default createGenerator("js", (data) => {
   const {
     config,

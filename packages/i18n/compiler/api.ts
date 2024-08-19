@@ -118,7 +118,7 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
   await Promise.all(writables);
 
   i18nLogger.success(
-    `Code generated (${Math.round(performance.now() - start)}ms)${optsCode.write ? ` in ./${optsCode.write.output}` : ""}`,
+    `Code generated (${Math.round(performance.now() - start)}ms)${optsCode.write ? ` in ${optsCode.write.output}` : ""}`,
   );
   return code;
 };
@@ -168,7 +168,7 @@ let i18nCompilerSync = (options: I18nCompilerOptions) => {
   }
 
   i18nLogger.success(
-    `Code generated (${Math.round(performance.now() - start)}ms)${optsCode.write ? ` in ./${optsCode.write.output}` : ""}`,
+    `Code generated (${Math.round(performance.now() - start)}ms)${optsCode.write ? ` in ${optsCode.write.output}` : ""}`,
   );
   return code;
 };

@@ -5,6 +5,7 @@
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
+    "logLevel": 3,
     "debug": false,
     "single": false
   },
@@ -31,7 +32,14 @@
       }
     },
     "translations": {
-      "ignorePaths": ["~.json", "~.json"],
+      "ignorePaths": [
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json"
+      ],
       "createArrayIndexBasedFns": false,
       "functions": {
         "dir": "$t",
@@ -73,6 +81,21 @@
   "input": {
     "localesFolders": ["en", "it"],
     "translationFiles": [
+      {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
+          }
+        }
+      },
       {
         "path": "~.json",
         "locale": "en",
@@ -121,18 +144,15 @@
         }
       },
       {
-        "path": "404.json",
+        "path": "$faq.json",
         "locale": "en",
         "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
-          }
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
         }
       },
       {
@@ -196,18 +216,6 @@
         }
       },
       {
-        "path": "$faq.json",
-        "locale": "en",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        }
-      },
-      {
         "path": "~account/FormUserLanguages.json",
         "locale": "en",
         "data": {
@@ -263,6 +271,18 @@
         }
       },
       {
+        "path": "$faq.json",
+        "locale": "it",
+        "data": {
+          "home": [
+            {
+              "question": "Cos'è?",
+              "answer": "Quello"
+            }
+          ]
+        }
+      },
+      {
         "path": "404.json",
         "locale": "it",
         "data": {
@@ -275,18 +295,6 @@
             "2": "Due volte",
             "3": "Tre volte"
           }
-        }
-      },
-      {
-        "path": "$faq.json",
-        "locale": "it",
-        "data": {
-          "home": [
-            {
-              "question": "Cos'è?",
-              "answer": "Quello"
-            }
-          ]
         }
       },
       {
@@ -412,7 +420,8 @@
           "it": "/apps/tool"
         },
         "wildcard": true,
-        "pathnamesSlim": "/apps/tool"
+        "pathnamesSlim": "/apps/tool",
+        "equalValues": true
       },
       "apps.tool.things": {
         "id": "apps.tool.things",
@@ -426,7 +435,8 @@
           "it": "/things"
         },
         "inWildcard": true,
-        "pathnamesSlim": "/apps/tool/things"
+        "pathnamesSlim": "/apps/tool/things",
+        "equalValues": true
       },
       "apps.tool.things.[id]": {
         "id": "apps.tool.things.[id]",
@@ -443,7 +453,8 @@
           "id": "stringOrNumber"
         },
         "inWildcard": true,
-        "pathnamesSlim": "/apps/tool/things/[id]"
+        "pathnamesSlim": "/apps/tool/things/[id]",
+        "equalValues": true
       },
       "apps.tool.things.[id].detail": {
         "id": "apps.tool.things.[id].detail",
@@ -518,7 +529,8 @@
           "en": "/",
           "it": "/"
         },
-        "pathnamesSlim": "/"
+        "pathnamesSlim": "/",
+        "equalValues": true
       },
       "products": {
         "id": "products",

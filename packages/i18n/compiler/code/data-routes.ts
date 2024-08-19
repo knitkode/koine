@@ -1,5 +1,6 @@
 import {
   type JsonObject,
+  areEqual,
   changeCaseSnake,
   escapeRegExp,
   objectFlat,
@@ -225,21 +226,18 @@ function replaceRouteParentTokens(
 }
 
 /**
- * Mutate the routes data replacing the parent route tokens
- * NB: it mutates the data
+ * Flag routes that are children of wildcards, a.k.a. child SPA routes
+ *
+ * NB: It mutates the data
  */
-function replaceRoutesPathnamesParentTokens(
-  dataRoutes: I18nCompiler.DataRoutes,
-  utils: CodeDataRoutesUtils,
-) {
-  for (const routeId in dataRoutes.byId) {
-    for (const locale in dataRoutes.byId[routeId].pathnames) {
-      dataRoutes.byId[routeId].pathnames[locale] = replaceRouteParentTokens(
-        dataRoutes,
-        utils,
-        locale,
-        routeId,
+function addInWildcardFlags(dataRoutes: I18nCompiler.DataRoutes) {
+  if (dataRoutes.wildcardIds.length) {
+    for (const routeId in dataRoutes.byId) {
+      const inWildcard = dataRoutes.wildcardIds.some(
+        (wildcardRouteId) =>
+          routeId.startsWith(wildcardRouteId) && wildcardRouteId !== routeId,
       );
+      if (inWildcard) dataRoutes.byId[routeId].inWildcard = true;
     }
   }
 }
@@ -257,6 +255,7 @@ function manageRoutesSpaPathnames(
     parentRouteId: I18nCompiler.RouteId,
   ) =>
     currentRoute.inWildcard && !dataRoutes.wildcardIds.includes(parentRouteId);
+
   for (const routeId in dataRoutes.byId) {
     const { inWildcard } = dataRoutes.byId[routeId];
 
@@ -276,6 +275,26 @@ function manageRoutesSpaPathnames(
     } else {
       // discard unneeded data
       delete dataRoutes.byId[routeId].pathnamesSpa;
+    }
+  }
+}
+
+/**
+ * Mutate the routes data replacing the parent route tokens
+ * NB: it mutates the data
+ */
+function replaceRoutesPathnamesParentTokens(
+  dataRoutes: I18nCompiler.DataRoutes,
+  utils: CodeDataRoutesUtils,
+) {
+  for (const routeId in dataRoutes.byId) {
+    for (const locale in dataRoutes.byId[routeId].pathnames) {
+      dataRoutes.byId[routeId].pathnames[locale] = replaceRouteParentTokens(
+        dataRoutes,
+        utils,
+        locale,
+        routeId,
+      );
     }
   }
 }
@@ -347,28 +366,40 @@ function addRoutesSlimPathnames(
 }
 
 /**
- * Flag routes that are children of wildcards, a.k.a. child SPA routes
+ * We flag routes that have always the same output to optimize the
+ * `to` functions implementation since in those cases we do not need to check
+ * the current locale.
  *
- * NB: It mutates the data
+ * NB: it mutates the data
  */
-function addInWildcardFlags(dataRoutes: I18nCompiler.DataRoutes) {
-  if (dataRoutes.wildcardIds.length) {
-    for (const routeId in dataRoutes.byId) {
-      const inWildcard = dataRoutes.wildcardIds.some(
-        (wildcardRouteId) =>
-          routeId.startsWith(wildcardRouteId) && wildcardRouteId !== routeId,
-      );
-      if (inWildcard) dataRoutes.byId[routeId].inWildcard = true;
+function flagDataRoutesEqualValues(dataRoutes: I18nCompiler.DataRoutes) {
+  for (const key in dataRoutes.byId) {
+    const route = dataRoutes.byId[key];
+    let lastCompared: (typeof route.pathnames)[string] | null = null;
+    let areAllEqual = true;
+
+    for (const locale in route.pathnames) {
+      if (lastCompared) {
+        if (!areEqual(lastCompared, route.pathnames[locale])) {
+          areAllEqual = false;
+          break;
+        }
+      }
+      lastCompared = route.pathnames[locale];
     }
+
+    if (areAllEqual) dataRoutes.byId[key].equalValues = true;
   }
 }
 
-function getRouteFunctionName(options: CodeDataRoutesOptions, id: string) {
-  return options.functions.prefix + changeCaseSnake(id);
+function getRouteFunctionName(
+  utils: Pick<CodeDataRoutesUtils, "functions">,
+  id: string,
+) {
+  return utils.functions.prefix + changeCaseSnake(id);
 }
 
 function createRouteEntry(
-  options: CodeDataRoutesOptions,
   utils: CodeDataRoutesUtils,
   {
     value,
@@ -392,7 +423,7 @@ function createRouteEntry(
   const route: I18nCompiler.DataRoute = {
     ...(existing || {}),
     id: routeId,
-    fnName: getRouteFunctionName(options, routeId),
+    fnName: getRouteFunctionName(utils, routeId),
     pathnames,
     // just copy them for now, the difference treatment happens when resolving
     // the parent tokens
@@ -414,11 +445,10 @@ function createRouteEntry(
 }
 
 function buildDataRoutesFromJsonData(
-  options: CodeDataRoutesOptions,
+  data: I18nCompiler.DataRoutes,
+  utils: CodeDataRoutesUtils,
   json: JsonObject,
   locale: I18nCompiler.Locale,
-  utils: CodeDataRoutesUtils,
-  data: I18nCompiler.DataRoutes,
 ) {
   const routes = objectFlat<Record<I18nCompiler.RouteId, string>>(
     json,
@@ -429,7 +459,6 @@ function buildDataRoutesFromJsonData(
     const parsed = parseUserDefinedRouteId(key, utils);
     const existing = data.byId[parsed.routeId];
     const route = createRouteEntry(
-      options,
       utils,
       { value: routes[key], locale, ...parsed },
       existing,
@@ -473,11 +502,17 @@ export let getCodeDataRoutes = (
   };
   const utils = getCodeDataRoutesUtils(config, options);
 
+  let localesAnalysed = 0;
   for (let i = 0; i < translationFiles.length; i++) {
     const { path, locale, data } = translationFiles[i];
 
     if (path === options.translationJsonFileName) {
-      buildDataRoutesFromJsonData(options, data, locale, utils, dataRoutes);
+      localesAnalysed++;
+      buildDataRoutesFromJsonData(dataRoutes, utils, data, locale);
+
+      if (config.locales.length === localesAnalysed) {
+        break;
+      }
     }
   }
 
@@ -486,6 +521,7 @@ export let getCodeDataRoutes = (
   manageRoutesSpaPathnames(dataRoutes, utils);
   replaceRoutesPathnamesParentTokens(dataRoutes, utils);
   addRoutesSlimPathnames(dataRoutes, utils);
+  flagDataRoutesEqualValues(dataRoutes);
 
   return dataRoutes;
 };

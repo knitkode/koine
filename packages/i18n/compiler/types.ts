@@ -170,6 +170,11 @@ export namespace I18nCompiler {
      * Flags routes children of a wildcard route (in SPA applications subrouting)
      */
     inWildcard?: boolean;
+    /**
+     * Flag as `true` when all values for all locales have the same value (a.k.a.
+     * there are no real translations...)
+     */
+    equalValues?: boolean;
   };
 
   /**

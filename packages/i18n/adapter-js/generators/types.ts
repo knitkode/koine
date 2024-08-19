@@ -81,15 +81,15 @@ function buildTranslationsDictionary(
       translations: { ignorePaths },
     },
   } = data;
-  const filteredFiles = filterInputTranslationFiles(
+  const files = filterInputTranslationFiles(
     translationFiles,
     ignorePaths,
     (file) => file.locale === defaultLocale,
   );
   const out: string[] = [];
 
-  for (let i = 0; i < filteredFiles.length; i++) {
-    const { path, data } = filteredFiles[i];
+  for (let i = 0; i < files.length; i++) {
+    const { path, data } = files[i];
     const namespace = path.replace(".json", "");
 
     out.push(`"${namespace}": ${buildTypeForValue(data)}`);
@@ -260,7 +260,7 @@ export default createGenerator("js", (arg) => {
       // where different instances of this library compiled output need
       // to cohexist
       disabled: true,
-      // TODO: checkthis global namespacing styling (now it is disabled anyway)
+      // TODO: check this global namespacing styling (now it is disabled anyway)
       //  An import alias would allow the following?
       // export {};
 
