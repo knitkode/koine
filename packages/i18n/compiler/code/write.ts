@@ -247,8 +247,6 @@ const treatFileContent = (
   // remove empty first/last lines
   content = content.trim();
 
-  if (generatedFile.isBarrel) return;
-
   if (tsNoCheck && (ext === "d.ts" || ext === "ts" || ext === "tsx")) {
     content = `// @ts-nocheck\n` + content;
   }
