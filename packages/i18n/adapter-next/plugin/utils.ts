@@ -75,9 +75,11 @@ export let tweakNextConfig = (
   const nextConfig: NextConfig = {
     ...restNextConfig,
     modularizeImports: {
-      ...swcCreateTransform("@koine/i18n"),
+      ...swcCreateTransform({ path: "@koine/i18n" }),
       // automatically create swc transforms based on given options
-      ...(write?.tsconfig ? swcCreateTransform(write.tsconfig.alias) : {}),
+      ...(write?.tsconfig
+        ? swcCreateTransform({ path: write.tsconfig.alias })
+        : {}),
       ...modularizeImports,
     },
     webpack: (_webpackConfig, webpackConfigContext) => {
