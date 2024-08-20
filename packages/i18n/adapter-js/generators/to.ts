@@ -2,7 +2,7 @@ import { isString } from "@koine/utils";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   FunctionsCompiler,
-  FunctionsCompilerBodyOptions,
+  type FunctionsCompilerBodyOptions,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
 import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";

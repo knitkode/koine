@@ -9,7 +9,7 @@ import {
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   FunctionsCompiler,
-  FunctionsCompilerBodyOptions,
+  type FunctionsCompilerBodyOptions,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
 import {
