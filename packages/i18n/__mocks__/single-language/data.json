@@ -32,7 +32,7 @@
       }
     },
     "translations": {
-      "ignorePaths": ["~.json", "~.json", "~.json", "~.json", "~.json"],
+      "ignorePaths": ["~.json"],
       "createArrayIndexBasedFns": false,
       "functions": {
         "dir": "$t",
@@ -48,12 +48,12 @@
       }
     },
     "adapter": {
+      "modularize": true,
+      "router": "app",
       "globalize": {
         "prefix": "i18n",
         "functions": true
       },
-      "modularize": false,
-      "router": "app",
       "name": "next"
     },
     "write": {

@@ -107,7 +107,7 @@ describe("test written output", () => {
         adapter: {
           name: "next",
           options: {
-            modularize: false,
+            modularize: true,
           },
         },
         routes: {},

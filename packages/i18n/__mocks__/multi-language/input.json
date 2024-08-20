@@ -2,21 +2,6 @@
   "localesFolders": ["en", "it"],
   "translationFiles": [
     {
-      "path": "404.json",
-      "locale": "en",
-      "data": {
-        "seo": {
-          "title": "404 - Not found"
-        },
-        "title": "404, page not found",
-        "onlyNumberKeys": {
-          "1": "Once",
-          "2": "Twice",
-          "3": "Three times"
-        }
-      }
-    },
-    {
       "path": "~.json",
       "locale": "en",
       "data": {
@@ -60,6 +45,21 @@
               }
             }
           }
+        }
+      }
+    },
+    {
+      "path": "404.json",
+      "locale": "en",
+      "data": {
+        "seo": {
+          "title": "404 - Not found"
+        },
+        "title": "404, page not found",
+        "onlyNumberKeys": {
+          "1": "Once",
+          "2": "Twice",
+          "3": "Three times"
         }
       }
     },
@@ -191,18 +191,6 @@
       }
     },
     {
-      "path": "$faq.json",
-      "locale": "it",
-      "data": {
-        "home": [
-          {
-            "question": "Cos'è?",
-            "answer": "Quello"
-          }
-        ]
-      }
-    },
-    {
       "path": "404.json",
       "locale": "it",
       "data": {
@@ -215,6 +203,18 @@
           "2": "Due volte",
           "3": "Tre volte"
         }
+      }
+    },
+    {
+      "path": "$faq.json",
+      "locale": "it",
+      "data": {
+        "home": [
+          {
+            "question": "Cos'è?",
+            "answer": "Quello"
+          }
+        ]
       }
     },
     {
