@@ -1,3 +1,4 @@
+import { swcCreateTransforms } from "@koine/node/swc";
 import { createGenerator } from "../../compiler/createAdapter";
 
 export default createGenerator("js", (arg) => {
@@ -68,6 +69,35 @@ exports.config = config;
 
 module.exports = config;
 `,
+    },
+    swcTransforms: {
+      name: "i18nSwcTransforms",
+      ext: "js",
+      index: false,
+      disabled: arg.options.adapter.modularize ? false : true,
+      content: () => {
+        const { tsconfig } = arg.options.write || {};
+        if (!tsconfig) return "";
+
+        // prettier-ignore
+        const flat = swcCreateTransforms([
+          { path: "@koine/i18n", flat: true },
+          { path: tsconfig.alias, flat: true },
+          { path: tsconfig.alias + "/" + arg.options.routes.functions.dir, flat: true },
+          { path: tsconfig.alias + "/" + arg.options.translations.functions.dir, flat: true },
+          { path: tsconfig.alias + "/" + createGenerator.dirs.server, flat: true },
+        ])
+        const deep = swcCreateTransforms([
+          { path: "@koine/i18n", flat: true },
+          { path: tsconfig.alias },
+        ]);
+        return `
+  export const i18nSwcTransforms = {
+    flat: ${JSON.stringify(flat, null, 2)};
+    deep: ${JSON.stringify(deep, null, 2)};
+  }
+`;
+      },
     },
   };
 });
