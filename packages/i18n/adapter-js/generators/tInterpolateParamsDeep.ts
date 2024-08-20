@@ -12,10 +12,12 @@ export const tInterpolateParamsDeep = () =>
     ],
     comment: { internal: true },
     name: "tInterpolateParamsDeep",
+    generics: [{ name: "T", type: "string | object | unknown[]" }],
     args: [
-      { name: "value", type: "string | object | unknown[]", optional: false },
+      { name: "value", type: "T", optional: false },
       { name: "params", type: "object", optional: true },
     ],
+    returns: { name: "T" },
     // before: ({ format }) => tInterpolateParams({ start, end }).$out(format, {
     //   exports: false,
     //   imports: false,

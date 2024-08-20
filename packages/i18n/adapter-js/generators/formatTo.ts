@@ -16,16 +16,21 @@ export const formatTo = (
 ) =>
   new FunctionsCompiler({
     // NOTE: we could import `defaultLocale` but it's cleaner and easier to
-    // manage by inlining it, especially when we want to inline the outut of this
-    // compiled function
+    // manage by inlining it, especially when we want to inline the output of
+    // this compiled function
     imports: [],
     comment: { internal: true },
     name: "formatTo",
+    generics: [{ name: "T", type: "string" }],
     args: [
       { name: "locale", type: "string | undefined", optional: false },
-      { name: "pathname", type: "string", optional: false },
+      { name: "pathname", type: "T", optional: false },
       { name: "params", type: "object", optional: true },
     ],
+    returns: {
+      name: "T",
+      explicit: true,
+    },
     body: ({ format }) =>
       `
   locale = locale || "${defaultLocale}";

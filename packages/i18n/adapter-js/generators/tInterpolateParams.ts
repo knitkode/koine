@@ -13,10 +13,12 @@ export const tInterpolateParams = ({
     imports: [],
     comment: { internal: true },
     name: "tInterpolateParams",
+    generics: [{ name: "T", type: "string | number | boolean" }],
     args: [
-      { name: "value", type: "string", optional: false },
+      { name: "value", type: "T", optional: false },
       { name: "params", type: "object", optional: true },
     ],
+    returns: { name: "T" },
     body: ({ format }) => `params ? value.replace(
     /${escapeEachChar(start)}(.*?)${escapeEachChar(end)}/g,
     (_, key) =>

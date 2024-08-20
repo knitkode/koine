@@ -7,10 +7,14 @@ export const tPluralise = () =>
     before: `let pluralRules = new Intl.PluralRules();\n\n`,
     comment: { internal: true },
     name: "tPluralise",
+    generics: [
+      { name: "T", type: "{ [pluralKey: string]: string | number | boolean }" },
+    ],
     args: [
-      { name: "values", type: "any", optional: false },
+      { name: "values", type: "T", optional: false },
       { name: "count", type: "number", optional: false },
     ],
+    returns: { name: "T[keyof T]", explicit: true },
     body: `values[count] || values[pluralRules.select(count)] || (count === 0 ? values.zero : values["other"])`,
     implicitReturn: true,
   });

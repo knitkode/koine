@@ -9,6 +9,7 @@ import {
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   FunctionsCompiler,
+  FunctionsCompilerBodyOptions,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
 import {
@@ -73,59 +74,78 @@ function getTFunctionBodyAndImports(
   const hasValuableLocalisation = !single && !equalValues;
   const imports = [importsMap.types];
 
-  // let body = ""; // with implicitReturn: true
-  let body = hasValuableLocalisation
-    ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
-    : "";
-  body += "return ";
-
-  let returns = "";
-
-  if (isPrimitive(values)) {
-    returns += getTranslationValueOutput(values);
-  } else {
-    returns += getTFunctionBodyWithLocales(
-      defaultLocale,
-      values,
-      hasValuableLocalisation,
-    );
-  }
   if (plural) {
     imports.push(importsMap.tPluralise);
-    returns = `tPluralise(${returns}, params.${PLURAL_COUNT_PROPERTY})`;
   }
 
-  // NOTE: here params does not have `count`, that does not need to be
-  // interpolated, see output in __mocks__ where $t_account_user_profile_pluralAsObject
-  // should not need the presence of `tInterpolateParamsDeep`
   if (params) {
     if (typeValue === "Primitive") {
       imports.push(importsMap.tInterpolateParams);
-      returns = `tInterpolateParams(${returns}, params)`;
     } else if (typeValue === "Array" || typeValue === "Object") {
       imports.push(importsMap.tInterpolateParamsDeep);
-      returns = `tInterpolateParamsDeep(${returns}, params)`;
     }
   }
 
-  return { body: body + returns, imports };
+  return {
+    imports,
+    body: (functionBodyOpts: FunctionsCompilerBodyOptions) => {
+      // let body = ""; // with implicitReturn: true
+      let body = hasValuableLocalisation
+        ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
+        : "";
+      body += "return ";
+
+      let returns = "";
+
+      if (isPrimitive(values)) {
+        returns += getTranslationValueOutput(values, functionBodyOpts);
+      } else {
+        returns += getTFunctionBodyWithLocales(
+          defaultLocale,
+          values,
+          hasValuableLocalisation,
+          functionBodyOpts,
+        );
+      }
+      if (plural) {
+        returns = `tPluralise(${returns}, params.${PLURAL_COUNT_PROPERTY})`;
+      }
+
+      // NOTE: here params does not have `count`, that does not need to be
+      // interpolated, see output in __mocks__ where $t_account_user_profile_pluralAsObject
+      // should not need the presence of `tInterpolateParamsDeep`
+      if (params) {
+        if (typeValue === "Primitive") {
+          returns = `tInterpolateParams(${returns}, params)`;
+        } else if (typeValue === "Array" || typeValue === "Object") {
+          returns = `tInterpolateParamsDeep(${returns}, params)`;
+        }
+      }
+      return body + returns;
+    },
+  };
 }
 
-function getTranslationValueOutput(value: I18nCompiler.DataTranslationValue) {
+function getTranslationValueOutput(
+  value: I18nCompiler.DataTranslationValue,
+  { format }: FunctionsCompilerBodyOptions,
+) {
+  const asConst = format === "ts" ? " as const" : "";
   if (isString(value) || isNumber(value)) {
-    return `"${value}"`;
+    return `"${value}"${asConst}`;
   } else if (isBoolean(value)) {
     return `${value}`;
   } else if (isArray(value)) {
-    return JSON.stringify(value);
+    return JSON.stringify(value) + asConst;
   }
-  return `(${JSON.stringify(value)})`;
+  return `(${JSON.stringify(value)}${asConst})`;
 }
 
 function getTFunctionBodyWithLocales(
   defaultLocale: I18nCompiler.Config["defaultLocale"],
   perLocaleValues: I18nCompiler.DataTranslation["values"],
   hasValuableLocalisation: boolean,
+  functionBodyOpts: FunctionsCompilerBodyOptions,
 ) {
   let output = "";
 
@@ -136,12 +156,15 @@ function getTFunctionBodyWithLocales(
         locale !== defaultLocale &&
         !areEqual(value, perLocaleValues[defaultLocale])
       ) {
-        output += `locale === "${locale}" ? ${getTranslationValueOutput(value)} : `;
+        output += `locale === "${locale}" ? ${getTranslationValueOutput(value, functionBodyOpts)} : `;
       }
     }
   }
 
-  output += getTranslationValueOutput(perLocaleValues[defaultLocale]);
+  output += getTranslationValueOutput(
+    perLocaleValues[defaultLocale],
+    functionBodyOpts,
+  );
 
   return output;
 }
@@ -191,10 +214,11 @@ const getTFunctions = (
               key: "i18nKey",
               val: `\`${translation.fullKey}\``,
             },
-            {
-              key: "i18nDefaultValue", // + defaultLocale,
-              val: `\`${JSON.stringify(translation.values[defaultLocale])}\``,
-            },
+            // no need for this anymore as we have `as const` on the return value
+            // {
+            //   key: "i18nDefaultValue",
+            //   val: `\`${JSON.stringify(translation.values[defaultLocale])}\``,
+            // },
           ],
         },
       }),

@@ -32,7 +32,14 @@
       }
     },
     "translations": {
-      "ignorePaths": ["~.json", "~.json"],
+      "ignorePaths": [
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json"
+      ],
       "createArrayIndexBasedFns": false,
       "functions": {
         "dir": "$t",

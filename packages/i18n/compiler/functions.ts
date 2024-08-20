@@ -15,13 +15,35 @@ export type FunctionsCompilerData = {
    */
   name: string;
   /**
+   * The function generics (`T extends string` in `myFn<T extends string>(myArg?: T) { return "x" }`)
+   */
+  generics?: FunctionsCompilerDataGeneric[];
+  /**
    * The function arguments (list of {@link FunctionsCompilerDataArg})
    */
-  args: FunctionsCompilerDataArg[];
+  args?: FunctionsCompilerDataArg[];
+  /**
+   * The function's return value, it also renders the `@returns` comment directive
+   */
+  returns?: {
+    /**
+     * `someVal` in `@returns {someVal}` comment directive
+     */
+    name: string;
+    /**
+     * `That thing` in `@returns {someVal} - That thing` comment directive
+     */
+    description?: string;
+    /**
+     * When `true` and we are outputting TypeScript code it adds an explicit
+     * return type: `: MyType` in in `myFn(): MyType { return "x" }`
+     */
+    explicit?: boolean;
+  };
   /**
    * The function body (`return "x";` in `myFn(myArg?: MyArg) { return "x"; }`)
    */
-  body: string | ((options: { format: FunctionsCompilerFormat }) => string);
+  body: string | ((options: FunctionsCompilerBodyOptions) => string);
   /**
    * Whether the function body should automatically prepend a `return ` statement
    * in case of a **traditional** function expression or by using [an _expression body_
@@ -29,6 +51,28 @@ export type FunctionsCompilerData = {
    * in case of an **arrow** function expression
    */
   implicitReturn?: boolean;
+};
+
+export type FunctionsCompilerBodyOptions = { format: FunctionsCompilerFormat };
+
+export type FunctionsCompilerDataGeneric = {
+  /**
+   * The generic _name_ value (`T` in `myFn<T extends string | number>(a?: T) {}`)
+   */
+  name: string;
+  /**
+   * The generic _extends_ clause (`string | number` in `myFn<T extends string | number>(a?: T) {}`)
+   */
+  type?: string;
+  /**
+   * The generic _default_ value (`number` in `myFn<T extends string | number = number>(a?: T) {}`)
+   */
+  defaults?: string;
+  /**
+   * The generic description to show in the optionally generated `@template`
+   * line in {@link FunctionsCompilerComment comment}
+   */
+  description?: string;
 };
 
 export type FunctionsCompilerDataArg = {
@@ -86,10 +130,6 @@ type FunctionsCompilerComment = {
    * List of {@link FunctionsCompilerCommentTag comment `@...` tags}
    */
   tags?: FunctionsCompilerCommentTag[];
-  /**
-   * `someVal` in `@returns someVal` comment directive
-   */
-  returns?: string;
 };
 
 type FunctionsCompilerOutputOptions = {
@@ -150,17 +190,72 @@ export class FunctionsCompiler {
   }
 
   /**
+   * @returns function's arguments to surround with `(` brackets `)`
+   */
+  static #generics(data: FunctionsCompilerData) {
+    const { generics } = data;
+
+    if (generics?.length) {
+      return (
+        "<" +
+        generics
+          .map(
+            ({ name, type, defaults }) =>
+              `${name}${type ? " extends " + type : ""}${defaults ? " = " + defaults : ""}`,
+          )
+          .join(", ") +
+        ">"
+      );
+    }
+
+    return "";
+  }
+
+  /**
    * @param withTypes Optionally output TypeScript type for each argument
    * @returns function's arguments to surround with `(` brackets `)`
    */
-  static #args(args: FunctionsCompilerDataArg[], withTypes: boolean) {
-    return args
-      .map((arg) =>
-        withTypes
-          ? `${arg.name}${arg.optional ? "?" : ""}: ${arg.type}`
-          : arg.name,
-      )
-      .join(", ");
+  static #args(data: FunctionsCompilerData, withTypes: boolean) {
+    const { generics, args = [], returns } = data;
+    let out = "";
+
+    if (withTypes && generics) {
+      out += this.#generics(data);
+    }
+
+    out +=
+      "(" +
+      args
+        .map((arg) =>
+          withTypes
+            ? `${arg.name}${arg.optional ? "?" : ""}: ${arg.type}`
+            : arg.name,
+        )
+        .join(", ") +
+      ")";
+
+    if (returns?.explicit) {
+      out += ": " + returns.name;
+    }
+
+    return out;
+  }
+
+  /**
+   * @see https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#template
+   * @private
+   */
+  static #commentGeneric(generic: FunctionsCompilerDataGeneric) {
+    const { type, name, defaults, description } = generic;
+    let out = `@template {${type}} `;
+
+    out += defaults ? "[" + name + "=" + defaults + "]" : name;
+
+    if (description) {
+      out += " - " + description; // required hyphen
+    }
+
+    return out;
   }
 
   /**
@@ -195,8 +290,8 @@ export class FunctionsCompiler {
    * @returns block comment string based on the given {@link FunctionsCompilerComment data}
    */
   static #comment(data: FunctionsCompilerData) {
-    const { args, comment = {} } = data;
-    const { title, body, internal, tags, returns } = comment;
+    const { generics, args, comment = {}, returns } = data;
+    const { title, body, internal, tags } = comment;
     let lines = [];
 
     if (title) {
@@ -212,10 +307,26 @@ export class FunctionsCompiler {
 
     if (tags) tags.forEach((tag) => lines.push(`@${tag.key} ${tag.val}`));
 
-    args.forEach((arg) => {
-      lines.push(this.#commentParam(arg));
-    });
-    if (returns) lines.push("@returns " + returns);
+    if (generics) {
+      generics.forEach((generic) => {
+        lines.push(this.#commentGeneric(generic));
+      });
+    }
+
+    if (args) {
+      args.forEach((arg) => {
+        lines.push(this.#commentParam(arg));
+      });
+    }
+
+    if (returns) {
+      lines.push(
+        "@returns {" +
+          returns.name +
+          "}" +
+          (returns.description ? " - " + returns.description : ""),
+      );
+    }
 
     return lines.length ? `/**\n * ${lines.join("\n * ")}\n */\n` : "";
   }
@@ -285,7 +396,7 @@ export class FunctionsCompiler {
     data: FunctionsCompilerData,
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
-    const { imports, name, args } = data;
+    const { imports, name } = data;
     const { opts_imports, opts_exports, opts_comments, opts_style } = options;
     let out =
       opts_imports && imports.length
@@ -299,10 +410,10 @@ export class FunctionsCompiler {
     out += opts_exports === "named" || opts_exports === "both" ? "export " : "";
 
     if (opts_style === "arrow") {
-      out += `let ${name} = (${this.#args(args, true)}) => `;
+      out += `let ${name} = ${this.#args(data, true)} => `;
       out += this.#getBody(data, options, "ts") + ";";
     } else if (opts_style === "function") {
-      out += `function ${name}(${this.#args(args, true)}) {`;
+      out += `function ${name}${this.#args(data, true)} {`;
       out += this.#getBody(data, options, "ts") + "}";
     }
 
@@ -321,7 +432,7 @@ export class FunctionsCompiler {
     data: FunctionsCompilerData,
     options: FunctionsCompilerOutputOptionsResolved,
   ) {
-    const { imports, name, args } = data;
+    const { imports, name } = data;
     const { opts_imports, opts_exports, opts_comments, opts_style } = options;
     let out =
       opts_imports && imports.length
@@ -332,10 +443,10 @@ export class FunctionsCompiler {
     out += this.#pure(options);
 
     if (opts_style === "arrow") {
-      out += `let ${name} = (${this.#args(args, false)}) => `;
+      out += `let ${name} = ${this.#args(data, false)} => `;
       out += this.#getBody(data, options, "cjs") + ";";
     } else if (opts_style === "function") {
-      out += `function ${name}(${this.#args(args, false)}) {`;
+      out += `function ${name}${this.#args(data, false)} {`;
       out += this.#getBody(data, options, "cjs") + "}";
     }
 

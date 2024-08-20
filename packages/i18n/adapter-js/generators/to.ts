@@ -2,6 +2,7 @@ import { isString } from "@koine/utils";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   FunctionsCompiler,
+  FunctionsCompilerBodyOptions,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
 import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";
@@ -47,39 +48,45 @@ function getToFunctionBody(
   const formatArgLocale = single ? `""` : "locale";
   const formatArgParams = params ? ", params" : "";
 
-  // let body = ""; // with implicitReturn: true
-  let body = hasValuableLocalisation
-    ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
-    : "";
-  body += "return ";
+  return (functionBodyOpts: FunctionsCompilerBodyOptions) => {
+    // let body = ""; // with implicitReturn: true
+    let body = hasValuableLocalisation
+      ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
+      : "";
+    body += "return ";
 
-  let returns = "";
+    let returns = "";
 
-  if (isString(pathnames)) {
-    returns += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams})`;
-  } else {
-    returns += `formatTo(${formatArgLocale}, ${getToFunctionBodyWithLocales(
-      defaultLocale,
-      pathnames,
-    )}${formatArgParams})`;
-  }
-  return body + returns;
+    if (isString(pathnames)) {
+      returns += `formatTo(${formatArgLocale}, "${pathnames}"${formatArgParams})`;
+    } else {
+      returns += `formatTo(${formatArgLocale}, ${getToFunctionBodyWithLocales(
+        defaultLocale,
+        pathnames,
+        functionBodyOpts,
+      )}${formatArgParams})`;
+    }
+
+    return body + returns;
+  };
 }
 
 function getToFunctionBodyWithLocales(
   defaultLocale: string,
   perLocaleValues: Record<string, string>,
+  { format }: FunctionsCompilerBodyOptions,
 ) {
+  const asConst = format === "ts" ? " as const" : "";
   let output = "";
 
   for (const locale in perLocaleValues) {
     const value = perLocaleValues[locale];
     if (locale !== defaultLocale && value !== perLocaleValues[defaultLocale]) {
-      output += `locale === "${locale}" ? "${value}" : `;
+      output += `locale === "${locale}" ? "${value}"${asConst} : `;
     }
   }
 
-  output += '"' + perLocaleValues[defaultLocale] + '"';
+  output += '"' + perLocaleValues[defaultLocale] + '"' + asConst;
 
   return output;
 }
@@ -119,10 +126,11 @@ function getToFunctions(
               key: "i18nRouteId",
               val: `\`${routeId}\``,
             },
-            {
-              key: "i18nDefaultValue", // + defaultLocale,
-              val: `\`"${route.pathnames[options.defaultLocale]}"\``,
-            },
+            // no need for this anymore as we have `as const` on the return value
+            // {
+            //   key: "i18nDefaultValue",
+            //   val: `\`"${route.pathnames[options.defaultLocale]}"\``,
+            // },
           ],
         },
       }),

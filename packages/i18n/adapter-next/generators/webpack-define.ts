@@ -48,7 +48,7 @@ export default createGenerator("next", (arg) => {
       ext: "d.ts",
       index: false,
       content: () => {
-        const I18n = `import("../types").I18n`;
+        // const I18n = `import("../types").I18n`;
         // const Locale = `${I18n}.Locale`;
         /** a.k.a. `I18n.Locale`, inlined for better visualization on hover in IDE */
         const Locale = getTypeLocale(config);
@@ -60,13 +60,14 @@ declare global {
   ${Object.keys(routesToGlobalize)
     .map((key) => {
       const route = routesToGlobalize[key];
-      const { id, fnName, params } = route;
+      const { fnName, params, pathnames } = route;
       let out = `var ${globalize.prefixSafe}${fnName}: (`;
       params
         ? (out += `params: ${compileDataParamsToType(params)}, `)
         : (out += ``);
 
-      out += `locale?: ${Locale}) => ${I18n}.RoutePathnames["${id}"]`;
+      // out += `locale?: ${Locale}) => ${I18n}.RoutePathnames["${id}"]`;
+      out += `locale?: ${Locale}) => ${JSON.stringify(pathnames[config.defaultLocale])}`;
       return out;
     })
     .join(";\n  ")};
@@ -115,7 +116,7 @@ module.exports = {
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
               formatTo(config).$outInline(),
-              body,
+              body({ format: "cjs" }),
             "})`,",
             `{ fileDependencies: [join(base, ${modularize ? `"${dir}", "${fnName}.ts"` : `"${dir}.ts"`})] }`
           ].join(" ")
@@ -136,7 +137,7 @@ module.exports = {
               params ? tInterpolateParams(options.translations.tokens.dynamicDelimiters).$outInline() : "",
               params ? (typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline()) : "",
               plural ? tPluralise().$outInline() : "",
-              body,
+              body({ format: "cjs" }),
             "})`,",
             `{ fileDependencies: [join(base, ${modularize ? `"${dir}", "${fnName}.ts"` : `"${dir}.ts"`})] }`
           ].join(" ")
@@ -247,7 +248,7 @@ module.exports = {
               .map((key) => {
                 const route = routesToGlobalize[key];
                 const { args, body } = getToFunction(route, config);
-                return `"${key}": (${args.map((a) => a.name).join(", ")}) => { ${body} }`;
+                return `"${key}": (${args.map((a) => a.name).join(", ")}) => { ${body({ format: "cjs" })} }`;
               })
               .join(",\n  ")}
           };
@@ -271,7 +272,7 @@ module.exports = {
                 const translation = translationsToGlobalize[key];
                 const { fullKey } = translation;
                 const { args, body } = getTFunction(translation, config);
-                return `"${fullKey}": (${args.map((a) => a.name).join(", ")}) => { ${body} }`;
+                return `"${fullKey}": (${args.map((a) => a.name).join(", ")}) => { ${body({ format: "cjs" })} }`;
               })
               .join(",\n  ")}
           };
