@@ -355,7 +355,7 @@ export namespace I18nCompiler {
     /**
      * File extension
      */
-    ext: "d.ts" | "ts" | "tsx" | "mjs" | "js" | "json";
+    ext: "d.ts" | "ts" | "tsx" | "cjs" | "mjs" | "js" | "json";
     /**
      * Function that generates the file content
      */

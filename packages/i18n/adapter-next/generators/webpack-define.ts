@@ -93,7 +93,7 @@ declare global {
     webpackDefineGranular: {
       dir: createGenerator.dirs.internal,
       name: "webpack-define-granular",
-      ext: "js",
+      ext: "cjs",
       index: false,
       content: () => {
         return /* j s */ `
@@ -218,7 +218,7 @@ declare global {
       disabled: true,
       dir: createGenerator.dirs.internal,
       name: "webpack-define-compact",
-      ext: "js",
+      ext: "cjs",
       index: false,
       content: () => {
         return /* j s */ `

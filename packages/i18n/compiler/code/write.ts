@@ -253,6 +253,7 @@ const treatFileContent = (
   if (
     eslintDisable &&
     (ext === "js" ||
+      ext === "cjs" ||
       ext === "mjs" ||
       ext === "d.ts" ||
       ext === "ts" ||
