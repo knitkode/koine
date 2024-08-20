@@ -100,12 +100,12 @@ export let tweakNextConfig = (
           ),
           write &&
             new DefinePlugin(
-              // require(join(write.cwd, write.output, "internal/webpack-define-compact")),
+              // require(join(write.cwd, write.output, "internal/webpack-define-compact.cjs")),
               require(
                 join(
                   write.cwd,
                   write.output,
-                  "internal/webpack-define-granular",
+                  "internal/webpack-define-granular.cjs",
                 ),
               ),
             ),
