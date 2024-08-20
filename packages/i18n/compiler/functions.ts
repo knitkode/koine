@@ -234,7 +234,7 @@ export class FunctionsCompiler {
         .join(", ") +
       ")";
 
-    if (returns?.explicit) {
+    if (withTypes && returns?.explicit) {
       out += ": " + returns.name;
     }
 
