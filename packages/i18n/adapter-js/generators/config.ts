@@ -88,13 +88,13 @@ module.exports = config;
           { path: tsconfig.alias + "/" + createGenerator.dirs.server, flat: true },
         ])
         const deep = swcCreateTransforms([
-          { path: "@koine/i18n", flat: true },
+          { path: "@koine/i18n" as const, flat: true },
           { path: tsconfig.alias },
         ]);
         return `
   export const i18nSwcTransforms = {
-    flat: ${JSON.stringify(flat, null, 2)};
-    deep: ${JSON.stringify(deep, null, 2)};
+    flat: ${JSON.stringify(flat, null, 2)},
+    deep: ${JSON.stringify(deep, null, 2)}
   }
 `;
       },
