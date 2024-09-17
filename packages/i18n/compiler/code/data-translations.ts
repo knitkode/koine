@@ -1,4 +1,4 @@
-import { basename, dirname, extname, join, sep } from "node:path";
+import { basename, dirname, extname, join } from "node:path";
 import {
   areEqual,
   isArray,
@@ -280,8 +280,6 @@ function manageDataTranslationsPlurals(
   });
 }
 
-const slashRegex = new RegExp(sep, "g");
-
 function getTranslationFunctionName(
   options: CodeDataTranslationsOptions,
   fullKey: string,
@@ -292,8 +290,8 @@ function getTranslationFunctionName(
     .replace(/~/g, "_")
     // replace dash, dots, semicolon
     .replace(/-|\.|:/g, "_")
-    // replce slashes
-    .replace(slashRegex, "_")
+    // replace slashes
+    .replace(/\/|\\/g, "_")
     // ensure valid js identifier, allow only alphanumeric characters and few symbols
     .replace(/[^a-zA-Z0-9_$]/gi, "");
 
