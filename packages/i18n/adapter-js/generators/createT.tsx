@@ -3,10 +3,17 @@ import { createGenerator } from "../../compiler/createAdapter";
 // TODO: reuse here tInterpolateParamsDeep and tPluralise
 export default createGenerator("js", (arg) => {
   const {
-    options,
     config: { single },
+    options: {
+      translations: {
+        fallbackDefaultStrategy,
+        tokens: {
+          keyDelimiter,
+          namespaceDelimiter
+        }
+      }
+    },
   } = arg;
-  const { keyDelimiter, namespaceDelimiter } = options.translations.tokens;
 
   return {
     createT: {
@@ -15,7 +22,8 @@ export default createGenerator("js", (arg) => {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
-import type { I18n, I18nConfig, I18nUtils } from "./types";${
+import type { I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
+import type { I18n } from "./types";${
         single
           ? ""
           : `
@@ -40,11 +48,12 @@ export function createT<TDictionary extends I18n.TranslationsDictionaryLoose>(
   pluralRules = pluralRules || new Intl.PluralRules(locale);
   return <
     TPath extends I18nUtils.Paths<TDictionary>,
+    TFallback extends I18nUtils.Get<TDictionary, TPath>,
     TReturn = I18nUtils.Get<TDictionary, TPath>,
   >(
     fullpath: TPath,
     query?: I18n.TranslationQuery,
-    fallback?: I18nConfig.TranslationsFallbackStrategy
+    fallback?: TFallback
   ): TReturn => {
     let [namespaceOrPath, maybePath] = fullpath.split("${namespaceDelimiter}");
     // namespace is optional, so in case there is no delimiter we just have the path
@@ -53,14 +62,18 @@ export function createT<TDictionary extends I18n.TranslationsDictionaryLoose>(
     const dic = (namespace && dictionaries[namespace]) || dictionaries || {};
     const pluralisedKey = getPluralisedKey(pluralRules, dic, path, query);
     const value = getDicValue(dic, pluralisedKey);
-    const empty =
+      
+    // check if value is empty
+    if (
       typeof value === "undefined" ||
+      value === null ||
+      value === "" ||
       (typeof value === "object" && !Object.keys(value).length) ||
-      (Array.isArray(value) && !value.length) ||
-      (value === "" && !allowEmptyStrings);
-
-    if (empty) {
-      return (query === "" ? "" : fullpath) as unknown as TReturn;
+      (Array.isArray(value) && !value.length)
+    ) {
+      return typeof fallback !== "undefined"
+        ? fallback
+        : ${fallbackDefaultStrategy === "key" ? `fullpath` : `""`} as TReturn;
     }
 
     return (query ? tInterpolateParamsDeep(value, query) : value) as TReturn;
@@ -92,7 +105,7 @@ function getPluralisedKey(
   pluralRules: Intl.PluralRules,
   dic: I18n.TranslationsDictionaryLoose,
   key: string,
-  query?: I18n.TranslationQuery | null
+  query?: I18n.TranslationQuery
 ): string {
   const count = query instanceof Object ? query["count"] : null;
 

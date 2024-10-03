@@ -105,7 +105,7 @@ describe("test written output", () => {
       },
       code: {
         adapter: {
-          name: "next",
+          name: "js",
           options: {
             modularize: true,
           },
@@ -153,7 +153,7 @@ describe("test written output", () => {
       },
       code: {
         adapter: {
-          name: "next",
+          name: "js",
           options: {
             modularize: false,
           },
@@ -161,6 +161,7 @@ describe("test written output", () => {
         write: {
           cwd: mocksPath("multi-language"),
           output: ".code",
+          ignorePaths: ["createT.ts"],
           tsconfig: {
             alias: "@/i18n",
           },

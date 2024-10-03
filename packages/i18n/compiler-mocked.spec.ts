@@ -1,6 +1,7 @@
 // import { jestCreateExpectedThrownError } from "@koine/node/jest";
 import * as t from "./__mocks__/multi-language/.code/$t";
 import { to } from "./__mocks__/multi-language/.code/to";
+import { getT } from "./__mocks__/multi-language/.code"
 import { createT } from "./__mocks__/multi-language/.code";
 import * as multiTo from "./__mocks__/multi-language/.code/$to";
 import * as singleTo from "./__mocks__/single-language/.code/$to";
@@ -8,7 +9,7 @@ import * as dictionary_accountUserProfile from "./__mocks__/multi-language/.code
 
 // const err = jestCreateExpectedThrownError("@koine/i18n", "to");
 
-describe("generated code: to", () => {
+describe("test 'to' and '$to' generated code", () => {
   test("all routes urls", () => {
     expect(to("about")).toEqual("/about");
     expect(to("about", "it")).toEqual("/it/chi-siamo");
@@ -30,7 +31,7 @@ describe("generated code: to", () => {
   });
 });
 
-describe("generated code: t", () => {
+describe("test '$t' generated code", () => {
   test("basic multilingual translate", () => {
     expect(t.$t_404_seo_title()).toEqual("404 - Not found");
     expect(t.$t_404_seo_title("it")).toEqual("404 - Introvabile");
@@ -44,6 +45,7 @@ describe("generated code: t", () => {
 
   test("interpolation", () => {
     expect(t.$t_account_user_profile_title({ varName: "is" })).toEqual("Title is");
+    expect(t.$t_account_user_profile_obj_objNested_listComplexNested({ nestedVarName1: "a", nestedVarName2: "b" })).toEqual([{ k1: "v1 en a", k2: "v2 b" }])
   });
 
   test("pluralisation", () => {
@@ -66,11 +68,6 @@ describe("generated code: t", () => {
 
     expect(t.$t_account_user_profile_dontConsiderMeAPluralIDontHaveOther_1()).toEqual("One");
     expect(t.$t_account_user_profile_dontConsiderMeAPluralIDontHaveOther_1("it")).toEqual("Uno");
-
-    // TODO: jest seems to encounter a limit in filename length when writing
-    // the files, hence for instance the following t function's file does not get
-    // written to disk... Check whether we can overcome this limitation
-    // t.$t_$account_$user$profile_obj_objNested_listComplexNested({ })
   });
 
   test("translations as data", () => {
@@ -78,7 +75,35 @@ describe("generated code: t", () => {
   });
 });
 
-describe("createT", () => {
+describe("test fallback behaviour with getT function in a multi language scenario", () => {
+
+  test("fallback default strategy should print untranslated key", async () => {
+    const t = await getT("it", "404");
+
+    expect(t("onlyEn")).toBe("404:onlyEn");
+    expect(t("onlyEnArray")).toBe("404:onlyEnArray");
+    expect(t("onlyEnObject")).toBe("404:onlyEnObject");
+    expect(t("onlyEnObject.a")).toBe("404:onlyEnObject.a");
+  });
+
+  test("custom fallback should take precedence", async () => {
+    const t = await getT("it", "404");
+
+    expect(t("onlyEn", {}, "??")).toBe("??");
+    expect(t("onlyEnArray", {}, ["x"])).toEqual(["x"]);
+    expect(t("onlyEnObject", {}, { a:"x", b: "x" })).toEqual({ a: "x", b: "x"});
+  });
+
+  test("no fallback is applied when translation exists", async () => {
+    const t = await getT("en", "404");
+
+    expect(t("onlyEn", {}, "")).toBe("a");
+    expect(t("onlyEnArray", {}, ["x"])).toEqual(["a", "b"]);
+    expect(t("onlyEnObject", {}, { a:"x", b: "x" })).toEqual({ a: "a", b: "b"});
+  });
+});
+
+describe("test createT direct usage", () => {
   const t = createT(dictionary_accountUserProfile, "en");
 
   test("should return t function that interpolates", async () => {
@@ -90,7 +115,7 @@ describe("createT", () => {
     expect(t("pluralAsObjectWithExtraKeys.noPluralRelated")).toBe("Yes")
   })
 
-  test("createT dictionary", async () => {
+  test("with an inlined dictionary", async () => {
     const dictionary = {
       a: "a",
       b: 1,
@@ -107,7 +132,7 @@ describe("createT", () => {
         }
       }
     } as const;
-    const t = createT(dictionary, new Intl.PluralRules())
+    const t = createT(dictionary, "en")
 
     // const value = t("a");
     expect(t("a")).toBe("a");

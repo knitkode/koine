@@ -1,7 +1,10 @@
 {
   "config": {
     "baseUrl": "https://example.com",
-    "locales": ["en", "it"],
+    "locales": [
+      "en",
+      "it"
+    ],
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
@@ -32,12 +35,13 @@
       }
     },
     "translations": {
-      "ignorePaths": ["~.json", "~.json"],
+      "ignorePaths": [
+        "~.json",
+        "~.json"
+      ],
       "createArrayIndexBasedFns": false,
-      "fallback": {
-        "strategy": "key",
-        "useDefaultLocaleWhenEmpty": true
-      },
+      "fallbackDefaultStrategy": "key",
+      "useDefaultLocaleWhenEmpty": true,
       "functions": {
         "dir": "$t",
         "prefix": "$t_",
@@ -53,18 +57,16 @@
       }
     },
     "adapter": {
-      "globalize": {
-        "prefix": "i18n",
-        "functions": true
-      },
       "modularize": false,
-      "router": "app",
-      "name": "next"
+      "name": "js"
     },
     "write": {
       "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/multi-language",
       "output": ".code",
       "emptyOutputFolder": true,
+      "ignorePaths": [
+        "createT.ts"
+      ],
       "tsconfig": {
         "path": "../tsconfig.json",
         "alias": "@/i18n"
@@ -77,7 +79,10 @@
     }
   },
   "input": {
-    "localesFolders": ["en", "it"],
+    "localesFolders": [
+      "en",
+      "it"
+    ],
     "translationFiles": [
       {
         "path": "~.json",
@@ -127,6 +132,30 @@
         }
       },
       {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyEn": "a",
+          "onlyEnArray": [
+            "a",
+            "b"
+          ],
+          "onlyEnObject": {
+            "a": "a",
+            "b": "b"
+          },
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
+          }
+        }
+      },
+      {
         "path": "$faq.json",
         "locale": "en",
         "data": {
@@ -164,7 +193,10 @@
             "2": "Two",
             "3": "Three"
           },
-          "listFlat": ["v1", "v2"],
+          "listFlat": [
+            "v1",
+            "v2"
+          ],
           "listComplex": [
             {
               "k1": "v1",
@@ -174,7 +206,10 @@
           "obj": {
             "objNested": {
               "str": "v",
-              "listFlatNested": ["v1", "v2"],
+              "listFlatNested": [
+                "v1",
+                "v2"
+              ],
               "listComplexNested": [
                 {
                   "k1": "v1 en {{ nestedVarName1 }}",
@@ -185,31 +220,22 @@
                 "objNested21": {
                   "k": "v"
                 },
-                "listFlatNested22": ["v1", "v2"],
+                "listFlatNested22": [
+                  "v1",
+                  "v2"
+                ],
                 "str3": "v"
               },
               "objNested2b": {
                 "str2b1": "v",
                 "str2b2": "v",
-                "listFlatNested2b3": ["v1", "v2"],
+                "listFlatNested2b3": [
+                  "v1",
+                  "v2"
+                ],
                 "str2b4": "v"
               }
             }
-          }
-        }
-      },
-      {
-        "path": "404.json",
-        "locale": "en",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
           }
         }
       },
@@ -219,6 +245,21 @@
         "data": {
           "empty": {},
           "msg": "Some text"
+        }
+      },
+      {
+        "path": "404.json",
+        "locale": "it",
+        "data": {
+          "seo": {
+            "title": "404 - Introvabile"
+          },
+          "title": "404, pagina non trovata",
+          "onlyNumberKeys": {
+            "1": "Una volta",
+            "2": "Due volte",
+            "3": "Tre volte"
+          }
         }
       },
       {
@@ -281,21 +322,6 @@
         }
       },
       {
-        "path": "404.json",
-        "locale": "it",
-        "data": {
-          "seo": {
-            "title": "404 - Introvabile"
-          },
-          "title": "404, pagina non trovata",
-          "onlyNumberKeys": {
-            "1": "Una volta",
-            "2": "Due volte",
-            "3": "Tre volte"
-          }
-        }
-      },
-      {
         "path": "~account/~user~profile.json",
         "locale": "it",
         "data": {
@@ -321,7 +347,10 @@
             "2": "Due",
             "3": "Tre"
           },
-          "listFlat": ["v1", "v2"],
+          "listFlat": [
+            "v1",
+            "v2"
+          ],
           "listComplex": [
             {
               "k1": "v1",
@@ -331,7 +360,10 @@
           "obj": {
             "objNested": {
               "str": "v",
-              "listFlatNested": ["v1", "v2"],
+              "listFlatNested": [
+                "v1",
+                "v2"
+              ],
               "listComplexNested": [
                 {
                   "k1": "v1 ita {{ nestedVarName1 }}",
@@ -342,13 +374,19 @@
                 "objNested21": {
                   "k": "v"
                 },
-                "listFlatNested22": ["v1", "v2"],
+                "listFlatNested22": [
+                  "v1",
+                  "v2"
+                ],
                 "str3": "v"
               },
               "objNested2b": {
                 "str2b1": "v",
                 "str2b2": "v",
-                "listFlatNested2b3": ["v1", "v2"],
+                "listFlatNested2b3": [
+                  "v1",
+                  "v2"
+                ],
                 "str2b4": "v"
               }
             }
@@ -572,7 +610,9 @@
         }
       }
     },
-    "wildcardIds": ["apps.tool"],
+    "wildcardIds": [
+      "apps.tool"
+    ],
     "onlyStaticRoutes": false,
     "dynamicRoutes": [
       "account.user.[id]",
@@ -619,6 +659,72 @@
           }
         ]
       }
+    },
+    "404:onlyEn": {
+      "id": "404:onlyEn",
+      "fnName": "$t_404_onlyEn",
+      "namespace": "404",
+      "path": "onlyEn",
+      "fullKey": "404:onlyEn",
+      "typeValue": "Primitive",
+      "values": {
+        "en": "a"
+      },
+      "equalValues": true
+    },
+    "404:onlyEnArray": {
+      "id": "404:onlyEnArray",
+      "fnName": "$t_404_onlyEnArray",
+      "namespace": "404",
+      "path": "onlyEnArray",
+      "fullKey": "404:onlyEnArray",
+      "typeValue": "Array",
+      "values": {
+        "en": [
+          "a",
+          "b"
+        ]
+      },
+      "equalValues": true
+    },
+    "404:onlyEnObject": {
+      "id": "404:onlyEnObject",
+      "fnName": "$t_404_onlyEnObject",
+      "namespace": "404",
+      "path": "onlyEnObject",
+      "fullKey": "404:onlyEnObject",
+      "typeValue": "Object",
+      "values": {
+        "en": {
+          "a": "a",
+          "b": "b"
+        }
+      },
+      "equalValues": true
+    },
+    "404:onlyEnObject_a": {
+      "id": "404:onlyEnObject_a",
+      "fnName": "$t_404_onlyEnObject_a",
+      "namespace": "404",
+      "path": "onlyEnObject.a",
+      "fullKey": "404:onlyEnObject.a",
+      "typeValue": "Primitive",
+      "values": {
+        "en": "a"
+      },
+      "equalValues": true
+    },
+    "404:onlyEnObject_b": {
+      "id": "404:onlyEnObject_b",
+      "fnName": "$t_404_onlyEnObject_b",
+      "namespace": "404",
+      "path": "onlyEnObject.b",
+      "fullKey": "404:onlyEnObject.b",
+      "typeValue": "Primitive",
+      "values": {
+        "en": "b"
+      },
+      "equalValues": true
     },
     "404:onlyNumberKeys": {
       "id": "404:onlyNumberKeys",
@@ -841,8 +947,14 @@
       "fullKey": "~account/~user~profile:listFlat",
       "typeValue": "Array",
       "values": {
-        "en": ["v1", "v2"],
-        "it": ["v1", "v2"]
+        "en": [
+          "v1",
+          "v2"
+        ],
+        "it": [
+          "v1",
+          "v2"
+        ]
       },
       "equalValues": true
     },
@@ -857,7 +969,10 @@
         "en": {
           "objNested": {
             "str": "v",
-            "listFlatNested": ["v1", "v2"],
+            "listFlatNested": [
+              "v1",
+              "v2"
+            ],
             "listComplexNested": [
               {
                 "k1": "v1 en {{ nestedVarName1 }}",
@@ -868,13 +983,19 @@
               "objNested21": {
                 "k": "v"
               },
-              "listFlatNested22": ["v1", "v2"],
+              "listFlatNested22": [
+                "v1",
+                "v2"
+              ],
               "str3": "v"
             },
             "objNested2b": {
               "str2b1": "v",
               "str2b2": "v",
-              "listFlatNested2b3": ["v1", "v2"],
+              "listFlatNested2b3": [
+                "v1",
+                "v2"
+              ],
               "str2b4": "v"
             }
           }
@@ -882,7 +1003,10 @@
         "it": {
           "objNested": {
             "str": "v",
-            "listFlatNested": ["v1", "v2"],
+            "listFlatNested": [
+              "v1",
+              "v2"
+            ],
             "listComplexNested": [
               {
                 "k1": "v1 ita {{ nestedVarName1 }}",
@@ -893,13 +1017,19 @@
               "objNested21": {
                 "k": "v"
               },
-              "listFlatNested22": ["v1", "v2"],
+              "listFlatNested22": [
+                "v1",
+                "v2"
+              ],
               "str3": "v"
             },
             "objNested2b": {
               "str2b1": "v",
               "str2b2": "v",
-              "listFlatNested2b3": ["v1", "v2"],
+              "listFlatNested2b3": [
+                "v1",
+                "v2"
+              ],
               "str2b4": "v"
             }
           }
@@ -920,7 +1050,10 @@
       "values": {
         "en": {
           "str": "v",
-          "listFlatNested": ["v1", "v2"],
+          "listFlatNested": [
+            "v1",
+            "v2"
+          ],
           "listComplexNested": [
             {
               "k1": "v1 en {{ nestedVarName1 }}",
@@ -931,19 +1064,28 @@
             "objNested21": {
               "k": "v"
             },
-            "listFlatNested22": ["v1", "v2"],
+            "listFlatNested22": [
+              "v1",
+              "v2"
+            ],
             "str3": "v"
           },
           "objNested2b": {
             "str2b1": "v",
             "str2b2": "v",
-            "listFlatNested2b3": ["v1", "v2"],
+            "listFlatNested2b3": [
+              "v1",
+              "v2"
+            ],
             "str2b4": "v"
           }
         },
         "it": {
           "str": "v",
-          "listFlatNested": ["v1", "v2"],
+          "listFlatNested": [
+            "v1",
+            "v2"
+          ],
           "listComplexNested": [
             {
               "k1": "v1 ita {{ nestedVarName1 }}",
@@ -954,13 +1096,19 @@
             "objNested21": {
               "k": "v"
             },
-            "listFlatNested22": ["v1", "v2"],
+            "listFlatNested22": [
+              "v1",
+              "v2"
+            ],
             "str3": "v"
           },
           "objNested2b": {
             "str2b1": "v",
             "str2b2": "v",
-            "listFlatNested2b3": ["v1", "v2"],
+            "listFlatNested2b3": [
+              "v1",
+              "v2"
+            ],
             "str2b4": "v"
           }
         }
@@ -1004,8 +1152,14 @@
       "fullKey": "~account/~user~profile:obj.objNested.listFlatNested",
       "typeValue": "Array",
       "values": {
-        "en": ["v1", "v2"],
-        "it": ["v1", "v2"]
+        "en": [
+          "v1",
+          "v2"
+        ],
+        "it": [
+          "v1",
+          "v2"
+        ]
       },
       "equalValues": true
     },
@@ -1021,14 +1175,20 @@
           "objNested21": {
             "k": "v"
           },
-          "listFlatNested22": ["v1", "v2"],
+          "listFlatNested22": [
+            "v1",
+            "v2"
+          ],
           "str3": "v"
         },
         "it": {
           "objNested21": {
             "k": "v"
           },
-          "listFlatNested22": ["v1", "v2"],
+          "listFlatNested22": [
+            "v1",
+            "v2"
+          ],
           "str3": "v"
         }
       },
@@ -1042,8 +1202,14 @@
       "fullKey": "~account/~user~profile:obj.objNested.objNested2.listFlatNested22",
       "typeValue": "Array",
       "values": {
-        "en": ["v1", "v2"],
-        "it": ["v1", "v2"]
+        "en": [
+          "v1",
+          "v2"
+        ],
+        "it": [
+          "v1",
+          "v2"
+        ]
       },
       "equalValues": true
     },
@@ -1101,13 +1267,19 @@
         "en": {
           "str2b1": "v",
           "str2b2": "v",
-          "listFlatNested2b3": ["v1", "v2"],
+          "listFlatNested2b3": [
+            "v1",
+            "v2"
+          ],
           "str2b4": "v"
         },
         "it": {
           "str2b1": "v",
           "str2b2": "v",
-          "listFlatNested2b3": ["v1", "v2"],
+          "listFlatNested2b3": [
+            "v1",
+            "v2"
+          ],
           "str2b4": "v"
         }
       },
@@ -1121,8 +1293,14 @@
       "fullKey": "~account/~user~profile:obj.objNested.objNested2b.listFlatNested2b3",
       "typeValue": "Array",
       "values": {
-        "en": ["v1", "v2"],
-        "it": ["v1", "v2"]
+        "en": [
+          "v1",
+          "v2"
+        ],
+        "it": [
+          "v1",
+          "v2"
+        ]
       },
       "equalValues": true
     },

@@ -65,7 +65,12 @@ export function createAdapter<
     };
   }
 
-  adapter.getGenerators = config.getGenerators;
+  // TODO: this assertion is not type safe, is just a workaround that allows us
+  // to easily re-use other adapters' generators withing a getGenerators function
+  // but the data argument passed to this function is problematic
+  adapter.getGenerators = config.getGenerators as <TAdapterName extends I18nCompiler.AdapterName>(
+    data: I18nCompiler.DataCode<TAdapterName>,
+  ) => I18nCompiler.AdapterGenerator<I18nCompiler.AdapterName>[];
   adapter.defaultOptions = config.defaultOptions;
 
   return adapter;

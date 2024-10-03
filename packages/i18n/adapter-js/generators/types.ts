@@ -314,12 +314,8 @@ declare namespace I18n {
       index: true,
       content: () => /* j s */ `
 import type { Split, JsonObject } from "@koine/utils";
-import type { I18nConfig, I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
+import type { I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
 import type { RouteIdError } from "./internal/routesError";
-
-export import I18nConfig = I18nConfig;
-
-export import I18nUtils = I18nUtils;
 
 export namespace I18n {
   /**
@@ -505,10 +501,12 @@ export namespace I18n {
    */
   export type TranslateDefault = <
     TPath extends TranslationsAllPaths,
+    TFallback extends TranslationAtPath<TPath>,
     TReturn = TranslationAtPath<TPath>,
   >(
     path: TPath,
     query?: TranslationQuery,
+    fallback?: TFallback
   ) => TReturn;
 
   /**
@@ -517,10 +515,12 @@ export namespace I18n {
    */
   export type TranslateNamespaced<TNamespace extends TranslateNamespace> = <
     TPath extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
+    TFallback extends TranslationAtPathFromNamespace<TNamespace, TPath>,
     TReturn = TranslationAtPathFromNamespace<TNamespace, TPath>,
   >(
     path: TPath,
     query?: TranslationQuery,
+    fallback?: TFallback
   ) => TReturn;
 
   /**
@@ -528,9 +528,10 @@ export namespace I18n {
    * the \`t\` function indirectly without needng knowledge of the string it needs
    * to output.
    */
-  export type TranslateLoose<TReturn = string> = (
+  export type TranslateLoose<TFallback = string, TReturn = string> = (
     path?: any,
     query?: TranslationQuery,
+    fallback?: TFallback
   ) => TReturn;
 
   /**
@@ -540,6 +541,7 @@ export namespace I18n {
   export type TranslateLoosest<TReturn = any> = (
     path?: any,
     query?: TranslationQuery,
+    fallback?: any
   ) => TReturn;
 
   /**

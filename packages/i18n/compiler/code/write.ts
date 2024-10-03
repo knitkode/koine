@@ -8,6 +8,7 @@ import { rm } from "node:fs/promises";
 import { EOL } from "node:os";
 import { dirname, join, relative, sep } from "node:path";
 import { parse, stringify } from "comment-json";
+import { glob, globSync } from "glob";
 import * as ts from "typescript";
 import type { RequiredDeep, SetRequired } from "@koine/utils";
 import type { TsConfigJson } from "@koine/utils";
@@ -31,16 +32,25 @@ export type CodeWriteOptions = {
    */
   cwd?: string;
   /**
-   * Relative to the given `cwd`.
-   *
-   * Use a _dot_ named folder in order to be automatically ignored when your
-   * i18n input source files live in the same folder as the generated code
+   * Path relative to the given `cwd` where to output all generated code
    */
   output: string;
   /**
+   * Whether to empty the output folder before writing to it. Paths specified
+   * in `ignorePaths` option will not be deleted.
+   *
    * @default true
    */
   emptyOutputFolder?: boolean;
+  /**
+   * A list of glob patterns to ignore (uses [`minimatch`](https://www.npmjs.com/package/minimatch))
+   * relative to the `output` folder path.
+   * 
+   * The same patterns are automatically _negated_ and added to the `.gitignore`
+   * file in order to prevent them being ignored in source control version
+   * (unless `gitignore` options is set to `false`).
+   */
+  ignorePaths?: string[];
   /**
    * Determines how .gitignore files are managed
    *
@@ -129,7 +139,7 @@ export let writeCode = async <TAdapterName extends I18nCompiler.AdapterName>(
   const writeConfig = getWriteCodeConfig(config, options);
   const code = await generateCode(data);
 
-  await emptyOutputFolder(writeConfig);
+  await manageOutputFolder(writeConfig);
   await writeCodeFiles(writeConfig, code);
   writeTsconfigFile(writeConfig);
   writeCompiledTypescriptFiles(writeConfig, code);
@@ -147,7 +157,7 @@ export let writeCodeSync = <TAdapterName extends I18nCompiler.AdapterName>(
   const writeConfig = getWriteCodeConfig(config, options);
   const code = generateCodeSync(data);
 
-  emptyOutputFolderSync(writeConfig);
+  manageOutputFolderSync(writeConfig);
   writeCodeFilesSync(writeConfig, code);
   writeTsconfigFile(writeConfig);
   writeCompiledTypescriptFiles(writeConfig, code);
@@ -162,6 +172,7 @@ export function resolveWriteCodeOptions(options: CodeWriteOptions) {
     cwd = process.cwd(),
     output,
     emptyOutputFolder = true,
+    ignorePaths = [],
     tsconfig = {},
     typescriptCompilation = false,
     tsNoCheck = process.env["JEST_WORKER_ID"] ? false : true,
@@ -173,6 +184,7 @@ export function resolveWriteCodeOptions(options: CodeWriteOptions) {
     cwd,
     output,
     emptyOutputFolder,
+    ignorePaths,
     tsconfig: {
       path: "../tsconfig.json",
       // by default we grab the leaf folder name of output path' folders tree
@@ -199,17 +211,44 @@ export function getWriteCodeConfig(
   return { debug: config.debug, ...options, files, folders };
 }
 
-async function emptyOutputFolder(config: CodeWriteConfig) {
-  const { cwd, output, emptyOutputFolder } = config;
+async function manageOutputFolder(config: CodeWriteConfig) {
+  const { cwd, output, emptyOutputFolder, ignorePaths } = config;
   if (!emptyOutputFolder) return;
-  await rm(join(cwd, output), { force: true, recursive: true });
+
+  if (ignorePaths.length) {
+    const absolutePaths = await glob("**/*", {
+      cwd: join(cwd, output),
+      ignore: ignorePaths,
+      absolute: true,
+    });
+
+    await Promise.all(
+      absolutePaths.map(async (absolutePath) => {
+        await rm(absolutePath, { force: true, recursive: true });
+      }),
+    );
+  } else {
+    await rm(join(cwd, output), { force: true, recursive: true });
+  }
 }
 
-function emptyOutputFolderSync(config: CodeWriteConfig) {
-  const { cwd, output, emptyOutputFolder } = config;
+function manageOutputFolderSync(config: CodeWriteConfig) {
+  const { cwd, output, emptyOutputFolder, ignorePaths } = config;
   if (!emptyOutputFolder) return;
 
-  rmSync(join(cwd, output), { force: true, recursive: true });
+  if (ignorePaths.length) {
+    const absolutePaths = globSync("**/*", {
+      cwd: join(cwd, output),
+      ignore: ignorePaths,
+      absolute: true,
+    });
+
+    absolutePaths.forEach((absolutePath) => {
+      rmSync(absolutePath, { force: true, recursive: true });
+    });
+  } else {
+    rmSync(join(cwd, output), { force: true, recursive: true });
+  }
 }
 
 function addFileToGitignoreLists(
@@ -522,20 +561,30 @@ function writeTranslationsFilesSync(
 }
 
 function writeGitignore(config: CodeWriteConfig) {
-  const { cwd, output, gitignore } = config;
+  const { cwd, output, gitignore, ignorePaths } = config;
 
   if (!gitignore) return;
 
-  let content = "";
+  let content: string[] = [];
 
   if (gitignore === "granular") {
     content = Array.from(new Set([...config.folders, ...config.files]))
       .sort()
-      .map((relativePath) => `/${relativePath}`)
-      .join(`\n`);
+      .map((relativePath) => `/${relativePath}`);
   } else if (gitignore === "all") {
-    content = ["**/*", "!.gitignore"].join("\n");
+    content = ["**/*", "!.gitignore"];
   }
 
-  fsWriteSync(join(cwd, output, ".gitignore"), content);
+  if (ignorePaths.length) {
+    content = [
+      ...content,
+      "",
+      "# i18n.code.write.ignorePaths:",
+      ...ignorePaths.map((p) => `!${p}`),
+    ];
+  }
+
+  if (content.length) {
+    fsWriteSync(join(cwd, output, ".gitignore"), content.join("\n"));
+  }
 }

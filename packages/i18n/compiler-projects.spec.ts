@@ -52,8 +52,11 @@ describe("test your.io", () => {
           options: {},
         },
         write: {
-          emptyOutputFolder: false,
-          gitignore: false,
+          ignorePaths: [
+            "build.ts",
+            "project.json",
+            "tsconfig.json",
+          ],
           output: "../../Your/YOURContent/YOUR.Frontend/libs/i18n",
           tsconfig: {
             alias: "@/i18n",

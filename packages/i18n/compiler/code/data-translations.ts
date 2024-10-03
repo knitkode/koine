@@ -41,25 +41,20 @@ export const codeDataTranslationsOptions = {
    */
   createArrayIndexBasedFns: false as boolean,
   /**
-   * Fallback options, manages missing translations behaviour
+   * Default fallback strategy, this can be overridden at the single translation
+   * usage level, possible values are:
+   *
+   * - `"key"`: it prints the untranslated translation key, e.g. `"header.cta"
+   * - `""`: it prints an empty string, useful when using translations dynamically
+   * based on variable data
+   *
+   * @default "key"
    */
-  fallback: {
-    /**
-     * Default fallback strategy, this can be overridden at the single translation
-     * usage level, possible values are:
-     *
-     * - `"key"`: it prints the untranslated translation key, e.g. `"header.cta"
-     * - `""`: it prints an empty string, useful when using translations dynamically
-     * based on variable data
-     *
-     * @default "key"
-     */
-    strategy: "key" as "key" | "",
-    /**
-     * @default true
-     */
-    useDefaultLocaleWhenEmpty: true as boolean,
-  },
+  fallbackDefaultStrategy: "key" as "key" | "empty",
+  /**
+   * @default true
+   */
+  useDefaultLocaleWhenEmpty: true as boolean,
   // TODO: add pluralisation config
   /**
    * Functions generation options

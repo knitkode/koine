@@ -3,6 +3,9 @@
     "title": "404 - Not found"
   },
   "title": "404, page not found",
+  "onlyEn": "a",
+  "onlyEnArray": ["a", "b"],
+  "onlyEnObject": { "a": "a", "b": "b"},
   "onlyNumberKeys": {
     "1": "Once",
     "2": "Twice",
