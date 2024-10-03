@@ -12,7 +12,7 @@ import { glob, globSync } from "glob";
 import * as ts from "typescript";
 import type { RequiredDeep, SetRequired } from "@koine/utils";
 import type { TsConfigJson } from "@koine/utils";
-import { fsWrite, fsWriteSync } from "@koine/node";
+import { fsMoveAndRestoreTemporaryPaths, fsMoveAndRestoreTemporaryPathsSync, fsWrite, fsWriteSync } from "@koine/node";
 import { getTranslationsDir } from "../helpers";
 import { i18nLogger } from "../logger";
 import type { I18nCompiler } from "../types";
@@ -211,24 +211,26 @@ export function getWriteCodeConfig(
   return { debug: config.debug, ...options, files, folders };
 }
 
+
 async function manageOutputFolder(config: CodeWriteConfig) {
   const { cwd, output, emptyOutputFolder, ignorePaths } = config;
   if (!emptyOutputFolder) return;
 
+  const outputAbsolutePath = join(cwd, output);
+
   if (ignorePaths.length) {
-    const absolutePaths = await glob("**/*", {
-      cwd: join(cwd, output),
-      ignore: ignorePaths,
-      absolute: true,
+    const ignorePathsMatched = await glob(ignorePaths, {
+      cwd: outputAbsolutePath,
     });
 
-    await Promise.all(
-      absolutePaths.map(async (absolutePath) => {
-        await rm(absolutePath, { force: true, recursive: true });
-      }),
-    );
+    await fsMoveAndRestoreTemporaryPaths({
+      paths: ignorePathsMatched,
+      destination: outputAbsolutePath,
+      callback: () => rm(outputAbsolutePath, { force: true, recursive: true })
+    });
+
   } else {
-    await rm(join(cwd, output), { force: true, recursive: true });
+    await rm(outputAbsolutePath, { force: true, recursive: true });
   }
 }
 
@@ -236,18 +238,21 @@ function manageOutputFolderSync(config: CodeWriteConfig) {
   const { cwd, output, emptyOutputFolder, ignorePaths } = config;
   if (!emptyOutputFolder) return;
 
+  const outputAbsolutePath = join(cwd, output);
+
   if (ignorePaths.length) {
-    const absolutePaths = globSync("**/*", {
+    const ignorePathsMatched = globSync(ignorePaths, {
       cwd: join(cwd, output),
-      ignore: ignorePaths,
-      absolute: true,
+    });
+    
+    fsMoveAndRestoreTemporaryPathsSync({
+      paths: ignorePathsMatched,
+      destination: outputAbsolutePath,
+      callback: () => rmSync(outputAbsolutePath, { force: true, recursive: true })
     });
 
-    absolutePaths.forEach((absolutePath) => {
-      rmSync(absolutePath, { force: true, recursive: true });
-    });
   } else {
-    rmSync(join(cwd, output), { force: true, recursive: true });
+    rmSync(outputAbsolutePath, { force: true, recursive: true });
   }
 }
 

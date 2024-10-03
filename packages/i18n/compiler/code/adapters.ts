@@ -64,22 +64,31 @@ export const getAdapterSync = <T extends I18nCompiler.AdapterName>(
 export const resolveAdapterOptions = <
   TAdapterName extends I18nCompiler.AdapterName,
 >(
-  codeDataOptions: CodeDataOptions,
+  customCodeDataOptions: CodeDataOptions,
 ): CodeDataOptionsResolved<TAdapterName> => {
-  const { adapter } = codeDataOptions;
-  const { name, options } = adapter;
-  const { defaultOptions } = getAdapterCreator(name);
+  const {
+    adapter: customCodeDataOptionsAdapter,
+    ...restCustomCodeDataOptions
+  } = customCodeDataOptions;
+  const codeDataOptions = objectMergeWithDefaults(
+    defaultCodeDataOptions,
+    restCustomCodeDataOptions
+  );
+  const { defaultOptions } = getAdapterCreator(
+    customCodeDataOptionsAdapter.name
+  );
 
-  return objectMergeWithDefaults(defaultCodeDataOptions, {
-    ...codeDataOptions,
+  const options = objectMergeWithDefaults(codeDataOptions, {
     adapter: {
       ...(objectMergeWithDefaults(
         defaultOptions,
-        options,
+        customCodeDataOptionsAdapter.options,
       ) as I18nCompiler.AdapterConfigurationResolved<TAdapterName>),
-      name,
+      name: customCodeDataOptionsAdapter.name,
     },
   });
+
+  return options;
 };
 
 export const getAdapterFileMeta = (

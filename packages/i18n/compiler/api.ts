@@ -81,7 +81,7 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
    * from the terminal, we need to use `process.kill(process.pid);`
    */
   const start = performance.now();
-  i18nLogger.start("Compiling code from sources...");
+  // i18nLogger.start("Compiling code from sources...");
   const {
     input: optsInput,
     code: optsCode,
@@ -136,7 +136,7 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let i18nCompilerSync = (options: I18nCompilerOptions) => {
   const start = performance.now();
-  i18nLogger.start("Compiling code from sources...");
+  // i18nLogger.start("Compiling code from sources...");
   const {
     input: optsInput,
     code: optsCode,
