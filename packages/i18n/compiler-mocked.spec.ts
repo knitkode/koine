@@ -1,10 +1,10 @@
 // import { jestCreateExpectedThrownError } from "@koine/node/jest";
 import * as t from "./__mocks__/multi-language/.code/$t";
 import { to } from "./__mocks__/multi-language/.code/to";
-import { createT } from "./__mocks__/multi-language/.code/internal/createT";
+import { createT } from "./__mocks__/multi-language/.code";
 import * as multiTo from "./__mocks__/multi-language/.code/$to";
 import * as singleTo from "./__mocks__/single-language/.code/$to";
-import * as dictionaries_accountUserProfile from "./__mocks__/multi-language/.code/translations/en/~account/~user~profile.json";
+import * as dictionary_accountUserProfile from "./__mocks__/multi-language/.code/translations/en/~account/~user~profile.json";
 
 // const err = jestCreateExpectedThrownError("@koine/i18n", "to");
 
@@ -79,18 +79,51 @@ describe("generated code: t", () => {
 });
 
 describe("createT", () => {
-  const ns = "~account/~user~profile" as const;
-  const dictionaries = { [ns]: dictionaries_accountUserProfile };
-  const t = createT(dictionaries as any, new Intl.PluralRules());
+  const t = createT(dictionary_accountUserProfile, new Intl.PluralRules());
 
   test("should return t function that interpolates", async () => {
-
     expect(typeof t).toBe("function");
-    expect(t(`${ns}:title`, { varName: "here" })).toBe("Title here");
-    // expect(t("", null, { returnObjects: true })).toEqual(nsRootKeys)
+    expect(t("title", { varName: "here" })).toBe("Title here");
   })
   
   test("should be able to use a non-plural related value in a plural defined object", async () => {
-    expect(t(`~account/~user~profile:pluralAsObjectWithExtraKeys.noPluralRelated`)).toBe("Yes")
+    expect(t("pluralAsObjectWithExtraKeys.noPluralRelated")).toBe("Yes")
+  })
+
+  test("createT dictionary", async () => {
+    const dictionary = {
+      a: "a",
+      b: 1,
+      c: {
+        a: "ca",
+        b: "cb"
+      },
+      d: {
+        a: "hi {{ name }}",
+        b: ["db1", "db2 {{ name }}"],
+        c: {
+          a: "dca",
+          b: "dcb {{ name }}"
+        }
+      }
+    } as const;
+    const t = createT(dictionary, new Intl.PluralRules())
+
+    // const value = t("a");
+    expect(t("a")).toBe("a");
+    expect(t("b")).toBe(1);
+    expect(t("c")).toBe(dictionary.c);
+    expect(t("c.b")).toBe("cb");
+    expect(t("c.a")).toBe("ca");
+    expect(t("d.a", { name: "mate" })).toBe("hi mate");
+    expect(t("d", { name: "mate" })).toEqual({
+      a: "hi mate",
+      b: ["db1", "db2 mate"],
+      c: {
+        a: "dca",
+        b: "dcb mate"
+      }
+    });
+
   })
 })

@@ -82,7 +82,6 @@ export type TransProps = {
   i18nKey: I18n.TranslationsAllPaths;
   components?: React.ReactElement[] | Record<string, React.ReactElement>;
   values?: I18n.TranslationQuery;
-  returnObjects?: boolean;
 };
 
 /**
@@ -94,14 +93,11 @@ export const Trans = ({
   i18nKey,
   values,
   components,
-  returnObjects,
 }: TransProps) => {
   const [namespace, path] = (i18nKey as string).split(":");
   const t = useT(namespace as I18n.TranslateNamespace) as I18n.TranslateLoose;
   const result = useMemo(() => {
-    const text = t(path, values, {
-      returnObjects,
-    });
+    const text = t(path, values);
 
     if (!text) return text;
 
@@ -112,7 +108,7 @@ export const Trans = ({
       return text.map((item) => formatElements(item, components));
 
     return formatElements(text, components);
-  }, [t, path, values, components, returnObjects]) as string;
+  }, [t, path, values, components]) as string;
 
   return result;
 };

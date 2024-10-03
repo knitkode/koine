@@ -32,15 +32,12 @@
       }
     },
     "translations": {
-      "ignorePaths": [
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json"
-      ],
+      "ignorePaths": ["~.json", "~.json"],
       "createArrayIndexBasedFns": false,
+      "fallback": {
+        "strategy": "key",
+        "useDefaultLocaleWhenEmpty": true
+      },
       "functions": {
         "dir": "$t",
         "prefix": "$t_",
@@ -48,6 +45,7 @@
       },
       "tokens": {
         "namespaceDelimiter": ":",
+        "keyDelimiter": ".",
         "dynamicDelimiters": {
           "start": "{{",
           "end": "}}"
@@ -129,21 +127,6 @@
         }
       },
       {
-        "path": "404.json",
-        "locale": "en",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
-          }
-        }
-      },
-      {
         "path": "$faq.json",
         "locale": "en",
         "data": {
@@ -216,6 +199,21 @@
         }
       },
       {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
+          }
+        }
+      },
+      {
         "path": "~account/FormUserLanguages.json",
         "locale": "en",
         "data": {
@@ -271,6 +269,18 @@
         }
       },
       {
+        "path": "$faq.json",
+        "locale": "it",
+        "data": {
+          "home": [
+            {
+              "question": "Cos'è?",
+              "answer": "Quello"
+            }
+          ]
+        }
+      },
+      {
         "path": "404.json",
         "locale": "it",
         "data": {
@@ -283,18 +293,6 @@
             "2": "Due volte",
             "3": "Tre volte"
           }
-        }
-      },
-      {
-        "path": "$faq.json",
-        "locale": "it",
-        "data": {
-          "home": [
-            {
-              "question": "Cos'è?",
-              "answer": "Quello"
-            }
-          ]
         }
       },
       {

@@ -245,6 +245,9 @@ export default createGenerator("js", (arg) => {
         localeParamName,
         tokens: { idDelimiter },
       },
+      translations: {
+        tokens: { keyDelimiter, namespaceDelimiter },
+      },
     },
   } = arg;
 
@@ -295,7 +298,6 @@ declare namespace I18n {
   type TranslationAtPath = import("../types").I18n.TranslationAtPath;
   type TranslationAtPathFromNamespace = import("../types").I18n.TranslationAtPathFromNamespace;
   type TranslationAtPathGeneric = import("../types").I18n.TranslationAtPathGeneric;
-  type TranslationOptions = import("../types").I18n.TranslationOptions;
   type TranslationQuery = import("../types").I18n.TranslationQuery;
   type TranslationsAllPaths = import("../types").I18n.TranslationsAllPaths;
   type TranslationsDictionary = import("../types").I18n.TranslationsDictionary;
@@ -311,9 +313,13 @@ declare namespace I18n {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
-import type { Split } from "@koine/utils";
-import type { I18nUtils } from "@koine/i18n";
+import type { Split, JsonObject } from "@koine/utils";
+import type { I18nConfig, I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
 import type { RouteIdError } from "./internal/routesError";
+
+export import I18nConfig = I18nConfig;
+
+export import I18nUtils = I18nUtils;
 
 export namespace I18n {
   /**
@@ -377,9 +383,7 @@ export namespace I18n {
   /**
    * @internal
    */
-  export type TranslationsDictionaryLoose = {
-    [key: string]: string | TranslationsDictionaryLoose;
-  };
+  export type TranslationsDictionaryLoose = JsonObject;
 
   /**
    * The types extracted from the translations JSON files, this is a little
@@ -427,7 +431,7 @@ export namespace I18n {
   export type TranslationAtPath<TPath extends TranslationAtPathGeneric> =
     TPath extends TranslateNamespace
       ? TranslationsDictionary[TPath]
-      : TPath extends \`\${infer Namespace}:\${infer Path}\`
+      : TPath extends \`\${infer Namespace}${namespaceDelimiter}\${infer Path}\`
         ? Namespace extends TranslateNamespace
           ? I18nUtils.Get<TranslationsDictionary[Namespace], Path>
           : never
@@ -444,7 +448,7 @@ export namespace I18n {
   export type TranslationsPathsFrom<TPath extends TranslationAtPathGeneric> =
     TPath extends TranslateNamespace
       ? TranslationsPaths<TranslationsDictionary[TPath]>
-      : TPath extends \`\${infer Namespace}:\${infer Path}\`
+      : TPath extends \`\${infer Namespace}${namespaceDelimiter}\${infer Path}\`
         ? Namespace extends TranslateNamespace
           ? I18nUtils.Get<TranslationsDictionary[Namespace], Path> extends object
             ? TranslationsPaths<I18nUtils.Get<TranslationsDictionary[Namespace], Path>>
@@ -454,12 +458,12 @@ export namespace I18n {
 
   /**
    * All translations _paths_ of the given one, e.g. if \`TPath\` would be
-   * \`"dashboard.users.[id].edit"\` the generated type would be the union
-   * \`"dashboard.users.[id]" | "dashboard.users" | "dashboard"\`.
+   * \`"area.main.[id].edit"\` the generated type would be the union
+   * \`"area.main.[id]" | "area.main" | "area"\`.
    */
   export type TranslationsPathsAncestors<
     TPath extends string,
-    TSeparator extends string = ".",
+    TSeparator extends string = "${keyDelimiter}",
   > = I18nUtils.BuildRecursiveJoin<Split<TPath, TSeparator>, TSeparator>;
 
   /**
@@ -475,46 +479,15 @@ export namespace I18n {
   export type TranslationsAllPaths = I18nUtils.AllPaths<TranslationsDictionary>;
 
   /**
-   * Unlike in \`next-translate\` we allow passing some predefined arguments as
-   * shortcuts for common use cases:
-   * - \`"obj"\` as a shortcut for \`{ returnObjects: true }\`
-   * - \`""\` as a shortcut for \`{ fallback: "" }\`
-   *
-   */
-  type TranslationShortcut = "obj" | "";
-
-  /**
-   * Query object to populate the returned translated string interpolating data
-   * or a TranslationShortcut.
-   *
-   * NOTE: when using a shortcut passing TranslationOptions to \`t()\` is not supported
-   * TODO: type safe this behaviour of the third argument (options).
+   * Query object to populate the returned value interpolating dynamic data.
    * 
    * @internal
    */
   export type TranslationQuery =
     | undefined
     | null
-    | TranslationShortcut
     | {
         [key: string]: string | number | boolean;
-      };
-
-  /**
-   * Options of the translate function or a TranslationShortcut.
-   *
-   * NOTE: when using a shortcut passing TranslationOptions to \`t()\` is not supported
-   * TODO: type safe this behaviour of the third argument (options).
-   * 
-   * @internal
-   */
-  export type TranslationOptions =
-    | undefined
-    | TranslationShortcut
-    | {
-        returnObjects?: boolean;
-        fallback?: string | string[];
-        default?: string;
       };
 
   /**
@@ -536,7 +509,6 @@ export namespace I18n {
   >(
     path: TPath,
     query?: TranslationQuery,
-    options?: TranslationOptions,
   ) => TReturn;
 
   /**
@@ -549,7 +521,6 @@ export namespace I18n {
   >(
     path: TPath,
     query?: TranslationQuery,
-    options?: TranslationOptions,
   ) => TReturn;
 
   /**
@@ -560,7 +531,6 @@ export namespace I18n {
   export type TranslateLoose<TReturn = string> = (
     path?: any,
     query?: TranslationQuery,
-    options?: TranslationOptions,
   ) => TReturn;
 
   /**
@@ -570,7 +540,6 @@ export namespace I18n {
   export type TranslateLoosest<TReturn = any> = (
     path?: any,
     query?: TranslationQuery,
-    options?: TranslationOptions,
   ) => TReturn;
 
   /**

@@ -32,8 +32,12 @@
       }
     },
     "translations": {
-      "ignorePaths": ["~.json", "~.json", "~.json", "~.json", "~.json"],
+      "ignorePaths": ["~.json"],
       "createArrayIndexBasedFns": false,
+      "fallback": {
+        "strategy": "key",
+        "useDefaultLocaleWhenEmpty": true
+      },
       "functions": {
         "dir": "$t",
         "prefix": "$t_",
@@ -41,6 +45,7 @@
       },
       "tokens": {
         "namespaceDelimiter": ":",
+        "keyDelimiter": ".",
         "dynamicDelimiters": {
           "start": "{{",
           "end": "}}"
@@ -48,12 +53,12 @@
       }
     },
     "adapter": {
+      "modularize": true,
+      "router": "app",
       "globalize": {
         "prefix": "i18n",
         "functions": true
       },
-      "modularize": true,
-      "router": "app",
       "name": "next"
     },
     "write": {
@@ -74,6 +79,28 @@
   "input": {
     "localesFolders": ["en"],
     "translationFiles": [
+      {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found"
+        }
+      },
+      {
+        "path": "$faq.json",
+        "locale": "en",
+        "data": {
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
+        }
+      },
       {
         "path": "~.json",
         "locale": "en",
@@ -119,28 +146,6 @@
               }
             }
           }
-        }
-      },
-      {
-        "path": "404.json",
-        "locale": "en",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found"
-        }
-      },
-      {
-        "path": "$faq.json",
-        "locale": "en",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
         }
       },
       {

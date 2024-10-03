@@ -42,9 +42,9 @@ export const I18nTranslateContext = createContext<I18nTranslateContextValue>({
 "use client";
 
 import React, { useContext } from "react";
+import { createT } from "../createT";
 import { defaultLocale } from "../defaultLocale";
 import type { I18n } from "../types";
-import { createT } from "./createT";
 import { I18nTranslateContext } from "./I18nTranslateContext";
 import { setGlobalLocale } from "./setGlobalLocale";
 

@@ -1,4 +1,12 @@
 import type { JsonObject, Split } from "@koine/utils";
+import { CodeDataTranslationsOptions } from "./compiler/code/data-translations";
+
+export namespace I18nConfig {
+  export type TranslationsFallback = CodeDataTranslationsOptions["fallback"];
+
+  export type TranslationsFallbackStrategy =
+    CodeDataTranslationsOptions["fallback"]["strategy"];
+}
 
 export namespace I18nUtils {
   export type Join<

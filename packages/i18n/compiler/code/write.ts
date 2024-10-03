@@ -49,10 +49,10 @@ export type CodeWriteOptions = {
    * - `"granular"`: it generates a .gitignore file with all the paths of the
    * generated source code files. This can cause zombie files between `@koine/i18n`
    * updates or between multiple code generations as one file might be created
-   * on one run and not on the other. The .gitignore file wil lin fact be
+   * on one run and not on the other. The .gitignore file will in fact be
    * overwritten each time a code generation happens. This allows you to have
-   * custom filesnot gitignored alongside the automatically generated, and
-   * therefore gitignored, ones.
+   * custom files not gitignored alongside the automatically generated and
+   * therefore gitignored ones.
    * - `false`: it will not generate any gitignore file
    *
    * @default "all"

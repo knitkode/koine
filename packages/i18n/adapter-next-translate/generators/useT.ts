@@ -14,8 +14,7 @@ import useTranslation from "next-translate/useTranslation";
 import type { I18n } from "./types";
 
 /**
- * Wrap next-translate useTranslations for type safety and adds TranslationShortcut
- * as second/thir argument.
+ * Wrap next-translate useTranslations for type safety
  *
  * @see https://github.com/vinissimus/next-translate/issues/513#issuecomment-779826418
  *
@@ -29,18 +28,16 @@ export const useT = <TNamespace extends I18n.TranslateNamespace>(namespace: TNam
       function <
         TPath extends I18n.TranslationsPaths<I18n.TranslationsDictionary[TNamespace]>,
         TReturn = I18n.TranslationAtPathFromNamespace<TNamespace, TPath>,
-      >(s: TPath, q?: I18n.TranslationQuery, o?: I18n.TranslationOptions): TReturn {
+      >(s: TPath, q?: I18n.TranslationQuery, o?: {
+          returnObjects?: boolean;
+          fallback?: string | string[];
+          default?: string;
+        }): TReturn {
         return t(
           (namespace ? namespace + ":" + s : s) as string,
-          q === "obj" || q === "" ? null : q,
-          q === "obj" || o === "obj"
-            ? { returnObjects: true }
-            : q === "" || o === ""
-              ? { fallback: "" }
-              : o,
+          q,
+          o,
         ) as TReturn;
-        // ) as TReturn extends (undefined | never | unknown) ? TranslateReturn<I18n.TranslationQuery, I18n.TranslationOptions> : TReturn;
-        // );
       },
     [t, namespace],
   );
