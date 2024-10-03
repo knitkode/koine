@@ -1,7 +1,6 @@
 import { isPromise, objectMergeWithDefaults } from "@koine/utils";
 import adapterJs from "../../adapter-js";
 import adapterNext from "../../adapter-next";
-import adapterNextTranslate from "../../adapter-next-translate";
 import adapterReact from "../../adapter-react";
 import type { I18nCompiler } from "../types";
 import {
@@ -16,8 +15,6 @@ const getAdapterCreator = <T extends I18nCompiler.AdapterName>(name: T) => {
       return adapterJs;
     case "next":
       return adapterNext;
-    case "next-translate":
-      return adapterNextTranslate;
     case "react":
       return adapterReact;
   }

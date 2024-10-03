@@ -30,7 +30,7 @@ import { tInterpolateParamsDeep } from "./internal/tInterpolateParamsDeep";
 const allowEmptyStrings = true;
 
 /**
- * @see https://github.com/aralroca/next-translate/blob/master/src/transCore.tsx
+ * Create \`t\` function based on given dictionary/dictionaries and given locale
  */
 export function createT<TDictionary extends I18n.TranslationsDictionaryLoose>(
   dictionaries: TDictionary,

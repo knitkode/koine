@@ -16,18 +16,10 @@
     "webpack": "^5.90.1"
   },
   "peerDependencies": {
-    "next": "^14.0.4",
-    "next-translate": "^2.6.2",
-    "next-translate-plugin": "^2.6.2"
+    "next": "^14.0.4"
   },
   "peerDependenciesMeta": {
     "next": {
-      "optional": true
-    },
-    "next-translate": {
-      "optional": true
-    },
-    "next-translate-plugin": {
       "optional": true
     },
     "react": {

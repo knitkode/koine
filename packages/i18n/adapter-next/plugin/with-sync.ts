@@ -9,7 +9,6 @@
  * simply hook into webpack compilation to run the compiler, as we always need
  * its result at the very beginning.
  */
-import { createRequire } from "node:module";
 import type { NextConfig } from "next";
 import type { I18nCompilerOptions } from "../../compiler";
 import { i18nCompilerSync } from "../../compiler-sync";
@@ -19,8 +18,6 @@ import {
   shouldIgnoreNextJsConfigRun,
   tweakNextConfig,
 } from "./utils";
-
-const require = createRequire(import.meta.url);
 
 export type WithI18nOptions = NextConfig & {
   /**
@@ -50,29 +47,6 @@ export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
   nextConfig.redirects = () => getRedirects(redirects, i18nResult);
 
   nextConfig.rewrites = () => getRewrites(rewrites, i18nResult);
-
-  const {
-    options: { adapter },
-  } = i18nResult;
-
-  if (adapter.name === "next-translate") {
-    if (adapter.loader !== false) {
-      try {
-        const withNextTranslate = require("next-translate-plugin");
-        nextConfig = withNextTranslate(nextConfig);
-
-        // TODO: verify this:
-        // when using the locale param name structure just force to opt-out from
-        // next.js built in i18n support for pages router, this should also
-        // ease the cohexistence of pages and app router
-        if (i18nResult.options.routes.localeParamName) {
-          delete nextConfig.i18n;
-        }
-      } catch (_e) {
-        //
-      }
-    }
-  }
 
   return nextConfig;
 };

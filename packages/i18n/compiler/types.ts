@@ -2,7 +2,6 @@ import type { Simplify } from "@koine/utils";
 import type { PartialDeep } from "@koine/utils";
 import type * as AdapterJs from "../adapter-js";
 import type * as AdapterNext from "../adapter-next";
-import type * as AdapterNextTranslate from "../adapter-next-translate";
 import type * as AdapterReact from "../adapter-react";
 import type { CodeDataOptionsResolved } from "./code";
 import type { I18nCompilerConfigResolved } from "./config";
@@ -257,7 +256,6 @@ export namespace I18nCompiler {
     js: AdapterJs.Options;
     react: AdapterReact.Options;
     next: AdapterNext.Options;
-    "next-translate": AdapterNextTranslate.Options;
   };
 
   /**
@@ -294,9 +292,7 @@ export namespace I18nCompiler {
         ? AdapterConfigurationResolvedEntry<"react">
         : T extends "next"
           ? AdapterConfigurationResolvedEntry<"next">
-          : T extends "next-translate"
-            ? AdapterConfigurationResolvedEntry<"next-translate">
-            : never;
+          : never;
 
   /**
    * Any resolved adapter (union)
@@ -314,15 +310,13 @@ export namespace I18nCompiler {
       ? Simplify<ReturnType<AdapterReact.Adapter>>
       : T extends "next"
         ? Simplify<ReturnType<AdapterNext.Adapter>>
-        : T extends "next-translate"
-          ? Simplify<ReturnType<AdapterNextTranslate.Adapter>>
-          : never;
+        : never;
 
   /**
    * Built in adapters names
    */
   // export type AdapterName = keyof AdaptersOptionsMap;
-  export type AdapterName = "js" | "react" | "next" | "next-translate";
+  export type AdapterName = "js" | "react" | "next";
 
   /**
    * A generator within an {@link Adapter}, responsible for generating one or

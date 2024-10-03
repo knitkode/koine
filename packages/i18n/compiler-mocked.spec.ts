@@ -79,7 +79,7 @@ describe("generated code: t", () => {
 });
 
 describe("createT", () => {
-  const t = createT(dictionary_accountUserProfile, new Intl.PluralRules());
+  const t = createT(dictionary_accountUserProfile, "en");
 
   test("should return t function that interpolates", async () => {
     expect(typeof t).toBe("function");
