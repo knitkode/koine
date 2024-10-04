@@ -109,7 +109,7 @@ function getPluralisedKey(
   }
 
   if (getValue(dic, key + "${keyDelimiter}" + count) !== undefined) {
-    return key + "." + count;
+    return key + "${keyDelimiter}" + count;
   }
 
   const nestedKey = key + "${keyDelimiter}" + pluralRules.select(count);
