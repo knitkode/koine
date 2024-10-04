@@ -60,9 +60,12 @@ export function createT<TDictionary extends I18nUtils.TranslationsDictionaryLoos
       (typeof value === "object" && !Object.keys(value).length) ||
       (Array.isArray(value) && !value.length)
     ) {
-      return typeof fallback !== "undefined"
-        ? fallback
-        : ${fallbackDefaultStrategy === "key" ? `trace` : `""`} as TReturn;
+      return (
+        query === ""
+          ? value || ""
+          : typeof fallback !== "undefined"
+            ? fallback
+            : ${fallbackDefaultStrategy === "key" ? `trace` : `value || ""`}) as TReturn;
     }
 
     return (query ? i18nInterpolateParamsDeep(value, query) : value) as TReturn;
