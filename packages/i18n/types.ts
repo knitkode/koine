@@ -1,4 +1,5 @@
 import type { JsonObject, Split } from "@koine/utils";
+
 // import type { CodeDataTranslationsOptions } from "./compiler/code/data-translations";
 
 // export namespace I18nConfig {
@@ -6,17 +7,20 @@ import type { JsonObject, Split } from "@koine/utils";
 // }
 
 export namespace I18nUtils {
-  
   /**
-   * Generic shape of a translation dictionary, simple a whatever valid JSON
+   * Generic shape of a translation dictionary, simply a whatever valid JSON
    * ready object
    */
   export type TranslationsDictionaryLoose = JsonObject;
 
   /**
-   * @internal
+   * Generic shape of a series of namespaced translation dictionaries
+   * {@link TranslationsDictionaryLoose}
    */
-  export type TranslationsDictionaries = Record<string, TranslationsDictionaryLoose>;
+  export type TranslationsDictionaries = Record<
+    string,
+    TranslationsDictionaryLoose
+  >;
 
   /**
    * Translate function _loose_ type, to use only in implementations that uses
@@ -26,7 +30,7 @@ export namespace I18nUtils {
   export type TranslateLoose<TFallback = string, TReturn = string> = (
     path?: any,
     query?: TranslateQuery,
-    fallback?: TFallback
+    fallback?: TFallback,
   ) => TReturn;
 
   /**
@@ -36,21 +40,19 @@ export namespace I18nUtils {
   export type TranslateLoosest<TReturn = any> = (
     path?: any,
     query?: TranslateQuery,
-    fallback?: any
+    fallback?: any,
   ) => TReturn;
 
   /**
    * Query object to populate the translation returned value interpolating
    * dynamic data.
-   * 
+   *
    * Passing a `string` acts as _fallback_ value. If you need a fallback of
    * a different type or need both the _query_ and the _fallback_ use the third
    * argument to provide the fallback instead.
-   * 
+   *
    * All falsy allowed values are for ease of use of the third argument and
    * they will just opt out of any interpolation step.
-   * 
-   * @internal
    */
   export type TranslateQuery =
     | ""
@@ -64,17 +66,17 @@ export namespace I18nUtils {
 
   /**
    * Dictionary to generate SEO friendly alternate URLs `<links>` where:
-   * 
+   *
    * - _key_: `x-default` or any valid locale code (see [Google docs](https://developers.google.com/search/docs/specialty/international/localized-versions#language-codes))
    * - _value_: fully qualified and localised absolute URL
-   * 
+   *
    * It can also be an empty object, for instance with error routes.
    *
    * NOTE: this type should satisfy the nextjs type too that is:
    * TODO: maybe build a test for this
    * ```ts
    * import type { Metadata as NextMetadata } from "next";
-   * 
+   *
    * type Alternates = NonNullable<NextMetadata["alternates"]>["languages"];
    * ```
    */
@@ -87,14 +89,14 @@ export namespace I18nUtils {
    * TODO: maybe build a test for this
    * ```ts
    * import type { Metadata as NextMetadata } from "next";
-   * 
+   *
    * type Metadata = NonNullable<NextMetadata["alternates"]>;
    * ```
    */
   export type Metadata = {
     alternates: Alternates;
     canonical: null | string;
-  }
+  };
 
   export type Join<
     A,
