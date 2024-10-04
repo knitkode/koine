@@ -1,11 +1,13 @@
-// import { FunctionsCompiler } from "./functions";
-import { getImportDots } from "./helpers";
-
 export type ImportsCompilerData = {
   /**
    * `myPath` in `import type { MyType } from "../myPath"`;
    */
   path: string;
+  /**
+   * Flags an import from a thirdy part package. This is not needed when the path
+   * begins with a `@`, in the other cases we cannot infer this information.
+   */
+  external?: boolean;
   /**
    * `myImport` in `import myImport from "../myPath"`;
    *  or in `import myImport, { myNamed } from "../myPath"`;
@@ -33,10 +35,13 @@ export type ImportsCompilerOutputOptions = {
   /**
    * Determines the `../` in `import type { MyType } from "../myPath"`;
    */
-  folderUp: number;
+  folderUp?: number;
 };
 
 type ImportsCompilerOutputFormat = "ts" | "cjs";
+
+// export let getImportDots = (folderUp = 0) =>
+//   (folderUp ? Array(folderUp).fill("..").join("/") : ".") + "/";
 
 export class ImportsCompiler {
   data: ImportsCompilerData;
@@ -45,10 +50,69 @@ export class ImportsCompiler {
     this.data = data;
   }
 
-  static #ts(data: ImportsCompilerData, options: ImportsCompilerOutputOptions) {
+  static #aggregateImports(list: ImportsCompiler[]) {
+    const mapByPath = list.reduce((map, instance) => {
+      const { path } = instance.data;
+      map[path] = map[path] || [];
+      map[path].push(instance);
+      return map;
+    }, {} as Record<string, ImportsCompiler[]>);
+
+    return Object.keys(mapByPath).map(path => {
+      const instances = mapByPath[path];
+
+      if (instances.length > 1) {
+        let finalNamed: ImportsCompilerDataNamed[] = [];
+        let finalDefaulT: string = "";
+
+        instances.forEach(instance => {
+          const { defaulT, named } = instance.data;
+          if (named) {
+            finalNamed = [...finalNamed, ...named];
+          }
+          if (defaulT) {
+            if (finalDefaulT) {
+              throw Error(
+                `ImportsCompiler: Aggregated imports declare multiple default imports. ` +
+                `Default import "${defaulT}" conflicts with "${finalDefaulT}"`
+              );
+            } else {
+              finalDefaulT = defaulT;
+            }
+          }
+        });
+
+        return new ImportsCompiler({
+          defaulT: finalDefaulT,
+          named: finalNamed,
+          path
+        });
+      }
+
+      return instances[0];
+    })
+  }
+
+  public static getDir(options: { folderUp?: number; external?: boolean; }) {
+    const { folderUp = 0, external } = options;
+
+    if (external) return "";
+
+    return (folderUp ? Array(folderUp).fill("..").join("/") : ".") + "/";
+  }
+
+  static #isExternal(data: ImportsCompilerData) {
+    const { path, external } = data;
+    
+    if (typeof external === "boolean") return external;
+
+    return path.startsWith("@");
+  }
+
+  static #ts(data: ImportsCompilerData, options?: ImportsCompilerOutputOptions) {
     const { path, defaulT, named = [] } = data;
-    const { folderUp } = options;
-    const dir = getImportDots(folderUp);
+    const { folderUp } = options || {};
+    const dir = this.getDir({ folderUp, external: this.#isExternal(data) });
     let out = `import `;
     if (defaulT) {
       out += defaulT;
@@ -70,11 +134,11 @@ export class ImportsCompiler {
 
   static #cjs(
     data: ImportsCompilerData,
-    options: ImportsCompilerOutputOptions,
+    options?: ImportsCompilerOutputOptions,
   ) {
     const { path, defaulT, named = [] } = data;
-    const { folderUp } = options;
-    const dir = getImportDots(folderUp);
+    const { folderUp } = options || {};
+    const dir = this.getDir({ folderUp, external: this.#isExternal(data) });
     const partRequire = `= require("${dir + path}")`;
     let out = "";
 
@@ -93,7 +157,7 @@ export class ImportsCompiler {
 
   $out(
     format: ImportsCompilerOutputFormat,
-    options: ImportsCompilerOutputOptions,
+    options?: ImportsCompilerOutputOptions,
   ) {
     return ImportsCompiler.out(this.data, format, options);
   }
@@ -101,19 +165,21 @@ export class ImportsCompiler {
   static out(
     data: ImportsCompilerData,
     format: ImportsCompilerOutputFormat,
-    options: ImportsCompilerOutputOptions,
+    options?: ImportsCompilerOutputOptions,
   ) {
     if (format === "ts") return this.#ts(data, options);
     if (format === "cjs") return this.#cjs(data, options);
+    throw Error(`ImportsCompiler: Unsupported format '${format}'`);
     return "";
   }
 
   static outMany(
     format: ImportsCompilerOutputFormat,
     instances: ImportsCompiler[] | Set<ImportsCompiler>,
-    options: ImportsCompilerOutputOptions,
+    options?: ImportsCompilerOutputOptions,
   ) {
-    const list = Array.from(instances);
+    const list = this.#aggregateImports(Array.from(instances));
+
     return list.length
       ? list.map((i) => this.out(i.data, format, options)).join("\n") + "\n\n"
       : "";

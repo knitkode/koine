@@ -181,9 +181,7 @@ function $to(
           index: false,
           content: () => {
             let output = "";
-            output += ImportsCompiler.outMany("ts", allImports, {
-              folderUp: 0,
-            });
+            output += ImportsCompiler.outMany("ts", allImports);
             output += FunctionsCompiler.outMany("ts", functions, {
               imports: false,
               exports: "named",

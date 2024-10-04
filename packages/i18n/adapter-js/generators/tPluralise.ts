@@ -27,7 +27,7 @@ export default createGenerator("js", (_arg) => {
       ext: "ts",
       index: false,
       content: () =>
-        tPluralise().$out("ts", { imports: { folderUp: 0 }, exports: "named" }),
+        tPluralise().$out("ts", { imports: {}, exports: "named" }),
     },
   };
 });

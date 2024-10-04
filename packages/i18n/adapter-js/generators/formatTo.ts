@@ -98,7 +98,7 @@ export default createGenerator("js", (arg) => {
       index: false,
       content: () =>
         formatTo(config, true).$out("ts", {
-          imports: { folderUp: 0 },
+          imports: {},
           exports: "named",
         }),
     },

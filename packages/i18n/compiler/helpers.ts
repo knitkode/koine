@@ -1,10 +1,8 @@
 import { minimatch } from "minimatch";
 import type { I18nCompiler } from "./types";
+import { ImportsCompiler } from "./imports";
 
 export const GLOBAL_I18N_IDENTIFIER = "__i18n_locale";
-
-export let getImportDots = (folderUp = 0) =>
-  (folderUp ? Array(folderUp).fill("..").join("/") : ".") + "/";
 
 /**
  * TODO: maybe make this folder name or path configurable through options
@@ -13,7 +11,7 @@ export let getImportDots = (folderUp = 0) =>
  * @param folderName default `"translations"`
  */
 export let getTranslationsDir = (folderUp = 0, folderName = "translations") => {
-  return getImportDots(folderUp) + folderName;
+  return ImportsCompiler.getDir({ folderUp }) + folderName;
 };
 
 /**

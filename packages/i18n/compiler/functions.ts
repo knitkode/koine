@@ -132,7 +132,7 @@ type FunctionsCompilerComment = {
   tags?: FunctionsCompilerCommentTag[];
 };
 
-type FunctionsCompilerOutputOptions = {
+export type FunctionsCompilerOutputOptions = {
   /**
    * Imports output options, pass `false` to do not output import' statements
    */

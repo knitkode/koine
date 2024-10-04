@@ -75,14 +75,14 @@ function getTFunctionBodyAndImports(
   const imports = [importsMap.types];
 
   if (plural) {
-    imports.push(importsMap.tPluralise);
+    imports.push(importsMap.i18nPluralise);
   }
 
   if (params) {
     if (typeValue === "Primitive") {
-      imports.push(importsMap.tInterpolateParams);
+      imports.push(importsMap.i18nInterpolateParams);
     } else if (typeValue === "Array" || typeValue === "Object") {
-      imports.push(importsMap.tInterpolateParamsDeep);
+      imports.push(importsMap.i18nInterpolateParamsDeep);
     }
   }
 
@@ -108,17 +108,17 @@ function getTFunctionBodyAndImports(
         );
       }
       if (plural) {
-        returns = `tPluralise(${returns}, params.${PLURAL_COUNT_PROPERTY})`;
+        returns = `i18nPluralise(${returns}, params.${PLURAL_COUNT_PROPERTY})`;
       }
 
       // NOTE: here params does not have `count`, that does not need to be
       // interpolated, see output in __mocks__ where $t_account_user_profile_pluralAsObject
-      // should not need the presence of `tInterpolateParamsDeep`
+      // should not need the presence of `i18nInterpolateParamsDeep`
       if (params) {
         if (typeValue === "Primitive") {
-          returns = `tInterpolateParams(${returns}, params)`;
+          returns = `i18nInterpolateParams(${returns}, params)`;
         } else if (typeValue === "Array" || typeValue === "Object") {
-          returns = `tInterpolateParamsDeep(${returns}, params)`;
+          returns = `i18nInterpolateParamsDeep(${returns}, params)`;
         }
       }
       return body + returns;
@@ -171,17 +171,17 @@ function getTFunctionBodyWithLocales(
 
 const importsMap = {
   types: getImportTypes(),
-  tInterpolateParams: new ImportsCompiler({
-    path: "internal/tInterpolateParams",
-    named: [{ name: "tInterpolateParams" }],
+  i18nInterpolateParams: new ImportsCompiler({
+    path: "@koine/i18n",
+    named: [{ name: "i18nInterpolateParams" }],
   }),
-  tInterpolateParamsDeep: new ImportsCompiler({
-    path: "internal/tInterpolateParamsDeep",
-    named: [{ name: "tInterpolateParamsDeep" }],
+  i18nInterpolateParamsDeep: new ImportsCompiler({
+    path: "@koine/i18n",
+    named: [{ name: "i18nInterpolateParamsDeep" }],
   }),
-  tPluralise: new ImportsCompiler({
-    path: "internal/tPluralise",
-    named: [{ name: "tPluralise" }],
+  i18nPluralise: new ImportsCompiler({
+    path: "@koine/i18n",
+    named: [{ name: "i18nPluralise" }],
   }),
 };
 
@@ -266,9 +266,7 @@ export default createGenerator("js", (data) => {
           index: false,
           content: () => {
             let output = "";
-            output += ImportsCompiler.outMany("ts", allImports, {
-              folderUp: 0,
-            });
+            output += ImportsCompiler.outMany("ts", allImports);
             output += FunctionsCompiler.outMany("ts", functions, {
               imports: false,
               exports: "named",
