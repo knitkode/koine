@@ -6,11 +6,8 @@ export default createGenerator("js", (arg) => {
     options: {
       translations: {
         fallbackDefaultStrategy,
-        tokens: {
-          keyDelimiter,
-          namespaceDelimiter
-        }
-      }
+        tokens: { keyDelimiter, namespaceDelimiter },
+      },
     },
   } = arg;
 
@@ -21,14 +18,13 @@ export default createGenerator("js", (arg) => {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
-import type { I18nUtils } from "@koine/i18n";
+import { type I18nUtils, i18nInterpolateParamsDeep } from "@koine/i18n";
 import type { I18n } from "./types";${
         single
           ? ""
           : `
 import { defaultLocale } from "./defaultLocale";`
       }
-import { tInterpolateParamsDeep } from "./internal/tInterpolateParamsDeep";
 
 /**
  * Create \`t\` function based on given dictionary/dictionaries and given locale
@@ -69,7 +65,7 @@ export function createT<TDictionary extends I18nUtils.TranslationsDictionaryLoos
         : ${fallbackDefaultStrategy === "key" ? `trace` : `""`} as TReturn;
     }
 
-    return (query ? tInterpolateParamsDeep(value, query) : value) as TReturn;
+    return (query ? i18nInterpolateParamsDeep(value, query) : value) as TReturn;
   };
 }
 
