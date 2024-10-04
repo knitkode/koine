@@ -7,3 +7,5 @@ export const i18nDefaultMetadata: I18nUtils.Metadata = {
   canonical: "",
   alternates: {},
 };
+
+export default i18nDefaultMetadata;

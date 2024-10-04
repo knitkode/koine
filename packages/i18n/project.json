@@ -8,14 +8,13 @@
     "build": {
       "options": {
         "additionalEntryPoints": [
-          "packages/i18n/formatRoutePathname.ts",
           "packages/i18n/i18nDefaultMetadata.ts",
+          "packages/i18n/i18nFormatRoutePathname.ts",
           "packages/i18n/i18nInterpolateParams.ts",
           "packages/i18n/i18nInterpolateParamsDeep.ts",
+          "packages/i18n/i18nInterpolateRouteParams.ts",
           "packages/i18n/i18nPluralise.ts",
-          "packages/i18n/interpolateTo.ts",
-          "packages/i18n/routeHasDynamicPortion.ts",
-          "packages/i18n/rtlLocales.ts",
+          "packages/i18n/i18nRtlLocales.ts",
           "packages/i18n/compiler.ts",
           "packages/i18n/compiler-sync.ts",
           "packages/i18n/compiler-worker.ts",

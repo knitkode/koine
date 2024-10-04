@@ -1,4 +1,4 @@
-export let formatRoutePathname = (
+export let i18nFormatRoutePathname = (
   pathname = "",
   options?: {
     trailingSlash?: boolean;
@@ -15,4 +15,4 @@ export let formatRoutePathname = (
   return pathname || "/";
 };
 
-export default formatRoutePathname;
+export default i18nFormatRoutePathname;

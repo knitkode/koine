@@ -6,7 +6,7 @@
  * @see https://en.wikipedia.org/wiki/Script_(Unicode)
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getTextInfo
  */
-export let rtlLocales = [
+export let i18nRtlLocales = [
   "ae", // Avestan
   "ar", // 'العربية', Arabic
   "arc", // Aramaic
@@ -29,4 +29,4 @@ export let rtlLocales = [
   "yi", // 'ייִדיש', Yiddish
 ];
 
-export default rtlLocales;
+export default i18nRtlLocales;

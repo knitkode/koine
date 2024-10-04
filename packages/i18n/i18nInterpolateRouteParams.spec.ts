@@ -1,5 +1,5 @@
 import { jestCreateExpectedThrownError } from "@koine/node/jest";
-import { interpolateTo as fn } from "./interpolateTo";
+import { i18nInterpolateRouteParams as fn } from "./i18nInterpolateRouteParams";
 
 // /**
 //  *
@@ -30,9 +30,12 @@ import { interpolateTo as fn } from "./interpolateTo";
 //     }
 //   };
 
-const err = jestCreateExpectedThrownError("@koine/i18n", "interpolateTo");
+const err = jestCreateExpectedThrownError(
+  "@koine/i18n",
+  "i18nInterpolateRouteParams",
+);
 
-describe("interpolate basic functionalities", () => {
+describe("i18nInterpolateRouteParams", () => {
   const params = { id: 1, slug: "a" };
 
   test("with homepage special cases", () => {

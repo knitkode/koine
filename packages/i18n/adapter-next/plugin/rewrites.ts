@@ -2,7 +2,7 @@ import type { Rewrite } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, escapeRegExp } from "@koine/utils";
 import type { CodeDataRoutesOptions } from "../../compiler/code/data-routes";
 import type { I18nCompiler } from "../../compiler/types";
-import { formatRoutePathname } from "../../formatRoutePathname";
+import { i18nFormatRoutePathname } from "../../i18nFormatRoutePathname";
 import { transformPathname } from "./utils";
 
 function generatePathRewrite(arg: {
@@ -18,12 +18,12 @@ function generatePathRewrite(arg: {
   let sourcePrefix = "";
   if (localeSource) sourcePrefix = `/${localeSource}`;
 
-  const source = formatRoutePathname(sourcePrefix + pathname);
+  const source = i18nFormatRoutePathname(sourcePrefix + pathname);
 
   let destinationPrefix = "";
   if (localeDestination) destinationPrefix = `/${localeDestination}`;
 
-  const destination = formatRoutePathname(destinationPrefix + template);
+  const destination = i18nFormatRoutePathname(destinationPrefix + template);
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
 
   if (source === destination) return;

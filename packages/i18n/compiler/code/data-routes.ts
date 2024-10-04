@@ -7,7 +7,7 @@ import {
   objectSort,
   objectSortByKeysMatching,
 } from "@koine/utils";
-import { formatRoutePathname } from "../../formatRoutePathname";
+import { i18nFormatRoutePathname } from "../../i18nFormatRoutePathname";
 import type { I18nCompiler } from "../types";
 
 /**
@@ -147,7 +147,7 @@ function normaliseUserDefinedRoutePathname(
   routePathname: string,
   options: Pick<I18nCompiler.Config, "trailingSlash">,
 ) {
-  return formatRoutePathname(
+  return i18nFormatRoutePathname(
     routePathname
       .replace(/\*/g, "")
       .replace(

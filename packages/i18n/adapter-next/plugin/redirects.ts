@@ -2,7 +2,7 @@ import type { Redirect } from "next/dist/lib/load-custom-routes";
 import { arrayUniqueByProperties, escapeRegExp } from "@koine/utils";
 import type { CodeDataRoutesOptions } from "../../compiler/code/data-routes";
 import type { I18nCompiler } from "../../compiler/types";
-import { formatRoutePathname } from "../../formatRoutePathname";
+import { i18nFormatRoutePathname } from "../../i18nFormatRoutePathname";
 import { transformPathname } from "./utils";
 
 function generatePathRedirect(arg: {
@@ -16,10 +16,10 @@ function generatePathRedirect(arg: {
     arg;
 
   const sourcePrefix = localeSource ? `${localeSource}/` : "";
-  const source = formatRoutePathname(sourcePrefix + template);
+  const source = i18nFormatRoutePathname(sourcePrefix + template);
 
   const destinationPrefix = localeDestination ? `${localeDestination}/` : "";
-  const destination = formatRoutePathname(destinationPrefix + pathname);
+  const destination = i18nFormatRoutePathname(destinationPrefix + pathname);
   // console.log(`redirect template "${source}" to pathname "${destination}"`);
 
   if (source === destination) return;

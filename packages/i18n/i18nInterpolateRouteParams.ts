@@ -1,5 +1,5 @@
 import { getType } from "@koine/utils";
-import { formatRoutePathname } from "./formatRoutePathname";
+import { i18nFormatRoutePathname } from "./i18nFormatRoutePathname";
 import type { I18nUtils } from "./types";
 
 /**
@@ -22,17 +22,17 @@ import type { I18nUtils } from "./types";
  * - `/my/route/[id]`
  * - `//my/route/[id]`
  */
-export function interpolateTo<TRouteId extends string>(
+export function i18nInterpolateRouteParams<TRouteId extends string>(
   value: TRouteId, // RouteStrictIdStatic<TRouteId>,
 ): string;
-export function interpolateTo<
+export function i18nInterpolateRouteParams<
   TRouteId extends string,
   // TRouteParams extends DynamicParams<TRouteId>,
 >(
   value: TRouteId, // RouteStrictIdDynamic<TRouteId>,
   params: I18nUtils.DynamicParams<TRouteId>,
 ): string;
-export function interpolateTo<
+export function i18nInterpolateRouteParams<
   TRouteId extends string,
   // TRouteParams extends DynamicParams<TRouteId>,
 >(
@@ -47,7 +47,7 @@ export function interpolateTo<
 
         if (!(key in params)) {
           throw new Error(
-            "[@koine/i18n]:interpolateTo, using '" +
+            "[@koine/i18n]:i18nInterpolateRouteParams, using '" +
               value +
               "' without param '" +
               key +
@@ -57,7 +57,7 @@ export function interpolateTo<
 
         if (!["string", "number"].includes(typeof params[key])) {
           throw new Error(
-            "[@koine/i18n]:interpolateTo, using '" +
+            "[@koine/i18n]:i18nInterpolateRouteParams, using '" +
               value +
               "' with unserializable param  '" +
               key +
@@ -82,7 +82,7 @@ export function interpolateTo<
     : // special home page case
       "/";
 
-  return formatRoutePathname(pathname);
+  return i18nFormatRoutePathname(pathname);
 }
 
-export default interpolateTo;
+export default i18nInterpolateRouteParams;

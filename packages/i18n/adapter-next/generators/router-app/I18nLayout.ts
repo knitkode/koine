@@ -17,7 +17,7 @@ export default createGenerator("next", (arg) => {
       content: () => /* j s */ `
 import React from "react";
 import type { Metadata } from "next/types";
-import { rtlLocales } from "@koine/i18n";
+import { i18nRtlLocales } from "@koine/i18n";
 import { getI18nDictionaries } from "../internal/getI18nDictionaries";
 import { I18nTranslateProvider } from "../internal/I18nTranslateProvider";
 import { defaultLocale } from "../defaultLocale";
@@ -204,7 +204,7 @@ export const createI18nLayout = <
       return async (props: I18n.Props<TProps>) => {
         const config = await resolveConfigurator(props);
         const { locale } = config;
-        const dir = rtlLocales.includes(locale) ? "rtl" : "ltr";
+        const dir = i18nRtlLocales.includes(locale) ? "rtl" : "ltr";
         const i18nHtmlAttrs = { lang: locale, dir };
         const I18nScript = (
           <script dangerouslySetInnerHTML={{ __html: \`window.global = window.global || {}; global.${GLOBAL_I18N_IDENTIFIER} = "\${locale}";\`}}></script>
