@@ -1,6 +1,16 @@
 import { createGenerator } from "../../compiler/createAdapter";
 
-export default createGenerator("react", (_arg) => {
+export default createGenerator("react", (arg) => {
+  const {
+    options: {
+      translations: {
+        tokens: {
+          namespaceDelimiter
+        }
+      }
+    }
+  } = arg;
+
   return {
     formatElements: {
       dir: createGenerator.dirs.internal,
@@ -74,14 +84,15 @@ export function formatElements(
 "use client";
 
 import React, { useMemo } from "react";
+import type { I18nUtils } from "@koine/i18n";
 import { formatElements } from "./internal/formatElements";
 import type { I18n } from "./types";
 import { useT } from "./useT";
 
 export type TransProps = {
-  i18nKey: I18n.TranslationsAllPaths;
+  trace: I18n.TranslationsTrace;
   components?: React.ReactElement[] | Record<string, React.ReactElement>;
-  values?: I18n.TranslationQuery;
+  query?: I18nUtils.TranslateQuery;
 };
 
 /**
@@ -90,14 +101,14 @@ export type TransProps = {
  * to -> <h1>This is an <b>example</b><h1>
  */
 export const Trans = ({
-  i18nKey,
-  values,
+  trace,
+  query,
   components,
 }: TransProps) => {
-  const [namespace, path] = (i18nKey as string).split(":");
-  const t = useT(namespace as I18n.TranslateNamespace) as I18n.TranslateLoose;
+  const [namespace, path] = (trace as string).split("${namespaceDelimiter}");
+  const t = useT(namespace as I18n.TranslationsNamespace) as I18nUtils.TranslateLoose;
   const result = useMemo(() => {
-    const text = t(path, values);
+    const text = t(path, query);
 
     if (!text) return text;
 
@@ -108,7 +119,7 @@ export const Trans = ({
       return text.map((item) => formatElements(item, components));
 
     return formatElements(text, components);
-  }, [t, path, values, components]) as string;
+  }, [t, path, query, components]) as string;
 
   return result;
 };

@@ -48,6 +48,7 @@ export default createGenerator("js", (_arg) => {
       name: "tInterpolateParamsDeep",
       ext: "ts",
       index: false,
+      disabled: true,
       content: () =>
         tInterpolateParamsDeep().$out("ts", {
           imports: { folderUp: 0 },

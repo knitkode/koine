@@ -10,18 +10,17 @@ export default createGenerator("react", (_arg) => {
 "use client";
 
 import React from "react";
-import { defaultI18nMetadata } from "./internal/defaultI18nMetadata";
-import type { I18n } from "./types";
+import { type I18nUtils, i18nDefaultMetadata } from "@koine/i18n";
 
 export type I18nHeadTagsProps = {
-  metadata?: I18n.Metadata;
+  metadata?: I18nUtils.Metadata;
 };
 
 /**
  * Renders the HTML tags to use in the \`<head>\`
  */
 export const I18nHeadTags = (props: I18nHeadTagsProps) => {
-  const { metadata = defaultI18nMetadata } = props;
+  const { metadata = i18nDefaultMetadata } = props;
   const { alternates, canonical } = metadata;
 
   return (

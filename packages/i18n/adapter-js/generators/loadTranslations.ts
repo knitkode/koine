@@ -16,7 +16,7 @@ import type { I18n } from "../types";
  */
 export const loadTranslations = (
   locale: I18n.Locale,
-  namespace: I18n.TranslateNamespace,
+  namespace: I18n.TranslationsNamespace,
 ) =>
   import(\`${getTranslationsDir(1)}/\${locale}/\${namespace}.json\`).then(
     (m) => m.default,

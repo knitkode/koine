@@ -11,7 +11,7 @@ export default createGenerator("next", (_arg) => {
 
 import React from "react";
 import type { AppProps } from "next/app";
-import { defaultI18nMetadata } from "./internal/defaultI18nMetadata";
+import { type I18nUtils, i18nDefaultMetadata } from "@koine/i18n";
 import { I18nHead } from "./internal/I18nHead";
 import { I18nMetadataProvider } from "./internal/I18nMetadataProvider";
 import { I18nTranslateProvider } from "./internal/I18nTranslateProvider";
@@ -25,15 +25,15 @@ import type { I18n } from "./types";
 export type I18nAppPropsData = {
   i18n: {
     locale: I18n.Locale;
-    dictionaries: I18n.Dictionaries;
-    metadata: I18n.Metadata;
+    dictionaries: I18nUtils.TranslationsDictionaries;
+    metadata: I18nUtils.Metadata;
   }
 };
 
 const i18nDefaults: I18nAppPropsData["i18n"] = {
   locale: defaultLocale,
   dictionaries: {},
-  metadata: defaultI18nMetadata
+  metadata: i18nDefaultMetadata
 };
 
 type I18nAppProps =  React.PropsWithChildren<

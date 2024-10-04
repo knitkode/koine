@@ -299,10 +299,10 @@ function manageDataTranslationsPlurals(
 
 function getTranslationFunctionName(
   options: CodeDataTranslationsOptions,
-  fullKey: string,
+  trace: string,
 ) {
-  // return options.functions.prefix + changeCaseSnake(fullKey);
-  let replaced = fullKey
+  // return options.functions.prefix + changeCaseSnake(trace);
+  let replaced = trace
     // replace tilde
     .replace(/~/g, "_")
     // replace dash, dots, semicolon
@@ -339,14 +339,14 @@ function createTranslationEntry(
 ) {
   const params =
     value === null ? null : extractTranslationParamsFromValue(options, value);
-  const fullKey = namespace + options.tokens.namespaceDelimiter + path;
+  const trace = namespace + options.tokens.namespaceDelimiter + path;
   const translation: I18nCompiler.DataTranslation = {
     ...existing,
     id,
-    fnName: getTranslationFunctionName(options, fullKey),
+    fnName: getTranslationFunctionName(options, trace),
     namespace,
     path,
-    fullKey,
+    trace,
     typeValue,
     values: existing?.values || {},
   };

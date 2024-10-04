@@ -205,7 +205,7 @@ export namespace I18nCompiler {
      * - `namespaceDelimiter` from {@link CodeDataOptionsTranslations}
      * - `path`
      */
-    fullKey: string;
+    trace: string;
     /**
      * Function name of the translation, e.g. `myDir_myFileName_myObj_nestedKey`
      * according to the {@link CodeDataOptionsTranslations}

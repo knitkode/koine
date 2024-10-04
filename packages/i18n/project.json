@@ -9,6 +9,7 @@
       "options": {
         "additionalEntryPoints": [
           "packages/i18n/formatRoutePathname.ts",
+          "packages/i18n/i18nDefaultMetadata.ts",
           "packages/i18n/interpolateTo.ts",
           "packages/i18n/routeHasDynamicPortion.ts",
           "packages/i18n/rtlLocales.ts",

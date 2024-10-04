@@ -11,7 +11,7 @@ import { loadTranslations } from "./internal/loadTranslations";
 import { createT } from "../createT";
 import type { I18n } from "./types";
 
-export async function getT<TNamespace extends I18n.TranslateNamespace>(
+export async function getT<TNamespace extends I18n.TranslationsNamespace>(
   locale: I18n.Locale,
   namespace: TNamespace,
 ) {
@@ -19,9 +19,9 @@ export async function getT<TNamespace extends I18n.TranslateNamespace>(
   const pluralRules = new Intl.PluralRules(locale);
 
   const t = createT({ [namespace]: translations }, pluralRules, locale);
-  return ((i18nKey: string, ...args: any[]) =>
+  return ((path: string, ...args: any[]) =>
     (t as any)(
-      \`\${namespace}:\${i18nKey}\`,
+      \`\${namespace}:\${path}\`,
       ...args,
     )) as I18n.TranslateNamespaced<TNamespace>;
 }

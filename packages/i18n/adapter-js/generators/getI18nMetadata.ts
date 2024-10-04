@@ -12,12 +12,12 @@ export default createGenerator("js", (arg) => {
       index: false,
       // prettier-ignore
       content: () => /* j s */`
+import { type I18nUtils, i18nDefaultMetadata } from "@koine/i18n";
 import { defaultLocale } from "../defaultLocale";
 import { formatUrl } from "../formatUrl";
 import { locales } from "../locales";
 import { to } from "../to";
 import type { I18n } from "../types";
-import { defaultI18nMetadata } from "./defaultI18nMetadata";
 import { type RouteIdError, isErrorRoute } from "./routesError";
 
 type GetI18nMetadataOptions<TRouteId extends I18n.RouteId | RouteIdError> = {
@@ -36,9 +36,9 @@ export function getI18nMetadata<TRouteId extends I18n.RouteId | RouteIdError>({
   id,${dynamicRoutes.length ? `
   params,` : ``}
 }: GetI18nMetadataOptions<TRouteId>) {
-  if (isErrorRoute(id)) return defaultI18nMetadata;${dynamicRoutes.length && !staticRoutes.length ? `
+  if (isErrorRoute(id)) return i18nDefaultMetadata;${dynamicRoutes.length && !staticRoutes.length ? `
   params = params as NonNullable<typeof params>;` : ``}
-  const alternates: I18n.Alternates = {
+  const alternates: I18nUtils.Alternates = {
     "x-default": formatUrl(${dynamicRoutes.length && staticRoutes.length ? `
       // @ ts-ignore dynamic to fn typing
       params ? to(id, params, defaultLocale) : to(id, defaultLocale),

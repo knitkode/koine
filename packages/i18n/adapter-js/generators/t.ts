@@ -189,7 +189,6 @@ const getTFunctions = (
   translations: I18nCompiler.DataTranslations,
   options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) => {
-  const { defaultLocale } = options;
   const functions: FunctionsCompiler[] = [];
   const allImports: Set<ImportsCompiler> = new Set();
 
@@ -211,8 +210,8 @@ const getTFunctions = (
         comment: {
           tags: [
             {
-              key: "i18nKey",
-              val: `\`${translation.fullKey}\``,
+              key: "trace",
+              val: `\`${translation.trace}\``,
             },
             // no need for this anymore as we have `as const` on the return value
             // {

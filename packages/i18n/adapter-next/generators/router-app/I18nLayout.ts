@@ -75,7 +75,7 @@ type Configurator = {
    * Optionally set the translations _namespaces_ to expose to the client
    * components down this layout's components tree
    */
-  namespaces?: I18n.TranslateNamespace[];
+  namespaces?: I18n.TranslationsNamespace[];
 };
 
 /**

@@ -22,7 +22,7 @@ export const tInterpolateParams = ({
     body: ({ format }) => `params ? value.replace(
     /${escapeEachChar(start)}(.*?)${escapeEachChar(end)}/g,
     (_, key) =>
-      params[key.trim()${format === "ts" ? " as keyof typeof params" : ""}] + "",
+      (params[key.trim()${format === "ts" ? " as keyof typeof params" : ""}] || "{{" + key + "}}") + "",
   ) : value`,
     implicitReturn: true,
   });
@@ -37,6 +37,7 @@ export default createGenerator("js", (arg) => {
       name: "tInterpolateParams",
       ext: "ts",
       index: false,
+      disabled: true,
       content: () =>
         tInterpolateParams(dynamicDelimiters).$out("ts", {
           imports: false,

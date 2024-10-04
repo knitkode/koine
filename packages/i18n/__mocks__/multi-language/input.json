@@ -5,6 +5,30 @@
   ],
   "translationFiles": [
     {
+      "path": "404.json",
+      "locale": "en",
+      "data": {
+        "seo": {
+          "title": "404 - Not found"
+        },
+        "title": "404, page not found",
+        "onlyEn": "a",
+        "onlyEnArray": [
+          "a",
+          "b"
+        ],
+        "onlyEnObject": {
+          "a": "a",
+          "b": "b"
+        },
+        "onlyNumberKeys": {
+          "1": "Once",
+          "2": "Twice",
+          "3": "Three times"
+        }
+      }
+    },
+    {
       "path": "~.json",
       "locale": "en",
       "data": {
@@ -52,30 +76,6 @@
       }
     },
     {
-      "path": "404.json",
-      "locale": "en",
-      "data": {
-        "seo": {
-          "title": "404 - Not found"
-        },
-        "title": "404, page not found",
-        "onlyEn": "a",
-        "onlyEnArray": [
-          "a",
-          "b"
-        ],
-        "onlyEnObject": {
-          "a": "a",
-          "b": "b"
-        },
-        "onlyNumberKeys": {
-          "1": "Once",
-          "2": "Twice",
-          "3": "Three times"
-        }
-      }
-    },
-    {
       "path": "$faq.json",
       "locale": "en",
       "data": {
@@ -85,6 +85,76 @@
             "answer": "That"
           }
         ]
+      }
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "locale": "en",
+      "data": {
+        "empty": {},
+        "msg": "Some text"
+      }
+    },
+    {
+      "path": "~.json",
+      "locale": "it",
+      "data": {
+        "home": "/",
+        "about": "/chi-siamo",
+        "account": {
+          "user": {
+            "profile": "/account/profilo",
+            "[id]": "/account/profilo/{{ id }}",
+            "settings": {
+              "index": "/account/profilo/impostazioni",
+              "personal": "/account/profilo/impostazioni/personali"
+            }
+          }
+        },
+        "products": {
+          "index": "/prodotti",
+          "[id]": {
+            "index": "^/{{ id }}",
+            "edit": {
+              "index": "^/modifica",
+              "details": "^/dettagli"
+            }
+          }
+        },
+        "apps": {
+          "tool": {
+            "[[...spa]]": "/apps/tool",
+            "things": {
+              "index": "^/things",
+              "[id]": {
+                "index": "^/{{ id }}",
+                "detail": {
+                  "index": "^/dettaglio",
+                  "new": "^/new",
+                  "[detailId]": {
+                    "index": "^/{{ detailId }}",
+                    "edit": "^/edit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "404.json",
+      "locale": "it",
+      "data": {
+        "seo": {
+          "title": "404 - Introvabile"
+        },
+        "title": "404, pagina non trovata",
+        "onlyNumberKeys": {
+          "1": "Una volta",
+          "2": "Due volte",
+          "3": "Tre volte"
+        }
       }
     },
     {
@@ -160,76 +230,6 @@
       }
     },
     {
-      "path": "~account/FormUserLanguages.json",
-      "locale": "en",
-      "data": {
-        "empty": {},
-        "msg": "Some text"
-      }
-    },
-    {
-      "path": "404.json",
-      "locale": "it",
-      "data": {
-        "seo": {
-          "title": "404 - Introvabile"
-        },
-        "title": "404, pagina non trovata",
-        "onlyNumberKeys": {
-          "1": "Una volta",
-          "2": "Due volte",
-          "3": "Tre volte"
-        }
-      }
-    },
-    {
-      "path": "~.json",
-      "locale": "it",
-      "data": {
-        "home": "/",
-        "about": "/chi-siamo",
-        "account": {
-          "user": {
-            "profile": "/account/profilo",
-            "[id]": "/account/profilo/{{ id }}",
-            "settings": {
-              "index": "/account/profilo/impostazioni",
-              "personal": "/account/profilo/impostazioni/personali"
-            }
-          }
-        },
-        "products": {
-          "index": "/prodotti",
-          "[id]": {
-            "index": "^/{{ id }}",
-            "edit": {
-              "index": "^/modifica",
-              "details": "^/dettagli"
-            }
-          }
-        },
-        "apps": {
-          "tool": {
-            "[[...spa]]": "/apps/tool",
-            "things": {
-              "index": "^/things",
-              "[id]": {
-                "index": "^/{{ id }}",
-                "detail": {
-                  "index": "^/dettaglio",
-                  "new": "^/new",
-                  "[detailId]": {
-                    "index": "^/{{ detailId }}",
-                    "edit": "^/edit"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    {
       "path": "$faq.json",
       "locale": "it",
       "data": {
@@ -239,6 +239,14 @@
             "answer": "Quello"
           }
         ]
+      }
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "locale": "it",
+      "data": {
+        "empty": {},
+        "msg": "Del testo"
       }
     },
     {
@@ -311,14 +319,6 @@
             }
           }
         }
-      }
-    },
-    {
-      "path": "~account/FormUserLanguages.json",
-      "locale": "it",
-      "data": {
-        "empty": {},
-        "msg": "Del testo"
       }
     }
   ]

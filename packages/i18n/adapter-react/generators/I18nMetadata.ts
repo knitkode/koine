@@ -11,22 +11,21 @@ export default createGenerator("react", (_arg) => {
 "use client";
 
 import React, { createContext } from "react";
-import { defaultI18nMetadata } from "./defaultI18nMetadata";
-import type { I18n } from "../types";
+import { type I18nUtils, i18nDefaultMetadata } from "@koine/i18n";
 
 type I18nMetadataContextValue = readonly [
   /** metadata */
-  I18n.Metadata,
+  I18nUtils.Metadata,
   /** setMetadata */
-  React.Dispatch<React.SetStateAction<I18n.Metadata>>,
+  React.Dispatch<React.SetStateAction<I18nUtils.Metadata>>,
 ];
 
 /**
  * @internal
  */
 export const I18nMetadataContext = createContext<I18nMetadataContextValue>([
-  defaultI18nMetadata,
-  () => (defaultI18nMetadata),
+  i18nDefaultMetadata,
+  () => (i18nDefaultMetadata),
 ]);
 `,
     },
@@ -39,11 +38,11 @@ export const I18nMetadataContext = createContext<I18nMetadataContextValue>([
 "use client";
 
 import React, { useMemo, useState } from "react";
+import type { I18nUtils } from "@koine/i18n";
 import { I18nMetadataContext } from "./I18nMetadataContext";
-import type { I18n } from "../types";
 
 type I18nMetadataProviderProps = React.PropsWithChildren<{
-  metadata?: I18n.Metadata;
+  metadata?: I18nUtils.Metadata;
 }>;
 
 /**
@@ -51,8 +50,8 @@ type I18nMetadataProviderProps = React.PropsWithChildren<{
  */
 export const I18nMetadataProvider = (props: I18nMetadataProviderProps) =>{
   const { children } = props;
-  const [metadata, setMetadata] = useState<I18n.Metadata>(
-    props.metadata || ({} as I18n.Metadata),
+  const [metadata, setMetadata] = useState<I18nUtils.Metadata>(
+    props.metadata || ({} as I18nUtils.Metadata),
   );
   const value = useMemo(
     () => [metadata, setMetadata] as const,
@@ -76,11 +75,11 @@ export const I18nMetadataProvider = (props: I18nMetadataProviderProps) =>{
 "use client";
 
 import React, { useContext, useEffect } from "react";
+import type { I18nUtils } from "@koine/i18n";
 import { I18nMetadataContext } from "./I18nMetadataContext";
-import type { I18n } from "../types";
 
 type I18nMetadataSetterProps = {
-  metadata: I18n.Metadata;
+  metadata: I18nUtils.Metadata;
 };
 
 /**

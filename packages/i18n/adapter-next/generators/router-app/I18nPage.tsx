@@ -40,7 +40,7 @@ export type I18nPageProps<TRouteId extends I18n.RouteId> =
        */
       locale?: I18n.Locale;
       `
-      }namespaces?: I18n.TranslateNamespace[];
+      }namespaces?: I18n.TranslationsNamespace[];
       route: I18n.RouteArgs<TRouteId>;
     }
   >;
@@ -180,7 +180,7 @@ type Configurator<TRouteId extends I18n.RouteId> = {
    * Optionally set the translations _namespaces_ to expose to the client
    * components down this page's components tree
    */
-  namespaces?: I18n.TranslateNamespace[];
+  namespaces?: I18n.TranslationsNamespace[];
   /**
    * Optionally set this manually to override the current locale
    */

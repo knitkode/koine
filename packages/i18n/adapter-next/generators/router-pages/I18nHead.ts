@@ -18,7 +18,7 @@ export default createGenerator("next", (_arg) => {
 
 import React from "react";
 import Head from "next/head";
-import { defaultI18nMetadata } from "./defaultI18nMetadata";
+import { i18nDefaultMetadata } from "@koine/i18n";
 import type { I18nHeadTagsProps } from "../I18nHeadTags";
 
 export type I18nHeadProps = I18nHeadTagsProps;
@@ -29,7 +29,7 @@ export type I18nHeadProps = I18nHeadTagsProps;
  * @internal
  */
 export const I18nHead = (props: I18nHeadProps) => {
-  const { metadata = defaultI18nMetadata } = props;
+  const { metadata = i18nDefaultMetadata } = props;
   const { alternates, canonical } = metadata;
 
   return (

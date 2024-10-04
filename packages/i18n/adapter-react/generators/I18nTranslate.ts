@@ -11,6 +11,7 @@ export default createGenerator("react", (_arg) => {
 "use client";
 
 import React, { createContext } from "react";
+import type { I18nUtils } from "@koine/i18n";
 import { defaultLocale } from "../defaultLocale";
 import type { I18n } from "../types";
 
@@ -20,7 +21,7 @@ export type I18nTranslateContextValue = {
   /**
    * Store to accumulate nested provided dictionaries
    */
-  _d: I18n.Dictionaries;
+  _d: I18nUtils.TranslationsDictionaries;
 };
 
 /**
@@ -29,7 +30,7 @@ export type I18nTranslateContextValue = {
 export const I18nTranslateContext = createContext<I18nTranslateContextValue>({
   t: ((key: string) => key) as I18n.Translate,
   locale: defaultLocale,
-  _d: {} as I18n.Dictionaries
+  _d: {} as I18nUtils.TranslationsDictionaries
 });
 `,
     },
@@ -50,7 +51,7 @@ import { setGlobalLocale } from "./setGlobalLocale";
 
 export type I18nTranslateProviderProps = React.PropsWithChildren<{
   locale?: I18n.Locale;
-  dictionaries?: I18n.Dictionaries;
+  dictionaries?: I18nUtils.TranslationsDictionaries;
 }>;
 
 /**
@@ -110,7 +111,7 @@ import { useContext, useMemo } from "react";
 import { I18nTranslateContext } from "./internal/I18nTranslateContext";
 import type { I18n } from "./types";
 
-export const useT = <T extends I18n.TranslateNamespace>(namespace: T) => {
+export const useT = <T extends I18n.TranslationsNamespace>(namespace: T) => {
   const t = useContext(I18nTranslateContext).t;
   return useMemo(
     () =>

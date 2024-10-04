@@ -1,6 +1,5 @@
 import { createGenerator } from "../../compiler/createAdapter";
 
-// TODO: reuse here tInterpolateParamsDeep and tPluralise
 export default createGenerator("js", (arg) => {
   const {
     config: { single },
@@ -22,7 +21,7 @@ export default createGenerator("js", (arg) => {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
-import type { I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
+import type { I18nUtils } from "@koine/i18n";
 import type { I18n } from "./types";${
         single
           ? ""
@@ -31,37 +30,31 @@ import { defaultLocale } from "./defaultLocale";`
       }
 import { tInterpolateParamsDeep } from "./internal/tInterpolateParamsDeep";
 
-// An optional parameter allowEmptyStrings - true as default.
-// If allowEmptyStrings parameter is marked as false,
-// it should log an error when an empty string is attempted to be translated
-// and return the namespace and key as result of the translation.
-const allowEmptyStrings = true;
-
 /**
  * Create \`t\` function based on given dictionary/dictionaries and given locale
  */
-export function createT<TDictionary extends I18n.TranslationsDictionaryLoose>(
+export function createT<TDictionary extends I18nUtils.TranslationsDictionaryLoose>(
   dictionaries: TDictionary,
   ${single ? "locale: I18n.Locale = defaultLocale" : "locale: I18n.Locale"},
   pluralRules?: Intl.PluralRules,
 ) {
   pluralRules = pluralRules || new Intl.PluralRules(locale);
   return <
-    TPath extends I18nUtils.Paths<TDictionary>,
-    TFallback extends I18nUtils.Get<TDictionary, TPath>,
-    TReturn = I18nUtils.Get<TDictionary, TPath>,
+    TTrace extends I18nUtils.Paths<TDictionary>,
+    TFallback extends I18nUtils.Get<TDictionary, TTrace>,
+    TReturn = I18nUtils.Get<TDictionary, TTrace>,
   >(
-    fullpath: TPath,
-    query?: I18n.TranslationQuery,
+    trace: TTrace,
+    query?: I18nUtils.TranslateQuery,
     fallback?: TFallback
   ): TReturn => {
-    let [namespaceOrPath, maybePath] = fullpath.split("${namespaceDelimiter}");
+    let [namespaceOrPath, maybePath] = trace.split("${namespaceDelimiter}");
     // namespace is optional, so in case there is no delimiter we just have the path
     const namespace = namespaceOrPath && maybePath ? namespaceOrPath : "";
     const path = namespaceOrPath && maybePath ? maybePath : namespaceOrPath;
     const dic = (namespace && dictionaries[namespace]) || dictionaries || {};
     const pluralisedKey = getPluralisedKey(pluralRules, dic, path, query);
-    const value = getDicValue(dic, pluralisedKey);
+    const value = getValue(dic, pluralisedKey);
       
     // check if value is empty
     if (
@@ -73,7 +66,7 @@ export function createT<TDictionary extends I18n.TranslationsDictionaryLoose>(
     ) {
       return typeof fallback !== "undefined"
         ? fallback
-        : ${fallbackDefaultStrategy === "key" ? `fullpath` : `""`} as TReturn;
+        : ${fallbackDefaultStrategy === "key" ? `trace` : `""`} as TReturn;
     }
 
     return (query ? tInterpolateParamsDeep(value, query) : value) as TReturn;
@@ -83,15 +76,14 @@ export function createT<TDictionary extends I18n.TranslationsDictionaryLoose>(
 /**
  * Get value from key (allow nested keys as parent.children)
  */
-function getDicValue(
-  dic: I18n.TranslationsDictionaryLoose,
+function getValue(
+  dic: I18nUtils.TranslationsDictionaryLoose,
   key: string = "",
 ): unknown | undefined {
-  const keyDelimiter = "${keyDelimiter}";
-  const keyParts = keyDelimiter ? key.split(keyDelimiter) : [key];
+  const keyParts = key.split("${keyDelimiter}");
 
   return keyParts.reduce(
-    (val: I18n.TranslationsDictionaryLoose | string, key: string) => {
+    (val: I18nUtils.TranslationsDictionaryLoose | string, key: string) => {
       return val?.[key as keyof typeof val] ?? {};
     },
     dic,
@@ -103,29 +95,29 @@ function getDicValue(
  */
 function getPluralisedKey(
   pluralRules: Intl.PluralRules,
-  dic: I18n.TranslationsDictionaryLoose,
+  dic: I18nUtils.TranslationsDictionaryLoose,
   key: string,
-  query?: I18n.TranslationQuery
+  query?: I18nUtils.TranslateQuery
 ): string {
   const count = query instanceof Object ? query["count"] : null;
 
   if (!query || typeof count !== "number") return key;
 
-  if (getDicValue(dic, key + "_" + count) !== undefined) {
+  if (getValue(dic, key + "_" + count) !== undefined) {
     return key + "_" + count;
   }
 
   const pluralKey = key + "_" + pluralRules.select(count);
-  if (getDicValue(dic, pluralKey) !== undefined) {
+  if (getValue(dic, pluralKey) !== undefined) {
     return pluralKey;
   }
 
-  if (getDicValue(dic, key + "${keyDelimiter}" + count) !== undefined) {
+  if (getValue(dic, key + "${keyDelimiter}" + count) !== undefined) {
     return key + "." + count;
   }
 
   const nestedKey = key + "${keyDelimiter}" + pluralRules.select(count);
-  if (getDicValue(dic, nestedKey) !== undefined) {
+  if (getValue(dic, nestedKey) !== undefined) {
     return nestedKey;
   }
 

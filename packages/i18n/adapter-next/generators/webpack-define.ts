@@ -81,7 +81,7 @@ declare global {
         : (out += ``);
 
       // use of more advanced types to extract the value from the dictionary
-      // out += `locale?: ${Locale}) => ${I18n}.TranslationAtPath<"${fullKey}">`;
+      // out += `locale?: ${Locale}) => ${I18n}.TranslationAt<"${trace}">`;
       // use of a hardcoded return type nice to read when overing the function in the IDE
       out += `locale?: ${Locale}) => ${JSON.stringify(values[config.defaultLocale])}`;
       return out;
@@ -195,10 +195,10 @@ declare global {
    * @param path e.g. \`"myNamespace${options.translations.tokens.namespaceDelimiter}myPath.nestedKey"\`
    */
   type GlobalT = <
-    TPath extends import("../types").I18n.TranslationsAllPaths,
-    TReturn = import("../types").I18n.TranslationAtPath<TPath>,
+    TTrace extends import("../types").I18n.TranslationsTrace,
+    TReturn = import("../types").I18n.TranslationAt<TTrace>,
   >(
-    path: TPath,
+    trace: TTrace,
     query?: object,
   ) => TReturn;
 
@@ -258,7 +258,7 @@ module.exports = {
 
           return "missing: " + routeId;
         })\`,
-        t: \`(function(i18nKey, params) {
+        t: \`(function(trace, params) {
           const locale = global.${GLOBAL_I18N_IDENTIFIER};
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:t", { locale });` : ``}
 
@@ -270,17 +270,17 @@ module.exports = {
             ${Object.keys(translationsToGlobalize)
               .map((key) => {
                 const translation = translationsToGlobalize[key];
-                const { fullKey } = translation;
+                const { trace } = translation;
                 const { args, body } = getTFunction(translation, config);
-                return `"${fullKey}": (${args.map((a) => a.name).join(", ")}) => { ${body({ format: "cjs" })} }`;
+                return `"${trace}": (${args.map((a) => a.name).join(", ")}) => { ${body({ format: "cjs" })} }`;
               })
               .join(",\n  ")}
           };
 
-          const fn = lookup[i18nKey];
+          const fn = lookup[trace];
           if (fn) return fn(params);
 
-          return "missing: " + i18nKey;
+          return "missing: " + trace;
         })\`,
       }
     },

@@ -35,6 +35,10 @@
     },
     "translations": {
       "ignorePaths": [
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
         "~.json"
       ],
       "createArrayIndexBasedFns": false,
@@ -54,10 +58,6 @@
         }
       }
     },
-    "adapter": {
-      "modularize": true,
-      "name": "js"
-    },
     "write": {
       "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/single-language",
       "output": ".code",
@@ -72,6 +72,10 @@
       "eslintDisable": true,
       "copyTranslations": true,
       "gitignore": "all"
+    },
+    "adapter": {
+      "modularize": true,
+      "name": "js"
     }
   },
   "input": {
@@ -127,16 +131,6 @@
         }
       },
       {
-        "path": "404.json",
-        "locale": "en",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found"
-        }
-      },
-      {
         "path": "$faq.json",
         "locale": "en",
         "data": {
@@ -146,6 +140,16 @@
               "answer": "That"
             }
           ]
+        }
+      },
+      {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found"
         }
       },
       {
@@ -456,7 +460,7 @@
       "fnName": "$t_$faq_home",
       "namespace": "$faq",
       "path": "home",
-      "fullKey": "$faq:home",
+      "trace": "$faq:home",
       "typeValue": "Array",
       "values": {
         "en": [
@@ -473,7 +477,7 @@
       "fnName": "$t_404_seo",
       "namespace": "404",
       "path": "seo",
-      "fullKey": "404:seo",
+      "trace": "404:seo",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -487,7 +491,7 @@
       "fnName": "$t_404_seo_title",
       "namespace": "404",
       "path": "seo.title",
-      "fullKey": "404:seo.title",
+      "trace": "404:seo.title",
       "typeValue": "Primitive",
       "values": {
         "en": "404 - Not found"
@@ -499,7 +503,7 @@
       "fnName": "$t_404_title",
       "namespace": "404",
       "path": "title",
-      "fullKey": "404:title",
+      "trace": "404:title",
       "typeValue": "Primitive",
       "values": {
         "en": "404, page not found"
@@ -511,7 +515,7 @@
       "fnName": "$t_account_FormUserLanguages_empty",
       "namespace": "~account/FormUserLanguages",
       "path": "empty",
-      "fullKey": "~account/FormUserLanguages:empty",
+      "trace": "~account/FormUserLanguages:empty",
       "typeValue": "Object",
       "values": {
         "en": {}
@@ -523,7 +527,7 @@
       "fnName": "$t_account_FormUserLanguages_msg",
       "namespace": "~account/FormUserLanguages",
       "path": "msg",
-      "fullKey": "~account/FormUserLanguages:msg",
+      "trace": "~account/FormUserLanguages:msg",
       "typeValue": "Primitive",
       "values": {
         "en": "Some text"
@@ -535,7 +539,7 @@
       "fnName": "$t_account_user_profile_boolShouldntBeHereBut",
       "namespace": "~account/~user~profile",
       "path": "boolShouldntBeHereBut",
-      "fullKey": "~account/~user~profile:boolShouldntBeHereBut",
+      "trace": "~account/~user~profile:boolShouldntBeHereBut",
       "typeValue": "Primitive",
       "values": {
         "en": true
@@ -547,7 +551,7 @@
       "fnName": "$t_account_user_profile_dontConsiderMeAPluralIDontHaveOther",
       "namespace": "~account/~user~profile",
       "path": "dontConsiderMeAPluralIDontHaveOther",
-      "fullKey": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther",
+      "trace": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -563,7 +567,7 @@
       "fnName": "$t_account_user_profile_dontConsiderMeAPluralIDontHaveOther_1",
       "namespace": "~account/~user~profile",
       "path": "dontConsiderMeAPluralIDontHaveOther.1",
-      "fullKey": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther.1",
+      "trace": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther.1",
       "typeValue": "Primitive",
       "values": {
         "en": "One"
@@ -575,7 +579,7 @@
       "fnName": "$t_account_user_profile_dontConsiderMeAPluralIDontHaveOther_2",
       "namespace": "~account/~user~profile",
       "path": "dontConsiderMeAPluralIDontHaveOther.2",
-      "fullKey": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther.2",
+      "trace": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther.2",
       "typeValue": "Primitive",
       "values": {
         "en": "Two"
@@ -587,7 +591,7 @@
       "fnName": "$t_account_user_profile_dontConsiderMeAPluralIDontHaveOther_3",
       "namespace": "~account/~user~profile",
       "path": "dontConsiderMeAPluralIDontHaveOther.3",
-      "fullKey": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther.3",
+      "trace": "~account/~user~profile:dontConsiderMeAPluralIDontHaveOther.3",
       "typeValue": "Primitive",
       "values": {
         "en": "Three"
@@ -599,7 +603,7 @@
       "fnName": "$t_account_user_profile_listComplex",
       "namespace": "~account/~user~profile",
       "path": "listComplex",
-      "fullKey": "~account/~user~profile:listComplex",
+      "trace": "~account/~user~profile:listComplex",
       "typeValue": "Array",
       "values": {
         "en": [
@@ -616,7 +620,7 @@
       "fnName": "$t_account_user_profile_listFlat",
       "namespace": "~account/~user~profile",
       "path": "listFlat",
-      "fullKey": "~account/~user~profile:listFlat",
+      "trace": "~account/~user~profile:listFlat",
       "typeValue": "Array",
       "values": {
         "en": [
@@ -631,7 +635,7 @@
       "fnName": "$t_account_user_profile_obj",
       "namespace": "~account/~user~profile",
       "path": "obj",
-      "fullKey": "~account/~user~profile:obj",
+      "trace": "~account/~user~profile:obj",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -680,7 +684,7 @@
       "fnName": "$t_account_user_profile_obj_objNested",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested",
-      "fullKey": "~account/~user~profile:obj.objNested",
+      "trace": "~account/~user~profile:obj.objNested",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -727,7 +731,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_listComplexNested",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.listComplexNested",
-      "fullKey": "~account/~user~profile:obj.objNested.listComplexNested",
+      "trace": "~account/~user~profile:obj.objNested.listComplexNested",
       "typeValue": "Array",
       "values": {
         "en": [
@@ -748,7 +752,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_listFlatNested",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.listFlatNested",
-      "fullKey": "~account/~user~profile:obj.objNested.listFlatNested",
+      "trace": "~account/~user~profile:obj.objNested.listFlatNested",
       "typeValue": "Array",
       "values": {
         "en": [
@@ -763,7 +767,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2",
+      "trace": "~account/~user~profile:obj.objNested.objNested2",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -784,7 +788,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2_listFlatNested22",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2.listFlatNested22",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2.listFlatNested22",
+      "trace": "~account/~user~profile:obj.objNested.objNested2.listFlatNested22",
       "typeValue": "Array",
       "values": {
         "en": [
@@ -799,7 +803,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2_objNested21",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2.objNested21",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2.objNested21",
+      "trace": "~account/~user~profile:obj.objNested.objNested2.objNested21",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -813,7 +817,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2_objNested21_k",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2.objNested21.k",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2.objNested21.k",
+      "trace": "~account/~user~profile:obj.objNested.objNested2.objNested21.k",
       "typeValue": "Primitive",
       "values": {
         "en": "v"
@@ -825,7 +829,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2_str3",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2.str3",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2.str3",
+      "trace": "~account/~user~profile:obj.objNested.objNested2.str3",
       "typeValue": "Primitive",
       "values": {
         "en": "v"
@@ -837,7 +841,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2b",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2b",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2b",
+      "trace": "~account/~user~profile:obj.objNested.objNested2b",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -857,7 +861,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2b_listFlatNested2b3",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2b.listFlatNested2b3",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2b.listFlatNested2b3",
+      "trace": "~account/~user~profile:obj.objNested.objNested2b.listFlatNested2b3",
       "typeValue": "Array",
       "values": {
         "en": [
@@ -872,7 +876,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2b_str2b1",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2b.str2b1",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2b.str2b1",
+      "trace": "~account/~user~profile:obj.objNested.objNested2b.str2b1",
       "typeValue": "Primitive",
       "values": {
         "en": "v"
@@ -884,7 +888,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2b_str2b2",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2b.str2b2",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2b.str2b2",
+      "trace": "~account/~user~profile:obj.objNested.objNested2b.str2b2",
       "typeValue": "Primitive",
       "values": {
         "en": "v"
@@ -896,7 +900,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_objNested2b_str2b4",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.objNested2b.str2b4",
-      "fullKey": "~account/~user~profile:obj.objNested.objNested2b.str2b4",
+      "trace": "~account/~user~profile:obj.objNested.objNested2b.str2b4",
       "typeValue": "Primitive",
       "values": {
         "en": "v"
@@ -908,7 +912,7 @@
       "fnName": "$t_account_user_profile_obj_objNested_str",
       "namespace": "~account/~user~profile",
       "path": "obj.objNested.str",
-      "fullKey": "~account/~user~profile:obj.objNested.str",
+      "trace": "~account/~user~profile:obj.objNested.str",
       "typeValue": "Primitive",
       "values": {
         "en": "v"
@@ -920,7 +924,7 @@
       "fnName": "$t_account_user_profile_plural",
       "namespace": "~account/~user~profile",
       "path": "plural",
-      "fullKey": "~account/~user~profile:plural",
+      "trace": "~account/~user~profile:plural",
       "typeValue": "Primitive",
       "values": {
         "en": {
@@ -937,7 +941,7 @@
       "fnName": "$t_account_user_profile_pluralAsObject",
       "namespace": "~account/~user~profile",
       "path": "pluralAsObject",
-      "fullKey": "~account/~user~profile:pluralAsObject",
+      "trace": "~account/~user~profile:pluralAsObject",
       "typeValue": "Primitive",
       "values": {
         "en": {
@@ -953,7 +957,7 @@
       "fnName": "$t_account_user_profile_pluralAsObjectWithExtraKeys",
       "namespace": "~account/~user~profile",
       "path": "pluralAsObjectWithExtraKeys",
-      "fullKey": "~account/~user~profile:pluralAsObjectWithExtraKeys",
+      "trace": "~account/~user~profile:pluralAsObjectWithExtraKeys",
       "typeValue": "Object",
       "values": {
         "en": {
@@ -970,7 +974,7 @@
       "fnName": "$t_account_user_profile_pluralAsObjectWithExtraKeys_noPluralRelated",
       "namespace": "~account/~user~profile",
       "path": "pluralAsObjectWithExtraKeys.noPluralRelated",
-      "fullKey": "~account/~user~profile:pluralAsObjectWithExtraKeys.noPluralRelated",
+      "trace": "~account/~user~profile:pluralAsObjectWithExtraKeys.noPluralRelated",
       "typeValue": "Primitive",
       "values": {
         "en": "Yes"
@@ -982,7 +986,7 @@
       "fnName": "$t_account_user_profile_pluralNoDefault",
       "namespace": "~account/~user~profile",
       "path": "pluralNoDefault",
-      "fullKey": "~account/~user~profile:pluralNoDefault",
+      "trace": "~account/~user~profile:pluralNoDefault",
       "typeValue": "Primitive",
       "values": {
         "en": {
@@ -998,7 +1002,7 @@
       "fnName": "$t_account_user_profile_title",
       "namespace": "~account/~user~profile",
       "path": "title",
-      "fullKey": "~account/~user~profile:title",
+      "trace": "~account/~user~profile:title",
       "typeValue": "Primitive",
       "values": {
         "en": "Title {{ varName }}"

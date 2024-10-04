@@ -8,13 +8,14 @@ export default createGenerator("js", (_arg) => {
       ext: "ts",
       index: false,
       content: () => /* j s */ `
+import type { I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
 import { defaultLocale } from "../defaultLocale";
 import type { I18n } from "../types";
 import { loadTranslations } from "./loadTranslations";
 
 type GetI18nDictionariesOptions = {
   locale?: I18n.Locale;
-  namespaces?: I18n.TranslateNamespace[];
+  namespaces?: I18n.TranslationsNamespace[];
 };
 
 export async function getI18nDictionaries({
@@ -31,9 +32,9 @@ export async function getI18nDictionaries({
   return namespaces.reduce((dictionaries, ns, idx) => {
     dictionaries[ns] =
       translations[idx] ||
-      (null as unknown as I18n.TranslationsDictionaryLoose);
+      (null as unknown as I18nUtils.TranslationsDictionaryLoose);
     return dictionaries;
-  }, {} as I18n.Dictionaries);
+  }, {} as I18nUtils.TranslationsDictionaries);
 }
 `,
     },

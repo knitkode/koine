@@ -23,14 +23,14 @@ import { getLocale } from "./getLocale";
  * for further customization it allows passing as first argument a custom _locale_
  * code.
  */
-export async function getT<TNamespace extends I18n.TranslateNamespace>(
+export async function getT<TNamespace extends I18n.TranslationsNamespace>(
   namespace: TNamespace,
 ): Promise<I18n.TranslateNamespaced<TNamespace>>;
-export async function getT<TNamespace extends I18n.TranslateNamespace>(
+export async function getT<TNamespace extends I18n.TranslationsNamespace>(
   locale: I18n.Locale,
   namespace: TNamespace,
 ): Promise<I18n.TranslateNamespaced<TNamespace>>;
-export async function getT<TNamespace extends I18n.TranslateNamespace>(
+export async function getT<TNamespace extends I18n.TranslationsNamespace>(
   ...args: [TNamespace | I18n.Locale] | [TNamespace | I18n.Locale, TNamespace]
   // localeOrNamespace: TNamespace | I18n.Locale,
   // _namespace?: TNamespace,
@@ -41,9 +41,9 @@ export async function getT<TNamespace extends I18n.TranslateNamespace>(
   const pluralRules = new Intl.PluralRules(locale);
 
   const t = createT({ [namespace]: translations }, pluralRules, locale);
-  return ((i18nKey: string, ...args: any[]) =>
+  return ((path: string, ...args: any[]) =>
     (t as any)(
-      \`\${namespace}:\${i18nKey}\`,
+      \`\${namespace}:\${path}\`,
       ...args,
     )) as I18n.TranslateNamespaced<TNamespace>;
 }

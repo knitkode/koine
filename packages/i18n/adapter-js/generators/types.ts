@@ -273,11 +273,8 @@ export default createGenerator("js", (arg) => {
       //  @follow [Import aliases are not permitted in a global augmentation](https://github.com/microsoft/TypeScript/issues/13175)
       content: () => /* j s */ `
 declare namespace I18n {
-  type Alternates = import("../types").I18n.Alternates;
-  type Dictionaries = import("../types").I18n.Dictionaries;
   type Locale = import("../types").I18n.Locale;
   type LocalesMap = import("../types").I18n.LocalesMap;
-  type Metadata = import("../types").I18n.Metadata;
   type Params = import("../types").I18n.Params;
   type Props = import("../types").I18n.Props;
   type RouteArgs = import("../types").I18n.RouteArgs;
@@ -291,20 +288,16 @@ declare namespace I18n {
   type RoutesChildrenOf = import("../types").I18n.RoutesChildrenOf;
   type Translate = import("../types").I18n.Translate;
   type TranslateDefault = import("../types").I18n.TranslateDefault;
-  type TranslateLoose = import("../types").I18n.TranslateLoose;
-  type TranslateLoosest = import("../types").I18n.TranslateLoosest;
-  type TranslateNamespace = import("../types").I18n.TranslateNamespace;
   type TranslateNamespaced = import("../types").I18n.TranslateNamespaced;
-  type TranslationAtPath = import("../types").I18n.TranslationAtPath;
-  type TranslationAtPathFromNamespace = import("../types").I18n.TranslationAtPathFromNamespace;
-  type TranslationAtPathGeneric = import("../types").I18n.TranslationAtPathGeneric;
-  type TranslationQuery = import("../types").I18n.TranslationQuery;
-  type TranslationsAllPaths = import("../types").I18n.TranslationsAllPaths;
+  type TranslationAt = import("../types").I18n.TranslationAt;
+  type TranslationAtGeneric = import("../types").I18n.TranslationAtGeneric;
+  type TranslationAtNamespace = import("../types").I18n.TranslationAtNamespace;
   type TranslationsDictionary = import("../types").I18n.TranslationsDictionary;
-  type TranslationsDictionaryLoose = import("../types").I18n.TranslationsDictionaryLoose;
+  type TranslationsNamespace = import("../types").I18n.TranslationsNamespace;
   type TranslationsPaths = import("../types").I18n.TranslationsPaths;
-  type TranslationsPathsAncestors = import("../types").I18n.TranslationsPathsAncestors;
-  type TranslationsPathsFrom = import("../types").I18n.TranslationsPathsFrom;
+  type TranslationsAncestorsOf = import("../types").I18n.TranslationsAncestorsOf;
+  type TranslationsChildrenOf = import("../types").I18n.TranslationsChildrenOf;
+  type TranslationsTrace = import("../types").I18n.TranslationsTrace;
 }
 `,
     },
@@ -331,6 +324,35 @@ export namespace I18n {
   export type LocalesMap<T = any> = Record<Locale, T>;
 
   /**
+   * Params globally available from the URL/folder structure \`${localeParamName}\`,
+   * named accordingly to the \`localeParam\` option (e.g. _next.js_ folder structure
+   * \`/[${localeParamName}]/my-route/page.tsx\`)
+   */
+  export type Params = {
+    ${localeParamName}: Locale;
+  };
+
+  /**
+   * Props available to each page/layout when a root \`localeParam\` is in place
+   * (e.g. _next.js_ folder structure \`/[${localeParamName}]/my-route/page.tsx\`).
+   */
+  export type Props<P = {}> = P & {
+    params: Params;
+  };
+
+  /**
+   * @internal
+   */
+  export type RouteArgs<TRouteId extends RouteId | RouteIdError> =
+    TRouteId extends RouteIdDynamic ? {
+      id: TRouteId;
+      params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
+    } : TRouteId extends RouteIdStatic | RouteIdError ? {
+      id: TRouteId;
+      params?: never;
+    } : never;
+
+  /**
    * Any of the available route id
    */
   export type RouteId = RouteIdStatic | RouteIdDynamic;
@@ -346,19 +368,19 @@ export namespace I18n {
   export type RouteIdDynamic = ${types.RouteIdDynamic};
 
   /**
-   * Map every SPA path divided by their roots to their actual pathname value for the default locale
-   */
-  export type RouteSpa = ${types.RouteSpa};
+   * Route dynamic params dictionary for each dynamic route id
+  */
+ export type RouteParams = ${types.RouteParams};
 
-  /**
-   * Map every route id to its actual pathanem value for the default locale
-   */
+ /**
+  * Map every route id to its actual pathanem value for the default locale
+  */
   export type RoutePathnames = ${types.RoutePathnames};
 
   /**
-   * Route dynamic params dictionary for each dynamic route id
+   * Map every SPA path divided by their roots to their actual pathname value for the default locale
    */
-  export type RouteParams = ${types.RouteParams};
+  export type RouteSpa = ${types.RouteSpa};
 
   /**
    * Utility to join two route ids
@@ -377,75 +399,39 @@ export namespace I18n {
   > = T extends \`\${TStarts}.\${infer First}\` ? \`\${TStarts}.\${First}\` : never;
 
   /**
-   * @internal
-   */
-  export type TranslationsDictionaryLoose = JsonObject;
-
-  /**
    * The types extracted from the translations JSON files, this is a little
    * more sophisticated than the type result of \`typeof "./en/messages.json"\`
    */
   export type TranslationsDictionary = ${types.TranslationsDictionary};
 
   /**
-   * Any of the available translations namespaces
+   * Any of the available translations dictionary namespaces
    */
-  export type TranslateNamespace = Extract<keyof TranslationsDictionary, string>;
+  export type TranslationsNamespace = Extract<keyof TranslationsDictionary, string>;
 
   /**
-   * Translation **value** found at a specific _path_ in the given _namespace_
+   * All usable traces from the whole translations dictionary.
+   */
+  export type TranslationsTrace = I18nUtils.Traces<TranslationsDictionary>;
+
+  /**
+   * All usable paths from a given translations dictionary.
+   */
+  export type TranslationsPaths<T, TAsObj extends boolean = true> = I18nUtils.Paths<T, TAsObj>;
+
+  /**
+   * All translations children paths from the given partial _trace_
    *
-   * \`TPath\` can be any of all possible paths:
-   * - \`myKey\` sub dictionaries within a namespace
-   * - \`myKey.nested\` whatever nested level of nesting within a namespace
-   */
-  export type TranslationAtPathFromNamespace<
-    TNamespace extends TranslateNamespace,
-    TPath extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
-  > = TNamespace extends TranslateNamespace
-    ? TPath extends string // TranslationsPaths<TranslationsDictionary[TNamespace]>
-      ? I18nUtils.Get<TranslationsDictionary[TNamespace], TPath>
-      : TranslationsDictionary[TNamespace]
-    : never;
-
-  /**
-   * The generic type passed and to use with {@link TranslationAtPath} when you
-   * want to build a type extending that
-   */
-  export type TranslationAtPathGeneric =
-    | TranslateNamespace
-    | TranslationsAllPaths;
-
-  /**
-   * Translation **value** found at a _path_
-   *
-   * \`TPath\` can be any of all possible paths begininng with a namespace:
+   * \`T\` can be any of all possible paths begininng with a namespace:
    * - \`namespace\` only a namespace
-   * - \`namespace:myKey\` sub dictionaries within a namespace
-   * - \`namespace:myKey.nested\` whatever nested level of nesting
+   * - \`namespace${namespaceDelimiter}myKey\` sub dictionaries within a namespace
+   * - \`namespace${namespaceDelimiter}myKey.nested\` whatever nested level of nesting
    */
-  export type TranslationAtPath<TPath extends TranslationAtPathGeneric> =
-    TPath extends TranslateNamespace
-      ? TranslationsDictionary[TPath]
-      : TPath extends \`\${infer Namespace}${namespaceDelimiter}\${infer Path}\`
-        ? Namespace extends TranslateNamespace
-          ? I18nUtils.Get<TranslationsDictionary[Namespace], Path>
-          : never
-        : never;
-
-  /**
-   * All translations paths from the given _path_
-   *
-   * \`TPath\` can be any of all possible paths begininng with a namespace:
-   * - \`namespace\` only a namespace
-   * - \`namespace:myKey\` sub dictionaries within a namespace
-   * - \`namespace:myKey.nested\` whatever nested level of nesting
-   */
-  export type TranslationsPathsFrom<TPath extends TranslationAtPathGeneric> =
-    TPath extends TranslateNamespace
-      ? TranslationsPaths<TranslationsDictionary[TPath]>
-      : TPath extends \`\${infer Namespace}${namespaceDelimiter}\${infer Path}\`
-        ? Namespace extends TranslateNamespace
+  export type TranslationsChildrenOf<T extends TranslationAtGeneric> =
+    T extends TranslationsNamespace
+      ? TranslationsPaths<TranslationsDictionary[T]>
+      : T extends \`\${infer Namespace}${namespaceDelimiter}\${infer Path}\`
+        ? Namespace extends TranslationsNamespace
           ? I18nUtils.Get<TranslationsDictionary[Namespace], Path> extends object
             ? TranslationsPaths<I18nUtils.Get<TranslationsDictionary[Namespace], Path>>
             : TranslationsPaths<TranslationsDictionary[Namespace]>
@@ -453,45 +439,62 @@ export namespace I18n {
         : never;
 
   /**
-   * All translations _paths_ of the given one, e.g. if \`TPath\` would be
-   * \`"area.main.[id].edit"\` the generated type would be the union
-   * \`"area.main.[id]" | "area.main" | "area"\`.
+   * All translations ancestor partial _paths_ of the given one, e.g. if \`T\` would be
+   * \`"area${keyDelimiter}main${keyDelimiter}[id]${keyDelimiter}edit"\` the generated type would be the union
+   * \`"area${keyDelimiter}main${keyDelimiter}[id]" | "area${keyDelimiter}main" | "area"\`.
    */
-  export type TranslationsPathsAncestors<
-    TPath extends string,
+  export type TranslationsAncestorsOf<
+    T extends string,
     TSeparator extends string = "${keyDelimiter}",
-  > = I18nUtils.BuildRecursiveJoin<Split<TPath, TSeparator>, TSeparator>;
+  > = I18nUtils.BuildRecursiveJoin<Split<T, TSeparator>, TSeparator>;
 
   /**
-   * Recursive mapped type to extract all usable string paths from a translation
-   * definition object (usually from a JSON file).
+   * Translation **value** found at the given {@link TranslationAtGeneric _namespace_ or _trace_}
+   *
+   * \`T\` can be any of all possible paths begininng with a namespace:
+   * - \`namespace\` only a namespace
+   * - \`namespace${namespaceDelimiter}myKey\` sub dictionaries within a namespace
+   * - \`namespace${namespaceDelimiter}myKey${keyDelimiter}nested\` whatever nested level of nesting
    */
-  export type TranslationsPaths<T, TAsObj extends boolean = true> = I18nUtils.Paths<T, TAsObj>;
+  export type TranslationAt<T extends TranslationAtGeneric> =
+    T extends TranslationsNamespace
+      ? TranslationsDictionary[T]
+      : T extends \`\${infer Namespace}${namespaceDelimiter}\${infer Path}\`
+        ? Namespace extends TranslationsNamespace
+          ? I18nUtils.Get<TranslationsDictionary[Namespace], Path>
+          : never
+        : never;
 
   /**
-   * Recursive mapped type of all usable string paths from the whole translations
-   * dictionary.
+   * The generic type passed to and to use with {@link TranslationAt} when you
+   * want to build a type extending that
    */
-  export type TranslationsAllPaths = I18nUtils.AllPaths<TranslationsDictionary>;
+  export type TranslationAtGeneric =
+    | TranslationsNamespace
+    | TranslationsTrace;
 
   /**
-   * Query object to populate the returned value interpolating dynamic data.
-   * 
-   * @internal
+   * Translation **value** found at a specific _path_ in the given _namespace_
+   *
+   * \`T\` can be any of all possible paths:
+   * - \`myKey\` sub dictionaries within a namespace
+   * - \`myKey${keyDelimiter}nested\` whatever nested level of nesting within a namespace
    */
-  export type TranslationQuery =
-    | undefined
-    | null
-    | {
-        [key: string]: string | number | boolean;
-      };
+  export type TranslationAtNamespace<
+    TNamespace extends TranslationsNamespace,
+    T extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
+  > = TNamespace extends TranslationsNamespace
+    ? T extends string // TranslationsPaths<TranslationsDictionary[TNamespace]>
+      ? I18nUtils.Get<TranslationsDictionary[TNamespace], T>
+      : TranslationsDictionary[TNamespace]
+    : never;
 
   /**
    * Translate function which optionally accept a namespace as first argument
    */
   export type Translate<
-    TNamespace extends TranslateNamespace | undefined = TranslateNamespace,
-  > = TNamespace extends TranslateNamespace
+    TNamespace extends TranslationsNamespace | undefined = TranslationsNamespace,
+  > = TNamespace extends TranslationsNamespace
     ? TranslateNamespaced<TNamespace>
     : TranslateDefault;
 
@@ -500,12 +503,12 @@ export namespace I18n {
    * available strings in _all_ namespaces.
    */
   export type TranslateDefault = <
-    TPath extends TranslationsAllPaths,
-    TFallback extends TranslationAtPath<TPath>,
-    TReturn = TranslationAtPath<TPath>,
+    TTrace extends TranslationsTrace,
+    TFallback extends TranslationAt<TTrace>,
+    TReturn = TranslationAt<TTrace>,
   >(
-    path: TPath,
-    query?: TranslationQuery,
+    trace: TTrace,
+    query?: I18nUtils.TranslateQuery,
     fallback?: TFallback
   ) => TReturn;
 
@@ -513,112 +516,15 @@ export namespace I18n {
    * Translate function **with** namespace, it allows to select all available
    * strings _only_ in the given namespace.
    */
-  export type TranslateNamespaced<TNamespace extends TranslateNamespace> = <
+  export type TranslateNamespaced<TNamespace extends TranslationsNamespace> = <
     TPath extends TranslationsPaths<TranslationsDictionary[TNamespace]>,
-    TFallback extends TranslationAtPathFromNamespace<TNamespace, TPath>,
-    TReturn = TranslationAtPathFromNamespace<TNamespace, TPath>,
+    TFallback extends TranslationAtNamespace<TNamespace, TPath>,
+    TReturn = TranslationAtNamespace<TNamespace, TPath>,
   >(
     path: TPath,
-    query?: TranslationQuery,
+    query?: I18nUtils.TranslateQuery,
     fallback?: TFallback
   ) => TReturn;
-
-  /**
-   * Translate function _loose_ type, to use only in implementations that uses
-   * the \`t\` function indirectly without needng knowledge of the string it needs
-   * to output.
-   */
-  export type TranslateLoose<TFallback = string, TReturn = string> = (
-    path?: any,
-    query?: TranslationQuery,
-    fallback?: TFallback
-  ) => TReturn;
-
-  /**
-   * Translate function _loosest_ type it allows to return string or object or array
-   * or whatever basically.
-   */
-  export type TranslateLoosest<TReturn = any> = (
-    path?: any,
-    query?: TranslationQuery,
-    fallback?: any
-  ) => TReturn;
-
-  /**
-   * @internal
-   */
-  export type Dictionaries = Record<string, TranslationsDictionaryLoose>;
-
-  /**
-   * @internal
-   */
-  export type RouteArgs<TRouteId extends RouteId | RouteIdError> =
-    TRouteId extends RouteIdDynamic ? {
-      id: TRouteId;
-      params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
-    } : TRouteId extends RouteIdStatic | RouteIdError ? {
-      id: TRouteId;
-      params?: never;
-    } : never;
-    // | {
-    //     id: TRouteId extends RouteIdDynamic ? TRouteId : never;
-    //     params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
-    //   }
-    // | {
-    //     id: TRouteId extends RouteIdStatic | RouteIdError ? TRouteId : never;
-    //     params?: undefined;
-    //   };
-
-  /**
-   * Params globally available from the URL/folder structure \`${localeParamName}\`,
-   * named accordingly to the \`localeParam\` option (e.g. _next.js_ folder structure
-   * \`/[${localeParamName}]/my-route/page.tsx\`)
-   */
-  export type Params = {
-    ${localeParamName}: Locale;
-  };
-
-  /**
-   * Props available to each page/layout when a root \`localeParam\` is in place
-   * (e.g. _next.js_ folder structure \`/[${localeParamName}]/my-route/page.tsx\`).
-   */
-  export type Props<P = {}> = P & {
-    params: Params;
-  };
-
-  /**
-   * Dictionary to generate SEO friendly alternate URLs \`<links>\` where:
-   * 
-   * - _key_: \`x-default\` or any valid locale code (see [Google docs](https://developers.google.com/search/docs/specialty/international/localized-versions#language-codes))
-   * - _value_: fully qualified and localised absolute URL
-   * 
-   * It can also be an empty object, for instance with error routes.
-   *
-   * NOTE: this type should satisfy the nextjs type too that is:
-   * TODO: maybe build a test for this
-   * \`\`\`ts
-   * import type { Metadata as NextMetadata } from "next";
-   * 
-   * type Alternates = NonNullable<NextMetadata["alternates"]>["languages"];
-   * \`\`\`
-   */
-  export type Alternates = Record<string, string>;
-
-  /**
-   * I18n/routing related SEO metadata:
-   *
-   * NOTE: this type should satisfy the nextjs type too that is:
-   * TODO: maybe build a test for this
-   * \`\`\`ts
-   * import type { Metadata as NextMetadata } from "next";
-   * 
-   * type Metadata = NonNullable<NextMetadata["alternates"]>;
-   * \`\`\`
-   */
-  export type Metadata = {
-    alternates: Alternates;
-    canonical: null | string;
-  }
 }
 `,
     },

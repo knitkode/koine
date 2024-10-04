@@ -9,14 +9,14 @@ export default createGenerator("js", (_arg) => {
       index: true,
       content: () => /* j s */ `
 import { createElement, domEach } from "@koine/dom";
+import type { I18nUtils } from "@koine/i18n";
 import { defaultLocale } from "./defaultLocale";
-import type { I18n } from "./types";
 
 export function getI18nAlternatesFromDom(
   includeSearch?: boolean,
   includeHash?: boolean,
 ) {
-  const alternates: I18n.Alternates = {};
+  const alternates: I18nUtils.Alternates = {};
 
   domEach("[rel='alternate'][hrefLang]", (el) => {
     const locale = el.getAttribute("hrefLang");

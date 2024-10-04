@@ -14,9 +14,9 @@ export default createGenerator("next", (arg) => {
       index: true,
       content: () => /* j s */ `
 import type { GetStaticPathsContext, GetStaticPropsContext } from "next";
+import { i18nDefaultMetadata} from "@koine/i18n";
 import type { I18nAppPropsData } from "./I18nApp";
 import { defaultLocale } from "./defaultLocale";
-import { defaultI18nMetadata} from "./internal/defaultI18nMetadata";
 import { getI18nDictionaries } from "./internal/getI18nDictionaries";
 import { getI18nMetadata } from "./internal/getI18nMetadata";
 import { type RouteIdError, isErrorRoute } from "./internal/routesError";
@@ -69,7 +69,7 @@ type I18nPropsOptions<
   TParams,
   TData,
 > = {
-  namespaces: I18n.TranslateNamespace[];
+  namespaces: I18n.TranslationsNamespace[];
   params?: TParams;
   data?: TData;
   route: I18n.RouteArgs<TRouteId>;
@@ -95,7 +95,7 @@ const props = async <
     i18n: {
       locale: locale,
       metadata: isErrorRoute(route.id)
-        ? defaultI18nMetadata
+        ? i18nDefaultMetadata
         : getI18nMetadata({ locale, ...route }),
       dictionaries: await getI18nDictionaries({ locale, namespaces }),
     },
