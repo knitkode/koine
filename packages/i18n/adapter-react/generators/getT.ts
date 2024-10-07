@@ -16,9 +16,6 @@ import { getLocale } from "./getLocale";
 /**
  * **For React RSC only**
  * 
- * It grabs the current locale from NodeJS' \`AsyncLocalStorage\` implementation
- * used in \`I18nLocaleContext\`.
- * 
  * For compatibility with the vanilla _js_ implementation of this function and
  * for further customization it allows passing as first argument a custom _locale_
  * code.
@@ -38,9 +35,8 @@ export async function getT<TNamespace extends I18n.TranslationsNamespace>(
   const locale = args.length === 1 ? getLocale() : (args[0] as I18n.Locale);
   const namespace = args[1] || (args[0] as TNamespace);
   const translations = await loadTranslations(locale, namespace);
-  const pluralRules = new Intl.PluralRules(locale);
+  const t = createT({ [namespace]: translations }, locale);
 
-  const t = createT({ [namespace]: translations }, pluralRules, locale);
   return ((path: string, ...args: any[]) =>
     (t as any)(
       \`\${namespace}:\${path}\`,

@@ -44,7 +44,7 @@ export function createT<TDictionary extends I18nUtils.TranslationsDictionaryLoos
     query?: I18nUtils.TranslateQuery,
     fallback?: TFallback
   ): TReturn => {
-    let [namespaceOrPath, maybePath] = trace.split("${namespaceDelimiter}");
+    const [namespaceOrPath, maybePath] = trace.split("${namespaceDelimiter}");
     // namespace is optional, so in case there is no delimiter we just have the path
     const namespace = namespaceOrPath && maybePath ? namespaceOrPath : "";
     const path = namespaceOrPath && maybePath ? maybePath : namespaceOrPath;

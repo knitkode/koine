@@ -16,9 +16,8 @@ export async function getT<TNamespace extends I18n.TranslationsNamespace>(
   namespace: TNamespace,
 ) {
   const translations = await loadTranslations(locale, namespace);
-  const pluralRules = new Intl.PluralRules(locale);
+  const t = createT({ [namespace]: translations }, locale);
 
-  const t = createT({ [namespace]: translations }, pluralRules, locale);
   return ((path: string, ...args: any[]) =>
     (t as any)(
       \`\${namespace}:\${path}\`,

@@ -12,7 +12,8 @@ export let i18nInterpolateParams = <T extends string | number | boolean>(
   params
     ? (value + "").replace(
         /\{\{(.*?)\}\}/g,
-        (_, key) => (params[key.trim() as keyof typeof params] || "{{" + key + "}}") + "",
+        (_, key) =>
+          (params[key.trim() as keyof typeof params] ?? "{{" + key + "}}") + "",
       )
     : value;
 

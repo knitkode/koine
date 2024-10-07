@@ -42,6 +42,13 @@ describe("i18nInterpolateParams", () => {
     expect(result).toBe("Hi, Alice!");
   });
 
+  it("should handle multiple number parameters correctly, including 0", () => {
+    const value = "Do {{ quantity }} out of {{ min }}/{{ total }}!";
+    const params = { quantity: 3, min: 0, total: 5 };
+    const result = i18nInterpolateParams(value, params);
+    expect(result).toBe("Do 3 out of 0/5!");
+  });
+
   it("should handle extra spaces in keys", () => {
     const value = "Your score is {{  score  }}.";
     const params = { score: 10 };
