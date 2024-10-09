@@ -72,9 +72,8 @@ export const I18nTranslateProvider = ({
   setGlobalLocale(locale);
 
   const parentCtx = useContext(I18nTranslateContext);
-  const pluralRules = new Intl.PluralRules(locale);
   const _d = { ...parentCtx._d, ...dictionaries };
-  const t = createT(_d, pluralRules, locale) as I18n.Translate;
+  const t = createT(_d, locale) as I18n.Translate;
 
   return (
     <I18nTranslateContext.Provider value={{ locale, t, _d }}>
