@@ -49,17 +49,9 @@ export function createT<TDictionary extends I18nUtils.TranslationsDictionaryLoos
     const namespace = namespaceOrPath && maybePath ? namespaceOrPath : "";
     const path = namespaceOrPath && maybePath ? maybePath : namespaceOrPath;
     const dic = (namespace && dictionaries[namespace]) || dictionaries || {};
-    const pluralisedKey = getPluralisedKey(pluralRules, dic, path, query);
-    const value = getValue(dic, pluralisedKey);
+    const [value, isEmpty] = getValue(pluralRules, dic, path, query);
       
-    // check if value is empty
-    if (
-      typeof value === "undefined" ||
-      value === null ||
-      value === "" ||
-      (typeof value === "object" && !Object.keys(value).length) ||
-      (Array.isArray(value) && !value.length)
-    ) {
+    if (isEmpty) {
       // special case when query is an empty string use it as fallback
       fallback = query === "" ? query : fallback;
       return (typeof fallback !== "undefined" ? fallback : ${fallbackDefaultStrategy === "key" ? `trace` : `value || ""`}) as TReturn;
@@ -69,55 +61,62 @@ export function createT<TDictionary extends I18nUtils.TranslationsDictionaryLoos
   };
 }
 
-/**
- * Get value from key (allow nested keys as parent.children)
- */
 function getValue(
-  dic: I18nUtils.TranslationsDictionaryLoose,
-  key: string = "",
-): unknown | undefined {
-  const keyParts = key.split("${keyDelimiter}");
+  pluralRules: Intl.PluralRules,
+  dictionary: I18nUtils.TranslationsDictionaryLoose,
+  path: string,
+  query?: I18nUtils.TranslateQuery
+): [unknown | undefined, boolean] {
+  const count = query instanceof Object ? query["count"] : null;
 
-  return keyParts.reduce(
-    (val: I18nUtils.TranslationsDictionaryLoose | string, key: string) => {
-      return val?.[key as keyof typeof val] ?? {};
-    },
-    dic,
-  );
+  if (typeof count === "number") {
+    const countRule = pluralRules.select(count);
+    const pluralisedPaths = [
+      path + "_" + count,
+      path + "_" + countRule,
+      path + "${keyDelimiter}" + count,
+      path + "${keyDelimiter}" + countRule,
+    ];
+  
+    for (let i = 0; i < pluralisedPaths.length; i++) {
+      const pluralisedPath = pluralisedPaths[i];
+    
+      const output = getValueAtPath(dictionary, pluralisedPath);
+      if (output[0] !== undefined) {
+        return output;
+      }
+    }
+  }
+
+  return getValueAtPath(dictionary, path);
 }
 
 /**
- * Control plural keys depending the {{count}} variable
+ * Get value at path (allow nested keys as parent.children)
  */
-function getPluralisedKey(
-  pluralRules: Intl.PluralRules,
-  dic: I18nUtils.TranslationsDictionaryLoose,
-  key: string,
-  query?: I18nUtils.TranslateQuery
-): string {
-  const count = query instanceof Object ? query["count"] : null;
+function getValueAtPath(
+  dictionary: I18nUtils.TranslationsDictionaryLoose,
+  path: string = "",
+): unknown | undefined {
+  const keys = path.split("${keyDelimiter}");
 
-  if (!query || typeof count !== "number") return key;
+  const value = keys.reduce(
+    (val: I18nUtils.TranslationsDictionaryLoose | string, key: string) => {
+      return val?.[key as keyof typeof val];
+    },
+    dictionary,
+  );
 
-  if (getValue(dic, key + "_" + count) !== undefined) {
-    return key + "_" + count;
-  }
+  // check if value is empty
+  const isEmpty = (
+    typeof value === "undefined" ||
+    value === null ||
+    value === "" ||
+    (typeof value === "object" && !Object.keys(value).length) ||
+    (Array.isArray(value) && !value.length)
+  );
 
-  const pluralKey = key + "_" + pluralRules.select(count);
-  if (getValue(dic, pluralKey) !== undefined) {
-    return pluralKey;
-  }
-
-  if (getValue(dic, key + "${keyDelimiter}" + count) !== undefined) {
-    return key + "${keyDelimiter}" + count;
-  }
-
-  const nestedKey = key + "${keyDelimiter}" + pluralRules.select(count);
-  if (getValue(dic, nestedKey) !== undefined) {
-    return nestedKey;
-  }
-
-  return key;
+  return [value, isEmpty];
 }
 
 export default createT;

@@ -7,7 +7,6 @@
     "target": "es2015",
     "module": "ES2015",
     "moduleResolution": "Bundler",
-    // "esModuleInterop": true,
     // for @vercel/ncc:
     "jsx": "react-jsx",
     "verbatimModuleSyntax": false,

@@ -8,7 +8,7 @@ export default createGenerator("js", (_arg) => {
       index: true,
       content: () => /* j s */ `
 import { loadTranslations } from "./internal/loadTranslations";
-import { createT } from "../createT";
+import { createT } from "./createT";
 import type { I18n } from "./types";
 
 export async function getT<TNamespace extends I18n.TranslationsNamespace>(

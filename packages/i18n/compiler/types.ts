@@ -63,7 +63,7 @@ export namespace I18nCompiler {
      */
     path: string;
     locale: Locale;
-    data: { [key: string]: I18nCompiler.DataTranslationValue };
+    data: { [key: string]: DataTranslationValue };
   };
 
   export type DataSummary = Record<
@@ -322,15 +322,15 @@ export namespace I18nCompiler {
    * A generator within an {@link Adapter}, responsible for generating one or
    * more files/folders
    */
-  export type AdapterGenerator<T extends I18nCompiler.AdapterName> = (
-    data: I18nCompiler.DataCode<T>,
+  export type AdapterGenerator<T extends AdapterName> = (
+    data: DataCode<T>,
   ) => AdapterGeneratorResult;
 
   /**
    * The shape of what an {@link AdapterGenerator} returns, a dictionary of
    * files where the key is a `fileId`
    */
-  export type AdapterGeneratorResult = Record<string, I18nCompiler.AdapterFile>;
+  export type AdapterGeneratorResult = Record<string, AdapterFile>;
 
   /**
    * Adapter file anatomy

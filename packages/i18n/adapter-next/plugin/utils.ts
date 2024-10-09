@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 import { join } from "path";
 import { ContextReplacementPlugin, DefinePlugin } from "webpack";
-import { swcCreateTransform } from "@koine/node/swc";
 import type { I18nCompilerOptions, I18nCompilerReturn } from "../../compiler";
+import { createSwcTransforms } from "../../compiler/createSwcTransforms";
 import { generateRedirects } from "./redirects";
 import { generateRewrites } from "./rewrites";
 import { I18nWebpackPlugin } from "./webpackPluginI18n";
@@ -75,11 +75,7 @@ export let tweakNextConfig = (
   const nextConfig: NextConfig = {
     ...restNextConfig,
     modularizeImports: {
-      ...swcCreateTransform({ path: "@koine/i18n" }),
-      // automatically create swc transforms based on given options
-      ...(write?.tsconfig
-        ? swcCreateTransform({ path: write.tsconfig.alias })
-        : {}),
+      ...createSwcTransforms(i18nCompilerReturn.options),
       ...modularizeImports,
     },
     webpack: (_webpackConfig, webpackConfigContext) => {

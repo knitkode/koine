@@ -28,6 +28,7 @@ export function getTFunction(
   options: Pick<I18nCompiler.Config, "defaultLocale" | "single">,
 ) {
   const { params: rawParams, plural } = translation;
+  const { single } = options;
   const { body, imports } = getTFunctionBodyAndImports(translation, options);
   const args: FunctionsCompilerDataArg[] = [];
   // add the plural realted param wihtout mutating the translation params data
@@ -58,7 +59,9 @@ export function getTFunction(
     name: "locale",
     type: "I18n.Locale",
     optional: true,
-    description: "Use this to override the current locale",
+    description:
+      "Use this to override the current locale" +
+      (single ? " (in case you add other locales to your project)" : ""),
     defaults: "current locale",
   });
 

@@ -7,6 +7,7 @@ import {
   type CodeDataOptions,
   type CodeDataOptionsResolved,
   defaultCodeDataOptions,
+  resolveCodeDataOptions,
 } from "./data";
 
 const getAdapterCreator = <T extends I18nCompiler.AdapterName>(name: T) => {
@@ -66,29 +67,20 @@ export const resolveAdapterOptions = <
 >(
   customCodeDataOptions: CodeDataOptions,
 ): CodeDataOptionsResolved<TAdapterName> => {
-  const {
-    adapter: customCodeDataOptionsAdapter,
-    ...restCustomCodeDataOptions
-  } = customCodeDataOptions;
-  const codeDataOptions = objectMergeWithDefaults(
-    defaultCodeDataOptions,
-    restCustomCodeDataOptions
-  );
-  const { defaultOptions } = getAdapterCreator(
-    customCodeDataOptionsAdapter.name
-  );
+  const { options, name } = customCodeDataOptions.adapter;
+  const { defaultOptions } = getAdapterCreator(name);
+  const codeDataOptions = resolveCodeDataOptions(customCodeDataOptions);
 
-  const options = objectMergeWithDefaults(codeDataOptions, {
+  return {
+    ...codeDataOptions,
     adapter: {
       ...(objectMergeWithDefaults(
         defaultOptions,
-        customCodeDataOptionsAdapter.options,
+        options,
       ) as I18nCompiler.AdapterConfigurationResolved<TAdapterName>),
-      name: customCodeDataOptionsAdapter.name,
+      name,
     },
-  });
-
-  return options;
+  };
 };
 
 export const getAdapterFileMeta = (

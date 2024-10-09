@@ -59,6 +59,25 @@ export const codeDataTranslationsOptions = {
   /**
    * Functions generation options
    */
+  dictionaries: {
+    /**
+     * The directory name relative within the code `output` path where the
+     * generated dictionaries are written.
+     *
+     * @default "$dictionary"
+     */
+    dir: "$dictionary",
+    /**
+     * Generated `{prefix}_namespace` prefix, prepended to the automatically
+     * generated dictionaries objects.
+     *
+     * @default "$dictionary_"
+     */
+    prefix: "$dictionary_",
+  },
+  /**
+   * Functions generation options
+   */
   functions: {
     /**
      * The directory name relative within the code `output` path where the
@@ -68,7 +87,7 @@ export const codeDataTranslationsOptions = {
      */
     dir: "$t",
     /**
-     * Generated `namespace_tKey()` functions prefix, prepended to the automatically
+     * Generated `{prefix}_namespace_path()` functions prefix, prepended to the automatically
      * generated function names.
      *
      * @default "$t_"
@@ -297,9 +316,9 @@ function manageDataTranslationsPlurals(
   });
 }
 
-function getTranslationFunctionName(
-  options: CodeDataTranslationsOptions,
+export function normaliseTranslationTraceIdentifier(
   trace: string,
+  prefix = "",
 ) {
   // return options.functions.prefix + changeCaseSnake(trace);
   let replaced = trace
@@ -316,7 +335,14 @@ function getTranslationFunctionName(
   replaced = /^[0-9]/.test(replaced) ? "_" + replaced : replaced;
 
   // collapse consecutive underscores
-  return (options.functions.prefix + replaced).replace(/_+/g, "_");
+  return (prefix + replaced).replace(/_+/g, "_");
+}
+
+function getTranslationFunctionName(
+  options: CodeDataTranslationsOptions,
+  trace: string,
+) {
+  return normaliseTranslationTraceIdentifier(trace, options.functions.prefix);
 }
 
 function createTranslationEntry(
@@ -442,6 +468,15 @@ function addDataTranslationEntry(
 }
 
 /**
+ * Simply remove the extension, the namespace is the path without it, e.g.:
+ *
+ * from `path` `~account/~profile/edit.json` we get `"~account/~profile/edit"`
+ */
+export function translationPathToNamespace(path: string) {
+  return join(dirname(path), basename(path, extname(path)));
+}
+
+/**
  * Get translation data recursively starting from a specific file
  */
 function getCodeDataTranslationsFromFile(
@@ -451,7 +486,7 @@ function getCodeDataTranslationsFromFile(
 ): I18nCompiler.DataTranslations {
   const { locale, path } = file;
   // from `path` `~account/~profile/edit.json` we get `"~account/~profile/edit"`
-  const namespace = join(dirname(path), basename(path, extname(path)));
+  const namespace = translationPathToNamespace(path);
   let id = namespace;
 
   for (const key in file.data) {

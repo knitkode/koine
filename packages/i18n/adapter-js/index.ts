@@ -1,6 +1,7 @@
 import { createAdapter } from "../compiler/createAdapter";
 import config from "./generators/config";
 import createT from "./generators/createT";
+import dictionary from "./generators/dictionary";
 import formatTo from "./generators/formatTo";
 import formatUrl from "./generators/formatUrl";
 // import getI18nAlternatesFromDom from "./generators/getI18nAlternatesFromDom";
@@ -59,6 +60,7 @@ export const adapterJs = createAdapter({
     return [
       config,
       createT,
+      dictionary,
       formatTo,
       formatUrl,
       getI18nDictionaries,

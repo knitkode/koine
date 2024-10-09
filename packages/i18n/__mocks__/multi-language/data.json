@@ -1,10 +1,7 @@
 {
   "config": {
     "baseUrl": "https://example.com",
-    "locales": [
-      "en",
-      "it"
-    ],
+    "locales": ["en", "it"],
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
@@ -35,17 +32,14 @@
       }
     },
     "translations": {
-      "ignorePaths": [
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json"
-      ],
+      "ignorePaths": ["~.json", "~.json"],
       "createArrayIndexBasedFns": false,
       "fallbackDefaultStrategy": "key",
       "useDefaultLocaleWhenEmpty": true,
+      "dictionaries": {
+        "dir": "$dictionary",
+        "prefix": "$dictionary_"
+      },
       "functions": {
         "dir": "$t",
         "prefix": "$t_",
@@ -64,9 +58,7 @@
       "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/__mocks__/multi-language",
       "output": ".code",
       "emptyOutputFolder": true,
-      "ignorePaths": [
-        "createT.ts"
-      ],
+      "ignorePaths": ["createT.ts"],
       "tsconfig": {
         "path": "../tsconfig.json",
         "alias": "@/i18n"
@@ -83,35 +75,8 @@
     }
   },
   "input": {
-    "localesFolders": [
-      "en",
-      "it"
-    ],
+    "localesFolders": ["en", "it"],
     "translationFiles": [
-      {
-        "path": "404.json",
-        "locale": "en",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyEn": "a",
-          "onlyEnArray": [
-            "a",
-            "b"
-          ],
-          "onlyEnObject": {
-            "a": "a",
-            "b": "b"
-          },
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
-          }
-        }
-      },
       {
         "path": "~.json",
         "locale": "en",
@@ -160,6 +125,27 @@
         }
       },
       {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyEn": "a",
+          "onlyEnArray": ["a", "b"],
+          "onlyEnObject": {
+            "a": "a",
+            "b": "b"
+          },
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
+          }
+        }
+      },
+      {
         "path": "$faq.json",
         "locale": "en",
         "data": {
@@ -169,6 +155,66 @@
               "answer": "That"
             }
           ]
+        }
+      },
+      {
+        "path": "~account/~user~profile.json",
+        "locale": "en",
+        "data": {
+          "boolShouldntBeHereBut": true,
+          "title": "Title {{ varName }}",
+          "plural": "Plural",
+          "plural_one": "One {{ who }}",
+          "plural_other": "Some {{ who }}",
+          "plural_zero": "Zero {{ who }}",
+          "pluralNoDefault_one": "One",
+          "pluralNoDefault_other": "Some",
+          "pluralAsObject": {
+            "one": "One",
+            "other": "Others"
+          },
+          "pluralAsObjectWithExtraKeys": {
+            "one": "One",
+            "other": "Others",
+            "noPluralRelated": "Yes"
+          },
+          "dontConsiderMeAPluralIDontHaveOther": {
+            "1": "One",
+            "2": "Two",
+            "3": "Three"
+          },
+          "listFlat": ["v1", "v2"],
+          "listComplex": [
+            {
+              "k1": "v1",
+              "k2": "v2"
+            }
+          ],
+          "obj": {
+            "objNested": {
+              "str": "v",
+              "listFlatNested": ["v1", "v2"],
+              "listComplexNested": [
+                {
+                  "k1": "v1 en {{ nestedVarName1 }}",
+                  "k2": "v2 {{ nestedVarName2 }}"
+                }
+              ],
+              "objNested2": {
+                "objNested21": {
+                  "k": "v"
+                },
+                "listFlatNested22": ["v1", "v2"],
+                "str3": "v"
+              },
+              "objNested2b": {
+                "str2b1": "v",
+                "str2b2": "v",
+                "listFlatNested2b3": ["v1", "v2"],
+                "str2b4": "v"
+              }
+            }
+          }
         }
       },
       {
@@ -242,78 +288,6 @@
         }
       },
       {
-        "path": "~account/~user~profile.json",
-        "locale": "en",
-        "data": {
-          "boolShouldntBeHereBut": true,
-          "title": "Title {{ varName }}",
-          "plural": "Plural",
-          "plural_one": "One {{ who }}",
-          "plural_other": "Some {{ who }}",
-          "plural_zero": "Zero {{ who }}",
-          "pluralNoDefault_one": "One",
-          "pluralNoDefault_other": "Some",
-          "pluralAsObject": {
-            "one": "One",
-            "other": "Others"
-          },
-          "pluralAsObjectWithExtraKeys": {
-            "one": "One",
-            "other": "Others",
-            "noPluralRelated": "Yes"
-          },
-          "dontConsiderMeAPluralIDontHaveOther": {
-            "1": "One",
-            "2": "Two",
-            "3": "Three"
-          },
-          "listFlat": [
-            "v1",
-            "v2"
-          ],
-          "listComplex": [
-            {
-              "k1": "v1",
-              "k2": "v2"
-            }
-          ],
-          "obj": {
-            "objNested": {
-              "str": "v",
-              "listFlatNested": [
-                "v1",
-                "v2"
-              ],
-              "listComplexNested": [
-                {
-                  "k1": "v1 en {{ nestedVarName1 }}",
-                  "k2": "v2 {{ nestedVarName2 }}"
-                }
-              ],
-              "objNested2": {
-                "objNested21": {
-                  "k": "v"
-                },
-                "listFlatNested22": [
-                  "v1",
-                  "v2"
-                ],
-                "str3": "v"
-              },
-              "objNested2b": {
-                "str2b1": "v",
-                "str2b2": "v",
-                "listFlatNested2b3": [
-                  "v1",
-                  "v2"
-                ],
-                "str2b4": "v"
-              }
-            }
-          }
-        }
-      },
-      {
         "path": "$faq.json",
         "locale": "it",
         "data": {
@@ -323,14 +297,6 @@
               "answer": "Quello"
             }
           ]
-        }
-      },
-      {
-        "path": "~account/FormUserLanguages.json",
-        "locale": "it",
-        "data": {
-          "empty": {},
-          "msg": "Del testo"
         }
       },
       {
@@ -359,10 +325,7 @@
             "2": "Due",
             "3": "Tre"
           },
-          "listFlat": [
-            "v1",
-            "v2"
-          ],
+          "listFlat": ["v1", "v2"],
           "listComplex": [
             {
               "k1": "v1",
@@ -372,10 +335,7 @@
           "obj": {
             "objNested": {
               "str": "v",
-              "listFlatNested": [
-                "v1",
-                "v2"
-              ],
+              "listFlatNested": ["v1", "v2"],
               "listComplexNested": [
                 {
                   "k1": "v1 ita {{ nestedVarName1 }}",
@@ -386,23 +346,25 @@
                 "objNested21": {
                   "k": "v"
                 },
-                "listFlatNested22": [
-                  "v1",
-                  "v2"
-                ],
+                "listFlatNested22": ["v1", "v2"],
                 "str3": "v"
               },
               "objNested2b": {
                 "str2b1": "v",
                 "str2b2": "v",
-                "listFlatNested2b3": [
-                  "v1",
-                  "v2"
-                ],
+                "listFlatNested2b3": ["v1", "v2"],
                 "str2b4": "v"
               }
             }
           }
+        }
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "locale": "it",
+        "data": {
+          "empty": {},
+          "msg": "Del testo"
         }
       }
     ]
@@ -614,9 +576,7 @@
         }
       }
     },
-    "wildcardIds": [
-      "apps.tool"
-    ],
+    "wildcardIds": ["apps.tool"],
     "onlyStaticRoutes": false,
     "dynamicRoutes": [
       "account.user.[id]",
@@ -684,10 +644,7 @@
       "trace": "404:onlyEnArray",
       "typeValue": "Array",
       "values": {
-        "en": [
-          "a",
-          "b"
-        ]
+        "en": ["a", "b"]
       },
       "equalValues": true
     },
@@ -951,14 +908,8 @@
       "trace": "~account/~user~profile:listFlat",
       "typeValue": "Array",
       "values": {
-        "en": [
-          "v1",
-          "v2"
-        ],
-        "it": [
-          "v1",
-          "v2"
-        ]
+        "en": ["v1", "v2"],
+        "it": ["v1", "v2"]
       },
       "equalValues": true
     },
@@ -973,10 +924,7 @@
         "en": {
           "objNested": {
             "str": "v",
-            "listFlatNested": [
-              "v1",
-              "v2"
-            ],
+            "listFlatNested": ["v1", "v2"],
             "listComplexNested": [
               {
                 "k1": "v1 en {{ nestedVarName1 }}",
@@ -987,19 +935,13 @@
               "objNested21": {
                 "k": "v"
               },
-              "listFlatNested22": [
-                "v1",
-                "v2"
-              ],
+              "listFlatNested22": ["v1", "v2"],
               "str3": "v"
             },
             "objNested2b": {
               "str2b1": "v",
               "str2b2": "v",
-              "listFlatNested2b3": [
-                "v1",
-                "v2"
-              ],
+              "listFlatNested2b3": ["v1", "v2"],
               "str2b4": "v"
             }
           }
@@ -1007,10 +949,7 @@
         "it": {
           "objNested": {
             "str": "v",
-            "listFlatNested": [
-              "v1",
-              "v2"
-            ],
+            "listFlatNested": ["v1", "v2"],
             "listComplexNested": [
               {
                 "k1": "v1 ita {{ nestedVarName1 }}",
@@ -1021,19 +960,13 @@
               "objNested21": {
                 "k": "v"
               },
-              "listFlatNested22": [
-                "v1",
-                "v2"
-              ],
+              "listFlatNested22": ["v1", "v2"],
               "str3": "v"
             },
             "objNested2b": {
               "str2b1": "v",
               "str2b2": "v",
-              "listFlatNested2b3": [
-                "v1",
-                "v2"
-              ],
+              "listFlatNested2b3": ["v1", "v2"],
               "str2b4": "v"
             }
           }
@@ -1054,10 +987,7 @@
       "values": {
         "en": {
           "str": "v",
-          "listFlatNested": [
-            "v1",
-            "v2"
-          ],
+          "listFlatNested": ["v1", "v2"],
           "listComplexNested": [
             {
               "k1": "v1 en {{ nestedVarName1 }}",
@@ -1068,28 +998,19 @@
             "objNested21": {
               "k": "v"
             },
-            "listFlatNested22": [
-              "v1",
-              "v2"
-            ],
+            "listFlatNested22": ["v1", "v2"],
             "str3": "v"
           },
           "objNested2b": {
             "str2b1": "v",
             "str2b2": "v",
-            "listFlatNested2b3": [
-              "v1",
-              "v2"
-            ],
+            "listFlatNested2b3": ["v1", "v2"],
             "str2b4": "v"
           }
         },
         "it": {
           "str": "v",
-          "listFlatNested": [
-            "v1",
-            "v2"
-          ],
+          "listFlatNested": ["v1", "v2"],
           "listComplexNested": [
             {
               "k1": "v1 ita {{ nestedVarName1 }}",
@@ -1100,19 +1021,13 @@
             "objNested21": {
               "k": "v"
             },
-            "listFlatNested22": [
-              "v1",
-              "v2"
-            ],
+            "listFlatNested22": ["v1", "v2"],
             "str3": "v"
           },
           "objNested2b": {
             "str2b1": "v",
             "str2b2": "v",
-            "listFlatNested2b3": [
-              "v1",
-              "v2"
-            ],
+            "listFlatNested2b3": ["v1", "v2"],
             "str2b4": "v"
           }
         }
@@ -1156,14 +1071,8 @@
       "trace": "~account/~user~profile:obj.objNested.listFlatNested",
       "typeValue": "Array",
       "values": {
-        "en": [
-          "v1",
-          "v2"
-        ],
-        "it": [
-          "v1",
-          "v2"
-        ]
+        "en": ["v1", "v2"],
+        "it": ["v1", "v2"]
       },
       "equalValues": true
     },
@@ -1179,20 +1088,14 @@
           "objNested21": {
             "k": "v"
           },
-          "listFlatNested22": [
-            "v1",
-            "v2"
-          ],
+          "listFlatNested22": ["v1", "v2"],
           "str3": "v"
         },
         "it": {
           "objNested21": {
             "k": "v"
           },
-          "listFlatNested22": [
-            "v1",
-            "v2"
-          ],
+          "listFlatNested22": ["v1", "v2"],
           "str3": "v"
         }
       },
@@ -1206,14 +1109,8 @@
       "trace": "~account/~user~profile:obj.objNested.objNested2.listFlatNested22",
       "typeValue": "Array",
       "values": {
-        "en": [
-          "v1",
-          "v2"
-        ],
-        "it": [
-          "v1",
-          "v2"
-        ]
+        "en": ["v1", "v2"],
+        "it": ["v1", "v2"]
       },
       "equalValues": true
     },
@@ -1271,19 +1168,13 @@
         "en": {
           "str2b1": "v",
           "str2b2": "v",
-          "listFlatNested2b3": [
-            "v1",
-            "v2"
-          ],
+          "listFlatNested2b3": ["v1", "v2"],
           "str2b4": "v"
         },
         "it": {
           "str2b1": "v",
           "str2b2": "v",
-          "listFlatNested2b3": [
-            "v1",
-            "v2"
-          ],
+          "listFlatNested2b3": ["v1", "v2"],
           "str2b4": "v"
         }
       },
@@ -1297,14 +1188,8 @@
       "trace": "~account/~user~profile:obj.objNested.objNested2b.listFlatNested2b3",
       "typeValue": "Array",
       "values": {
-        "en": [
-          "v1",
-          "v2"
-        ],
-        "it": [
-          "v1",
-          "v2"
-        ]
+        "en": ["v1", "v2"],
+        "it": ["v1", "v2"]
       },
       "equalValues": true
     },

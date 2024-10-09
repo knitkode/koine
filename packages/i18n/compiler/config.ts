@@ -18,7 +18,7 @@ export type I18nCompilerConfig = {
    * By default this is computed by using the first locale computed or defined
    * @default "en"
    */
-  defaultLocale: I18nCompiler.Locale;
+  defaultLocale?: I18nCompiler.Locale;
   /**
    * @default true
    */
@@ -94,7 +94,7 @@ export let getConfig = (
 
   // ensure sorted locales
   merged.locales = merged.locales.sort((a, b) =>
-    merged.defaultLocale ? -1 : a.localeCompare(b),
+    a === merged.defaultLocale ? -1 : a.localeCompare(b),
   );
 
   // compute single

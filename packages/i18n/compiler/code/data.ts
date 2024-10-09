@@ -1,4 +1,8 @@
-import { type PartialDeep } from "@koine/utils";
+import {
+  type PartialDeep,
+  type SetOptional,
+  objectMergeWithDefaults,
+} from "@koine/utils";
 import type { I18nCompiler } from "../types";
 import { resolveAdapterOptions } from "./adapters";
 import { codeDataRoutesOptions, getCodeDataRoutes } from "./data-routes";
@@ -77,6 +81,18 @@ export let getCodeDataSync = <TAdapterName extends I18nCompiler.AdapterName>(
 ): I18nCompiler.DataCode<TAdapterName> => {
   const resolvedOptions = resolveAdapterOptions(options);
   return resolveCodeData(config, resolvedOptions, input);
+};
+
+export let resolveCodeDataOptions = (
+  customCodeDataOptions: SetOptional<CodeDataOptions, "adapter">,
+): Omit<CodeDataOptionsResolved, "adapter"> => {
+  const { adapter, ...restCustomCodeDataOptions } = customCodeDataOptions;
+  const codeDataOptions = objectMergeWithDefaults(
+    defaultCodeDataOptions,
+    restCustomCodeDataOptions,
+  );
+
+  return codeDataOptions;
 };
 
 function resolveCodeData<TAdapterName extends I18nCompiler.AdapterName>(

@@ -4,7 +4,8 @@
     "outDir": "../../dist/out-tsc",
     "types": ["jest", "node"],
     "allowSyntheticDefaultImports": true,
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "esModuleInterop": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.spec.ts", "**/*.d.ts"]
 }

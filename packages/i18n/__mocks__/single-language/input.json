@@ -1,7 +1,5 @@
 {
-  "localesFolders": [
-    "en"
-  ],
+  "localesFolders": ["en"],
   "translationFiles": [
     {
       "path": "~.json",
@@ -51,6 +49,16 @@
       }
     },
     {
+      "path": "404.json",
+      "locale": "en",
+      "data": {
+        "seo": {
+          "title": "404 - Not found"
+        },
+        "title": "404, page not found"
+      }
+    },
+    {
       "path": "$faq.json",
       "locale": "en",
       "data": {
@@ -60,16 +68,6 @@
             "answer": "That"
           }
         ]
-      }
-    },
-    {
-      "path": "404.json",
-      "locale": "en",
-      "data": {
-        "seo": {
-          "title": "404 - Not found"
-        },
-        "title": "404, page not found"
       }
     },
     {
@@ -98,10 +96,7 @@
           "2": "Two",
           "3": "Three"
         },
-        "listFlat": [
-          "v1",
-          "v2"
-        ],
+        "listFlat": ["v1", "v2"],
         "listComplex": [
           {
             "k1": "v1",
@@ -111,10 +106,7 @@
         "obj": {
           "objNested": {
             "str": "v",
-            "listFlatNested": [
-              "v1",
-              "v2"
-            ],
+            "listFlatNested": ["v1", "v2"],
             "listComplexNested": [
               {
                 "k1": "v1 {{ nestedVarName1 }}",
@@ -125,19 +117,13 @@
               "objNested21": {
                 "k": "v"
               },
-              "listFlatNested22": [
-                "v1",
-                "v2"
-              ],
+              "listFlatNested22": ["v1", "v2"],
               "str3": "v"
             },
             "objNested2b": {
               "str2b1": "v",
               "str2b2": "v",
-              "listFlatNested2b3": [
-                "v1",
-                "v2"
-              ],
+              "listFlatNested2b3": ["v1", "v2"],
               "str2b4": "v"
             }
           }
