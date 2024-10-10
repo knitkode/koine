@@ -14,7 +14,7 @@ import type { AppProps } from "next/app";
 import { type I18nUtils, i18nDefaultMetadata } from "@koine/i18n";
 import { I18nHead } from "./internal/I18nHead";
 import { I18nMetadataProvider } from "./internal/I18nMetadataProvider";
-import { I18nTranslateProvider } from "./internal/I18nTranslateProvider";
+import { I18nTranslateProvider } from "./I18nTranslateProvider";
 import { defaultLocale } from "./defaultLocale";
 import { I18nEffects } from "./I18nEffects";
 import type { I18n } from "./types";

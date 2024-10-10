@@ -212,7 +212,7 @@ declare global {
   var ${globalize.prefix}: {
     t: GlobalT;
     to: GlobalTo;
-  }
+  };
 }
 `;
       },
@@ -234,7 +234,7 @@ module.exports = {
       ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define:ctx.module", _ctx.module);` : ``};
       return {
         to: \`(function(routeId, params) {
-          const locale = global.${GLOBAL_I18N_IDENTIFIER};
+          const locale = globalThis.${GLOBAL_I18N_IDENTIFIER};
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:to", { locale });` : ``}
 
           const defaultLocale = "${config.defaultLocale}";
@@ -261,7 +261,7 @@ module.exports = {
           return "missing: " + routeId;
         })\`,
         t: \`(function(trace, params) {
-          const locale = global.${GLOBAL_I18N_IDENTIFIER};
+          const locale = globalThis.${GLOBAL_I18N_IDENTIFIER};
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:t", { locale });` : ``}
 
           ${tPluralise().$outInline()}

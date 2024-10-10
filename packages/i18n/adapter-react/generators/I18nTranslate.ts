@@ -35,19 +35,18 @@ export const I18nTranslateContext = createContext<I18nTranslateContextValue>({
 `,
     },
     I18nTranslateProvider: {
-      dir: createGenerator.dirs.internal,
       name: "I18nTranslateProvider",
       ext: "tsx",
-      index: false,
+      index: true,
       content: () => /* j s */ `
 "use client";
 
 import React, { useContext } from "react";
-import { createT } from "../createT";
-import { defaultLocale } from "../defaultLocale";
-import type { I18n } from "../types";
-import { I18nTranslateContext } from "./I18nTranslateContext";
-import { setGlobalLocale } from "./setGlobalLocale";
+import { I18nTranslateContext } from "./internal/I18nTranslateContext";
+import { setGlobalLocale } from "./internal/setGlobalLocale";
+import { createT } from "./createT";
+import { defaultLocale } from "./defaultLocale";
+import type { I18n } from "./types";
 
 export type I18nTranslateProviderProps = React.PropsWithChildren<{
   locale?: I18n.Locale;

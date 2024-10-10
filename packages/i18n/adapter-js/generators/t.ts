@@ -94,7 +94,7 @@ function getTFunctionBodyAndImports(
     body: (functionBodyOpts: FunctionsCompilerBodyOptions) => {
       // let body = ""; // with implicitReturn: true
       let body = hasValuableLocalisation
-        ? "locale = locale || global." + GLOBAL_I18N_IDENTIFIER + "; "
+        ? "locale = locale || globalThis." + GLOBAL_I18N_IDENTIFIER + "; "
         : "";
       body += "return ";
 

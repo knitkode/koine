@@ -51,7 +51,7 @@ function createServerContext() {
       current = value;
       return current;
     },
-    get: () => global.${GLOBAL_I18N_IDENTIFIER} || current || storage.getStore() || defaultLocale,
+    get: () => globalThis.${GLOBAL_I18N_IDENTIFIER} || current || storage.getStore() || defaultLocale,
   };
 }
 

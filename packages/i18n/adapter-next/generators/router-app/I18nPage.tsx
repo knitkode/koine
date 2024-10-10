@@ -18,6 +18,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
 import { defaultLocale } from "../defaultLocale";
+import { I18nTranslateProvider } from "../I18nTranslateProvider";
 import { isLocale } from "../isLocale";
 import { locales } from "../locales";
 import type { I18n } from "../types";
@@ -25,7 +26,6 @@ import { getI18nDictionaries } from "../internal/getI18nDictionaries";
 import { getI18nMetadata } from "../internal/getI18nMetadata";
 import { I18nMetadataSetter } from "../internal/I18nMetadataSetter";
 import { I18nRouteSetter } from "../internal/I18nRouteSetter";
-import { I18nTranslateProvider } from "../internal/I18nTranslateProvider";
 import { getLocale } from "./getLocale";
 import { I18nLocaleContext } from "./I18nLocaleContext";
 
