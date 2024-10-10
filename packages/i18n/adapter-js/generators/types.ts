@@ -267,7 +267,7 @@ export default createGenerator("js", (arg) => {
       //  An import alias would allow the following?
       // export {};
 
-      // declare globalThis {
+      // declare global {
       //     import I18n = import("../types").I18n;
       // }
       //  @follow [Import aliases are not permitted in a global augmentation](https://github.com/microsoft/TypeScript/issues/13175)

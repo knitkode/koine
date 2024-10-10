@@ -10,7 +10,7 @@ export const setGlobalLocale = (_options?: never) =>
     args: [{ name: "value", type: "I18n.Locale", optional: false }],
     before: ({ format }) =>
       format === "ts"
-        ? `declare globalThis {
+        ? `declare global {
   var ${GLOBAL_I18N_IDENTIFIER}: I18n.Locale;
 }
 `
@@ -28,7 +28,7 @@ export default createGenerator("js", (_arg) => {
       ext: "d.ts",
       index: false,
       content: () => `
-declare globalThis {
+declare global {
   var ${GLOBAL_I18N_IDENTIFIER}: import("../types").I18n.Locale;
 }
 `,
