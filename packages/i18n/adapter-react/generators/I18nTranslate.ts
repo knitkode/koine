@@ -54,7 +54,6 @@ export type I18nTranslateProviderProps = React.PropsWithChildren<{
 }>;
 
 /**
- * @internal
  */
 export const I18nTranslateProvider = ({
   locale = defaultLocale,
@@ -80,6 +79,8 @@ export const I18nTranslateProvider = ({
     </I18nTranslateContext.Provider>
   );
 };
+
+export default I18nTranslateProvider;
 `,
     },
     useLocale: {
