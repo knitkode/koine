@@ -1,7 +1,9 @@
 import { formatTo } from "../../adapter-js/generators/formatTo";
+import {
+  i18nInterpolateParamsCompiler,
+  i18nInterpolateParamsDeepCompiler,
+} from "../../adapter-js/generators/interpolate";
 import { getTFunction } from "../../adapter-js/generators/t";
-import { tInterpolateParams } from "../../adapter-js/generators/tInterpolateParams";
-import { tInterpolateParamsDeep } from "../../adapter-js/generators/tInterpolateParamsDeep";
 import { tPluralise } from "../../adapter-js/generators/tPluralise";
 import { getToFunction } from "../../adapter-js/generators/to";
 import { getTypeLocale } from "../../adapter-js/generators/types";
@@ -134,8 +136,8 @@ module.exports = {
         collapseWhitespaces(
           [
             "`(function(" + args.map(a => a.name).join(", ") + ") {",
-              params ? tInterpolateParams(options.translations.tokens.dynamicDelimiters).$outInline() : "",
-              params ? (typeValue === "Primitive" ? "" : tInterpolateParamsDeep().$outInline()) : "",
+              params ? i18nInterpolateParamsCompiler(options.translations.tokens.dynamicDelimiters).$outInline() : "",
+              params ? (typeValue === "Primitive" ? "" : i18nInterpolateParamsDeepCompiler().$outInline()) : "",
               plural ? tPluralise().$outInline() : "",
               body({ format: "cjs" }),
             "})`,",
@@ -263,8 +265,8 @@ module.exports = {
           ${debug === "internal" ? `console.log("[@koine/i18n]:webpack-define-compact:t", { locale });` : ``}
 
           ${tPluralise().$outInline()}
-          ${tInterpolateParams(options.translations.tokens.dynamicDelimiters).$outInline()}
-          ${tInterpolateParamsDeep().$outInline()}
+          ${i18nInterpolateParamsCompiler(options.translations.tokens.dynamicDelimiters).$outInline()}
+          ${i18nInterpolateParamsDeepCompiler().$outInline()}
 
           const lookup = {
             ${Object.keys(translationsToGlobalize)

@@ -8,14 +8,13 @@ import formatUrl from "./generators/formatUrl";
 import getI18nDictionaries from "./generators/getI18nDictionaries";
 import getI18nMetadata from "./generators/getI18nMetadata";
 import getT from "./generators/getT";
+import interpolate from "./generators/interpolate";
 import isLocale from "./generators/isLocale";
 import loadTranslations from "./generators/loadTranslations";
 import pathnameToRouteId from "./generators/pathnameToRouteId";
 import routes from "./generators/routes";
 import setLocale from "./generators/setLocale";
 import t from "./generators/t";
-import tInterpolateParams from "./generators/tInterpolateParams";
-import tInterpolateParamsDeep from "./generators/tInterpolateParamsDeep";
 import tPluralise from "./generators/tPluralise";
 import to from "./generators/to";
 import types from "./generators/types";
@@ -68,14 +67,13 @@ export const adapterJs = createAdapter({
       // TODO: probably remove it or move it to `i18n/client` public utils
       // getI18nAlternatesFromDom,
       getT,
+      interpolate,
       isLocale,
       loadTranslations,
       pathnameToRouteId,
       routes,
       setLocale,
       t,
-      tInterpolateParams,
-      tInterpolateParamsDeep,
       tPluralise,
       to,
       types,
