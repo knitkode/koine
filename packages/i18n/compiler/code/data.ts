@@ -1,6 +1,7 @@
 import {
   type PartialDeep,
   type SetOptional,
+  type SimplifyDeep,
   objectMergeWithDefaults,
 } from "@koine/utils";
 import type { I18nCompiler } from "../types";
@@ -31,7 +32,7 @@ export type CodeDataOptionsTranslations = typeof codeDataTranslationsOptions;
  * Options for _code data_ generation
  */
 export type CodeDataOptions /* <TAdapterName extends I18nCompiler.AdapterName> */ =
-  {
+  SimplifyDeep<{
     /**
      * The adapater configuration to use for code generation.
      * Specify its `name` and `options` in an _object dictionary_.
@@ -45,7 +46,7 @@ export type CodeDataOptions /* <TAdapterName extends I18nCompiler.AdapterName> *
      * User defined {@link CodeDataOptionsTranslations}
      */
     translations?: PartialDeep<CodeDataOptionsTranslations>;
-  };
+  }>;
 
 export type CodeDataOptionsResolved<
   TAdapterName extends I18nCompiler.AdapterName = I18nCompiler.AdapterName,
