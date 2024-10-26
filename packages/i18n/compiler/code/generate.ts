@@ -62,7 +62,9 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
 
     Object.keys(files).forEach((fileId) => {
       // check that we haven't already generated this file
-      if (previousAdaptersGeneratedFilesIds[fileId]) return;
+      if (previousAdaptersGeneratedFilesIds[fileId]) {
+        return;
+      }
 
       previousAdaptersGeneratedFilesIds[fileId] = 1;
 
@@ -71,7 +73,9 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
       const transformer = transformers?.[transformerId];
 
       // bail if transformer is set to `false`
-      if (transformer === false) return;
+      if (transformer === false) {
+        return;
+      }
 
       const file =
         transformer === true || !transformer
@@ -79,7 +83,9 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
           : transformer(_file as never);
 
       // bail if generator is disabled
-      if (file.disabled) return;
+      if (file.disabled) {
+        return;
+      }
 
       const { dir, name, path } = getAdapterFileMeta(file, {});
       const { content } = file;
