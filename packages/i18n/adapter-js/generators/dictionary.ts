@@ -35,7 +35,7 @@ export default createGenerator("js", (data) => {
 
   return Object.keys(dictionariesPathsByNamespace).reduce((map, namespace) => {
     const pathsByLocale = dictionariesPathsByNamespace[namespace];
-    const fileId = `dictionary_${namespace}`;
+    const fileId = `$dictionary_${namespace}`;
     const fnName = normaliseTranslationTraceIdentifier(namespace, prefix);
     map[fileId] = {
       dir,
