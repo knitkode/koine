@@ -45,6 +45,7 @@ describe("test projects", () => {
   //       baseUrl: "https://your.io",
   //       defaultLocale: "en",
   //       hideDefaultLocaleInUrl: true,
+  //       // logLevel: 5,
   //       input: {
   //         source: "../../Your/translations",
   //         // source:
