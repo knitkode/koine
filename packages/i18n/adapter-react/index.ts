@@ -2,12 +2,11 @@ import { type Options as AdapterJsOptions, adapterJs } from "../adapter-js";
 import { createAdapter } from "../compiler/createAdapter";
 import I18nEffects from "./generators/I18nEffects";
 import I18nHeadTags from "./generators/I18nHeadTags";
-import I18nLocaleContext from "./generators/I18nLocaleContext";
 import I18nMetadata from "./generators/I18nMetadata";
 import I18nRoute from "./generators/I18nRoute";
 import I18nTranslate from "./generators/I18nTranslate";
+import locale from "./generators/locale";
 import Trans from "./generators/Trans";
-import getLocale from "./generators/getLocale";
 import getT from "./generators/getT";
 import getTo from "./generators/getTo";
 import useRouteId from "./generators/useRouteId";
@@ -29,12 +28,11 @@ export const adapterReact = createAdapter({
       ...adapterJs.getGenerators(data),
       I18nEffects,
       I18nHeadTags,
-      I18nLocaleContext,
       I18nMetadata,
       I18nRoute,
       I18nTranslate,
+      locale,
       Trans,
-      getLocale,
       getT,
       getTo,
       useRouteId,

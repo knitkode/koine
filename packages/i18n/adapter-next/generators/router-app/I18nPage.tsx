@@ -17,7 +17,7 @@ export default createGenerator("next", (arg) => {
 import React from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
-import { defaultLocale } from "../defaultLocale";
+import { i18nConsole } from "@koine/i18n";
 import { I18nTranslateProvider } from "../I18nTranslateProvider";
 import { isLocale } from "../isLocale";
 import { locales } from "../locales";
@@ -27,7 +27,7 @@ import { getI18nMetadata } from "../internal/getI18nMetadata";
 import { I18nMetadataSetter } from "../internal/I18nMetadataSetter";
 import { I18nRouteSetter } from "../internal/I18nRouteSetter";
 import { getLocale } from "./getLocale";
-import { I18nLocaleContext } from "./I18nLocaleContext";
+import { setLocale } from "./setLocale";
 
 export type I18nPageProps<TRouteId extends I18n.RouteId> =
   React.PropsWithChildren<
@@ -123,13 +123,8 @@ function pageInit(paramsOrProps: I18n.Props["params"] | I18n.Props) {
         single
           ? ``
           : `
-      // set the server context based locale as early as possible, usually this
-      // function is called as first thing in the page components. Setting the
-      // locale here might help reducing the cases where a 't' function needed
-      // in those "root" page components is obtained by calling 'getT' without
-      // passing a 'locale' argument. Passing the 'locale' should not be needed
-      // actually, but...
-      I18nLocaleContext.set(locale);
+      // set the server context based locale as early as possible
+      setLocale(locale);
       `
       }return locale;
     }
@@ -249,7 +244,7 @@ export const createI18nPage = <
     | TConfig,
 ) => {
   const resolveConfigurator = async (props: I18n.Props<TProps>) => {
-    const localeParam = pageInit(props);
+    const localeParam = pageInit(props);${createGenerator.log(arg, "createI18nPage", "resolveConfigurator", "localeParam")}
     const config =
       typeof configurator === "function"
         ? await configurator(props, localeParam)
@@ -283,7 +278,7 @@ export const createI18nPage = <
       ) => React.ReactNode | Promise<React.ReactNode>,
     ) => {
       return async (props: I18n.Props<TProps>) => {
-        const { locale, route, namespaces } = await resolveConfigurator(props);
+        const { locale, route, namespaces } = await resolveConfigurator(props);${createGenerator.log(arg, "page.default", "resolveConfigurator", "locale")}
         const render = await impl({ locale, route, ...props });
         return (
           <I18nPage

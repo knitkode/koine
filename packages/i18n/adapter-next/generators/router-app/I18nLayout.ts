@@ -17,15 +17,14 @@ export default createGenerator("next", (arg) => {
       content: () => /* j s */ `
 import React from "react";
 import type { Metadata } from "next/types";
-import { i18nRtlLocales } from "@koine/i18n";
+import { i18nConsole, i18nRtlLocales } from "@koine/i18n";
 import { getI18nDictionaries } from "../internal/getI18nDictionaries";
 import { I18nTranslateProvider } from "../I18nTranslateProvider";
-import { defaultLocale } from "../defaultLocale";
 import { locales } from "../locales";
 import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
 import { I18nLayoutRoot } from "./I18nLayoutRoot";
-import { I18nLocaleContext } from "./I18nLocaleContext";
+import { setLocale } from "./setLocale";
 
 export type I18nLayoutProps = React.PropsWithChildren<Configurator>;
 
@@ -44,17 +43,13 @@ export const I18nLayout = async ({
   locale = locale || getLocale();
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
 
-  I18nLocaleContext.set(locale);
-
   return (
-    <I18nLocaleContext.Provider value={locale}>
-      <I18nTranslateProvider
-        locale={locale}
-        dictionaries={dictionaries}
-      >
-        {children}
-      </I18nTranslateProvider>
-    </I18nLocaleContext.Provider>
+    <I18nTranslateProvider
+      locale={locale}
+      dictionaries={dictionaries}
+    >
+      {children}
+    </I18nTranslateProvider>
   );
 };
 
@@ -156,7 +151,7 @@ export const createI18nLayout = <
     | Configurator,
 ) => {
   const resolveConfigurator = async (props: I18n.Props<TProps>) => {
-    const localeParam = props.params?.${localeParamName};
+    const localeParam = props.params?.${localeParamName};${createGenerator.log(arg, "createI18nLayout", "resolveConfigurator", "localeParam")}
     const config = configurator
       ? typeof configurator === "function"
         ? await configurator(props, localeParam)
@@ -164,6 +159,9 @@ export const createI18nLayout = <
       : null;
     const { locale: localeConfig, ...restConfig } = config || {};
     const locale = localeConfig || getLocale();
+
+    setLocale(locale);
+
     return { ...restConfig, locale };
   };
 
@@ -203,7 +201,7 @@ export const createI18nLayout = <
     ) => {
       return async (props: I18n.Props<TProps>) => {
         const config = await resolveConfigurator(props);
-        const { locale } = config;
+        const { locale } = config;${createGenerator.log(arg, "layout.default", "resolveConfigurator", "locale")}
         const dir = i18nRtlLocales.includes(locale) ? "rtl" : "ltr";
         const i18nHtmlAttrs = { lang: locale, dir };
         const I18nScript = (
