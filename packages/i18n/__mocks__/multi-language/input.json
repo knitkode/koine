@@ -1,5 +1,8 @@
 {
-  "localesFolders": ["it", "en"],
+  "localesFolders": [
+    "it",
+    "en"
+  ],
   "translationFiles": [
     {
       "path": "~.json",
@@ -57,7 +60,10 @@
         },
         "title": "404, page not found",
         "onlyEn": "a",
-        "onlyEnArray": ["a", "b"],
+        "onlyEnArray": [
+          "a",
+          "b"
+        ],
         "onlyEnObject": {
           "a": "a",
           "b": "b"
@@ -107,7 +113,10 @@
           "2": "Two",
           "3": "Three"
         },
-        "listFlat": ["v1", "v2"],
+        "listFlat": [
+          "v1",
+          "v2"
+        ],
         "listComplex": [
           {
             "k1": "v1",
@@ -117,7 +126,10 @@
         "obj": {
           "objNested": {
             "str": "v",
-            "listFlatNested": ["v1", "v2"],
+            "listFlatNested": [
+              "v1",
+              "v2"
+            ],
             "listComplexNested": [
               {
                 "k1": "v1 en {{ nestedVarName1 }}",
@@ -128,13 +140,19 @@
               "objNested21": {
                 "k": "v"
               },
-              "listFlatNested22": ["v1", "v2"],
+              "listFlatNested22": [
+                "v1",
+                "v2"
+              ],
               "str3": "v"
             },
             "objNested2b": {
               "str2b1": "v",
               "str2b2": "v",
-              "listFlatNested2b3": ["v1", "v2"],
+              "listFlatNested2b3": [
+                "v1",
+                "v2"
+              ],
               "str2b4": "v"
             }
           }
@@ -249,7 +267,10 @@
           "2": "Due",
           "3": "Tre"
         },
-        "listFlat": ["v1", "v2"],
+        "listFlat": [
+          "v1",
+          "v2"
+        ],
         "listComplex": [
           {
             "k1": "v1",
@@ -259,7 +280,10 @@
         "obj": {
           "objNested": {
             "str": "v",
-            "listFlatNested": ["v1", "v2"],
+            "listFlatNested": [
+              "v1",
+              "v2"
+            ],
             "listComplexNested": [
               {
                 "k1": "v1 ita {{ nestedVarName1 }}",
@@ -270,13 +294,19 @@
               "objNested21": {
                 "k": "v"
               },
-              "listFlatNested22": ["v1", "v2"],
+              "listFlatNested22": [
+                "v1",
+                "v2"
+              ],
               "str3": "v"
             },
             "objNested2b": {
               "str2b1": "v",
               "str2b2": "v",
-              "listFlatNested2b3": ["v1", "v2"],
+              "listFlatNested2b3": [
+                "v1",
+                "v2"
+              ],
               "str2b4": "v"
             }
           }
