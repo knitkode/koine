@@ -8,6 +8,7 @@
     "build": {
       "options": {
         "additionalEntryPoints": [
+          "packages/i18n/i18nConsole.ts",
           "packages/i18n/i18nDefaultMetadata.ts",
           "packages/i18n/i18nFormatRoutePathname.ts",
           "packages/i18n/i18nInterpolateParams.ts",
