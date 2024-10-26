@@ -91,3 +91,25 @@ createGenerator.dirs = {
   server: "server",
   test: "test",
 };
+
+/**
+ * Prints a `console.log` statement based on the current `logLevel` configuration
+ * 
+ * @param options The _argument_ passed to the `createGenerator` function creator
+ * @param generatorName The generator name
+ * @param fnName The function name where the loggin happes
+ * @param args Whatever you would pass to `console.log`, everyhing will be printed unquoted, so if you intend to log a literal string double quote it like `"'myString'"`
+ * @returns An empty string or the `console.log` statement preceded by `\n`
+ */
+createGenerator.log = (
+  options: { config: Pick<I18nCompiler.Config, "logLevel"> },
+  generatorName: string,
+  fnName: string,
+  ...args: unknown[]
+) => {
+  return options.config.logLevel > 3 ? (
+    `\nif (process.env.NODE_ENV === "development") ` +
+    `i18nConsole(\`${generatorName}${fnName ? "~" + fnName : ""}:\`, ${args.join(", ")})`
+    // `console.log(\`[i18n] ${generatorName}~${fnName}:\`, ${args.join(", ")});`
+  ) : "";
+};

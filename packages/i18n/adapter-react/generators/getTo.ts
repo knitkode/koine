@@ -20,8 +20,7 @@ import { getLocale } from "./getLocale";
 /**
  * **For React RSC only**
  * 
- * By default it grabs the current locale from NodeJS' \`AsyncLocalStorage\`
- * implementation used in \`I18nLocaleContext\`.
+ * @param {locale} By default it uses the current locale
  */
 export function getTo(locale = getLocale()) {
   return <Id extends I18n.RouteId>(

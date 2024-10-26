@@ -1,6 +1,6 @@
 import { createGenerator } from "../../compiler/createAdapter";
 
-export default createGenerator("react", (_arg) => {
+export default createGenerator("react", (arg) => {
   return {
     I18nTranslateContext: {
       dir: createGenerator.dirs.internal,
@@ -42,6 +42,7 @@ export const I18nTranslateContext = createContext<I18nTranslateContextValue>({
 "use client";
 
 import React, { useContext } from "react";
+import { i18nConsole, type I18nUtils } from "@koine/i18n";
 import { I18nTranslateContext } from "./internal/I18nTranslateContext";
 import { setGlobalLocale } from "./internal/setGlobalLocale";
 import { createT } from "./createT";
@@ -67,7 +68,7 @@ export const I18nTranslateProvider = ({
   // (the "rsc" webpack layer), while here we set it in a client component (the
   // "ssr" webpack layer) making the locale available in all client components
   // and in the webpack-define implementation
-  setGlobalLocale(locale);
+  setGlobalLocale(locale);${createGenerator.log(arg, "I18nTranslateProvider", "setGlobalLocale", "locale")}
 
   const parentCtx = useContext(I18nTranslateContext);
   const _d = { ...parentCtx._d, ...dictionaries };

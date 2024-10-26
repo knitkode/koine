@@ -1,6 +1,6 @@
 import { createGenerator } from "../../compiler/createAdapter";
 
-export default createGenerator("react", (_arg) => {
+export default createGenerator("react", (arg) => {
   return {
     getT: {
       dir: createGenerator.dirs.server,
@@ -8,6 +8,7 @@ export default createGenerator("react", (_arg) => {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
+import { i18nConsole } from "@koine/i18n";
 import { loadTranslations } from "../internal/loadTranslations";
 import { createT } from "../createT";
 import type { I18n } from "../types";
@@ -33,7 +34,7 @@ export async function getT<TNamespace extends I18n.TranslationsNamespace>(
   // _namespace?: TNamespace,
 ) {
   const locale = args.length === 1 ? getLocale() : (args[0] as I18n.Locale);
-  const namespace = args[1] || (args[0] as TNamespace);
+  const namespace = args[1] || (args[0] as TNamespace);${createGenerator.log(arg, "getT", "", "{ locale, namespace }")}
   const translations = await loadTranslations(locale, namespace);
   const t = createT({ [namespace]: translations }, locale);
 
