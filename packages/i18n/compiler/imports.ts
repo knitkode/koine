@@ -170,7 +170,6 @@ export class ImportsCompiler {
     if (format === "ts") return this.#ts(data, options);
     if (format === "cjs") return this.#cjs(data, options);
     throw Error(`ImportsCompiler: Unsupported format '${format}'`);
-    return "";
   }
 
   static outMany(

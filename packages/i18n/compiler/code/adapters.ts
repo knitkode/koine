@@ -6,7 +6,7 @@ import type { I18nCompiler } from "../types";
 import {
   type CodeDataOptions,
   type CodeDataOptionsResolved,
-  defaultCodeDataOptions,
+  // defaultCodeDataOptions,
   resolveCodeDataOptions,
 } from "./data";
 

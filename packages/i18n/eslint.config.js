@@ -7,7 +7,6 @@ module.exports = [
   ...baseConfig,
   {
     ignores: [
-      "packages/i18n/__mocks__",
       "__mocks__/",
       "packages/i18n/__mocks__/",
     ],

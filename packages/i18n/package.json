@@ -2,7 +2,7 @@
   "name": "@koine/i18n",
   "sideEffects": false,
   "engines": {
-    "node": "^14.18.0 || >=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@koine/node": "*",
@@ -16,7 +16,7 @@
     "webpack": "^5.90.1"
   },
   "peerDependencies": {
-    "next": "^14.0.4"
+    "next": "^13 || ^14 || ^15"
   },
   "peerDependenciesMeta": {
     "next": {

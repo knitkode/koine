@@ -1,4 +1,4 @@
-import type { PickDeep } from "type-fest";
+import type { PickDeep } from "@koine/utils";
 import { swcCreateTransform } from "@koine/node/swc";
 import type { CodeDataOptionsResolved } from "./code";
 

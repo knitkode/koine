@@ -5,6 +5,7 @@ describe("test projects", () => {
     // pretend we are not testing, these are affecting projects outside
     // of this library
     process.env["JEST_WORKER_ID"] = undefined;
+    console.log(i18nCompiler.name);
   });
 
   test("pretending we are not testing should work", () => {
