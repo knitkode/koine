@@ -1,4 +1,4 @@
-import { I18nUtils } from './types';
+import type { I18nUtils } from './types';
 
 /**
  * Default metadata shape for I18n SEO
