@@ -109,7 +109,7 @@ createGenerator.log = (
 ) => {
   return options.config.logLevel > 3 ? (
     `\nif (process.env.NODE_ENV === "development") ` +
-    `i18nConsole(\`${generatorName}${fnName ? "~" + fnName : ""}:\`, ${args.join(", ")})`
+    `i18nConsole.log.first(\`${generatorName}${fnName ? "~" + fnName : ""}:\`, ${args.join(", ")})`
     // `console.log(\`[i18n] ${generatorName}~${fnName}:\`, ${args.join(", ")});`
   ) : "";
 };

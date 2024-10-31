@@ -18,7 +18,7 @@ import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
 
 /**
- * **For React RSC only**
+ * **For React Server Components only**
  * 
  * @param {locale} By default it uses the current locale
  */

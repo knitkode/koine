@@ -21,6 +21,14 @@ import types from "./generators/types";
 
 export type Options = {
   /**
+   * A valid JavaScript object key identifier on whc
+   * 
+   * @default "__i18n_locale"
+   */
+  // globalize: {
+  //   locale: string;
+  // };
+  /**
    * - When `true` it outpus each function in a separate file with a `named` and a
    * `default` export in order to fully support SWC transforms optimization (see
    * _Next.js_ **modularizeImports** option).
@@ -53,6 +61,9 @@ export type Options = {
 export const adapterJs = createAdapter({
   name: "js",
   defaultOptions: {
+    // globalize: {
+    //   locale: "__i18n_locale",
+    // },
     modularize: true,
   } satisfies Options,
   getGenerators: (_data) => {

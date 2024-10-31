@@ -15,7 +15,7 @@ import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
 
 /**
- * **For React RSC only**
+ * **For React Server Components only**
  * 
  * For compatibility with the vanilla _js_ implementation of this function and
  * for further customization it allows passing as first argument a custom _locale_

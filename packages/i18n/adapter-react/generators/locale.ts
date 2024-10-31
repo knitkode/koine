@@ -26,7 +26,7 @@ function createServerContext<T>(
   defaultValue: T,
   onSet?: (value: T) => void,
 ): [() => T, (v: T) => void] {
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "development") {
     if (Boolean(React.useState)) {
       throw new Error("createServerContext only works in RSC");
     }
@@ -43,7 +43,7 @@ function createServerContext<T>(
 };
 
 /**
- * **For React RSC only**
+ * **For React Server Components only**
  * 
  * @internal
  */
@@ -63,7 +63,7 @@ import React from "react";
 import { localeServerContext } from "../internal/localeServerContext";
 
 /**
- * **For React RSC only**
+ * **For React Server Components only**
  * 
  * It gets the current locale
  */
@@ -82,7 +82,7 @@ import React from "react";
 import { localeServerContext } from "../internal/localeServerContext";
 
 /**
- * **For React RSC only**
+ * **For React Server Components only**
  * 
  * It sets the current locale
  */

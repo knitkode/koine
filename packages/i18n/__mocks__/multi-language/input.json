@@ -5,53 +5,6 @@
   ],
   "translationFiles": [
     {
-      "path": "~.json",
-      "locale": "en",
-      "data": {
-        "home": "/",
-        "about": "/about",
-        "account": {
-          "user": {
-            "profile": "/account/user",
-            "[id]": "/account/user/{{ id }}",
-            "settings": {
-              "index": "/account/user/settings",
-              "personal": "/account/user/settings/personal"
-            }
-          }
-        },
-        "products": {
-          "index": "/products",
-          "[id]": {
-            "index": "^/{{ id }}",
-            "edit": {
-              "index": "^/edit",
-              "details": "^/details"
-            }
-          }
-        },
-        "apps": {
-          "tool": {
-            "[[...spa]]": "/apps/tool",
-            "things": {
-              "index": "^/things",
-              "[id]": {
-                "index": "^/{{ id }}",
-                "detail": {
-                  "index": "^/detail",
-                  "new": "^/new",
-                  "[detailId]": {
-                    "index": "^/{{ detailId }}",
-                    "edit": "^/edit"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    {
       "path": "404.json",
       "locale": "en",
       "data": {
@@ -76,15 +29,11 @@
       }
     },
     {
-      "path": "$faq.json",
+      "path": "~account/FormUserLanguages.json",
       "locale": "en",
       "data": {
-        "home": [
-          {
-            "question": "What is?",
-            "answer": "That"
-          }
-        ]
+        "empty": {},
+        "msg": "Some text"
       }
     },
     {
@@ -160,14 +109,6 @@
       }
     },
     {
-      "path": "~account/FormUserLanguages.json",
-      "locale": "en",
-      "data": {
-        "empty": {},
-        "msg": "Some text"
-      }
-    },
-    {
       "path": "~.json",
       "locale": "it",
       "data": {
@@ -231,6 +172,65 @@
     },
     {
       "path": "$faq.json",
+      "locale": "en",
+      "data": {
+        "home": [
+          {
+            "question": "What is?",
+            "answer": "That"
+          }
+        ]
+      }
+    },
+    {
+      "path": "~.json",
+      "locale": "en",
+      "data": {
+        "home": "/",
+        "about": "/about",
+        "account": {
+          "user": {
+            "profile": "/account/user",
+            "[id]": "/account/user/{{ id }}",
+            "settings": {
+              "index": "/account/user/settings",
+              "personal": "/account/user/settings/personal"
+            }
+          }
+        },
+        "products": {
+          "index": "/products",
+          "[id]": {
+            "index": "^/{{ id }}",
+            "edit": {
+              "index": "^/edit",
+              "details": "^/details"
+            }
+          }
+        },
+        "apps": {
+          "tool": {
+            "[[...spa]]": "/apps/tool",
+            "things": {
+              "index": "^/things",
+              "[id]": {
+                "index": "^/{{ id }}",
+                "detail": {
+                  "index": "^/detail",
+                  "new": "^/new",
+                  "[detailId]": {
+                    "index": "^/{{ detailId }}",
+                    "edit": "^/edit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "$faq.json",
       "locale": "it",
       "data": {
         "home": [
@@ -239,6 +239,14 @@
             "answer": "Quello"
           }
         ]
+      }
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "locale": "it",
+      "data": {
+        "empty": {},
+        "msg": "Del testo"
       }
     },
     {
@@ -311,14 +319,6 @@
             }
           }
         }
-      }
-    },
-    {
-      "path": "~account/FormUserLanguages.json",
-      "locale": "it",
-      "data": {
-        "empty": {},
-        "msg": "Del testo"
       }
     }
   ]

@@ -1,11 +1,24 @@
 import * as t from "./__mocks__/multi-language/.code/$t";
 import { $dictionary_404 } from "./__mocks__/multi-language/.code/$dictionary";
 import { to } from "./__mocks__/multi-language/.code/to";
-import { getT } from "./__mocks__/multi-language/.code"
+import { getT } from "./__mocks__/multi-language/.code/server"
 import { createT } from "./__mocks__/multi-language/.code";
 import * as multiTo from "./__mocks__/multi-language/.code/$to";
 import * as singleTo from "./__mocks__/single-language/.code/$to";
 import * as dictionary_accountUserProfile from "./__mocks__/multi-language/.code/translations/en/~account/~user~profile.json";
+
+jest.mock("@koine/i18n", () => jest.requireActual("./index"));
+
+// @see https://github.com/vercel/next.js/discussions/49304#discussioncomment-7690268
+jest.mock("react", () => {
+  const testCache = <T extends (...args: Array<unknown>) => unknown>(func: T) => func;
+  const originalModule = jest.requireActual("react");
+  return {
+      ...originalModule,
+      cache: testCache,
+  };
+});
+
 
 describe("test mocked output code", () => {
 
