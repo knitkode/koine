@@ -26,5 +26,6 @@ import { I18n } from "@/i18n";
 const myLocale: I18n["Locale"] = "";
 
 ```
+
 This was discarded for a better _dx_ as using `I18n["Locale"]` is not as nice as using the namespace form of this `I18n.Locale`.
 For a better _dx_ it was also decided not to export any `I18n` namespace from `@koine/i18n` to avoid amibguity in the IDE autocomplete feature as the same namespace is always exported from the compiled output.

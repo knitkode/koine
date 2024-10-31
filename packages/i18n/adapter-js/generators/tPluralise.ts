@@ -26,8 +26,7 @@ export default createGenerator("js", (_arg) => {
       name: "tPluralise",
       ext: "ts",
       index: false,
-      content: () =>
-        tPluralise().$out("ts", { imports: {}, exports: "named" }),
+      content: () => tPluralise().$out("ts", { imports: {}, exports: "named" }),
     },
   };
 });

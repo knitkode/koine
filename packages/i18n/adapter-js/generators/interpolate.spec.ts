@@ -1,9 +1,11 @@
-import { i18nInterpolateParams } from "./i18nInterpolateParams";
-import { i18nInterpolateParamsDeep } from "./i18nInterpolateParamsDeep";
+import {
+  i18nInterpolateParamsCompiler,
+  i18nInterpolateParamsDeepCompiler,
+} from "./interpolate";
 
 describe("i18nInterpolateParamsDeep", () => {
-  const fn = i18nInterpolateParamsDeep().$createTestableFn(
-    i18nInterpolateParams({
+  const fn = i18nInterpolateParamsDeepCompiler().$createTestableFn(
+    i18nInterpolateParamsCompiler({
       start: "{{",
       end: "}}",
     }).$createTestableFn(),

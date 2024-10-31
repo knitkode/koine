@@ -22,7 +22,7 @@ import types from "./generators/types";
 export type Options = {
   /**
    * A valid JavaScript object key identifier on whc
-   * 
+   *
    * @default "__i18n_locale"
    */
   // globalize: {

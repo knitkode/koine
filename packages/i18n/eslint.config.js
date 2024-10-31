@@ -6,10 +6,7 @@ const baseConfig = require("../../eslint.config.js");
 module.exports = [
   ...baseConfig,
   {
-    ignores: [
-      "__mocks__/",
-      "packages/i18n/__mocks__/",
-    ],
+    ignores: ["__mocks__/", "packages/i18n/__mocks__/"],
     // files: ["packages/i18n/**/*.ts", "packages/i18n/**/*.tsx"],
     // rules: {},
   },

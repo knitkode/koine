@@ -66,7 +66,7 @@ function transformRoute(route: RoutesMapRoute) {
         part = part.replace("*", "");
         const isDynamic = part.startsWith("{{") && part.endsWith("}}");
         const asValue = isDynamic
-          ? (part.match(/{{(.+)}}/)?.[1].trim() ?? "")
+          ? part.match(/{{(.+)}}/)?.[1].trim() ?? ""
           : part.trim();
         const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");
 
@@ -84,7 +84,7 @@ function transformRoute(route: RoutesMapRoute) {
       .map((part) => {
         const isDynamic = part.startsWith("[") && part.endsWith("]");
         const asValue = isDynamic
-          ? (part.match(/\[(.+)\]/)?.[1].trim() ?? "")
+          ? part.match(/\[(.+)\]/)?.[1].trim() ?? ""
           : part.trim();
         const hasWildcard = mapPartsByIdx[asValue]?.hasWildcard;
         const asPath = encodeURIComponent(asValue) + (hasWildcard ? "*" : "");

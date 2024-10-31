@@ -6,7 +6,7 @@ describe("ImportsCompiler", () => {
     defaulT: "myFn",
     named: [{ name: "myUtil" }, { name: "MyType", type: true }],
   };
-  
+
   it("should instantiate correctly with provided data", () => {
     const compiler = new ImportsCompiler(defaultData);
     expect(compiler.data).toEqual(defaultData);
@@ -52,10 +52,12 @@ describe("ImportsCompiler", () => {
           `const { myUtil } = require("./lib");`,
       );
     });
-    
+
     it("should output TypeScript import correctly", () => {
       const result = ImportsCompiler.out(defaultData, "ts", { folderUp: 1 });
-      expect(result).toBe('import myFn, { myUtil, type MyType } from "../lib";');
+      expect(result).toBe(
+        'import myFn, { myUtil, type MyType } from "../lib";',
+      );
     });
 
     it("should output CommonJS import correctly", () => {
@@ -99,7 +101,9 @@ describe("ImportsCompiler", () => {
         }),
       ]);
 
-      expect(result).toBe(`import myLib, { named, type MyType } from "@o/l";\n\n`);
+      expect(result).toBe(
+        `import myLib, { named, type MyType } from "@o/l";\n\n`,
+      );
     });
 
     it("should throw error for multiple default imports from the same path", () => {

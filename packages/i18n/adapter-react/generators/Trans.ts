@@ -4,11 +4,9 @@ export default createGenerator("react", (arg) => {
   const {
     options: {
       translations: {
-        tokens: {
-          namespaceDelimiter
-        }
-      }
-    }
+        tokens: { namespaceDelimiter },
+      },
+    },
   } = arg;
 
   return {

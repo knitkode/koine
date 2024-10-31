@@ -68,7 +68,9 @@ export function createAdapter<
   // TODO: this assertion is not type safe, is just a workaround that allows us
   // to easily re-use other adapters' generators withing a getGenerators function
   // but the data argument passed to this function is problematic
-  adapter.getGenerators = config.getGenerators as <TAdapterName extends I18nCompiler.AdapterName>(
+  adapter.getGenerators = config.getGenerators as <
+    TAdapterName extends I18nCompiler.AdapterName,
+  >(
     data: I18nCompiler.DataCode<TAdapterName>,
   ) => I18nCompiler.AdapterGenerator<I18nCompiler.AdapterName>[];
   adapter.defaultOptions = config.defaultOptions;
@@ -94,7 +96,7 @@ createGenerator.dirs = {
 
 /**
  * Prints a `console.log` statement based on the current `logLevel` configuration
- * 
+ *
  * @param options The _argument_ passed to the `createGenerator` function creator
  * @param generatorName The generator name
  * @param fnName The function name where the loggin happes
@@ -107,9 +109,9 @@ createGenerator.log = (
   fnName: string,
   ...args: unknown[]
 ) => {
-  return options.config.logLevel > 3 ? (
-    `\nif (process.env.NODE_ENV === "development") ` +
-    `i18nConsole.log.first(\`${generatorName}${fnName ? "~" + fnName : ""}:\`, ${args.join(", ")})`
-    // `console.log(\`[i18n] ${generatorName}~${fnName}:\`, ${args.join(", ")});`
-  ) : "";
+  return options.config.logLevel > 3
+    ? `\nif (process.env.NODE_ENV === "development") ` +
+        `i18nConsole.log.first(\`${generatorName}${fnName ? "~" + fnName : ""}:\`, ${args.join(", ")})`
+    : // `console.log(\`[i18n] ${generatorName}~${fnName}:\`, ${args.join(", ")});`
+      "";
 };

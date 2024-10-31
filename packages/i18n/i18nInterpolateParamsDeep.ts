@@ -6,10 +6,9 @@ import { i18nInterpolateParams } from "./i18nInterpolateParams";
  * @param {object} [params] - (**optional**)
  * @returns {T}
  */
-export function i18nInterpolateParamsDeep<T extends string | object | unknown[]>(
-  value: T,
-  params?: object,
-) {
+export function i18nInterpolateParamsDeep<
+  T extends string | object | unknown[],
+>(value: T, params?: object) {
   if (Array.isArray(value)) {
     for (let i = 0; i < value.length; i++) {
       value[i] = i18nInterpolateParamsDeep(value[i], params);

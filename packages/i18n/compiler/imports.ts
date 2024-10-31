@@ -51,21 +51,24 @@ export class ImportsCompiler {
   }
 
   static #aggregateImports(list: ImportsCompiler[]) {
-    const mapByPath = list.reduce((map, instance) => {
-      const { path } = instance.data;
-      map[path] = map[path] || [];
-      map[path].push(instance);
-      return map;
-    }, {} as Record<string, ImportsCompiler[]>);
+    const mapByPath = list.reduce(
+      (map, instance) => {
+        const { path } = instance.data;
+        map[path] = map[path] || [];
+        map[path].push(instance);
+        return map;
+      },
+      {} as Record<string, ImportsCompiler[]>,
+    );
 
-    return Object.keys(mapByPath).map(path => {
+    return Object.keys(mapByPath).map((path) => {
       const instances = mapByPath[path];
 
       if (instances.length > 1) {
         let finalNamed: ImportsCompilerDataNamed[] = [];
         let finalDefaulT: string = "";
 
-        instances.forEach(instance => {
+        instances.forEach((instance) => {
           const { defaulT, named } = instance.data;
           if (named) {
             finalNamed = [...finalNamed, ...named];
@@ -74,7 +77,7 @@ export class ImportsCompiler {
             if (finalDefaulT) {
               throw Error(
                 `ImportsCompiler: Aggregated imports declare multiple default imports. ` +
-                `Default import "${defaulT}" conflicts with "${finalDefaulT}"`
+                  `Default import "${defaulT}" conflicts with "${finalDefaulT}"`,
               );
             } else {
               finalDefaulT = defaulT;
@@ -85,15 +88,15 @@ export class ImportsCompiler {
         return new ImportsCompiler({
           defaulT: finalDefaulT,
           named: finalNamed,
-          path
+          path,
         });
       }
 
       return instances[0];
-    })
+    });
   }
 
-  public static getDir(options: { folderUp?: number; external?: boolean; }) {
+  public static getDir(options: { folderUp?: number; external?: boolean }) {
     const { folderUp = 0, external } = options;
 
     if (external) return "";
@@ -103,13 +106,16 @@ export class ImportsCompiler {
 
   static #isExternal(data: ImportsCompilerData) {
     const { path, external } = data;
-    
+
     if (typeof external === "boolean") return external;
 
     return path.startsWith("@");
   }
 
-  static #ts(data: ImportsCompilerData, options?: ImportsCompilerOutputOptions) {
+  static #ts(
+    data: ImportsCompilerData,
+    options?: ImportsCompilerOutputOptions,
+  ) {
     const { path, defaulT, named = [] } = data;
     const { folderUp } = options || {};
     const dir = this.getDir({ folderUp, external: this.#isExternal(data) });

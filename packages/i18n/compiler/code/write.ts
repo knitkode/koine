@@ -12,7 +12,12 @@ import { glob, globSync } from "glob";
 import * as ts from "typescript";
 import type { RequiredDeep, SetRequired } from "@koine/utils";
 import type { TsConfigJson } from "@koine/utils";
-import { fsMoveAndRestoreTemporaryPaths, fsMoveAndRestoreTemporaryPathsSync, fsWrite, fsWriteSync } from "@koine/node";
+import {
+  fsMoveAndRestoreTemporaryPaths,
+  fsMoveAndRestoreTemporaryPathsSync,
+  fsWrite,
+  fsWriteSync,
+} from "@koine/node";
 import { getTranslationsDir } from "../helpers";
 import { i18nLogger } from "../logger";
 import type { I18nCompiler } from "../types";
@@ -45,7 +50,7 @@ export type CodeWriteOptions = {
   /**
    * A list of glob patterns to ignore (uses [`minimatch`](https://www.npmjs.com/package/minimatch))
    * relative to the `output` folder path.
-   * 
+   *
    * The same patterns are automatically _negated_ and added to the `.gitignore`
    * file in order to prevent them being ignored in source control version
    * (unless `gitignore` options is set to `false`).
@@ -211,7 +216,6 @@ export function getWriteCodeConfig(
   return { debug: config.debug, ...options, files, folders };
 }
 
-
 async function manageOutputFolder(config: CodeWriteConfig) {
   const { cwd, output, emptyOutputFolder, ignorePaths } = config;
   if (!emptyOutputFolder) return;
@@ -226,9 +230,8 @@ async function manageOutputFolder(config: CodeWriteConfig) {
     await fsMoveAndRestoreTemporaryPaths({
       paths: ignorePathsMatched,
       destination: outputAbsolutePath,
-      callback: () => rm(outputAbsolutePath, { force: true, recursive: true })
+      callback: () => rm(outputAbsolutePath, { force: true, recursive: true }),
     });
-
   } else {
     await rm(outputAbsolutePath, { force: true, recursive: true });
   }
@@ -244,13 +247,13 @@ function manageOutputFolderSync(config: CodeWriteConfig) {
     const ignorePathsMatched = globSync(ignorePaths, {
       cwd: join(cwd, output),
     });
-    
+
     fsMoveAndRestoreTemporaryPathsSync({
       paths: ignorePathsMatched,
       destination: outputAbsolutePath,
-      callback: () => rmSync(outputAbsolutePath, { force: true, recursive: true })
+      callback: () =>
+        rmSync(outputAbsolutePath, { force: true, recursive: true }),
     });
-
   } else {
     rmSync(outputAbsolutePath, { force: true, recursive: true });
   }

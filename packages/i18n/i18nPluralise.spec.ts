@@ -14,7 +14,7 @@ describe("i18nPluralise", () => {
       few: "a few items",
       many: "many items",
       other: "other items",
-      zero: "no items"
+      zero: "no items",
     };
     expect(i18nPluralise(values, 1)).toBe("one item");
     expect(i18nPluralise(values, 2)).toBe("other items");
@@ -26,7 +26,7 @@ describe("i18nPluralise", () => {
     const values = {
       1: "1 item",
       one: "one item",
-      zero: "no items"
+      zero: "no items",
     };
     expect(i18nPluralise(values, 1)).toBe("1 item");
   });

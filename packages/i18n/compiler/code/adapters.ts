@@ -5,8 +5,7 @@ import adapterReact from "../../adapter-react";
 import type { I18nCompiler } from "../types";
 import {
   type CodeDataOptions,
-  type CodeDataOptionsResolved,
-  // defaultCodeDataOptions,
+  type CodeDataOptionsResolved, // defaultCodeDataOptions,
   resolveCodeDataOptions,
 } from "./data";
 

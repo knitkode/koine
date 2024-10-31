@@ -1,6 +1,6 @@
 import { minimatch } from "minimatch";
-import type { I18nCompiler } from "./types";
 import { ImportsCompiler } from "./imports";
+import type { I18nCompiler } from "./types";
 
 export const GLOBAL_I18N_IDENTIFIER = "__i18n_locale";
 
