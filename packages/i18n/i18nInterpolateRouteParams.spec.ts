@@ -1,4 +1,7 @@
-import { jestCreateExpectedThrownError } from "@koine/node/jest";
+import {
+  jestCreateExpectedThrownError,
+  jestSetNodeEnv,
+} from "@koine/test/jest";
 import { i18nInterpolateRouteParams as fn } from "./i18nInterpolateRouteParams";
 
 // /**
@@ -97,7 +100,7 @@ describe("i18nInterpolateRouteParams", () => {
   });
 
   test("disallowing wrong usage ts side", () => {
-    process.env = { ...process.env, NODE_ENV: "development" };
+    jestSetNodeEnv("development");
 
     // // @ts-expect-error test wrong implementation
     // expect(fn("my.static", params)).toEqual("/my/static");
