@@ -275,8 +275,6 @@ export default createGenerator("js", (arg) => {
 declare namespace I18n {
   type Locale = import("../types").I18n.Locale;
   type LocalesMap = import("../types").I18n.LocalesMap;
-  type Params = import("../types").I18n.Params;
-  type Props = import("../types").I18n.Props;
   type RouteArgs = import("../types").I18n.RouteArgs;
   type RouteId = import("../types").I18n.RouteId;
   type RouteIdDynamic = import("../types").I18n.RouteIdDynamic;
@@ -324,23 +322,6 @@ export namespace I18n {
   export type LocalesMap<T = any> = Record<Locale, T>;
 
   /**
-   * Params globally available from the URL/folder structure \`${localeParamName}\`,
-   * named accordingly to the \`localeParam\` option (e.g. _next.js_ folder structure
-   * \`/[${localeParamName}]/my-route/page.tsx\`)
-   */
-  export type Params = {
-    ${localeParamName}: Locale;
-  };
-
-  /**
-   * Props available to each page/layout when a root \`localeParam\` is in place
-   * (e.g. _next.js_ folder structure \`/[${localeParamName}]/my-route/page.tsx\`).
-   */
-  export type Props<P = {}> = P & {
-    params: Params;
-  };
-
-  /**
    * @internal
    */
   export type RouteArgs<TRouteId extends RouteId | RouteIdError> =
@@ -369,11 +350,11 @@ export namespace I18n {
 
   /**
    * Route dynamic params dictionary for each dynamic route id
-  */
- export type RouteParams = ${types.RouteParams};
+   */
+  export type RouteParams = ${types.RouteParams};
 
  /**
-  * Map every route id to its actual pathanem value for the default locale
+  * Map every route id to its actual pathname value for the default locale
   */
   export type RoutePathnames = ${types.RoutePathnames};
 

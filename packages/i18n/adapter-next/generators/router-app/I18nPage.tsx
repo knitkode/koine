@@ -3,9 +3,6 @@ import { createGenerator } from "../../../compiler/createAdapter";
 export default createGenerator("next", (arg) => {
   const {
     config: { single },
-    options: {
-      routes: { localeParamName },
-    },
   } = arg;
   return {
     I18nPage: {
@@ -15,51 +12,57 @@ export default createGenerator("next", (arg) => {
       index: false,
       content: () => /* j s */ `
 import React from "react";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
 import { i18nConsole } from "@koine/i18n";
-import { I18nTranslateProvider } from "../I18nTranslateProvider";
-import { isLocale } from "../isLocale";
-import { locales } from "../locales";
-import type { I18n } from "../types";
 import { getI18nDictionaries } from "../internal/getI18nDictionaries";
 import { getI18nMetadata } from "../internal/getI18nMetadata";
 import { I18nMetadataSetter } from "../internal/I18nMetadataSetter";
 import { I18nRouteSetter } from "../internal/I18nRouteSetter";
+import { I18nTranslateProvider } from "../I18nTranslateProvider";
+import { locales } from "../locales";
+import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
-import { setLocale } from "./setLocale";
+import {
+  type NextProps,
+  type I18nProps,
+  type I18nServerConfigurator,
+  resolveConfigurator
+} from "./i18nServerHelpers";
+
+type Config<TRouteId extends I18n.RouteId> = {
+  /**
+   * Specify the page's route data
+   */
+  route: I18n.RouteArgs<TRouteId>;
+  /**
+   * Optionally set the translations _namespaces_ to expose to the client
+   * components down this page's components tree
+   */
+  namespaces?: I18n.TranslationsNamespace[];${
+    single
+      ? ""
+      : `
+  /**
+   * Optionally set this manually to override the current locale
+   */
+  locale?: I18n.Locale;`}
+};
 
 export type I18nPageProps<TRouteId extends I18n.RouteId> =
-  React.PropsWithChildren<
-    {
-      ${
-        single
-          ? ""
-          : `/**
-       * Optionally set this manually to override the current locale
-       */
-      locale?: I18n.Locale;
-      `
-      }namespaces?: I18n.TranslationsNamespace[];
-      route: I18n.RouteArgs<TRouteId>;
-    }
-  >;
+  React.PropsWithChildren<Config<TRouteId>>;
 
 /**
  * Use this _in each_ \`page.tsx\` render function
  *
  * **For App Router only**
  */
-export const I18nPage = async <TRouteId extends I18n.RouteId>(
-  props: I18nPageProps<TRouteId>,
-) => {
-  const {
-    locale: localeProp,
-    namespaces = [],
-    route,
-    children,
-  } = props;
-  const locale = localeProp || getLocale();
+export const I18nPage = async <TRouteId extends I18n.RouteId>({
+  locale,
+  namespaces = [],
+  route,
+  children,
+}: I18nPageProps<TRouteId>) => {
+  locale = locale || getLocale();
   const metadata = getI18nMetadata({ locale, ...route });
   const dictionaries = await getI18nDictionaries({ locale, namespaces });
 
@@ -77,115 +80,10 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>(
   );
 };
 
-// /**
-//  * Use this as **first thing** in _in each_ of your \`page.tsx\` file both in the
-//  * _component_ function and in the \`generateMetadata\` function.
-//  *
-//  * **For App Router only**
-//  * @deprecated
-//  */
-// I18nPage.init = pageInit;
-
-/**
- * Use this _in each_ \`page.tsx\` -> \`generateMetadata\` function
- *
- * **For App Router only**
- */
-I18nPage.generateMetadata = getMetadata;
-
-/**
- * Optionally Use this _only in_ \`page.tsx\` to get the current _locale_ from
- * the page props.
- *
- * **For App Router only**
- */
-I18nPage.locale = (props: any) => props.${localeParamName};
-
-/**
- * This function both sets and return the current locale based on the given
- * _props_ by simply reading the dedicated \`[localeParamName]\` dynamic segment
- * of the URL.
- * It automatically 404s with next.js's \`notFound\` if the locale does not exists.
- *
- * **For App Router only**
- * 
- * @internal
- */
-function pageInit(params: I18n.Props["params"]): I18n.Locale;
-function pageInit(props: I18n.Props): I18n.Locale;
-function pageInit(paramsOrProps: I18n.Props["params"] | I18n.Props) {
-  const params = (paramsOrProps as any)?.params || paramsOrProps;
-  if (params) {
-    const locale = (params as any).${localeParamName};
-
-    if (isLocale(locale)) {
-      ${
-        single
-          ? ``
-          : `
-      // set the server context based locale as early as possible
-      setLocale(locale);
-      `
-      }return locale;
-    }
-  }
-
-  notFound();
-}
-
-/**
- * Use this _in each_ \`page.tsx\` -> \`generateMetadata\` function
- *
- * **For App Router only**
- * 
- * @internal
- */
-function getMetadata <TRouteId extends I18n.RouteId>(
-  options: { locale?: I18n.Locale; } & I18n.RouteArgs<TRouteId>,
-  metadata?: Metadata,
-) {
-  const { locale: localeProp } = options;
-  const locale = localeProp || getLocale();
-  const { alternates: alternatesOverride, openGraph: openGraphOverride, ...restMetadata } = metadata || {};
-  const { canonical: canonicalOverride, languages: languagesOverride = {} } =
-    alternatesOverride || {};
-  const { alternates, canonical } = getI18nMetadata({ ...options, locale });
-
-  return {
-    ...restMetadata,
-    alternates: {
-      canonical: canonicalOverride || canonical,
-      languages: { ...alternates, ...languagesOverride },
-    },
-    // TODO: make this optional through a compiler option, also maybe move it to getI18nMetadata
-    openGraph: {
-      locale,
-      alternateLocale: locales.filter((l) => l !== locale),
-      ...(openGraphOverride || {})
-    }
-  };
-};
-
-type Configurator<TRouteId extends I18n.RouteId> = {
-  /**
-   * Specify the page's route data
-   */
-  route: I18n.RouteArgs<TRouteId>;
-  /**
-   * Optionally set the translations _namespaces_ to expose to the client
-   * components down this page's components tree
-   */
-  namespaces?: I18n.TranslationsNamespace[];
-  /**
-   * Optionally set this manually to override the current locale
-   */
-  locale?: I18n.Locale;
-};
-
 /**
  * @example
  * 
- * \`\`\`
+ * \`\`\`ts
  * 
  * // 1) configure and create a page
  * 
@@ -231,55 +129,71 @@ type Configurator<TRouteId extends I18n.RouteId> = {
  * });
  * \`\`\`
  */
-export const createI18nPage = <
-  TProps extends {},
-  TRouteId extends I18n.RouteId,
-  TConfig extends Configurator<TRouteId>,
->(
-  configurator:
-    | ((
-        props: I18n.Props<TProps>,
-        locale: I18n.Locale,
-      ) => TConfig | Promise<TConfig>)
-    | TConfig,
-) => {
-  const resolveConfigurator = async (props: I18n.Props<TProps>) => {
-    const localeParam = pageInit(props);${createGenerator.log(arg, "createI18nPage", "resolveConfigurator", "localeParam")}
-    const config =
-      typeof configurator === "function"
-        ? await configurator(props, localeParam)
-        : configurator;
-    const { locale: localeConfig, ...restConfig } = config;
-    const locale = localeConfig || localeParam;
-    return { ...restConfig, locale };
-  };
-
-  return {
+export const createI18nPage =
+  <TProps extends NextProps>() =>
+  <
+    TRouteId extends I18n.RouteId,
+    TConfigurator extends I18nServerConfigurator<Config<TRouteId>, TProps>
+  >(
+    configurator?: TConfigurator
+  ) => ({
     generateMetadata: (
-      impl: (
-        props: TProps &
-          Pick<TConfig, "route"> & {
-            locale: I18n.Locale;
-          }
+      impl: <TRawProps extends NextProps>(
+        props: I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>,
       ) => Metadata | Promise<Metadata>,
     ) => {
-      return async (props: I18n.Props<TProps>): Promise<Metadata> => {
-        const { locale, route } = await resolveConfigurator(props);
-        const metadata = await impl({ locale, route, ...props });
-        return getMetadata({ locale, ...route }, metadata);
+      return async <TRawProps extends NextProps>(rawProps: TRawProps) => {
+        const { namespaces, ...restConfig } = await resolveConfigurator<
+          TProps,
+          TRawProps,
+          Config<TRouteId>,
+          TConfigurator
+        >(rawProps, configurator);
+        const { locale, route, } = restConfig;
+        const metadata = await impl(
+          restConfig as I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>
+        );
+        const { alternates: alternatesOverride, openGraph: openGraphOverride, ...restMetadata } = metadata || {};
+        const { canonical: canonicalOverride, languages: languagesOverride = {} } =
+          alternatesOverride || {};
+        const { alternates, canonical } = getI18nMetadata({ ...route, locale });
+
+        return {
+          ...restMetadata,
+          alternates: {
+            canonical: canonicalOverride || canonical,
+            languages: { ...alternates, ...languagesOverride },
+          },
+          // TODO: make this optional through a compiler option, also maybe move it to getI18nMetadata
+          openGraph: {
+            locale,
+            alternateLocale: locales.filter((l) => l !== locale),
+            ...(openGraphOverride || {})
+          }
+        };
       };
     },
     default: (
-      impl: (
-        props: TProps &
-          Pick<TConfig, "route"> & {
-            locale: I18n.Locale;
-          },
+      impl: <TRawProps extends NextProps>(
+        props: I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>
       ) => React.ReactNode | Promise<React.ReactNode>,
     ) => {
-      return async (props: I18n.Props<TProps>) => {
-        const { locale, route, namespaces } = await resolveConfigurator(props);${createGenerator.log(arg, "page.default", "resolveConfigurator", "locale")}
-        const render = await impl({ locale, route, ...props });
+      return async <TRawProps extends NextProps>(rawProps: TRawProps) => {
+        const { params: _rawParams, ...rawPropsWithoutParams } = rawProps;
+        const config = await resolveConfigurator<
+          TProps,
+          TRawProps,
+          Config<TRouteId>,
+          TConfigurator
+        >(rawProps, configurator);
+        const { locale, namespaces, params, route } = config;${createGenerator.log(arg, "page.default", "resolveConfigurator", "locale")}
+        const render = await impl({
+          ...rawPropsWithoutParams,
+          locale,
+          params,
+          route
+        } as I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>);
+
         return (
           <I18nPage
             locale={locale}
@@ -291,8 +205,7 @@ export const createI18nPage = <
         );
       };
     },
-  };
-};
+  });
 `,
     },
   };
