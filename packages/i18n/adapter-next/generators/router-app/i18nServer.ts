@@ -33,9 +33,9 @@ type I18nParams = {
 /**
  * In next@15 params were transformed into a Promise.
  */
-export type NextProps = Partial<Record<"params", any | Promise<any>>> & {
-  params?: any;
-};
+export type NextProps = Partial<
+  Record<"params" | "searchParams", any | Promise<any>>
+> & {};
 
 type UnwrapParamsPromise<P> = Omit<P, "params"> &
   (P extends { params?: Promise<infer T> }

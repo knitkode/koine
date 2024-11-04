@@ -242,7 +242,6 @@ export default createGenerator("js", (arg) => {
   const {
     options: {
       routes: {
-        localeParamName,
         tokens: { idDelimiter },
       },
       translations: {
@@ -304,7 +303,7 @@ declare namespace I18n {
       ext: "ts",
       index: true,
       content: () => /* j s */ `
-import type { Split, JsonObject } from "@koine/utils";
+import type { Split } from "@koine/utils";
 import type { I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
 import type { RouteIdError } from "./internal/routesError";
 
