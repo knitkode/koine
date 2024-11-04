@@ -87,7 +87,7 @@ export async function resolveConfigurator<
   rawProps: TRawProps,
   configurator?: TConfigurator,
 ) {
-  const { params: rawParams, ...rawPropsWithoutParams } = rawProps;
+  const { params: rawParams = {}, ...rawPropsWithoutParams } = rawProps;
   const { ${localeParamName}, ...nonI18nParams } = await rawParams;
   const localeParam = ${localeParamName} as I18n.Locale;${createGenerator.log(arg, "i18nServerHelpers", "resolveConfigurator", "localeParam")}
   const configuratorProps = {
