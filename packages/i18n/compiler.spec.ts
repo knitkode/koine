@@ -142,7 +142,7 @@ describe("test written output", () => {
       baseUrl: "https://example.com",
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
-      logLevel: 4,
+      // logLevel: 4,
       input: {
         cwd: mocksPath("multi-language"),
         source: ".",
@@ -154,7 +154,7 @@ describe("test written output", () => {
       },
       code: {
         adapter: {
-          name: "react",
+          name: "next",
           options: {
             modularize: false,
           },

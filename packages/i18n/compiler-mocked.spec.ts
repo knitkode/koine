@@ -19,7 +19,6 @@ jest.mock("react", () => {
   };
 });
 
-
 describe("test mocked output code", () => {
 
   describe("'to' and '$to' generated code", () => {

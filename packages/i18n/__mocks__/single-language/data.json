@@ -35,10 +35,6 @@
     },
     "translations": {
       "ignorePaths": [
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json",
         "~.json"
       ],
       "createArrayIndexBasedFns": false,

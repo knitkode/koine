@@ -8,7 +8,7 @@
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
-    "logLevel": 4,
+    "logLevel": 3,
     "debug": false,
     "single": false
   },
@@ -36,11 +36,6 @@
     },
     "translations": {
       "ignorePaths": [
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json",
-        "~.json",
         "~.json"
       ],
       "createArrayIndexBasedFns": false,
@@ -83,7 +78,12 @@
     },
     "adapter": {
       "modularize": false,
-      "name": "react"
+      "router": "app",
+      "globalize": {
+        "prefix": "i18n",
+        "functions": true
+      },
+      "name": "next"
     }
   },
   "input": {
