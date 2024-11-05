@@ -25,9 +25,10 @@ import type { I18n } from "../types";
 import { I18nLayoutRoot } from "./I18nLayoutRoot";
 import {
   type NextProps,
+  type I18nNextPropsLayout,
   type I18nProps,
   type I18nServerConfigurator,
-  resolveConfigurator
+  resolveConfigurator,
 } from "./i18nServerHelpers";
 
 type Config = {
@@ -61,7 +62,9 @@ export const I18nLayout = async ({
   // }
 
   // locale = locale || getLocale();
-  const dictionaries = namespaces.length ? (await getI18nDictionaries({ locale, namespaces })) : {};
+  const dictionaries = namespaces.length
+    ? await getI18nDictionaries({ locale, namespaces })
+    : {};
 
   return (
     <I18nTranslateProvider
@@ -141,32 +144,34 @@ export const I18nLayout = async ({
  * \`\`\`
  */
 export const createI18nLayout =
-  <TProps extends NextProps>() =>
+  <TProps extends I18nNextPropsLayout>() =>
   <TConfigurator extends I18nServerConfigurator<Config, TProps>>(
     configurator?: TConfigurator,
   ) => ({
     generateStaticParams: () => locales.map((l) => ({ ${localeParamName}: l })),
     generateMetadata: (
-      impl: <TRawProps extends NextProps>(
-        props: I18nProps<TProps, TRawProps, Config, TConfigurator>,
+      impl: (
+        props: I18nProps<TProps, Config, TConfigurator>,
       ) => Metadata | Promise<Metadata>,
     ) => {
-      return async <TRawProps extends NextProps>(rawProps: TRawProps) => {
-        const { namespaces, ...restConfig } = await resolveConfigurator<
-          TProps,
-          TRawProps,
-          Config,
-          TConfigurator
-        >(rawProps, configurator);
-        const metadata = await impl(
-          restConfig as I18nProps<TProps, TRawProps, Config, TConfigurator>
+      return async (rawProps: NextProps<TProps>) => {
+        const { params: _rawParams, ...rawPropsWithoutParams } = rawProps;
+        const config = await resolveConfigurator<TProps, Config, TConfigurator>(
+          rawProps as unknown as TProps,
+          configurator,
         );
+        const { locale, params } = config;
+        const metadata = await impl({
+          ...rawPropsWithoutParams,
+          locale,
+          params,
+        } as unknown as I18nProps<TProps, Config, TConfigurator>);
         return metadata;
       };
     },
     default: (
-      impl: <TRawProps extends NextProps>(
-        props: I18nProps<TProps, TRawProps, Config, TConfigurator> &
+      impl: (
+        props: I18nProps<TProps, Config, TConfigurator> &
           React.PropsWithChildren<{
             /**
              * Render this in
@@ -186,26 +191,28 @@ export const createI18nLayout =
           }>,
       ) => React.ReactNode | Promise<React.ReactNode>,
     ) => {
-      return async <TRawProps extends NextProps>(rawProps: TRawProps) => {
+      return async (rawProps: NextProps<TProps>) => {
         const { params: _rawParams, ...rawPropsWithoutParams } = rawProps;
-        const config = await resolveConfigurator<
-          TProps,
-          TRawProps,
-          Config,
-          TConfigurator
-        >(rawProps, configurator);
+        const config = await resolveConfigurator<TProps, Config, TConfigurator>(
+          rawProps as unknown as TProps,
+          configurator,
+        );
         const { locale, namespaces, params } = config;${createGenerator.log(arg, "layout.default", "resolveConfigurator", "locale")}
         const dir = i18nRtlLocales.includes(locale) ? "rtl" : "ltr";
         const i18nHtmlAttrs = { lang: locale, dir };
         const I18nScript = (
-          <script dangerouslySetInnerHTML={{ __html: \`globalThis.${GLOBAL_I18N_IDENTIFIER} = "\${locale}";\`}}></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: \`globalThis.${GLOBAL_I18N_IDENTIFIER} = "\${locale}";\`
+            }}
+          ></script>
         );
         const render = await impl({
           ...({
             ...rawPropsWithoutParams,
             locale,
             params,
-          } as I18nProps<TProps, TRawProps, Config, TConfigurator>),
+          } as unknown as I18nProps<TProps, Config, TConfigurator>),
           I18nScript,
           i18nHtmlAttrs,
         });

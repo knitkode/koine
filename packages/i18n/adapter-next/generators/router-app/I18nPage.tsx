@@ -24,6 +24,7 @@ import type { I18n } from "../types";
 import { getLocale } from "./getLocale";
 import {
   type NextProps,
+  type I18nNextPropsPage,
   type I18nProps,
   type I18nServerConfigurator,
   resolveConfigurator
@@ -130,32 +131,42 @@ export const I18nPage = async <TRouteId extends I18n.RouteId>({
  * \`\`\`
  */
 export const createI18nPage =
-  <TProps extends NextProps>() =>
+  <TProps extends I18nNextPropsPage>() =>
   <
     TRouteId extends I18n.RouteId,
-    TConfigurator extends I18nServerConfigurator<Config<TRouteId>, TProps>
+    TConfigurator extends I18nServerConfigurator<Config<TRouteId>, TProps>,
   >(
-    configurator?: TConfigurator
+    configurator?: TConfigurator,
   ) => ({
     generateMetadata: (
-      impl: <TRawProps extends NextProps>(
-        props: I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>,
+      impl: (
+        props: I18nProps<TProps, Config<TRouteId>, TConfigurator>,
       ) => Metadata | Promise<Metadata>,
     ) => {
-      return async <TRawProps extends NextProps>(rawProps: TRawProps) => {
-        const { namespaces, ...restConfig } = await resolveConfigurator<
+      return async (rawProps: NextProps<TProps>) => {
+        const { params: _rawParams, ...rawPropsWithoutParams } = rawProps;
+        const config = await resolveConfigurator<
           TProps,
-          TRawProps,
           Config<TRouteId>,
           TConfigurator
-        >(rawProps, configurator);
-        const { locale, route, } = restConfig;
-        const metadata = await impl(
-          restConfig as I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>
-        );
-        const { alternates: alternatesOverride, openGraph: openGraphOverride, ...restMetadata } = metadata || {};
-        const { canonical: canonicalOverride, languages: languagesOverride = {} } =
-          alternatesOverride || {};
+        >(rawProps as unknown as TProps, configurator);
+        const { locale, params, route } = config;
+        const metadata = await impl({
+          ...rawPropsWithoutParams,
+          locale,
+          params,
+          route,
+        } as unknown as I18nProps<TProps, Config<TRouteId>, TConfigurator>);
+
+        const {
+          alternates: alternatesOverride,
+          openGraph: openGraphOverride,
+          ...restMetadata
+        } = metadata || {};
+        const {
+          canonical: canonicalOverride,
+          languages: languagesOverride = {},
+        } = alternatesOverride || {};
         const { alternates, canonical } = getI18nMetadata({ ...route, locale });
 
         return {
@@ -168,31 +179,30 @@ export const createI18nPage =
           openGraph: {
             locale,
             alternateLocale: locales.filter((l) => l !== locale),
-            ...(openGraphOverride || {})
-          }
+            ...(openGraphOverride || {}),
+          },
         };
       };
     },
     default: (
-      impl: <TRawProps extends NextProps>(
-        props: I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>
+      impl: (
+        props: I18nProps<TProps, Config<TRouteId>, TConfigurator>,
       ) => React.ReactNode | Promise<React.ReactNode>,
     ) => {
-      return async <TRawProps extends NextProps>(rawProps: TRawProps) => {
+      return async (rawProps: NextProps<TProps>) => {
         const { params: _rawParams, ...rawPropsWithoutParams } = rawProps;
         const config = await resolveConfigurator<
           TProps,
-          TRawProps,
           Config<TRouteId>,
           TConfigurator
-        >(rawProps, configurator);
+        >(rawProps as unknown as TProps, configurator);
         const { locale, namespaces, params, route } = config;${createGenerator.log(arg, "page.default", "resolveConfigurator", "locale")}
         const render = await impl({
           ...rawPropsWithoutParams,
           locale,
           params,
-          route
-        } as I18nProps<TProps, TRawProps, Config<TRouteId>, TConfigurator>);
+          route,
+        } as unknown as I18nProps<TProps, Config<TRouteId>, TConfigurator>);
 
         return (
           <I18nPage
