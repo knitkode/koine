@@ -252,10 +252,18 @@ export namespace I18nCompiler {
   /**
    * Built in adapters definition (map)
    */
-  type AdaptersOptionsMap = {
-    js: AdapterJs.Options;
-    react: AdapterReact.Options;
-    next: AdapterNext.Options;
+  type AdaptersConfigurationMap = {
+    js: { name: "js"; options: AdapterJs.Options; meta: AdapterJs.Meta };
+    react: {
+      name: "react";
+      options: AdapterReact.Options;
+      meta: AdapterReact.Meta;
+    };
+    next: {
+      name: "next";
+      options: AdapterNext.Options;
+      meta: AdapterNext.Meta;
+    };
   };
 
   /**
@@ -264,7 +272,7 @@ export namespace I18nCompiler {
   export type AnyAdapterConfiguration = {
     [Name in AdapterName]: {
       name: Name;
-      options?: PartialDeep<AdaptersOptionsMap[Name]>;
+      options?: PartialDeep<AdaptersConfigurationMap[Name]["options"]>;
     };
   }[AdapterName];
 
@@ -273,7 +281,7 @@ export namespace I18nCompiler {
    */
   type AdapterConfigurationResolvedEntry<T extends AdapterName> = {
     name: T;
-  } & AdaptersOptionsMap[T];
+  } & AdaptersConfigurationMap[T];
 
   /**
    * Any adapter resolved configuration (union)
@@ -315,7 +323,7 @@ export namespace I18nCompiler {
   /**
    * Built in adapters names
    */
-  // export type AdapterName = keyof AdaptersOptionsMap;
+  // export type AdapterName = keyof AdaptersConfigurationMap;
   export type AdapterName = "js" | "react" | "next";
 
   /**

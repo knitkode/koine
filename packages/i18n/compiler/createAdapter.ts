@@ -15,6 +15,9 @@ export function createAdapter<
 >(config: {
   name: TName;
   defaultOptions: TOptions;
+  getMeta: (
+    options: I18nCompiler.AdapterConfigurationResolved<TName>["options"],
+  ) => I18nCompiler.AdapterConfigurationResolved<TName>["meta"];
   getGenerators: TGetGenerators;
   /**
    * Create adapter's generated files transformers functions to apply in a second pass
@@ -73,6 +76,11 @@ export function createAdapter<
   >(
     data: I18nCompiler.DataCode<TAdapterName>,
   ) => I18nCompiler.AdapterGenerator<I18nCompiler.AdapterName>[];
+  adapter.getMeta = config.getMeta as <
+    TAdapterName extends I18nCompiler.AdapterName,
+  >(
+    options: I18nCompiler.AdapterConfigurationResolved<TAdapterName>["options"],
+  ) => I18nCompiler.AdapterConfigurationResolved<I18nCompiler.AdapterName>["meta"];
   adapter.defaultOptions = config.defaultOptions;
 
   return adapter;

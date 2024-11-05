@@ -67,18 +67,17 @@ export const resolveAdapterOptions = <
   customCodeDataOptions: CodeDataOptions,
 ): CodeDataOptionsResolved<TAdapterName> => {
   const { options, name } = customCodeDataOptions.adapter;
-  const { defaultOptions } = getAdapterCreator(name);
+  const { defaultOptions, getMeta } = getAdapterCreator(name);
   const codeDataOptions = resolveCodeDataOptions(customCodeDataOptions);
+  const adapterOptions = objectMergeWithDefaults(defaultOptions, options);
 
   return {
     ...codeDataOptions,
     adapter: {
-      ...(objectMergeWithDefaults(
-        defaultOptions,
-        options,
-      ) as I18nCompiler.AdapterConfigurationResolved<TAdapterName>),
       name,
-    },
+      meta: getMeta(adapterOptions),
+      options: adapterOptions,
+    } as I18nCompiler.AdapterConfigurationResolved<TAdapterName>,
   };
 };
 

@@ -1,7 +1,5 @@
-import {
-  type Options as AdapterReactOptions,
-  adapterReact,
-} from "../adapter-react";
+import { getDependencyVersion } from "@koine/node";
+import * as AdapterReact from "../adapter-react";
 import { createAdapter } from "../compiler/createAdapter";
 import nextRedirects from "./generators/next-redirects";
 import nextRewrites from "./generators/next-rewrites";
@@ -19,8 +17,7 @@ import i18nGet from "./generators/router-pages/i18nGet";
 import useRouteId from "./generators/useRouteId";
 import webpackDefine from "./generators/webpack-define";
 
-// export type Options = typeof adapterReact.defaultOptions & {
-export type Options = AdapterReactOptions & {
+export type Options = AdapterReact.Options & {
   /**
    * @default "app"
    */
@@ -76,6 +73,13 @@ export type Options = AdapterReactOptions & {
   };
 };
 
+export type Meta = AdapterReact.Meta & {
+  /**
+   * @default inferred from installed package
+   */
+  nextVersion: number;
+}
+
 /**
  * We add `safePrefix`: when `prefix` is present we add an underscore after it
  * and remove consecutive underscores in case the user defined prefix already
@@ -102,17 +106,24 @@ export function resolveGlobalizeOption(globalize: Options["globalize"]) {
 export const adapterNext = createAdapter({
   name: "next",
   defaultOptions: {
-    ...adapterReact.defaultOptions,
+    ...AdapterReact.adapterReact.defaultOptions,
     router: "app",
     globalize: {
       prefix: "i18n",
       functions: true,
     },
   } satisfies Options,
+  getMeta: (options) => {
+    const nextVersion = getDependencyVersion("next", "major");
+    return {
+      ...AdapterReact.adapterReact.getMeta(options),
+      nextVersion
+    }
+  },
   getGenerators: (data) => {
-    const { router } = data.options.adapter;
+    const { router } = data.options.adapter.options;
     return [
-      ...adapterReact.getGenerators(data),
+      ...AdapterReact.adapterReact.getGenerators(data),
       ...[nextRedirects, nextRewrites],
       ...(router === "app" || router === "migrating"
         ? [I18nLayout, I18nLayoutRoot, I18nPage, i18nServer]
@@ -125,7 +136,7 @@ export const adapterNext = createAdapter({
     ];
   },
   getTransformers: (data) => {
-    const { router } = data.options.adapter;
+    const { router } = data.options.adapter.options;
 
     return {
       I18nHeadTags: false,

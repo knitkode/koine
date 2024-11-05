@@ -235,7 +235,7 @@ export default createGenerator("js", (data) => {
     config,
     options: {
       translations: optionsTranslations,
-      adapter: { modularize },
+      adapter: { options: { modularize } },
     },
     translations,
   } = data;

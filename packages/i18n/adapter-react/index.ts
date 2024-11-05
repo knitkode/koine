@@ -1,4 +1,4 @@
-import { type Options as AdapterJsOptions, adapterJs } from "../adapter-js";
+import * as AdapterJs from "../adapter-js";
 import { createAdapter } from "../compiler/createAdapter";
 import I18nEffects from "./generators/I18nEffects";
 import I18nHeadTags from "./generators/I18nHeadTags";
@@ -15,17 +15,23 @@ import useToSpa from "./generators/useToSpa";
 
 // import packageJson from "./generators/packageJson";
 
-// export type Options = typeof adapterJs.defaultOptions & {};
-export type Options = AdapterJsOptions & {};
+export type Options = AdapterJs.Options & {};
+
+export type Meta = AdapterJs.Meta & {};
 
 export const adapterReact = createAdapter({
   name: "react",
   defaultOptions: {
-    ...adapterJs.defaultOptions,
+    ...AdapterJs.adapterJs.defaultOptions,
   } satisfies Options,
+  getMeta: (options) => {
+    return {
+      ...AdapterJs.adapterJs.getMeta(options),
+    };
+  },
   getGenerators: (data) => {
     return [
-      ...adapterJs.getGenerators(data),
+      ...AdapterJs.adapterJs.getGenerators(data),
       I18nEffects,
       I18nHeadTags,
       I18nMetadata,

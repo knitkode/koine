@@ -148,7 +148,7 @@ function $to(
     routes,
     options: {
       routes: optionsRoutes,
-      adapter: { modularize },
+      adapter: { options: { modularize } },
     },
   } = data;
   const { dir } = optionsRoutes.functions;

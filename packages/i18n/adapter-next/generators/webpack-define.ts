@@ -38,8 +38,8 @@ export default createGenerator("next", (arg) => {
   const { config, options } = arg;
   const { debug } = config;
   const { cwd, output } = options.write || { cwd: "", output: "" };
-  const { modularize } = options.adapter;
-  const globalize = resolveGlobalizeOption(options.adapter.globalize);
+  const { modularize } = options.adapter.options;
+  const globalize = resolveGlobalizeOption(options.adapter.options.globalize);
   const routesToGlobalize = globalize.functions.routes ? arg.routes.byId : {};
   const translationsToGlobalize = globalize.functions.translations ? arg.translations : {};
 

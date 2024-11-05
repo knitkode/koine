@@ -58,6 +58,8 @@ export type Options = {
   modularize: boolean;
 };
 
+export type Meta = {};
+
 export const adapterJs = createAdapter({
   name: "js",
   defaultOptions: {
@@ -66,6 +68,9 @@ export const adapterJs = createAdapter({
     // },
     modularize: true,
   } satisfies Options,
+  getMeta: (_options) => {
+    return {};
+  },
   getGenerators: (_data) => {
     return [
       config,

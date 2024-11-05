@@ -74,7 +74,7 @@ module.exports = config;
       name: "i18nSwcTransforms",
       ext: "js",
       index: false,
-      disabled: arg.options.adapter.modularize ? false : true,
+      disabled: arg.options.adapter.options.modularize ? false : true,
       content: () => {
         const { tsconfig } = arg.options.write || {};
         if (!tsconfig) return "";

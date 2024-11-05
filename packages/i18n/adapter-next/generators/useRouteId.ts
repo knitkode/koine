@@ -4,7 +4,7 @@ export default createGenerator("next", (arg) => {
   const {
     options: {
       routes: { localeParamName },
-      adapter: { router },
+      adapter: { options: { router } },
     },
   } = arg;
   return {
