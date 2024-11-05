@@ -77,13 +77,18 @@
       "gitignore": "all"
     },
     "adapter": {
-      "modularize": false,
-      "router": "app",
-      "globalize": {
-        "prefix": "i18n",
-        "functions": true
+      "name": "next",
+      "meta": {
+        "nextVersion": 15
       },
-      "name": "next"
+      "options": {
+        "modularize": false,
+        "router": "app",
+        "globalize": {
+          "prefix": "i18n",
+          "functions": true
+        }
+      }
     }
   },
   "input": {
@@ -164,18 +169,6 @@
         }
       },
       {
-        "path": "$faq.json",
-        "locale": "en",
-        "data": {
-          "home": [
-            {
-              "question": "What is?",
-              "answer": "That"
-            }
-          ]
-        }
-      },
-      {
         "path": "~account/~user~profile.json",
         "locale": "en",
         "data": {
@@ -248,11 +241,15 @@
         }
       },
       {
-        "path": "~account/FormUserLanguages.json",
+        "path": "$faq.json",
         "locale": "en",
         "data": {
-          "empty": {},
-          "msg": "Some text"
+          "home": [
+            {
+              "question": "What is?",
+              "answer": "That"
+            }
+          ]
         }
       },
       {
@@ -303,6 +300,14 @@
         }
       },
       {
+        "path": "~account/FormUserLanguages.json",
+        "locale": "it",
+        "data": {
+          "empty": {},
+          "msg": "Del testo"
+        }
+      },
+      {
         "path": "404.json",
         "locale": "it",
         "data": {
@@ -315,6 +320,14 @@
             "2": "Due volte",
             "3": "Tre volte"
           }
+        }
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "locale": "en",
+        "data": {
+          "empty": {},
+          "msg": "Some text"
         }
       },
       {
@@ -399,14 +412,6 @@
               }
             }
           }
-        }
-      },
-      {
-        "path": "~account/FormUserLanguages.json",
-        "locale": "it",
-        "data": {
-          "empty": {},
-          "msg": "Del testo"
         }
       }
     ]
@@ -838,8 +843,8 @@
       "trace": "~account/FormUserLanguages:empty",
       "typeValue": "Object",
       "values": {
-        "en": {},
-        "it": {}
+        "it": {},
+        "en": {}
       },
       "equalValues": true
     },
@@ -851,8 +856,8 @@
       "trace": "~account/FormUserLanguages:msg",
       "typeValue": "Primitive",
       "values": {
-        "en": "Some text",
-        "it": "Del testo"
+        "it": "Del testo",
+        "en": "Some text"
       }
     },
     "~account/~user~profile:boolShouldntBeHereBut": {
