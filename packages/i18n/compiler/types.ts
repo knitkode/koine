@@ -52,6 +52,11 @@ export namespace I18nCompiler {
      * List of the locale folders found in the input source data
      */
     localesFolders: string[];
+    /**
+     * Dictionary of routes by route id, each route defines a dictionary with
+     * key=locale, value=pathname
+     */
+    routes?: Record<RouteId, Record<Locale, RoutePathname>>; 
   };
 
   /**

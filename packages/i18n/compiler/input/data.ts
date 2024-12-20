@@ -54,6 +54,7 @@ export let getInputDataSync = (
   return options.reduce((all, input) => {
     // throw Error(`[@koine/i18n]: Invalid 'source' option`)
     return mergeDataInputs(
+      all,
       isInputDataDirect(input)
         ? getInputDataDirectSync(input)
         : isInputDataRemote(input)
@@ -61,7 +62,6 @@ export let getInputDataSync = (
           : isInputDataLocal(input)
             ? getInputDataLocalSync(input)
             : {},
-      all,
     );
   }, {} as I18nCompiler.DataInput);
 };

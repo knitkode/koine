@@ -1,7 +1,11 @@
 import { join } from "path";
 import { wait } from "@koine/utils";
 import { fsWrite } from "@koine/node";
-import { type I18nCompiler, i18nCompiler, I18nCompilerOptions } from "./compiler";
+import {
+  type I18nCompiler,
+  I18nCompilerOptions,
+  i18nCompiler,
+} from "./compiler";
 
 // jest.unmock('mock-stdin');
 // describe("test CLI", () => {
@@ -12,7 +16,10 @@ import { type I18nCompiler, i18nCompiler, I18nCompilerOptions } from "./compiler
 // })
 
 describe("test in memory output", () => {
-  const runCompiler = async (input: I18nCompilerOptions["input"]) =>
+  const runCompiler = async (
+    input: I18nCompilerOptions["input"],
+    otherOptions?: Partial<I18nCompilerOptions>,
+  ) =>
     i18nCompiler({
       baseUrl: "https://example.com",
       defaultLocale: "en",
@@ -26,6 +33,7 @@ describe("test in memory output", () => {
           },
         },
       },
+      ...(otherOptions || {}),
     });
 
   const inputData: I18nCompiler.DataInput = {
@@ -88,7 +96,7 @@ describe("test in memory output", () => {
       {
         source: {
           localesFolders: ["de"],
-          translationFiles: [ ],
+          translationFiles: [],
         },
       },
       {
@@ -96,16 +104,40 @@ describe("test in memory output", () => {
           return {
             localesFolders: ["en"],
             translationFiles: [],
-          }
-        }
+          };
+        },
       },
       {
-        source: "https://gist.githubusercontent.com/knitkode/12e079ff546cfe2700c285ab4568015d/raw/4dc47bb3ad940b32795f756206d32eebaaf1ee87/i18n-three-locales-routes.json"
-      }
+        source:
+          "https://gist.githubusercontent.com/knitkode/12e079ff546cfe2700c285ab4568015d/raw/4dc47bb3ad940b32795f756206d32eebaaf1ee87/i18n-three-locales-routes.json",
+      },
     ]);
 
     expect(data.config.locales).toEqual(["en", "de", "es", "it"]);
     expect(data.config.defaultLocale).toEqual("en");
+  });
+
+  test("input routes", async () => {
+    const data = await runCompiler(
+      {
+        source: {
+          localesFolders: ["en", "it"],
+          translationFiles: [],
+          routes: {
+            about: {
+              en: "/about-us",
+              it: "chi-siamo",
+            },
+          },
+        },
+      },
+      {
+        trailingSlash: true,
+      },
+    );
+
+    expect(data.routes.byId["about"].pathnames["it"]).toEqual("/chi-siamo/");
+    expect(data.routes.byId["about"].pathnames["en"]).toEqual("/about-us/");
   });
 });
 

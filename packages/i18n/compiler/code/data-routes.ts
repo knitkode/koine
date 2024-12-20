@@ -490,7 +490,7 @@ function buildDataRoutesFromJsonData(
 export let getCodeDataRoutes = (
   config: I18nCompiler.Config,
   options: CodeDataRoutesOptions,
-  { translationFiles }: I18nCompiler.DataInput,
+  { translationFiles, routes }: I18nCompiler.DataInput,
 ) => {
   const dataRoutes: I18nCompiler.DataRoutes = {
     byId: {},
@@ -512,6 +512,23 @@ export let getCodeDataRoutes = (
 
       if (config.locales.length === localesAnalysed) {
         break;
+      }
+    }
+  }
+
+  // custom input routes (outside of translation files)
+  if (routes) {
+    for (const routeId in routes) {
+      const pathnames = routes[routeId];
+      for (const locale in pathnames) {
+        const pathname = pathnames[locale];
+
+        buildDataRoutesFromJsonData(
+          dataRoutes,
+          utils,
+          { [routeId]: pathname },
+          locale,
+        );
       }
     }
   }
