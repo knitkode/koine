@@ -107,7 +107,7 @@ const generateCodeFromAdapter = <T extends I18nCompiler.AdapterName>(
   // auto-generated files on git, maybe allow this as an option?
   // // prettier breaks jest, @see https://jestjs.io/docs/ecmascript-modules
   // // https://github.com/jestjs/jest/issues/14305
-  // if (!process.env["JEST_WORKER_ID"]) {
+  // if (!process.env["VITEST_WORKER_ID"]) {
   //   const { format } = await import("prettier");
   //   out = await format(out, {
   //     parser: "typescript",

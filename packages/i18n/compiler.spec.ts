@@ -1,8 +1,7 @@
 import { join } from "path";
 import { wait } from "@koine/utils";
 import { fsWrite } from "@koine/node";
-import { type I18nCompiler, i18nCompiler } from "./compiler";
-import type { InputDataOptions } from "./compiler/input/types";
+import { type I18nCompiler, i18nCompiler, I18nCompilerOptions } from "./compiler";
 
 // jest.unmock('mock-stdin');
 // describe("test CLI", () => {
@@ -13,7 +12,7 @@ import type { InputDataOptions } from "./compiler/input/types";
 // })
 
 describe("test in memory output", () => {
-  const runCompiler = async (input: InputDataOptions) =>
+  const runCompiler = async (input: I18nCompilerOptions["input"]) =>
     i18nCompiler({
       baseUrl: "https://example.com",
       defaultLocale: "en",
@@ -82,6 +81,31 @@ describe("test in memory output", () => {
     expect(emptyData.config.defaultLocale).toEqual("en");
     expect(emptyData.routes.byId).toEqual({});
     expect(emptyData.translations).toEqual({});
+  });
+
+  test("multiple inputs should merge", async () => {
+    const data = await runCompiler([
+      {
+        source: {
+          localesFolders: ["de"],
+          translationFiles: [ ],
+        },
+      },
+      {
+        source: async () => {
+          return {
+            localesFolders: ["en"],
+            translationFiles: [],
+          }
+        }
+      },
+      {
+        source: "https://gist.githubusercontent.com/knitkode/12e079ff546cfe2700c285ab4568015d/raw/4dc47bb3ad940b32795f756206d32eebaaf1ee87/i18n-three-locales-routes.json"
+      }
+    ]);
+
+    expect(data.config.locales).toEqual(["en", "de", "es", "it"]);
+    expect(data.config.defaultLocale).toEqual("en");
   });
 });
 

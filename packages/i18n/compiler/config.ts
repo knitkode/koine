@@ -93,9 +93,13 @@ export let getConfig = (
   const merged = objectMergeWithDefaults(configDefaults, options);
 
   // ensure sorted locales
-  merged.locales = merged.locales.sort((a, b) =>
-    a === merged.defaultLocale ? -1 : a.localeCompare(b),
-  );
+  merged.locales = [...merged.locales].sort((a, b) => {
+    return a === merged.defaultLocale
+      ? -1
+      : b === merged.defaultLocale
+        ? 1
+        : a.localeCompare(b);
+  });
 
   // compute single
   merged.single = merged.locales.length === 1;

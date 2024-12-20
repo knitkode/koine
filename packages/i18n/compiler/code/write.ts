@@ -180,8 +180,8 @@ export function resolveWriteCodeOptions(options: CodeWriteOptions) {
     ignorePaths = [],
     tsconfig = {},
     typescriptCompilation = false,
-    tsNoCheck = process.env["JEST_WORKER_ID"] ? false : true,
-    eslintDisable = process.env["JEST_WORKER_ID"] ? false : true,
+    tsNoCheck = process.env["VITEST_WORKER_ID"] ? false : true,
+    eslintDisable = process.env["VITEST_WORKER_ID"] ? false : true,
     copyTranslations = true,
     gitignore = "all",
   } = options;
@@ -445,13 +445,13 @@ function writeTsconfigFile(config: CodeWriteConfig) {
 
   if (hasChanged) {
     writeFileSync(tsconfigPath, newContent + EOL);
-    if (debug || process.env["JEST_WORKER_ID"]) {
+    if (debug || process.env["VITEST_WORKER_ID"]) {
       i18nLogger.log(
         `i18n: tsconfig.json updated. You need to manually check 'paths' are setup correctly.`,
       );
     }
   } else {
-    if (debug || process.env["JEST_WORKER_ID"]) {
+    if (debug || process.env["VITEST_WORKER_ID"]) {
       i18nLogger.info(`i18n: tsconfig.json is up to date.`);
     }
   }

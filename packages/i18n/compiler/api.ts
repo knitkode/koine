@@ -26,16 +26,18 @@ import {
   writeSummarySync,
 } from "./summary";
 
+type OptionsInput = InputDataOptions & {
+  /**
+   * Options for _input_ writing
+   */
+  write?: InputWriteOptions;
+};
+
 export type I18nCompilerOptions = I18nCompilerConfig & {
   /**
    * Options for _input_ data generation and writing
    */
-  input: InputDataOptions & {
-    /**
-     * Options for _input_ writing
-     */
-    write?: InputWriteOptions;
-  };
+  input: OptionsInput | OptionsInput[];
   /**
    * Options for _code_ data generation and writing
    */
@@ -88,17 +90,18 @@ export let i18nCompiler = async (options: I18nCompilerOptions) => {
     summary: optsSummary,
     ...configOptions
   } = options;
+  const optsInputs = Array.isArray(optsInput) ? optsInput : [optsInput];
   const writables = [] as Promise<any>[];
-  const input = await getInputData(optsInput);
+  const input = await getInputData(optsInputs);
   const config = getConfig(input, configOptions);
   const code = await getCodeData(config, optsCode, input);
 
   // configure logger level, docs https://www.npmjs.com/package/consola#log-level
   i18nLogger.level = config.logLevel;
 
-  if (optsInput?.write) {
-    writables.push(writeInput(optsInput.write, input));
-  }
+  optsInputs.forEach(
+    ({ write }) => write && writables.push(writeInput(write, input)),
+  );
 
   if (optsCode?.write) {
     const codeWriteOptions = resolveWriteCodeOptions(optsCode.write);
@@ -143,16 +146,15 @@ let i18nCompilerSync = (options: I18nCompilerOptions) => {
     summary: optsSummary,
     ...configOptions
   } = options;
-  const input = getInputDataSync(optsInput);
+  const optsInputs = Array.isArray(optsInput) ? optsInput : [optsInput];
+  const input = getInputDataSync(optsInputs);
   const config = getConfig(input, configOptions);
   const code = getCodeDataSync(config, optsCode, input);
 
   // configure logger level, docs https://www.npmjs.com/package/consola#log-level
   i18nLogger.level = config.logLevel;
 
-  if (optsInput?.write) {
-    writeInputSync(optsInput.write, input);
-  }
+  optsInputs.forEach(({ write }) => write && writeInputSync(write, input));
 
   if (optsCode?.write) {
     const codeWriteOptions = resolveWriteCodeOptions(optsCode.write);

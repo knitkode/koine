@@ -1,0 +1,101 @@
+{
+  "config": {
+    "baseUrl": "https://example.com",
+    "locales": [],
+    "defaultLocale": "en",
+    "hideDefaultLocaleInUrl": true,
+    "trailingSlash": false,
+    "logLevel": 3,
+    "debug": false,
+    "single": false
+  },
+  "options": {
+    "routes": {
+      "permanentRedirects": false,
+      "localeParamName": "lang",
+      "translationJsonFileName": "~.json",
+      "functions": {
+        "dir": "$to",
+        "prefix": "$to_"
+      },
+      "tokens": {
+        "parentReference": "^",
+        "idDelimiter": ".",
+        "catchAll": {
+          "start": "[...",
+          "end": "]"
+        },
+        "optionalCatchAll": {
+          "start": "[[...",
+          "end": "]]"
+        }
+      }
+    },
+    "translations": {
+      "ignorePaths": [
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json",
+        "~.json"
+      ],
+      "createArrayIndexBasedFns": false,
+      "fallbackDefaultStrategy": "key",
+      "useDefaultLocaleWhenEmpty": true,
+      "dictionaries": {
+        "dir": "$dictionary",
+        "prefix": "$dictionary_"
+      },
+      "functions": {
+        "dir": "$t",
+        "prefix": "$t_",
+        "asData": true
+      },
+      "tokens": {
+        "namespaceDelimiter": ":",
+        "keyDelimiter": ".",
+        "dynamicDelimiters": {
+          "start": "{{",
+          "end": "}}"
+        }
+      }
+    },
+    "write": {
+      "cwd": "/home/kuus/Web/KnitKode/koine/packages/i18n/packages/i18n/__mocks__/single-language",
+      "output": ".code",
+      "emptyOutputFolder": true,
+      "ignorePaths": [],
+      "tsconfig": {
+        "path": "../tsconfig.json",
+        "alias": "@/i18n"
+      },
+      "typescriptCompilation": false,
+      "tsNoCheck": true,
+      "eslintDisable": true,
+      "copyTranslations": true,
+      "gitignore": "all"
+    },
+    "adapter": {
+      "name": "js",
+      "meta": {},
+      "options": {
+        "modularize": true
+      }
+    }
+  },
+  "input": {
+    "localesFolders": [],
+    "translationFiles": []
+  },
+  "routes": {
+    "byId": {},
+    "wildcardIds": [],
+    "onlyStaticRoutes": true,
+    "dynamicRoutes": [],
+    "staticRoutes": [],
+    "haveSpaRoutes": false
+  },
+  "translations": {}
+}

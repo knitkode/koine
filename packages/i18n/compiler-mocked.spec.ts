@@ -7,12 +7,12 @@ import * as multiTo from "./__mocks__/multi-language/.code/$to";
 import * as singleTo from "./__mocks__/single-language/.code/$to";
 import * as dictionary_accountUserProfile from "./__mocks__/multi-language/.code/translations/en/~account/~user~profile.json";
 
-jest.mock("@koine/i18n", () => jest.requireActual("./index"));
+vitest.mock("@koine/i18n", () => vitest.importActual("./index"));
 
 // @see https://github.com/vercel/next.js/discussions/49304#discussioncomment-7690268
-jest.mock("react", () => {
+vitest.mock("react", async () => {
   const testCache = <T extends (...args: Array<unknown>) => unknown>(func: T) => func;
-  const originalModule = jest.requireActual("react");
+  const originalModule = await vitest.importActual("react");
   return {
       ...originalModule,
       cache: testCache,

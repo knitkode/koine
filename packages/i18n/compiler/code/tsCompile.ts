@@ -25,7 +25,7 @@ export let tsCompile = (
     skipLibCheck: true,
     noEmitHelpers: true,
     importHelpers: true,
-    paths: process.env["JEST_WORKER_ID"]
+    paths: process.env["VITEST_WORKER_ID"]
       ? {
           "@koine/i18n": [join(cwd, "packages/i18n/index.ts")],
           "@koine/browser": [join(cwd, "packages/browser/index.ts")],

@@ -304,7 +304,7 @@ declare namespace I18n {
       index: true,
       content: () => /* j s */ `
 import type { Split } from "@koine/utils";
-import type { I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
+import type { I18nUtils } from "${process.env["VITEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
 import type { RouteIdError } from "./internal/routesError";
 
 export namespace I18n {

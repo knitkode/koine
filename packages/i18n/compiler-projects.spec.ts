@@ -4,12 +4,12 @@ describe("test projects", () => {
   beforeAll(() => {
     // pretend we are not testing, these are affecting projects outside
     // of this library
-    process.env["JEST_WORKER_ID"] = undefined;
+    process.env["VITEST_WORKER_ID"] = undefined;
     console.log(i18nCompiler.name);
   });
 
   test("pretending we are not testing should work", () => {
-    expect(process.env["JEST_WORKER_ID"]).toBe("undefined");
+    expect(process.env["VITEST_WORKER_ID"]).toBe("undefined");
   });
 
   // describe("test your.io", () => {

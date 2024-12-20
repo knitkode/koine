@@ -2,14 +2,20 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": ["jest", "node"],
+    "types": [
+      "vitest/globals",
+      "vitest/importMeta",
+      "vite/client",
+      "node",
+      "vitest"
+    ],
     "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": false,
     "esModuleInterop": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "vite.config.ts",
+    "vitest.config.ts",
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "**/*.d.ts"

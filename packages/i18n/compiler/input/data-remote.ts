@@ -69,9 +69,7 @@ export let getInputDataRemote = async (options: InputDataOptionsRemote) =>
 
         res.on("end", () => {
           try {
-            const dataInput = (
-              isGithubUrl ? JSON.parse(result) : result
-            ) as I18nCompiler.DataInput;
+            const dataInput = JSON.parse(result) as I18nCompiler.DataInput;
             resolve({
               ...dataInput,
               localesFolders: ignore.length

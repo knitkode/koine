@@ -8,7 +8,7 @@ export default createGenerator("js", (_arg) => {
       ext: "ts",
       index: false,
       content: () => /* j s */ `
-import type { I18nUtils } from "${process.env["JEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
+import type { I18nUtils } from "${process.env["VITEST_WORKER_ID"] ? "../../../types" : "@koine/i18n"}";
 import { defaultLocale } from "../defaultLocale";
 import type { I18n } from "../types";
 import { loadTranslations } from "./loadTranslations";
