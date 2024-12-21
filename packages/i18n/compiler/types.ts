@@ -39,22 +39,39 @@ export namespace I18nCompiler {
   >;
 
   /**
-   * Data extracted from filesystem structure
+   * Data input, often extracted from filesystem structure
    */
   export type DataInput = {
+    /**
+     * List of the locale available, often these are folders names found in the
+     * input source data, e.g. but they can also be provided "manually" harcoded
+     * 
+     * ```ts
+     * ["en", "it"]
+     * ```
+     */
+    locales: string[];
     /**
      * List of the translations source `.json` files
      *
      * TODO: maybe support more formats like `yml` or `.po`
+     * @see {@link DataInputTranslationFile}
      */
     translationFiles: DataInputTranslationFile[];
     /**
-     * List of the locale folders found in the input source data
-     */
-    localesFolders: string[];
-    /**
-     * Dictionary of routes by route id, each route defines a dictionary with
-     * key=locale, value=pathname
+     * Dictionary of routes by **route id**, each route defines a dictionary with
+     * `key` => **locale**, `value` => **pathname**, e.g.
+     * 
+     * ```ts
+     * home: {
+     *   en: "/",
+     *   it: "/"
+     * },
+     * about: {
+     *   en: "/about-us",
+     *   it: "/chi-siamo"
+     * },
+     * ```
      */
     routes?: Record<RouteId, Record<Locale, RoutePathname>>; 
   };
@@ -68,6 +85,9 @@ export namespace I18nCompiler {
      */
     path: string;
     locale: Locale;
+    /**
+     * @see {@link DataTranslationValue}
+     */
     data: { [key: string]: DataTranslationValue };
   };
 
@@ -163,7 +183,7 @@ export namespace I18nCompiler {
      */
     pathnamesSpa?: Record<Locale, RoutePathname>;
     /**
-     * The route params dictionary {@link DataParams}}
+     * The route params dictionary {@link DataParams}
      */
     params?: DataParams;
     /**

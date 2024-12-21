@@ -106,7 +106,7 @@ function resolveCodeData<TAdapterName extends I18nCompiler.AdapterName>(
   // order locales
   input = {
     ...input,
-    localesFolders: input.localesFolders.sort((a, b) =>
+    locales: input.locales.sort((a, b) =>
       config.defaultLocale ? -1 : a.localeCompare(b),
     ),
   };

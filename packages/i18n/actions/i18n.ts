@@ -17,7 +17,7 @@ const main = async () => {
     },
   });
 
-  info(`Found locales: ${input.localesFolders.join(", ")}`);
+  info(`Found locales: ${input.locales.join(", ")}`);
   info(`Found ${input.translationFiles.length} JSON files`);
 };
 

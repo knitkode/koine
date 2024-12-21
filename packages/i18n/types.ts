@@ -73,7 +73,6 @@ export namespace I18nUtils {
    * It can also be an empty object, for instance with error routes.
    *
    * NOTE: this type should satisfy the nextjs type too that is:
-   * TODO: maybe build a test for this
    * ```ts
    * import type { Metadata as NextMetadata } from "next";
    *
@@ -86,7 +85,6 @@ export namespace I18nUtils {
    * I18n/routing related SEO metadata:
    *
    * NOTE: this type should satisfy the nextjs type too that is:
-   * TODO: maybe build a test for this
    * ```ts
    * import type { Metadata as NextMetadata } from "next";
    *

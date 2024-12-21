@@ -25,11 +25,11 @@ const onResponseData = (options: InputDataOptionsRemote, result: string) => {
 
     return {
       ...dataInput,
-      localesFolders: ignore.length
-        ? dataInput.localesFolders.filter((folder) =>
+      locales: ignore.length
+        ? dataInput.locales.filter((folder) =>
             ignore.every((glob) => !minimatch(folder, glob)),
           )
-        : dataInput.localesFolders,
+        : dataInput.locales,
       translationFiles: ignore.length
         ? dataInput.translationFiles.filter((file) =>
             ignore.every((glob) => !minimatch(file.path, glob)),
@@ -72,11 +72,11 @@ export let getInputDataRemote = async (options: InputDataOptionsRemote) =>
             const dataInput = JSON.parse(result) as I18nCompiler.DataInput;
             resolve({
               ...dataInput,
-              localesFolders: ignore.length
-                ? dataInput.localesFolders.filter((folder) =>
+              locales: ignore.length
+                ? dataInput.locales.filter((folder) =>
                     ignore.every((glob) => !minimatch(folder, glob)),
                   )
-                : dataInput.localesFolders,
+                : dataInput.locales,
               translationFiles: ignore.length
                 ? dataInput.translationFiles.filter((file) =>
                     ignore.every((glob) => !minimatch(file.path, glob)),

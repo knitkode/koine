@@ -34,11 +34,11 @@ export let getInputDataLocal = async (
 ): Promise<I18nCompiler.DataInput> => {
   const { cwd = process.cwd(), ignore = [], source } = options;
   const path = join(cwd, source);
-  const localesFolders = getLocalesFolders({ cwd: path, ignore, source });
+  const locales = getLocalesFolders({ cwd: path, ignore, source });
   const translationFiles: I18nCompiler.DataInputTranslationFile[] = [];
 
   await Promise.all(
-    localesFolders.map(async (locale) => {
+    locales.map(async (locale) => {
       const jsonFiles = await glob("**/*.json", {
         cwd: join(path, locale),
         ignore: options.ignore,
@@ -62,7 +62,7 @@ export let getInputDataLocal = async (
   );
 
   return {
-    localesFolders,
+    locales,
     translationFiles,
   };
 };
@@ -72,10 +72,10 @@ export let getInputDataLocalSync = (
 ): I18nCompiler.DataInput => {
   const { cwd = process.cwd(), ignore = [], source } = options;
   const path = join(cwd, source);
-  const localesFolders = getLocalesFolders({ cwd: path, ignore, source });
+  const locales = getLocalesFolders({ cwd: path, ignore, source });
   const translationFiles: I18nCompiler.DataInputTranslationFile[] = [];
 
-  localesFolders.forEach((locale) => {
+  locales.forEach((locale) => {
     const jsonFiles = globSync("**/*.json", {
       cwd: join(path, locale),
       ignore: options.ignore,
@@ -96,7 +96,7 @@ export let getInputDataLocalSync = (
   });
 
   return {
-    localesFolders,
+    locales,
     translationFiles,
   };
 };

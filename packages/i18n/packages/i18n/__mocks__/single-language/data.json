@@ -39,6 +39,7 @@
         "~.json",
         "~.json",
         "~.json",
+        "~.json",
         "~.json"
       ],
       "createArrayIndexBasedFns": false,
@@ -86,7 +87,7 @@
     }
   },
   "input": {
-    "localesFolders": [],
+    "locales": [],
     "translationFiles": []
   },
   "routes": {

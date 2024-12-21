@@ -10,7 +10,7 @@ export let isInputDataDirect = (
   return (
     isFunction(source) ||
     (!isString(source) &&
-      isArray(source.localesFolders) &&
+      isArray(source.locales) &&
       isArray(source.translationFiles))
   );
 };

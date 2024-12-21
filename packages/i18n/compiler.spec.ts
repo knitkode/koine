@@ -37,7 +37,7 @@ describe("test in memory output", () => {
     });
 
   const inputData: I18nCompiler.DataInput = {
-    localesFolders: ["en"],
+    locales: ["en"],
     translationFiles: [
       {
         path: "test.json",
@@ -75,7 +75,7 @@ describe("test in memory output", () => {
   test("empty data set should not break", async () => {
     const emptyData = await runCompiler({
       source: {
-        localesFolders: ["en"],
+        locales: ["en"],
         translationFiles: [
           {
             path: "test.json",
@@ -95,21 +95,21 @@ describe("test in memory output", () => {
     const data = await runCompiler([
       {
         source: {
-          localesFolders: ["de"],
+          locales: ["de"],
           translationFiles: [],
         },
       },
       {
         source: async () => {
           return {
-            localesFolders: ["en"],
+            locales: ["en"],
             translationFiles: [],
           };
         },
       },
       {
         source:
-          "https://gist.githubusercontent.com/knitkode/12e079ff546cfe2700c285ab4568015d/raw/4dc47bb3ad940b32795f756206d32eebaaf1ee87/i18n-three-locales-routes.json",
+          "https://gist.githubusercontent.com/knitkode/12e079ff546cfe2700c285ab4568015d/raw/62f8d1ac761647638405c03aabcacbe7204dec60/i18n-three-locales-routes.json",
       },
     ]);
 
@@ -117,27 +117,44 @@ describe("test in memory output", () => {
     expect(data.config.defaultLocale).toEqual("en");
   });
 
-  test("input routes", async () => {
+  test("input routes and custom route id delimiter", async () => {
     const data = await runCompiler(
       {
         source: {
-          localesFolders: ["en", "it"],
+          locales: ["en", "it"],
           translationFiles: [],
           routes: {
             about: {
               en: "/about-us",
               it: "chi-siamo",
             },
+            "blog/[slug]": {
+              en: "/blog/{slug}",
+              it: "articoli/{{ slug }}",
+            },
           },
         },
       },
       {
         trailingSlash: true,
+        code: {
+          adapter: {
+            name: "js"
+          },
+          routes: {
+            tokens: {
+              idDelimiter: "/",
+
+            }
+          }
+        }
       },
     );
 
     expect(data.routes.byId["about"].pathnames["it"]).toEqual("/chi-siamo/");
     expect(data.routes.byId["about"].pathnames["en"]).toEqual("/about-us/");
+    expect(data.routes.byId["blog/[slug]"].pathnames["en"]).toEqual("/blog/[slug]/");
+    expect(data.routes.byId["blog/[slug]"].params).toEqual({ slug: "stringOrNumber" });
   });
 });
 

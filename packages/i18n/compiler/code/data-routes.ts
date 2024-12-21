@@ -134,14 +134,13 @@ function parseUserDefinedRouteId(
  * - removes the trailing slash
  * - removes `*` wildcard token
  * - normalises to `/my/[id]` dynamic params defined in any of these shapes:
+ *   - `/my/:id`
  *   - `/my/{{id}}`
  *   - `/my/{{ id }}`
  *   - `/my/[id]`
  *   - `/my/[ id ]`
  *   - `/my/{id}`
  *   - `/my/{ id }`
- *
- * TODO: support also `/my/:id` syntax?
  */
 function normaliseUserDefinedRoutePathname(
   routePathname: string,
@@ -150,6 +149,13 @@ function normaliseUserDefinedRoutePathname(
   return i18nFormatRoutePathname(
     routePathname
       .replace(/\*/g, "")
+      // manage `:id` syntax
+      .replace(
+        /:(.*?)?(\/|$)/g,
+        (_search, firstGroup, secondGroup) =>
+          `[${firstGroup.trim()}]${secondGroup}`,
+      )
+      // manage brackets syntax
       .replace(
         /[[{]{1,2}(.*?)[\]}]{1,2}/g,
         (_search, replaceValue) => `[${replaceValue.trim()}]`,

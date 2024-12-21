@@ -1,7 +1,7 @@
 import { getInputDataRemote, isInputDataRemote } from "./data-remote";
 
 const SOURCE_GIST =
-  "https://gist.githubusercontent.com/knitkode/12e079ff546cfe2700c285ab4568015d/raw/4dc47bb3ad940b32795f756206d32eebaaf1ee87/i18n-three-locales-routes.json";
+  "https://gist.githubusercontent.com/knitkode/12e079ff546cfe2700c285ab4568015d/raw/62f8d1ac761647638405c03aabcacbe7204dec60/i18n-three-locales-routes.json";
 
 describe("data-remote", () => {
   describe("isInputDataRemote", () => {
@@ -27,7 +27,7 @@ describe("data-remote", () => {
       const data = await getInputDataRemote({
         source: SOURCE_GIST,
       });
-      expect(data.localesFolders).toEqual(["en", "es", "it"]);
+      expect(data.locales).toEqual(["en", "es", "it"]);
     });
 
     // it("should throw when remote source data cannot be fetched", async () => {

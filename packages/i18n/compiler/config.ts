@@ -67,14 +67,14 @@ export const configDefaults: I18nCompilerConfigResolved = {
  * input data
  */
 export let getConfig = (
-  dataInput: Pick<I18nCompiler.DataInput, "localesFolders">,
+  dataInput: Pick<I18nCompiler.DataInput, "locales">,
   options?: I18nCompilerConfig,
 ) => {
   if (options) {
     options.baseUrl = normaliseUrl(options.baseUrl);
 
     // dynamically define locales
-    options.locales = options.locales || dataInput.localesFolders;
+    options.locales = options.locales || dataInput.locales;
 
     // ensure defaultLocale
     options.defaultLocale = options.defaultLocale || options.locales?.[0];
@@ -87,7 +87,7 @@ export let getConfig = (
     options = {} as I18nCompilerConfig;
 
     // dynamically define locales
-    options.locales = dataInput.localesFolders;
+    options.locales = dataInput.locales;
   }
 
   const merged = objectMergeWithDefaults(configDefaults, options);
