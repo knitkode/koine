@@ -52,7 +52,7 @@ export let escapeEachChar = (input: string) =>
  * @param otherCondition Optionally pass another condition
  */
 export let filterInputTranslationFiles = (
-  files: I18nCompiler.DataInput["translationFiles"],
+  files: I18nCompiler.DataInput["translationFiles"] = [],
   ignore: string[] = [],
   condition?: (file: I18nCompiler.DataInputTranslationFile) => boolean,
 ) =>

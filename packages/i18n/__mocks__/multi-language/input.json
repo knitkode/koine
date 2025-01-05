@@ -1,80 +1,17 @@
 {
-  "localesFolders": [
+  "locales": [
     "it",
     "en"
   ],
+  "translations": {
+    "en": {
+      "xyz": "Hi {{ who }}"
+    },
+    "it": {
+      "xyz": "Ciao {{ who }}"
+    }
+  },
   "translationFiles": [
-    {
-      "path": "~.json",
-      "locale": "en",
-      "data": {
-        "home": "/",
-        "about": "/about",
-        "account": {
-          "user": {
-            "profile": "/account/user",
-            "[id]": "/account/user/{{ id }}",
-            "settings": {
-              "index": "/account/user/settings",
-              "personal": "/account/user/settings/personal"
-            }
-          }
-        },
-        "products": {
-          "index": "/products",
-          "[id]": {
-            "index": "^/{{ id }}",
-            "edit": {
-              "index": "^/edit",
-              "details": "^/details"
-            }
-          }
-        },
-        "apps": {
-          "tool": {
-            "[[...spa]]": "/apps/tool",
-            "things": {
-              "index": "^/things",
-              "[id]": {
-                "index": "^/{{ id }}",
-                "detail": {
-                  "index": "^/detail",
-                  "new": "^/new",
-                  "[detailId]": {
-                    "index": "^/{{ detailId }}",
-                    "edit": "^/edit"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "path": "404.json",
-      "locale": "en",
-      "data": {
-        "seo": {
-          "title": "404 - Not found"
-        },
-        "title": "404, page not found",
-        "onlyEn": "a",
-        "onlyEnArray": [
-          "a",
-          "b"
-        ],
-        "onlyEnObject": {
-          "a": "a",
-          "b": "b"
-        },
-        "onlyNumberKeys": {
-          "1": "Once",
-          "2": "Twice",
-          "3": "Three times"
-        }
-      }
-    },
     {
       "path": "~account/~user~profile.json",
       "locale": "en",
@@ -148,6 +85,29 @@
       }
     },
     {
+      "path": "404.json",
+      "locale": "it",
+      "data": {
+        "seo": {
+          "title": "404 - Introvabile"
+        },
+        "title": "404, pagina non trovata",
+        "onlyNumberKeys": {
+          "1": "Una volta",
+          "2": "Due volte",
+          "3": "Tre volte"
+        }
+      }
+    },
+    {
+      "path": "~account/FormUserLanguages.json",
+      "locale": "en",
+      "data": {
+        "empty": {},
+        "msg": "Some text"
+      }
+    },
+    {
       "path": "$faq.json",
       "locale": "en",
       "data": {
@@ -157,6 +117,30 @@
             "answer": "That"
           }
         ]
+      }
+    },
+    {
+      "path": "404.json",
+      "locale": "en",
+      "data": {
+        "seo": {
+          "title": "404 - Not found"
+        },
+        "title": "404, page not found",
+        "onlyEn": "a",
+        "onlyEnArray": [
+          "a",
+          "b"
+        ],
+        "onlyEnObject": {
+          "a": "a",
+          "b": "b"
+        },
+        "onlyNumberKeys": {
+          "1": "Once",
+          "2": "Twice",
+          "3": "Three times"
+        }
       }
     },
     {
@@ -207,34 +191,58 @@
       }
     },
     {
-      "path": "~account/FormUserLanguages.json",
-      "locale": "it",
+      "path": "~.json",
+      "locale": "en",
       "data": {
-        "empty": {},
-        "msg": "Del testo"
-      }
-    },
-    {
-      "path": "404.json",
-      "locale": "it",
-      "data": {
-        "seo": {
-          "title": "404 - Introvabile"
+        "home": "/",
+        "about": "/about",
+        "account": {
+          "user": {
+            "profile": "/account/user",
+            "[id]": "/account/user/{{ id }}",
+            "settings": {
+              "index": "/account/user/settings",
+              "personal": "/account/user/settings/personal"
+            }
+          }
         },
-        "title": "404, pagina non trovata",
-        "onlyNumberKeys": {
-          "1": "Una volta",
-          "2": "Due volte",
-          "3": "Tre volte"
+        "products": {
+          "index": "/products",
+          "[id]": {
+            "index": "^/{{ id }}",
+            "edit": {
+              "index": "^/edit",
+              "details": "^/details"
+            }
+          }
+        },
+        "apps": {
+          "tool": {
+            "[[...spa]]": "/apps/tool",
+            "things": {
+              "index": "^/things",
+              "[id]": {
+                "index": "^/{{ id }}",
+                "detail": {
+                  "index": "^/detail",
+                  "new": "^/new",
+                  "[detailId]": {
+                    "index": "^/{{ detailId }}",
+                    "edit": "^/edit"
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
     {
       "path": "~account/FormUserLanguages.json",
-      "locale": "en",
+      "locale": "it",
       "data": {
         "empty": {},
-        "msg": "Some text"
+        "msg": "Del testo"
       }
     },
     {

@@ -13,7 +13,7 @@ export default createGenerator("js", (data) => {
     options: { translations: optionsTranslations },
   } = data;
   const { dir, prefix } = optionsTranslations.dictionaries;
-  const { translationFiles } = input;
+  const { translationFiles = [] } = input;
   const dictionariesPathsByNamespace = translationFiles.reduce(
     (map, translationFile) => {
       const { locale, path } = translationFile;
@@ -27,7 +27,7 @@ export default createGenerator("js", (data) => {
       string,
       Record<
         I18nCompiler.Locale,
-        I18nCompiler.DataInput["translationFiles"][number]["path"]
+        NonNullable<I18nCompiler.DataInput["translationFiles"]>[number]["path"]
       >
     >,
   );

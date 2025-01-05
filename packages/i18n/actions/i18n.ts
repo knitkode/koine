@@ -18,7 +18,7 @@ const main = async () => {
   });
 
   info(`Found locales: ${input.locales.join(", ")}`);
-  info(`Found ${input.translationFiles.length} JSON files`);
+  info(`Found ${input.translationFiles?.length || 0} JSON files`);
 };
 
 const git = new Git(process.cwd(), main);

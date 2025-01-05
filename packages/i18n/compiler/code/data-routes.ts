@@ -496,7 +496,7 @@ function buildDataRoutesFromJsonData(
 export let getCodeDataRoutes = (
   config: I18nCompiler.Config,
   options: CodeDataRoutesOptions,
-  { translationFiles, routes }: I18nCompiler.DataInput,
+  { translationFiles = [], routes }: I18nCompiler.DataInput,
 ) => {
   const dataRoutes: I18nCompiler.DataRoutes = {
     byId: {},

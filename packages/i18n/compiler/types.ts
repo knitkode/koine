@@ -57,7 +57,29 @@ export namespace I18nCompiler {
      * TODO: maybe support more formats like `yml` or `.po`
      * @see {@link DataInputTranslationFile}
      */
-    translationFiles: DataInputTranslationFile[];
+    translationFiles?: DataInputTranslationFile[];
+    /**
+     * Dictionary of translations by **locale**, each locale defines a dictionary
+     * where keys compose the translation ids. Any valid JSON serializable value
+     * is allowed, including nested objects and arrays.
+     * 
+     * ```ts
+     * en: {
+     *   nav: {
+     *     back: "Back",
+     *     contacts: "Contact us"
+     *   }
+     * },
+     * it: {
+    *    nav: {
+    *      back: "Indietro",
+    *      contacts: "Contattaci"
+    *    }
+     * },
+     * ```
+     * @see {@link DataTranslationValue}
+     */
+    translations?: Record<Locale, { [key: string]: DataTranslationValue; }>;
     /**
      * Dictionary of routes by **route id**, each route defines a dictionary with
      * `key` => **locale**, `value` => **pathname**, e.g.

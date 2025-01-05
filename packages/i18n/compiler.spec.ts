@@ -38,13 +38,6 @@ describe("test in memory output", () => {
 
   const inputData: I18nCompiler.DataInput = {
     locales: ["en"],
-    translationFiles: [
-      {
-        path: "test.json",
-        locale: "en",
-        data: {},
-      },
-    ],
   };
 
   test("input source: direct as object or function sync/async", async () => {
@@ -96,14 +89,12 @@ describe("test in memory output", () => {
       {
         source: {
           locales: ["de"],
-          translationFiles: [],
         },
       },
       {
         source: async () => {
           return {
             locales: ["en"],
-            translationFiles: [],
           };
         },
       },
@@ -122,7 +113,6 @@ describe("test in memory output", () => {
       {
         source: {
           locales: ["en", "it"],
-          translationFiles: [],
           routes: {
             about: {
               en: "/about-us",
@@ -155,6 +145,44 @@ describe("test in memory output", () => {
     expect(data.routes.byId["about"].pathnames["en"]).toEqual("/about-us/");
     expect(data.routes.byId["blog/[slug]"].pathnames["en"]).toEqual("/blog/[slug]/");
     expect(data.routes.byId["blog/[slug]"].params).toEqual({ slug: "stringOrNumber" });
+  });
+
+  test("input translations", async () => {
+    const data = await runCompiler(
+      {
+        source: {
+          locales: ["en", "it"],
+          translations: {
+            en: {
+              nav: {
+                back: "Back",
+                contacts: "Contact us"
+              }
+            },
+            it: {
+              nav: {
+                back: "Indietro",
+                contacts: "Contattaci"
+              }
+            },
+          },
+        },
+      },
+      // {
+      //   code: {
+      //     adapter: {
+      //       name: "js"
+      //     },
+      //     translations: {
+      //       tokens: {
+      //         keyDelimiter: ".",
+      //       }
+      //     }
+      //   }
+      // },
+    );
+
+    expect(data.translations["nav_back"].values["en"]).toEqual("Back")
   });
 });
 
@@ -216,15 +244,30 @@ describe("test written output", () => {
       defaultLocale: "en",
       hideDefaultLocaleInUrl: true,
       // logLevel: 4,
-      input: {
-        cwd: mocksPath("multi-language"),
-        source: ".",
-        write: {
+      input: [
+        {
           cwd: mocksPath("multi-language"),
-          output: "input.json",
-          pretty: true,
+          source: ".",
+          write: {
+            cwd: mocksPath("multi-language"),
+            output: "input.json",
+            pretty: true,
+          },
         },
-      },
+        {
+          source: {
+            locales: ["en", "it"],
+            translations: {
+              en: {
+                xyz: "Hi {{ who }}"
+              },
+              it: {
+                xyz: "Ciao {{ who }}"
+              }
+            }
+          }
+        }
+      ],
       code: {
         adapter: {
           name: "next",

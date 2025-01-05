@@ -1,4 +1,15 @@
 {
-  "locales": [],
+  "locales": [
+    "it",
+    "en"
+  ],
+  "translations": {
+    "en": {
+      "xyz": "Hi {{ who }}"
+    },
+    "it": {
+      "xyz": "Ciao {{ who }}"
+    }
+  },
   "translationFiles": []
 }

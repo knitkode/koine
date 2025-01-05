@@ -92,82 +92,19 @@
     }
   },
   "input": {
-    "localesFolders": [
-      "en",
-      "it"
+    "locales": [
+      "it",
+      "en"
     ],
+    "translations": {
+      "en": {
+        "xyz": "Hi {{ who }}"
+      },
+      "it": {
+        "xyz": "Ciao {{ who }}"
+      }
+    },
     "translationFiles": [
-      {
-        "path": "~.json",
-        "locale": "en",
-        "data": {
-          "home": "/",
-          "about": "/about",
-          "account": {
-            "user": {
-              "profile": "/account/user",
-              "[id]": "/account/user/{{ id }}",
-              "settings": {
-                "index": "/account/user/settings",
-                "personal": "/account/user/settings/personal"
-              }
-            }
-          },
-          "products": {
-            "index": "/products",
-            "[id]": {
-              "index": "^/{{ id }}",
-              "edit": {
-                "index": "^/edit",
-                "details": "^/details"
-              }
-            }
-          },
-          "apps": {
-            "tool": {
-              "[[...spa]]": "/apps/tool",
-              "things": {
-                "index": "^/things",
-                "[id]": {
-                  "index": "^/{{ id }}",
-                  "detail": {
-                    "index": "^/detail",
-                    "new": "^/new",
-                    "[detailId]": {
-                      "index": "^/{{ detailId }}",
-                      "edit": "^/edit"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        "path": "404.json",
-        "locale": "en",
-        "data": {
-          "seo": {
-            "title": "404 - Not found"
-          },
-          "title": "404, page not found",
-          "onlyEn": "a",
-          "onlyEnArray": [
-            "a",
-            "b"
-          ],
-          "onlyEnObject": {
-            "a": "a",
-            "b": "b"
-          },
-          "onlyNumberKeys": {
-            "1": "Once",
-            "2": "Twice",
-            "3": "Three times"
-          }
-        }
-      },
       {
         "path": "~account/~user~profile.json",
         "locale": "en",
@@ -241,6 +178,29 @@
         }
       },
       {
+        "path": "404.json",
+        "locale": "it",
+        "data": {
+          "seo": {
+            "title": "404 - Introvabile"
+          },
+          "title": "404, pagina non trovata",
+          "onlyNumberKeys": {
+            "1": "Una volta",
+            "2": "Due volte",
+            "3": "Tre volte"
+          }
+        }
+      },
+      {
+        "path": "~account/FormUserLanguages.json",
+        "locale": "en",
+        "data": {
+          "empty": {},
+          "msg": "Some text"
+        }
+      },
+      {
         "path": "$faq.json",
         "locale": "en",
         "data": {
@@ -250,6 +210,30 @@
               "answer": "That"
             }
           ]
+        }
+      },
+      {
+        "path": "404.json",
+        "locale": "en",
+        "data": {
+          "seo": {
+            "title": "404 - Not found"
+          },
+          "title": "404, page not found",
+          "onlyEn": "a",
+          "onlyEnArray": [
+            "a",
+            "b"
+          ],
+          "onlyEnObject": {
+            "a": "a",
+            "b": "b"
+          },
+          "onlyNumberKeys": {
+            "1": "Once",
+            "2": "Twice",
+            "3": "Three times"
+          }
         }
       },
       {
@@ -300,34 +284,58 @@
         }
       },
       {
-        "path": "~account/FormUserLanguages.json",
-        "locale": "it",
+        "path": "~.json",
+        "locale": "en",
         "data": {
-          "empty": {},
-          "msg": "Del testo"
-        }
-      },
-      {
-        "path": "404.json",
-        "locale": "it",
-        "data": {
-          "seo": {
-            "title": "404 - Introvabile"
+          "home": "/",
+          "about": "/about",
+          "account": {
+            "user": {
+              "profile": "/account/user",
+              "[id]": "/account/user/{{ id }}",
+              "settings": {
+                "index": "/account/user/settings",
+                "personal": "/account/user/settings/personal"
+              }
+            }
           },
-          "title": "404, pagina non trovata",
-          "onlyNumberKeys": {
-            "1": "Una volta",
-            "2": "Due volte",
-            "3": "Tre volte"
+          "products": {
+            "index": "/products",
+            "[id]": {
+              "index": "^/{{ id }}",
+              "edit": {
+                "index": "^/edit",
+                "details": "^/details"
+              }
+            }
+          },
+          "apps": {
+            "tool": {
+              "[[...spa]]": "/apps/tool",
+              "things": {
+                "index": "^/things",
+                "[id]": {
+                  "index": "^/{{ id }}",
+                  "detail": {
+                    "index": "^/detail",
+                    "new": "^/new",
+                    "[detailId]": {
+                      "index": "^/{{ detailId }}",
+                      "edit": "^/edit"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
       {
         "path": "~account/FormUserLanguages.json",
-        "locale": "en",
+        "locale": "it",
         "data": {
           "empty": {},
-          "msg": "Some text"
+          "msg": "Del testo"
         }
       },
       {
@@ -747,15 +755,15 @@
       "trace": "404:onlyNumberKeys",
       "typeValue": "Object",
       "values": {
-        "en": {
-          "1": "Once",
-          "2": "Twice",
-          "3": "Three times"
-        },
         "it": {
           "1": "Una volta",
           "2": "Due volte",
           "3": "Tre volte"
+        },
+        "en": {
+          "1": "Once",
+          "2": "Twice",
+          "3": "Three times"
         }
       }
     },
@@ -767,8 +775,8 @@
       "trace": "404:onlyNumberKeys.1",
       "typeValue": "Primitive",
       "values": {
-        "en": "Once",
-        "it": "Una volta"
+        "it": "Una volta",
+        "en": "Once"
       }
     },
     "404:onlyNumberKeys_2": {
@@ -779,8 +787,8 @@
       "trace": "404:onlyNumberKeys.2",
       "typeValue": "Primitive",
       "values": {
-        "en": "Twice",
-        "it": "Due volte"
+        "it": "Due volte",
+        "en": "Twice"
       }
     },
     "404:onlyNumberKeys_3": {
@@ -791,8 +799,8 @@
       "trace": "404:onlyNumberKeys.3",
       "typeValue": "Primitive",
       "values": {
-        "en": "Three times",
-        "it": "Tre volte"
+        "it": "Tre volte",
+        "en": "Three times"
       }
     },
     "404:seo": {
@@ -803,11 +811,11 @@
       "trace": "404:seo",
       "typeValue": "Object",
       "values": {
-        "en": {
-          "title": "404 - Not found"
-        },
         "it": {
           "title": "404 - Introvabile"
+        },
+        "en": {
+          "title": "404 - Not found"
         }
       }
     },
@@ -819,8 +827,8 @@
       "trace": "404:seo.title",
       "typeValue": "Primitive",
       "values": {
-        "en": "404 - Not found",
-        "it": "404 - Introvabile"
+        "it": "404 - Introvabile",
+        "en": "404 - Not found"
       }
     },
     "404:title": {
@@ -831,8 +839,23 @@
       "trace": "404:title",
       "typeValue": "Primitive",
       "values": {
-        "en": "404, page not found",
-        "it": "404, pagina non trovata"
+        "it": "404, pagina non trovata",
+        "en": "404, page not found"
+      }
+    },
+    "xyz": {
+      "id": "xyz",
+      "fnName": "$t_xyz",
+      "namespace": "",
+      "path": "xyz",
+      "trace": "xyz",
+      "typeValue": "Primitive",
+      "values": {
+        "en": "Hi {{ who }}",
+        "it": "Ciao {{ who }}"
+      },
+      "params": {
+        "who": "stringOrNumber"
       }
     },
     "~account/FormUserLanguages:empty": {
@@ -843,8 +866,8 @@
       "trace": "~account/FormUserLanguages:empty",
       "typeValue": "Object",
       "values": {
-        "it": {},
-        "en": {}
+        "en": {},
+        "it": {}
       },
       "equalValues": true
     },
@@ -856,8 +879,8 @@
       "trace": "~account/FormUserLanguages:msg",
       "typeValue": "Primitive",
       "values": {
-        "it": "Del testo",
-        "en": "Some text"
+        "en": "Some text",
+        "it": "Del testo"
       }
     },
     "~account/~user~profile:boolShouldntBeHereBut": {

@@ -535,13 +535,13 @@ function writeCompiledTypescriptFiles(
 
 async function writeTranslationsFiles(
   config: CodeWriteConfig,
-  { translationFiles }: I18nCompiler.DataInput,
+  { translationFiles = [] }: I18nCompiler.DataInput,
 ) {
   const { cwd, output, copyTranslations } = config;
 
   if (!copyTranslations) return;
 
-  Promise.all(
+  await Promise.all(
     translationFiles.map(async ({ data, locale, path }) => {
       const relativePath = join(getTranslationsDir(0), locale);
       await fsWrite(
@@ -555,7 +555,7 @@ async function writeTranslationsFiles(
 
 function writeTranslationsFilesSync(
   config: CodeWriteConfig,
-  { translationFiles }: I18nCompiler.DataInput,
+  { translationFiles = [] }: I18nCompiler.DataInput,
 ) {
   const { cwd, output, copyTranslations } = config;
 

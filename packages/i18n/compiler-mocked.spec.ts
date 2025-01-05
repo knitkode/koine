@@ -47,6 +47,7 @@ describe("test mocked output code", () => {
     test("basic multilingual translate", () => {
       expect(t.$t_404_seo_title()).toEqual("404 - Not found");
       expect(t.$t_404_seo_title("it")).toEqual("404 - Introvabile");
+      expect(t.$t_xyz({ who: "Bob" })).toEqual("Hi Bob");
     });
   
     test("returning objects and arrays", () => {
@@ -89,7 +90,7 @@ describe("test mocked output code", () => {
 
   describe("'$dictionary' generated code", () => {
     it("should contains the right locales and data", () => {
-      expect(Object.keys($dictionary_404)).toEqual(["en", "it"]);
+      expect(Object.keys($dictionary_404).sort()).toEqual(["en", "it"].sort());
       expect($dictionary_404.en.onlyEn).toBe("a");
       expect($dictionary_404.it.title).toBe("404, pagina non trovata");
     });

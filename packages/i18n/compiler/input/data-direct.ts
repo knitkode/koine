@@ -7,12 +7,7 @@ export let isInputDataDirect = (
   data: InputDataOptions,
 ): data is InputDataOptionsDirect => {
   const { source } = data;
-  return (
-    isFunction(source) ||
-    (!isString(source) &&
-      isArray(source.locales) &&
-      isArray(source.translationFiles))
-  );
+  return isFunction(source) || (!isString(source) && isArray(source.locales));
 };
 
 export let getInputDataDirect = async (

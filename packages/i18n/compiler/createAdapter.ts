@@ -69,7 +69,7 @@ export function createAdapter<
   }
 
   // TODO: this assertion is not type safe, is just a workaround that allows us
-  // to easily re-use other adapters' generators withing a getGenerators function
+  // to easily re-use other adapters' generators within a getGenerators function
   // but the data argument passed to this function is problematic
   adapter.getGenerators = config.getGenerators as <
     TAdapterName extends I18nCompiler.AdapterName,

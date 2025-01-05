@@ -1,7 +1,10 @@
 {
   "config": {
     "baseUrl": "https://example.com",
-    "locales": [],
+    "locales": [
+      "en",
+      "it"
+    ],
     "defaultLocale": "en",
     "hideDefaultLocaleInUrl": true,
     "trailingSlash": false,
@@ -33,6 +36,7 @@
     },
     "translations": {
       "ignorePaths": [
+        "~.json",
         "~.json",
         "~.json",
         "~.json",
@@ -97,7 +101,18 @@
     }
   },
   "input": {
-    "locales": [],
+    "locales": [
+      "it",
+      "en"
+    ],
+    "translations": {
+      "en": {
+        "xyz": "Hi {{ who }}"
+      },
+      "it": {
+        "xyz": "Ciao {{ who }}"
+      }
+    },
     "translationFiles": []
   },
   "routes": {
@@ -108,5 +123,21 @@
     "staticRoutes": [],
     "haveSpaRoutes": false
   },
-  "translations": {}
+  "translations": {
+    "xyz": {
+      "id": "xyz",
+      "fnName": "$t_xyz",
+      "namespace": "",
+      "path": "xyz",
+      "trace": "xyz",
+      "typeValue": "Primitive",
+      "values": {
+        "en": "Hi {{ who }}",
+        "it": "Ciao {{ who }}"
+      },
+      "params": {
+        "who": "stringOrNumber"
+      }
+    }
+  }
 }

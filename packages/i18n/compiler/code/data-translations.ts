@@ -365,7 +365,9 @@ function createTranslationEntry(
 ) {
   const params =
     value === null ? null : extractTranslationParamsFromValue(options, value);
-  const trace = namespace + options.tokens.namespaceDelimiter + path;
+  const trace = namespace
+    ? namespace + options.tokens.namespaceDelimiter + path
+    : path;
   const translation: I18nCompiler.DataTranslation = {
     ...existing,
     id,
@@ -508,13 +510,38 @@ function getCodeDataTranslationsFromFile(
   return dataTranslations;
 }
 
+function getCodeDataTranslationsFromDictionary(
+  options: CodeDataTranslationsOptions,
+  dataTranslations: I18nCompiler.DataTranslations,
+  dictionary: NonNullable<I18nCompiler.DataInput["translations"]>[string],
+  locale: I18nCompiler.Locale,
+): I18nCompiler.DataTranslations {
+  for (const key in dictionary) {
+    // this is just an id we use internally, we do not really care about appling
+    // the user option, actually that would make the id inconsistent for nothing
+    // if (key) id = namespace + options.tokens.namespaceDelimiter + key;
+    const id = key;
+    const value = dictionary[key];
+
+    addDataTranslationEntry(options, dataTranslations, {
+      id,
+      namespace: "",
+      path: key,
+      locale,
+      value,
+    });
+  }
+
+  return dataTranslations;
+}
+
 /**
  * Get translations data
  */
 export let getCodeDataTranslations = (
   _config: I18nCompiler.Config,
   options: CodeDataTranslationsOptions,
-  { translationFiles }: I18nCompiler.DataInput,
+  { translationFiles, translations }: I18nCompiler.DataInput,
 ) => {
   const { ignorePaths } = options;
   const filteredFiles = filterInputTranslationFiles(
@@ -528,6 +555,16 @@ export let getCodeDataTranslations = (
       options,
       dataTranslations,
       filteredFiles[i],
+    );
+  }
+
+  for (const locale in translations) {
+    const dictionary = translations[locale];
+    getCodeDataTranslationsFromDictionary(
+      options,
+      dataTranslations,
+      dictionary,
+      locale,
     );
   }
 
