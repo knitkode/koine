@@ -97,4 +97,52 @@ describe("test projects", () => {
   //     });
   //   });
   // });
+
+  //  describe("test tiurihealth", () => {
+  //   test("mimic the github action behaviour", async () => {
+  //     await i18nCompiler({
+  //       baseUrl: "https://tiurihealth.com",
+  //       defaultLocale: "nl",
+  //       input: {
+  //         source: "../../Tiuri Health/translations",
+  //         write: {
+  //           output: "../../Tiuri Health/translations/.github/input.json",
+  //         },
+  //       },
+  //       code: {
+  //         adapter: {
+  //           name: "next",
+  //         }
+  //       },
+  //     });
+  //   });
+  //   test("mimic next plugin build", async () => {
+  //     await i18nCompiler({
+  //       baseUrl: "https://tiurihealth.com",
+  //       locales: ["nl", "en"],
+  //       defaultLocale: "nl",
+  //       hideDefaultLocaleInUrl: true,
+  //       debug: true,
+  //       logLevel: 5,
+  //       input: {
+  //         source: "../../Tiuri Health/translations",
+  //       },
+  //       code: {
+  //         adapter: {
+  //           name: "next",
+  //           options: {
+  //             globalize: {
+  //               functions: false,
+  //             }
+  //           }
+  //         },
+  //         write: {
+  //           ignorePaths: ["build.ts", "project.json", "tsconfig.json"],
+  //           output: "../../Tiuri Health/tiurihealth/apps/web/i18n",
+  //           tsconfig: false
+  //         },
+  //       },
+  //     });
+  //   });
+  // });
 });
