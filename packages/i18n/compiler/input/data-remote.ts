@@ -30,11 +30,13 @@ const onResponseData = (options: InputDataOptionsRemote, result: string) => {
             ignore.every((glob) => !minimatch(folder, glob)),
           )
         : dataInput.locales,
-      translationFiles: ignore.length
-        ? dataInput.translationFiles.filter((file) =>
-            ignore.every((glob) => !minimatch(file.path, glob)),
-          )
-        : dataInput.translationFiles,
+      translationFiles: dataInput.translationFiles
+        ? ignore.length
+          ? dataInput.translationFiles.filter((file) =>
+              ignore.every((glob) => !minimatch(file.path, glob)),
+            )
+          : dataInput.translationFiles
+        : [],
     };
   } catch (_e) {
     throw Error(`Failed to parse JSON from ${source}`);
@@ -77,11 +79,13 @@ export let getInputDataRemote = async (options: InputDataOptionsRemote) =>
                     ignore.every((glob) => !minimatch(folder, glob)),
                   )
                 : dataInput.locales,
-              translationFiles: ignore.length
-                ? dataInput.translationFiles.filter((file) =>
-                    ignore.every((glob) => !minimatch(file.path, glob)),
-                  )
-                : dataInput.translationFiles,
+              translationFiles: dataInput.translationFiles
+                ? ignore.length
+                  ? dataInput.translationFiles.filter((file) =>
+                      ignore.every((glob) => !minimatch(file.path, glob)),
+                    )
+                  : dataInput.translationFiles
+                : [],
             });
           } catch (_e) {
             throw Error(`Failed to parse JSON from ${source}`);

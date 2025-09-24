@@ -15,54 +15,62 @@ export class I18nWebpackPlugin {
   }
 
   apply(compiler: Compiler) {
-    const { input } = this.opts;
+    const inputOpt = this.opts.input;
+    const inputs = Array.isArray(inputOpt) ? inputOpt : [inputOpt];
+    let inputIdx = 0;
 
-    if (!isInputDataLocal(input)) return;
+    for (const input of inputs) {
+      inputIdx++;
 
-    const { cwd = process.cwd(), source } = input;
-    const i18nInputFolder = resolve(cwd, source);
+      if (!isInputDataLocal(input)) return;
 
-    if (compiler.hooks) {
-      const addI18nFolderDeps = debounce(
-        (compilation: Compilation) => {
-          if (!compilation.contextDependencies.has(i18nInputFolder)) {
-            compilation.contextDependencies.add(i18nInputFolder);
-            i18nLogger.debug(
-              "I18nWebpackPlugin:apply, input folder added to context deps",
-            );
-            // } else {
-            //   console.log("i18nCompiler input folder already added to context deps",);
-          }
-        },
-        1000,
-        true,
-      );
+      const pluginName = PLUGIN_NAME + "-" + inputIdx;
+      const { cwd = process.cwd(), source } = input;
+      const i18nInputFolder = resolve(cwd, source);
 
-      compiler.hooks.thisCompilation.tap(PLUGIN_NAME, addI18nFolderDeps);
-
-      const maybeRunI18n = debounce(
-        async (compiler: Compiler, callback: () => void) => {
-          const isI18nInputFile = compiler.modifiedFiles?.has(i18nInputFolder);
-          if (isI18nInputFile) {
-            i18nLogger.debug(
-              "found a change in input folder, it should compile",
-            );
-            try {
-              await i18nCompiler(this.opts);
-            } catch (_e) {
-              i18nLogger.debug("compilation failed");
+      if (compiler.hooks) {
+        const addI18nFolderDeps = debounce(
+          (compilation: Compilation) => {
+            if (!compilation.contextDependencies.has(i18nInputFolder)) {
+              compilation.contextDependencies.add(i18nInputFolder);
+              i18nLogger.debug(
+                "I18nWebpackPlugin:apply, input folder added to context deps",
+              );
+              // } else {
+              //   console.log("i18nCompiler input folder already added to context deps",);
             }
-          }
+          },
+          1000,
+          true,
+        );
 
-          callback();
-        },
-        100,
-        true,
-      );
+        compiler.hooks.thisCompilation.tap(pluginName, addI18nFolderDeps);
 
-      compiler.hooks.watchRun.tapAsync(PLUGIN_NAME, maybeRunI18n);
-    } else {
-      // compiler.plugin('done', done);
+        const maybeRunI18n = debounce(
+          async (compiler: Compiler, callback: () => void) => {
+            const isI18nInputFile =
+              compiler.modifiedFiles?.has(i18nInputFolder);
+            if (isI18nInputFile) {
+              i18nLogger.debug(
+                "found a change in input folder, it should compile",
+              );
+              try {
+                await i18nCompiler(this.opts);
+              } catch (_e) {
+                i18nLogger.debug("compilation failed");
+              }
+            }
+
+            callback();
+          },
+          100,
+          true,
+        );
+
+        compiler.hooks.watchRun.tapAsync(pluginName, maybeRunI18n);
+      } else {
+        // compiler.plugin('done', done);
+      }
     }
   }
 }

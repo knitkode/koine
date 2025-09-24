@@ -56,7 +56,7 @@ export type SummaryDataOptions = typeof summaryDataOptions & {
 export let getSummaryData = (
   config: Pick<I18nCompiler.Config, "locales" | "defaultLocale">,
   options: SummaryDataOptions,
-  { translationFiles }: I18nCompiler.DataInput,
+  { translationFiles = [] }: I18nCompiler.DataInput,
 ) => {
   const { defaultLocale } = config;
   let dataSummary: I18nCompiler.DataSummary = {};
