@@ -13,7 +13,7 @@ describe("getCodeDataRoutes", () => {
     trailingSlash: false,
   };
 
-  it("should handle various forms of route dyanmic definitions", () => {
+  it("should handle various forms of route dynamic definitions", () => {
     const data = getCodeDataRoutes(config, resolveCodeDataOptions({}).routes, {
       locales: ["en"],
       routes: {
