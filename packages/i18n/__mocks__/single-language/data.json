@@ -74,12 +74,15 @@
       "gitignore": "all"
     },
     "adapter": {
-      "modularize": true,
-      "name": "js"
+      "name": "js",
+      "meta": {},
+      "options": {
+        "modularize": true
+      }
     }
   },
   "input": {
-    "localesFolders": [
+    "locales": [
       "en"
     ],
     "translationFiles": [

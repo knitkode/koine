@@ -1,6 +1,7 @@
 {
   "home": "/",
   "about": "/chi-siamo",
+  "cookies": "/cookies",
   "account": {
     "user": {
       "profile": "/account/profilo",
