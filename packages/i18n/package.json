@@ -11,7 +11,7 @@
     "consola": "^3.2.3",
     "glob": "^11.0.0",
     "minimatch": "^10.0.1",
-    "synckit": "^0.9.0",
+    "synckit": "^0.11.4",
     "typescript": "^5.3.3",
     "webpack": "^5.90.1"
   },
@@ -25,5 +25,12 @@
     "react": {
       "optional": true
     }
+  },
+  "devDependencies": {
+    "@types/supertest": "^6.0.3",
+    "@types/wait-on": "^5.3.4",
+    "execa": "^9.5.2",
+    "supertest": "^7.1.0",
+    "wait-on": "^8.0.3"
   }
 }
