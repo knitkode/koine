@@ -19,5 +19,8 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "**/*.d.ts"
+  ],
+  "exclude": [
+    "playground"
   ]
 }
