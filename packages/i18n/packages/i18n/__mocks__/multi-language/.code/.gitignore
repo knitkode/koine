@@ -1,5 +1,0 @@
-**/*
-!.gitignore
-
-# i18n.code.write.ignorePaths:
-!createT.ts
