@@ -44,7 +44,9 @@ function getToFunctionBody(
 ) {
   const { params, pathnames, equalValues } = route;
   const { defaultLocale, single } = options;
-  const hasValuableLocalisation = !single && !equalValues;
+  // we cannot check for equal values here because the route url will still need
+  // to be different, e.g.: /it/cookies vs /cookies
+  const hasValuableLocalisation = !single; // && !equalValues;
   const formatArgLocale = single ? `""` : "locale";
   const formatArgParams = params ? ", params" : "";
 

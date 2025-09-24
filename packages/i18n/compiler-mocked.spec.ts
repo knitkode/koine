@@ -39,7 +39,11 @@ describe("test mocked output code", () => {
       // test right implementation
       singleTo.$to_about("en");
       singleTo.$to_about();
-  
+    });
+
+    test("route with same url still differs among language", () => {
+      expect(multiTo.$to_cookies()).toEqual("/cookies");
+      expect(multiTo.$to_cookies("it")).toEqual("/it/cookies");
     });
   });
   
