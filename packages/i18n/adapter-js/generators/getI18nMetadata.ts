@@ -48,7 +48,7 @@ export function getI18nMetadata<TRouteId extends I18n.RouteId | RouteIdError>({
   locales.forEach((locale) => {
     alternates[locale] = formatUrl(${dynamicRoutes.length && staticRoutes.length ? `
       // @ ts-ignore dynamic to fn typing
-      params ? to(id, params, locale) : to(id, locale),
+      params ? to(id, paramsByLocale?.[locale] ?? params, locale) : to(id, locale),
     );` : dynamicRoutes.length ? `to(id, paramsByLocale?.[locale] ?? params, locale));` : `to(id, locale));`}
   });
 
