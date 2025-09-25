@@ -119,8 +119,8 @@ describe("test projects", () => {
   //   test("mimic next plugin build", async () => {
   //     await i18nCompiler({
   //       baseUrl: "https://tiurihealth.com",
-  //       locales: ["nl", "en"],
-  //       defaultLocale: "nl",
+  //       locales: ["en", "nl"],
+  //       defaultLocale: "en",
   //       hideDefaultLocaleInUrl: true,
   //       debug: true,
   //       logLevel: 5,
@@ -137,8 +137,7 @@ describe("test projects", () => {
   //           }
   //         },
   //         write: {
-  //           ignorePaths: ["build.ts", "project.json", "tsconfig.json"],
-  //           output: "../../Tiuri Health/tiurihealth/apps/web/i18n",
+  //           output: "../../Tiuri Health/tiurihealth/apps/www/i18n",
   //           tsconfig: false
   //         },
   //       },
