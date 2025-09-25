@@ -327,6 +327,8 @@ export namespace I18n {
     TRouteId extends RouteIdDynamic ? {
       id: TRouteId;
       params: TRouteId extends RouteIdDynamic ? RouteParams[TRouteId] : never;
+      /** This should be typically filled only with translatable dynamic param values, excluding those for the current locale */
+      paramsByLocale?: TRouteId extends RouteIdDynamic ? Partial<Record<Locale, RouteParams[TRouteId]>> : never;
     } : TRouteId extends RouteIdStatic | RouteIdError ? {
       id: TRouteId;
       params?: never;

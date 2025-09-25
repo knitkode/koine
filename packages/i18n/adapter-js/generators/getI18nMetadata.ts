@@ -34,7 +34,8 @@ type GetI18nMetadataOptions<TRouteId extends I18n.RouteId | RouteIdError> = {
 export function getI18nMetadata<TRouteId extends I18n.RouteId | RouteIdError>({
   locale: currentLocale,
   id,${dynamicRoutes.length ? `
-  params,` : ``}
+  params,` : ``}${dynamicRoutes.length ? `
+  paramsByLocale,` : ``}
 }: GetI18nMetadataOptions<TRouteId>) {
   if (isErrorRoute(id)) return i18nDefaultMetadata;${dynamicRoutes.length && !staticRoutes.length ? `
   params = params as NonNullable<typeof params>;` : ``}
@@ -48,7 +49,7 @@ export function getI18nMetadata<TRouteId extends I18n.RouteId | RouteIdError>({
     alternates[locale] = formatUrl(${dynamicRoutes.length && staticRoutes.length ? `
       // @ ts-ignore dynamic to fn typing
       params ? to(id, params, locale) : to(id, locale),
-    );` : dynamicRoutes.length ? `to(id, params, locale));` : `to(id, locale));`}
+    );` : dynamicRoutes.length ? `to(id, paramsByLocale?.[locale] ?? params, locale));` : `to(id, locale));`}
   });
 
   return {
