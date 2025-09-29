@@ -1,11 +1,11 @@
 import type { Rewrite } from "next/dist/lib/load-custom-routes";
-import { arrayUniqueByProperties, escapeRegExp } from "@koine/utils";
+import { arrayUniqueByProperties, escapeRegExp, normaliseUrlPathname } from "@koine/utils";
 import type { CodeDataRoutesOptions } from "../../compiler/code/data-routes";
 import type { I18nCompiler } from "../../compiler/types";
 import { i18nFormatRoutePathname } from "../../i18nFormatRoutePathname";
 import { transformPathname } from "./utils";
 
-function generatePathRewrite(arg: {
+export function generatePathRewrite(arg: {
   localeSource?: I18nCompiler.Locale;
   localeDestination?: I18nCompiler.Locale;
   template: string;
@@ -26,7 +26,12 @@ function generatePathRewrite(arg: {
   const destination = i18nFormatRoutePathname(destinationPrefix + template);
   // console.log(`rewrite pathname "${source}" to template "${destination}"`);
 
-  if (source === destination) return;
+  // removed it: see test (it "should keep seemingly pointless rewrite when
+  // dynamic and static paths collide")
+  // TODO: these could be more sophisticated by adding a flag on the route data
+  // that signals whether a static route could have some collisions with a
+  // dynamic route on the same level of depth.
+  // if (source === destination) return;
 
   const rewrite: Rewrite = { source, destination };
 
@@ -146,14 +151,37 @@ export let generateRewrites = (
     rewrites.filter(Boolean) as Rewrite[],
     ["source", "destination"],
   ).sort((a, b) => {
-    // simple sort by source:
+
+    // 1) put dynamic paths later, after static paths, so that `/my-slug` takes
+    // precedence to `/:slug` allowing us to use a custom static template on top
+    // of a URL pathname that otherwise matches a dynamic template
+    if (a.destination.indexOf(":") > -1) {
+      return 1;
+    }
+    if (b.destination.indexOf(":") > -1) {
+      return -1;
+    }
+
+    // 2) put first homepages which only have the locale in the url, how:
+    // first ensure we normalise the pathname to the minimum (no trailing slash
+    // and remove consecutive slashes, then we can split and check that we have
+    // only one slash in the pathname, so e.g. `/` and `/it` will come first
+    if (i18nFormatRoutePathname(a.source).split("/").length === 2) {
+      // if `b` is also a homepage path we check their length and put the
+      // shortest first
+      if (i18nFormatRoutePathname(a.source).split("/").length === 2) {
+        if (a.source.length > b.source.length) {
+          return 1;
+        }
+      }
+      return -1;
+    }
+
+    // 3) simple sort by source:
     return a.source.localeCompare(b.source);
 
-    // simple sort by destination:
+    // 3b) simple sort by destination:
     // return a.destination.localeCompare(b.destination);
-
-    // sort by locale
-    // return a.
   });
 
   return cleaned;
