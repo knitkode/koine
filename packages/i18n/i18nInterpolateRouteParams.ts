@@ -2,6 +2,10 @@ import { getType } from "@koine/utils";
 import { i18nFormatRoutePathname } from "./i18nFormatRoutePathname";
 import type { I18nUtils } from "./types";
 
+const REGEX_PATHNAME_DOTS_TO_SLASHES = /\./g;
+
+const REGEX_PATHNAME_DYNAMIC_KEYS = /[[{]{1,2}(.*?)[\]}]{1,2}/g;
+
 /**
  * Given a `value` it returns a well formed URL pathname, optionally interpolating
  * the given dynamic params. These dynamic params must be expressed **consistently**
@@ -39,10 +43,10 @@ export function i18nInterpolateRouteParams<
   value: TRouteId, // RouteStrictId<TRouteId>,
   params?: I18nUtils.DynamicParams<TRouteId>,
 ) {
-  let pathname = value.replace(/\./g, "/");
+  let pathname = value.replace(REGEX_PATHNAME_DOTS_TO_SLASHES, "/");
   if (process.env["NODE_ENV"] === "development") {
     if (params) {
-      pathname.replace(/[[{]{1,2}(.*?)[\]}]{1,2}/g, (_, dynamicKey) => {
+      pathname.replace(REGEX_PATHNAME_DYNAMIC_KEYS, (_, dynamicKey) => {
         const key = dynamicKey as Extract<keyof typeof params, string>;
 
         if (!(key in params)) {
@@ -74,7 +78,7 @@ export function i18nInterpolateRouteParams<
   pathname = pathname
     ? params
       ? pathname.replace(
-          /[[{]{1,2}(.*?)[\]}]{1,2}/g,
+          REGEX_PATHNAME_DYNAMIC_KEYS,
           (_, dynamicKey) =>
             params[dynamicKey.trim() as keyof typeof params] + "",
         )

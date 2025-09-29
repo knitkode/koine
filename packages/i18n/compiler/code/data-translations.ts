@@ -316,6 +316,13 @@ function manageDataTranslationsPlurals(
   });
 }
 
+const REGEX_TILDE = /~/g;
+const REGEX_DASH_DOTS_SEMICOLON = /-|\.|:/g;
+const REGEX_SLASHES = /\/|\\/g;
+const REGEX_JS_IDENTIFIER = /[^a-zA-Z0-9_$]/gi;
+const REGEX_NOT_INITIAL_NUMBER = /^[0-9]/;
+const REGEX_CONSECUTIVE_UNDERSCORES = /_+/g;
+
 export function normaliseTranslationTraceIdentifier(
   trace: string,
   prefix = "",
@@ -323,19 +330,21 @@ export function normaliseTranslationTraceIdentifier(
   // return options.functions.prefix + changeCaseSnake(trace);
   let replaced = trace
     // replace tilde
-    .replace(/~/g, "_")
+    .replace(REGEX_TILDE, "_")
     // replace dash, dots, semicolon
-    .replace(/-|\.|:/g, "_")
+    .replace(REGEX_DASH_DOTS_SEMICOLON, "_")
     // replace slashes
-    .replace(/\/|\\/g, "_")
+    .replace(REGEX_SLASHES, "_")
     // ensure valid js identifier, allow only alphanumeric characters and few symbols
-    .replace(/[^a-zA-Z0-9_$]/gi, "");
+    .replace(REGEX_JS_IDENTIFIER, "");
 
   // ensure the key does not start with a number (invalid js)
-  replaced = /^[0-9]/.test(replaced) ? "_" + replaced : replaced;
+  replaced = REGEX_NOT_INITIAL_NUMBER.test(replaced)
+    ? "_" + replaced
+    : replaced;
 
   // collapse consecutive underscores
-  return (prefix + replaced).replace(/_+/g, "_");
+  return (prefix + replaced).replace(REGEX_CONSECUTIVE_UNDERSCORES, "_");
 }
 
 function getTranslationFunctionName(

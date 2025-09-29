@@ -457,6 +457,8 @@ function writeTsconfigFile(config: CodeWriteConfig) {
   }
 }
 
+const REGEX_TSX_EXTENSION = /\.tsx?$/;
+
 /**
  * Compiles generated TypeScript source files to JavaScript and `.d.ts` files.
  */
@@ -499,10 +501,10 @@ function writeCompiledTypescriptFiles(
 
   // // rename ESM output files
   // tsFiles.forEach((file) => {
-  //   const absolutePath = join(cwd, output, file.path.replace(/\.tsx?$/, ".js"));
+  //   const absolutePath = join(cwd, output, file.path.replace(REGEX_TSX_EXTENSION, ".js"));
   //   addFileToGitignoreLists(config, {
   //     ...file,
-  //     path: file.path.replace(/\.tsx?$/, ".mjs"),
+  //     path: file.path.replace(REGEX_TSX_EXTENSION, ".mjs"),
   //   });
 
   //   renameSync(absolutePath, absolutePath.replace(/\.js$/, ".mjs"));
@@ -517,12 +519,12 @@ function writeCompiledTypescriptFiles(
   tsFiles.forEach((file) => {
     addFileToGitignoreLists(config, {
       ...file,
-      path: file.path.replace(/\.tsx?$/, ".js"),
+      path: file.path.replace(REGEX_TSX_EXTENSION, ".js"),
     });
 
     addFileToGitignoreLists(config, {
       ...file,
-      path: file.path.replace(/\.tsx?$/, ".d.ts"),
+      path: file.path.replace(REGEX_TSX_EXTENSION, ".d.ts"),
     });
 
     // TODO: we should only compile the $t function for webpack to work...

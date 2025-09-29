@@ -33,6 +33,9 @@ function buildTypeForObjectValue(
   return `"${key}": ${buildTypeForValue(value)}`;
 }
 
+const REGEX_SYNTAX_SQUARE_BRACKETS = /;\[\];/g;
+const REGEX_SYNTAX_CONSECUTIVE_SEMICOLONS = /;+/g;
+
 function buildTypeForValue(value: I18nCompiler.DataTranslationValue) {
   let out = "";
   let primitiveType = "";
@@ -65,8 +68,8 @@ function buildTypeForValue(value: I18nCompiler.DataTranslationValue) {
   }
 
   // adjust syntax
-  out = out.replace(/;\[\];/g, "[];");
-  out = out.replace(/;+/g, ";");
+  out = out.replace(REGEX_SYNTAX_SQUARE_BRACKETS, "[];");
+  out = out.replace(REGEX_SYNTAX_CONSECUTIVE_SEMICOLONS, ";");
 
   return out;
 }

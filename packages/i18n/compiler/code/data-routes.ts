@@ -126,6 +126,10 @@ function parseUserDefinedRouteId(
   };
 }
 
+const REGEX_STARS = /\*/g;
+const REGEX_DYNAMIC_PATH_SEMICOLON = /:(.*?)?(\/|$)/g;
+const REGEX_DYNAMIC_PATH_BRACKETS = /[[{]{1,2}(.*?)[\]}]{1,2}/g;
+
 /**
  * Normalise user defined route pathname
  *
@@ -148,16 +152,16 @@ function normaliseUserDefinedRoutePathname(
 ) {
   return i18nFormatRoutePathname(
     routePathname
-      .replace(/\*/g, "")
+      .replace(REGEX_STARS, "")
       // manage `:id` syntax
       .replace(
-        /:(.*?)?(\/|$)/g,
+        REGEX_DYNAMIC_PATH_SEMICOLON,
         (_search, firstGroup, secondGroup) =>
           `[${firstGroup.trim()}]${secondGroup}`,
       )
       // manage brackets syntax
       .replace(
-        /[[{]{1,2}(.*?)[\]}]{1,2}/g,
+        REGEX_DYNAMIC_PATH_BRACKETS,
         (_search, replaceValue) => `[${replaceValue.trim()}]`,
       ),
     options,
