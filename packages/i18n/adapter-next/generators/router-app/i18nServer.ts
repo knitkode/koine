@@ -148,6 +148,8 @@ import { createI18nPage } from "./I18nPage";
 
 export type { I18n } from "../types";
 
+export type I18nServer = typeof i18nServer;
+
 export const i18nServer = {
   /**
    * {@link I18nLayoutRoot}
