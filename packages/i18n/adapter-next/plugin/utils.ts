@@ -59,8 +59,16 @@ export function transformPathname(
   );
 }
 
+export type I18nCompilerOptionsNext = {
+  /**
+   * When `true` the i18n webpack plugin is added to the webpack configuration.
+   * @default false
+   */
+  webpackPlugin?: boolean;
+}
+
 export let tweakNextConfig = (
-  i18nCompilerOptions: I18nCompilerOptions,
+  i18nCompilerOptions: I18nCompilerOptions & I18nCompilerOptionsNext,
   i18nCompilerReturn: I18nCompilerReturn,
   options: NextConfig,
 ) => {
@@ -78,36 +86,38 @@ export let tweakNextConfig = (
       ...createSwcTransforms(i18nCompilerReturn.options),
       ...modularizeImports,
     },
-    webpack: (_webpackConfig, webpackConfigContext) => {
-      const webpackConfig =
-        typeof webpack === "function"
-          ? webpack(_webpackConfig, webpackConfigContext)
-          : _webpackConfig;
+    ...i18nCompilerOptions.webpackPlugin && {
+      webpack: (_webpackConfig, webpackConfigContext) => {
+        const webpackConfig =
+          typeof webpack === "function"
+            ? webpack(_webpackConfig, webpackConfigContext)
+            : _webpackConfig;
 
-      return {
-        ...webpackConfig,
-        plugins: [
-          ...(webpackConfig.plugins || []),
-          new I18nWebpackPlugin(i18nCompilerOptions),
-          // @see https://github.com/date-fns/date-fns/blob/main/docs/webpack.md#removing-unused-languages-from-dynamic-import
-          new ContextReplacementPlugin(
-            /^date-fns[/\\]locale$/,
-            new RegExp(`\\.[/\\\\](${locales.join("|")})[/\\\\]index\\.js$`),
-          ),
-          write &&
-            new DefinePlugin(
-              // require(join(write.cwd, write.output, "internal/webpack-define-compact.cjs")),
-              require(
-                join(
-                  write.cwd,
-                  write.output,
-                  "internal/webpack-define-granular.cjs",
+        return {
+          ...webpackConfig,
+          plugins: [
+            ...(webpackConfig.plugins || []),
+            new I18nWebpackPlugin(i18nCompilerOptions),
+            // @see https://github.com/date-fns/date-fns/blob/main/docs/webpack.md#removing-unused-languages-from-dynamic-import
+            new ContextReplacementPlugin(
+              /^date-fns[/\\]locale$/,
+              new RegExp(`\\.[/\\\\](${locales.join("|")})[/\\\\]index\\.js$`),
+            ),
+            write &&
+              new DefinePlugin(
+                // require(join(write.cwd, write.output, "internal/webpack-define-compact.cjs")),
+                require(
+                  join(
+                    write.cwd,
+                    write.output,
+                    "internal/webpack-define-granular.cjs",
+                  ),
                 ),
               ),
-            ),
-        ].filter(Boolean),
-      };
-    },
+          ].filter(Boolean),
+        };
+      },
+    }
   };
 
   // const nextConfig =

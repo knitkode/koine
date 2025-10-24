@@ -5,6 +5,7 @@ import {
   getRewrites,
   shouldIgnoreNextJsConfigRun,
   tweakNextConfig,
+  type I18nCompilerOptionsNext
 } from "./utils";
 
 type NextConfigFn = (
@@ -16,7 +17,7 @@ export type WithI18nAsyncOptions = NextConfig & {
   /**
    * Configure the {@link I18nCompilerOptions I18nCompiler}
    */
-  i18nCompiler?: I18nCompilerOptions;
+  i18nCompiler?: I18nCompilerOptions & I18nCompilerOptionsNext;
 };
 
 /**

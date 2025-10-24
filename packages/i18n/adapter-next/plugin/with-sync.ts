@@ -17,13 +17,14 @@ import {
   getRewrites,
   shouldIgnoreNextJsConfigRun,
   tweakNextConfig,
+  type I18nCompilerOptionsNext
 } from "./utils";
 
 export type WithI18nOptions = NextConfig & {
   /**
    * Configure the {@link I18nCompilerOptions I18nCompiler}
    */
-  i18nCompiler?: I18nCompilerOptions;
+  i18nCompiler?: I18nCompilerOptions & I18nCompilerOptionsNext;
 };
 
 export let withI18n = (config: WithI18nOptions = {}): NextConfig => {
