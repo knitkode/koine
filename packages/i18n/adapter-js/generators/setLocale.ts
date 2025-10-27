@@ -1,6 +1,6 @@
 import { createGenerator } from "../../compiler/createAdapter";
 import { FunctionsCompiler } from "../../compiler/functions";
-import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";
+import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/constants";
 import { getImportTypes } from "./types";
 
 export const setGlobalLocale = (_options?: never) =>

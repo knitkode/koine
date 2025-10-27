@@ -7,11 +7,9 @@ import { getTFunction } from "../../adapter-js/generators/t";
 import { tPluralise } from "../../adapter-js/generators/tPluralise";
 import { getToFunction } from "../../adapter-js/generators/to";
 import { getTypeLocale } from "../../adapter-js/generators/types";
+import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/constants";
+import { compileDataParamsToType } from "../../compiler/helpers";
 import { createGenerator } from "../../compiler/createAdapter";
-import {
-  GLOBAL_I18N_IDENTIFIER,
-  compileDataParamsToType,
-} from "../../compiler/helpers";
 import { resolveGlobalizeOption } from "../index";
 
 function collapseWhitespaces(input: string) {

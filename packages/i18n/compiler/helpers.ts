@@ -2,8 +2,6 @@ import { minimatch } from "minimatch";
 import { ImportsCompiler } from "./imports";
 import type { I18nCompiler } from "./types";
 
-export const GLOBAL_I18N_IDENTIFIER = "__i18n_locale";
-
 /**
  * TODO: maybe make this folder name or path configurable through options
  *

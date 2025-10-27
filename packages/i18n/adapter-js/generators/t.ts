@@ -6,16 +6,14 @@ import {
   isPrimitive,
   isString,
 } from "@koine/utils";
+import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/constants";
 import { createGenerator } from "../../compiler/createAdapter";
 import {
   FunctionsCompiler,
   type FunctionsCompilerBodyOptions,
   type FunctionsCompilerDataArg,
 } from "../../compiler/functions";
-import {
-  GLOBAL_I18N_IDENTIFIER,
-  compileDataParamsToType,
-} from "../../compiler/helpers";
+import { compileDataParamsToType } from "../../compiler/helpers";
 import { ImportsCompiler } from "../../compiler/imports";
 import type { I18nCompiler } from "../../compiler/types";
 import { getImportTypes } from "./types";

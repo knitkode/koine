@@ -4,7 +4,6 @@ import createT from "./generators/createT";
 import dictionary from "./generators/dictionary";
 import formatTo from "./generators/formatTo";
 import formatUrl from "./generators/formatUrl";
-// import getI18nAlternatesFromDom from "./generators/getI18nAlternatesFromDom";
 import getI18nDictionaries from "./generators/getI18nDictionaries";
 import getI18nMetadata from "./generators/getI18nMetadata";
 import getLocale from "./generators/getLocale";
@@ -79,8 +78,6 @@ export const adapterJs = createAdapter({
       dictionary,
       formatTo,
       formatUrl,
-      // TODO: probably remove it or move it to `i18n/client` public utils
-      // getI18nAlternatesFromDom,
       getI18nDictionaries,
       getI18nMetadata,
       getLocale,

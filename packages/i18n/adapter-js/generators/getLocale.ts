@@ -1,5 +1,5 @@
 import { createGenerator } from "../../compiler/createAdapter";
-import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/helpers";
+import { GLOBAL_I18N_IDENTIFIER } from "../../compiler/constants";
 
 
 export default createGenerator("js", (arg) => {
