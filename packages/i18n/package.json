@@ -5,6 +5,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "@koine/dom": "*",
     "@koine/node": "*",
     "@koine/utils": "*",
     "comment-json": "^4.2.4",
